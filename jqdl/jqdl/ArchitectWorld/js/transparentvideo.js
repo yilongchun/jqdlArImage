@@ -15,7 +15,7 @@ var World2 = {
                                          offsetX: -0.2,
                                          offsetY: -0.12,
                                          isTransparent: true
-                                         });
+        });
         
         // Create a button which opens a website in a browser window after a click
         this.imgButton = new AR.ImageResource("assets2/wwwButton.jpg");
@@ -23,7 +23,7 @@ var World2 = {
                                                  offsetX: -0.05,
                                                  offsetY: 0.2,
                                                  zOrder: 1
-                                                 });
+        });
         video.play(-1);
         video.pause();
         
@@ -32,10 +32,12 @@ var World2 = {
                                            cam: [video, pageOneButton]
                                            },
                                            onEnterFieldOfVision: function onEnterFieldOfVisionFn() {
-                                           video.resume();
+                                               AR.logger.debug("识别到物品,播放视频");
+                                               video.resume();
                                            },
                                            onExitFieldOfVision: function onExitFieldOfVisionFn() {
-                                           video.pause();
+                                               AR.logger.debug("识别结束,视频暂停");
+                                               video.pause();
                                            }
        });
     },
