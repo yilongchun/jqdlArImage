@@ -151,6 +151,7 @@ function Marker(poiData) {
         drawables: {
             cam: [this.markerDrawable_idle, this.markerDrawable_selected, this.leftImage, this.titleLabel, this.descriptionLabel, this.htmlDrawable],
             indicator: this.directionIndicatorDrawable,
+//            enabled:false,
             radar: this.radardrawables
         }
     });
