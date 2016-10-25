@@ -77,7 +77,7 @@ function Marker(poiData) {
                 AR.logger.debug(World.currentMarker.poiData.id + " getOnHtmlClickTrigger");
                                             
                 var currentMarker = World.currentMarker;
-                var architectSdkUrl = "architectsdk://markerselected?id=" + encodeURIComponent(currentMarker.poiData.id) + "&title=" + encodeURIComponent(currentMarker.poiData.title) + "&description=" + encodeURIComponent(currentMarker.poiData.description);
+                var architectSdkUrl = "architectsdk://markerselected?id=" + encodeURIComponent(currentMarker.poiData.id) + "&title=" + escape(encodeURIComponent(currentMarker.poiData.title)) + "&description=" + encodeURIComponent(currentMarker.poiData.description);
                 /*
                  The urlListener of the native project intercepts this call and parses the arguments.
                  This is the only way to pass information from JavaSCript to your native code.

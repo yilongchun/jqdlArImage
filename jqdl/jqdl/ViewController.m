@@ -146,6 +146,12 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
      
      NOTE: On iOS, an unsupported device might be an iPhone 3GS for image recognition or an iPod Touch 4th generation for Geo augmented reality.
      */
+    
+    //修改导航栏标题字体颜色
+    self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName: [UIColor whiteColor] , NSFontAttributeName : [UIFont boldSystemFontOfSize:19]};
+    self.navigationController.navigationBar.barStyle = UIStatusBarStyleDefault;
+    [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
+    
     NSError *deviceSupportError = nil;
     if ( [WTArchitectView isDeviceSupportedForRequiredFeatures:WTFeature_2DTracking error:&deviceSupportError] ) {
         
@@ -576,10 +582,14 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     
     if (poi)
     {
-        NSLog(@"%@ %@",poi.name ,poi.detailedDescription);
+        
+        
+        NSString *str = [poi.name stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        DLog(@"%@",str);
+        NSLog(@"%@ %@",str,poi.detailedDescription);
         
         Feature2ViewController *vc = [[Feature2ViewController alloc] init];
-        vc.title = poi.name;
+        vc.title = str;
         vc.url = [NSString stringWithFormat:@"view-%@-",poiDescription];
         vc.hidesBottomBarWhenPushed = YES;
         [self.navigationController pushViewController:vc animated:YES];
