@@ -95,7 +95,7 @@ function Marker(poiData) {
     this.titleLabel = new AR.Label(poiData.title, 1, {
         zOrder: 1,
         offsetX:-2,
-        offsetY: 0.55,
+//        offsetY: 0.55,
         horizontalAnchor: AR.CONST.HORIZONTAL_ANCHOR.LEFT,
         style: {
             textColor: '#FFFFFF',
@@ -149,7 +149,7 @@ function Marker(poiData) {
     */
     this.markerObject = new AR.GeoObject(markerLocation, {
         drawables: {
-            cam: [this.markerDrawable_idle, this.markerDrawable_selected, this.leftImage, this.titleLabel, this.descriptionLabel, this.htmlDrawable],
+            cam: [this.markerDrawable_idle, this.markerDrawable_selected, this.leftImage, this.titleLabel, this.htmlDrawable],
             indicator: this.directionIndicatorDrawable,
 //            enabled:false,
             radar: this.radardrawables

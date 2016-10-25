@@ -296,7 +296,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                     WTPoi *poi = [[WTPoi alloc] initWithIdentifier:jingdianList.id
                                                           location:location
                                                               name:jingdianList.name
-                                               detailedDescription:jingdianList.name];
+                                               detailedDescription:jingdianList.urlCode];
                     DLog(@"%@",poi.jsonRepresentation);
                     
                     [poiManager addPoi:poi];
@@ -576,10 +576,15 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     
     if (poi)
     {
-        NSLog(@"%@",poi);
+        NSLog(@"%@ %@",poi.name ,poi.detailedDescription);
         
-        DetailViewController *vc = [DetailViewController new];
-        [self presentViewController:vc animated:YES completion:nil];
+        Feature2ViewController *vc = [[Feature2ViewController alloc] init];
+        vc.title = poi.name;
+        vc.url = [NSString stringWithFormat:@"view-%@-",poiDescription];
+        vc.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:vc animated:YES];
+        
+        
     }
 }
 
