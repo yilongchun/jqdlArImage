@@ -94,9 +94,9 @@ function Marker(poiData) {
     // create an AR.Label for the marker's title 
     this.titleLabel = new AR.Label(poiData.title, 1, {
         zOrder: 1,
-        offsetX:-2,
+//        offsetX:-2,
 //        offsetY: 0.55,
-        horizontalAnchor: AR.CONST.HORIZONTAL_ANCHOR.LEFT,
+        horizontalAnchor: AR.CONST.HORIZONTAL_ANCHOR.CENTER,
         style: {
             textColor: '#FFFFFF',
             fontStyle: AR.CONST.FONT_STYLE.BOLD
@@ -149,7 +149,7 @@ function Marker(poiData) {
     */
     this.markerObject = new AR.GeoObject(markerLocation, {
         drawables: {
-            cam: [this.markerDrawable_idle, this.markerDrawable_selected, this.leftImage, this.titleLabel, this.htmlDrawable],
+            cam: [this.markerDrawable_idle, this.markerDrawable_selected, this.titleLabel, this.htmlDrawable],
             indicator: this.directionIndicatorDrawable,
 //            enabled:false,
             radar: this.radardrawables
@@ -244,8 +244,8 @@ Marker.prototype.setSelected = function(marker) {
     marker.htmlDrawable.opacity = 1.0;
     marker.htmlDrawable.enabled = true;
 //    marker.detailImage.opacity = 1.0;
-    marker.titleLabel.style.textColor = "#43D8E6";
-    marker.descriptionLabel.style.textColor = "#666666";
+//    marker.titleLabel.style.textColor = "#43D8E6";
+//    marker.descriptionLabel.style.textColor = "#666666";
     
     // starts the selected-state animation
 //    marker.animationGroup_selected.start();
@@ -299,8 +299,8 @@ Marker.prototype.setDeselected = function(marker) {
     marker.htmlDrawable.opacity = 0.0;
     marker.htmlDrawable.enabled = false;
 //    marker.detailImage.opacity = 0.0;
-    marker.titleLabel.style.textColor = "#ffffff";
-    marker.descriptionLabel.style.textColor = "#ffffff";
+//    marker.titleLabel.style.textColor = "#ffffff";
+//    marker.descriptionLabel.style.textColor = "#ffffff";
     
     
     // starts the idle-state animation

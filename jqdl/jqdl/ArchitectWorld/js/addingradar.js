@@ -48,8 +48,8 @@ var World = {
 		World.markerList = [];
 
 		// start loading marker assets
-		World.markerDrawable_idle = new AR.ImageResource("assets/marker_idle2.png");
-		World.markerDrawable_selected = new AR.ImageResource("assets/marker_selected2.png");
+		World.markerDrawable_idle = new AR.ImageResource("assets/marker_idle.png");
+		World.markerDrawable_selected = new AR.ImageResource("assets/marker_selected.png");
 		World.markerDrawable_directionIndicator = new AR.ImageResource("assets/indi.png");
 
 		// loop through POI-information and create an AR.GeoObject (=Marker) per POI
