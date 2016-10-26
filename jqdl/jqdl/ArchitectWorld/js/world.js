@@ -63,12 +63,6 @@ var World = {
 				"description": poiData[currentPlaceNr].description,
                 "image":poiData[currentPlaceNr].image
 			};
-            
-            AR.logger.debug(poiData[currentPlaceNr].image);
-            
-//            if(currentPlaceNr == 0)
-//                singlePoi.altitude = 5;
-            
 			World.markerList.push(new Marker(singlePoi));
 		}
 		World.updateDistanceToUserValues();
@@ -79,7 +73,6 @@ var World = {
 	updateDistanceToUserValues: function updateDistanceToUserValuesFn() {
 		for (var i = 0; i < World.markerList.length; i++) {
 			World.markerList[i].distanceToUser = World.markerList[i].markerObject.locations[0].distanceToUser();
-            AR.logger.debug(i+","+World.markerList[i].distanceToUser);
 		}
 	},
 
