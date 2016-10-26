@@ -60,10 +60,11 @@ var World = {
 				"longitude": parseFloat(poiData[currentPlaceNr].longitude),
 				"altitude": parseFloat(currentPlaceNr*150),
 				"title": poiData[currentPlaceNr].name,
-				"description": poiData[currentPlaceNr].description
+				"description": poiData[currentPlaceNr].description,
+                "image":poiData[currentPlaceNr].image
 			};
             
-            //AR.logger.debug(poiData[currentPlaceNr].id+","+poiData[currentPlaceNr].name+","+poiData[currentPlaceNr].latitude+","+poiData[currentPlaceNr].longitude+","+poiData[currentPlaceNr].altitude);
+            AR.logger.debug(poiData[currentPlaceNr].image);
             
 //            if(currentPlaceNr == 0)
 //                singlePoi.altitude = 5;
@@ -78,10 +79,11 @@ var World = {
 	updateDistanceToUserValues: function updateDistanceToUserValuesFn() {
 		for (var i = 0; i < World.markerList.length; i++) {
 			World.markerList[i].distanceToUser = World.markerList[i].markerObject.locations[0].distanceToUser();
+            AR.logger.debug(i+","+World.markerList[i].distanceToUser);
 		}
 	},
 
-//	// updates status message shon in small "i"-button aligned bottom center
+	// updates status message shon in small "i"-button aligned bottom center
 //	updateStatusMessage: function updateStatusMessageFn(message, isWarning) {
 //
 //		var themeToUse = isWarning ? "e" : "c";
@@ -96,22 +98,22 @@ var World = {
 //		});
 //	},
 
-//	// location updates, fired every time you call architectView.setLocation() in native environment
-//	locationChanged: function locationChangedFn(lat, lon, alt, acc) {
-//        AR.logger.debug("lat:"+lat+",log:"+lon+",alt:"+alt+",acc:"+acc);
-//		// request data if not already present
-//		if (!World.initiallyLoadedData) {
-//			World.requestDataFromServer(lat, lon);
-//			World.initiallyLoadedData = true;
-//		} else if (World.locationUpdateCounter === 0) {
-//			// update placemark distance information frequently, you max also update distances only every 10m with some more effort
-//			World.updateDistanceToUserValues();
-//		}
-//
-//		// helper used to update placemark information every now and then (e.g. every 10 location upadtes fired)
-//		World.locationUpdateCounter = (++World.locationUpdateCounter % World.updatePlacemarkDistancesEveryXLocationUpdates);
-//	},
-//
+	// location updates, fired every time you call architectView.setLocation() in native environment
+	locationChanged: function locationChangedFn(lat, lon, alt, acc) {
+        AR.logger.debug("lat:"+lat+",log:"+lon+",alt:"+alt+",acc:"+acc);
+		// request data if not already present
+		if (!World.initiallyLoadedData) {
+			//World.requestDataFromServer(lat, lon);
+			World.initiallyLoadedData = true;
+		} else if (World.locationUpdateCounter === 0) {
+			// update placemark distance information frequently, you max also update distances only every 10m with some more effort
+			World.updateDistanceToUserValues();
+		}
+
+		// helper used to update placemark information every now and then (e.g. every 10 location upadtes fired)
+		World.locationUpdateCounter = (++World.locationUpdateCounter % World.updatePlacemarkDistancesEveryXLocationUpdates);
+	},
+
 	// fired when user pressed maker in cam
 	onMarkerSelected: function onMarkerSelectedFn(marker) {
 //		World.currentMarker = marker;

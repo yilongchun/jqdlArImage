@@ -1,5 +1,5 @@
-//var kMarker_AnimationDuration_ChangeDrawable = 500;
-//var kMarker_AnimationDuration_Resize = 1000;
+var kMarker_AnimationDuration_ChangeDrawable = 500;
+var kMarker_AnimationDuration_Resize = 1000;
 
 function Marker(poiData) {
 
@@ -10,8 +10,8 @@ function Marker(poiData) {
         With AR.PropertyAnimations you are able to animate almost any property of ARchitect objects. This sample will animate the opacity of both background drawables so that one will fade out while the other one fades in. The scaling is animated too. The marker size changes over time so the labels need to be animated too in order to keep them relative to the background drawable. AR.AnimationGroups are used to synchronize all animations in parallel or sequentially.
     */
 
-//    this.animationGroup_idle = null;
-//    this.animationGroup_selected = null;
+    this.animationGroup_idle = null;
+    this.animationGroup_selected = null;
 
 
     // create the AR.GeoLocation from the poi data
@@ -58,10 +58,10 @@ function Marker(poiData) {
     
     
     var _html="<div class='zdyDemo' style='height:600px;font-size:5em;border-radius:0.3em;background:#fff;position:relative'>";
-    _html+="<img src='http://img.qlxing.com/0a131bec-408a-404f-825f-3f9b959204dd' style='width:100%;height:600px;border-radius:0.3em'/>";
-    _html+="<span style='position:absolute;height:1.5em;bottom:0px;background:rgba(0,0,0,0.6);z-index:100;display:block;width:100%;color:#fff;line-height:1.5em;padding-left:0.4em;font-size:0.6em;border-radius:0 0 0.5em 0.5em;'>武胜西街13-432号--距离:</span>";
-    _html+="<span style='position:absolute;height:1em;bottom:0.5em;width:100%;display:block;z-index:120;padding-left:0.2em;'><img src='https://wap.qlxing.com/images/activity/startOne.png'/><img src='https://wap.qlxing.com/images/activity/startOne.png'/><img src='https://wap.qlxing.com/images/activity/startOne.png'/><img src='https://wap.qlxing.com/images/activity/startOne.png'/><img src='https://wap.qlxing.com/images/activity/startOne.png'/></span>";
-    _html+="</div>";
+    _html+="<img src='" + poiData.image + "' style='width:100%;height:600px;border-radius:0.3em'/>";
+    _html+="<span style='position:absolute;height:1.5em;bottom:0px;background:rgba(0,0,0,0.6);z-index:100;display:block;width:100%;color:#fff;line-height:1.5em;padding-left:0.4em;font-size:0.6em;border-radius:0 0 0.5em 0.5em;'>"+poiData.title+"</span>";
+//    _html+="<span style='position:absolute;height:1em;bottom:0.5em;width:100%;display:block;z-index:120;padding-left:0.2em;'><img src='https://wap.qlxing.com/images/activity/startOne.png'/><img src='https://wap.qlxing.com/images/activity/startOne.png'/><img src='https://wap.qlxing.com/images/activity/startOne.png'/><img src='https://wap.qlxing.com/images/activity/startOne.png'/><img src='https://wap.qlxing.com/images/activity/startOne.png'/></span>";
+//    _html+="</div>";
     
     this.htmlDrawable = new AR.HtmlDrawable({html:_html}, 9,
         {
@@ -77,7 +77,7 @@ function Marker(poiData) {
                 AR.logger.debug(World.currentMarker.poiData.id + " getOnHtmlClickTrigger");
                                             
                 var currentMarker = World.currentMarker;
-                var architectSdkUrl = "architectsdk://markerselected?id=" + encodeURIComponent(currentMarker.poiData.id) + "&title=" + escape(encodeURIComponent(currentMarker.poiData.title)) + "&description=" + encodeURIComponent(currentMarker.poiData.description);
+                var architectSdkUrl = "architectsdk://markerselected?id=" + encodeURIComponent(currentMarker.poiData.id) + "&title=" + escape(encodeURIComponent(currentMarker.poiData.title)) + "&description=" + encodeURIComponent(currentMarker.poiData.description) + "&image=" + encodeURIComponent(currentMarker.poiData.image);
                 /*
                  The urlListener of the native project intercepts this call and parses the arguments.
                  This is the only way to pass information from JavaSCript to your native code.
@@ -168,7 +168,7 @@ Marker.prototype.getOnClickTrigger = function(marker) {
 
     return function() {
 
-//        if (!Marker.prototype.isAnyAnimationRunning(marker)) {
+        if (!Marker.prototype.isAnyAnimationRunning(marker)) {
             if (marker.isSelected) {
 
                 Marker.prototype.setDeselected(marker);
@@ -182,9 +182,9 @@ Marker.prototype.getOnClickTrigger = function(marker) {
                 }
 
             }
-//        } else {
-//            AR.logger.debug('a animation is already running');
-//        }
+        } else {
+            AR.logger.debug('a animation is already running');
+        }
 
 
         return true;
@@ -199,35 +199,35 @@ Marker.prototype.setSelected = function(marker) {
     AR.logger.debug(marker.poiData.id + " setSelected");
     marker.isSelected = true;
 
-//    if (marker.animationGroup_selected === null) {
-//
-//        // create AR.PropertyAnimation that animates the opacity to 0.0 in order to hide the idle-state-drawable
-//        var hideIdleDrawableAnimation = new AR.PropertyAnimation(marker.markerDrawable_idle, "opacity", null, 0.0, kMarker_AnimationDuration_ChangeDrawable);
-//        // create AR.PropertyAnimation that animates the opacity to 1.0 in order to show the selected-state-drawable
-//        var showSelectedDrawableAnimation = new AR.PropertyAnimation(marker.markerDrawable_selected, "opacity", null, 1.0, kMarker_AnimationDuration_ChangeDrawable);
-//
-////        // create AR.PropertyAnimation that animates the scaling of the idle-state-drawable to 1.2
-////        var idleDrawableResizeAnimation = new AR.PropertyAnimation(marker.markerDrawable_idle, 'scaling', null, 1.0, kMarker_AnimationDuration_Resize, new AR.EasingCurve(AR.CONST.EASING_CURVE_TYPE.EASE_OUT_ELASTIC, {
-////            amplitude: 2.0
-////        }));
-////        // create AR.PropertyAnimation that animates the scaling of the selected-state-drawable to 1.2
-////        var selectedDrawableResizeAnimation = new AR.PropertyAnimation(marker.markerDrawable_selected, 'scaling', null, 1.0, kMarker_AnimationDuration_Resize, new AR.EasingCurve(AR.CONST.EASING_CURVE_TYPE.EASE_OUT_ELASTIC, {
-////            amplitude: 2.0
-////        }));
-////        // create AR.PropertyAnimation that animates the scaling of the title label to 1.2
-////        var titleLabelResizeAnimation = new AR.PropertyAnimation(marker.titleLabel, 'scaling', null, 1.0, kMarker_AnimationDuration_Resize, new AR.EasingCurve(AR.CONST.EASING_CURVE_TYPE.EASE_OUT_ELASTIC, {
-////            amplitude: 2.0
-////        }));
-////        // create AR.PropertyAnimation that animates the scaling of the description label to 1.2
-////        var descriptionLabelResizeAnimation = new AR.PropertyAnimation(marker.descriptionLabel, 'scaling', null, 1.0, kMarker_AnimationDuration_Resize, new AR.EasingCurve(AR.CONST.EASING_CURVE_TYPE.EASE_OUT_ELASTIC, {
-////            amplitude: 2.0
-////        }));
-//
-//        /*
-//            There are two types of AR.AnimationGroups. Parallel animations are running at the same time, sequentials are played one after another. This example uses a parallel AR.AnimationGroup.
-//        */
-//        marker.animationGroup_selected = new AR.AnimationGroup(AR.CONST.ANIMATION_GROUP_TYPE.PARALLEL, [hideIdleDrawableAnimation, showSelectedDrawableAnimation]);
-//    }
+    if (marker.animationGroup_selected === null) {
+
+        // create AR.PropertyAnimation that animates the opacity to 0.0 in order to hide the idle-state-drawable
+        var hideIdleDrawableAnimation = new AR.PropertyAnimation(marker.markerDrawable_idle, "opacity", null, 0.0, kMarker_AnimationDuration_ChangeDrawable);
+        // create AR.PropertyAnimation that animates the opacity to 1.0 in order to show the selected-state-drawable
+        var showSelectedDrawableAnimation = new AR.PropertyAnimation(marker.markerDrawable_selected, "opacity", null, 1.0, kMarker_AnimationDuration_ChangeDrawable);
+
+        // create AR.PropertyAnimation that animates the scaling of the idle-state-drawable to 1.2
+        var idleDrawableResizeAnimation = new AR.PropertyAnimation(marker.markerDrawable_idle, 'scaling', null, 1.2, kMarker_AnimationDuration_Resize, new AR.EasingCurve(AR.CONST.EASING_CURVE_TYPE.EASE_OUT_ELASTIC, {
+            amplitude: 2.0
+        }));
+        // create AR.PropertyAnimation that animates the scaling of the selected-state-drawable to 1.2
+        var selectedDrawableResizeAnimation = new AR.PropertyAnimation(marker.markerDrawable_selected, 'scaling', null, 1.2, kMarker_AnimationDuration_Resize, new AR.EasingCurve(AR.CONST.EASING_CURVE_TYPE.EASE_OUT_ELASTIC, {
+            amplitude: 2.0
+        }));
+        // create AR.PropertyAnimation that animates the scaling of the title label to 1.2
+        var titleLabelResizeAnimation = new AR.PropertyAnimation(marker.titleLabel, 'scaling', null, 1.2, kMarker_AnimationDuration_Resize, new AR.EasingCurve(AR.CONST.EASING_CURVE_TYPE.EASE_OUT_ELASTIC, {
+            amplitude: 2.0
+        }));
+        // create AR.PropertyAnimation that animates the scaling of the description label to 1.2
+        var descriptionLabelResizeAnimation = new AR.PropertyAnimation(marker.descriptionLabel, 'scaling', null, 1.2, kMarker_AnimationDuration_Resize, new AR.EasingCurve(AR.CONST.EASING_CURVE_TYPE.EASE_OUT_ELASTIC, {
+            amplitude: 2.0
+        }));
+
+        /*
+            There are two types of AR.AnimationGroups. Parallel animations are running at the same time, sequentials are played one after another. This example uses a parallel AR.AnimationGroup.
+        */
+        marker.animationGroup_selected = new AR.AnimationGroup(AR.CONST.ANIMATION_GROUP_TYPE.PARALLEL, [hideIdleDrawableAnimation, showSelectedDrawableAnimation, idleDrawableResizeAnimation, selectedDrawableResizeAnimation, titleLabelResizeAnimation, descriptionLabelResizeAnimation]);
+    }
 
     // removes function that is set on the onClick trigger of the idle-state marker
     marker.markerDrawable_idle.onClick = null;
@@ -239,8 +239,8 @@ Marker.prototype.setSelected = function(marker) {
 
     marker.markerObject.drawables.radar = marker.radardrawablesSelected;
     
-    marker.markerDrawable_idle.opacity = 0.0;
-    marker.markerDrawable_selected.opacity = 1.0;
+//    marker.markerDrawable_idle.opacity = 0.0;
+//    marker.markerDrawable_selected.opacity = 1.0;
     marker.htmlDrawable.opacity = 1.0;
     marker.htmlDrawable.enabled = true;
 //    marker.detailImage.opacity = 1.0;
@@ -248,7 +248,7 @@ Marker.prototype.setSelected = function(marker) {
 //    marker.descriptionLabel.style.textColor = "#666666";
     
     // starts the selected-state animation
-//    marker.animationGroup_selected.start();
+    marker.animationGroup_selected.start();
 };
 
 Marker.prototype.setDeselected = function(marker) {
@@ -257,34 +257,34 @@ Marker.prototype.setDeselected = function(marker) {
 
     marker.markerObject.drawables.radar = marker.radardrawables;
 
-//    if (marker.animationGroup_idle === null) {
-//
-//        // create AR.PropertyAnimation that animates the opacity to 1.0 in order to show the idle-state-drawable
-//        var showIdleDrawableAnimation = new AR.PropertyAnimation(marker.markerDrawable_idle, "opacity", null, 0.6, kMarker_AnimationDuration_ChangeDrawable);
-//        // create AR.PropertyAnimation that animates the opacity to 0.0 in order to hide the selected-state-drawable
-//        var hideSelectedDrawableAnimation = new AR.PropertyAnimation(marker.markerDrawable_selected, "opacity", null, 0, kMarker_AnimationDuration_ChangeDrawable);
-////        // create AR.PropertyAnimation that animates the scaling of the idle-state-drawable to 1.0
-////        var idleDrawableResizeAnimation = new AR.PropertyAnimation(marker.markerDrawable_idle, 'scaling', null, 1.0, kMarker_AnimationDuration_Resize, new AR.EasingCurve(AR.CONST.EASING_CURVE_TYPE.EASE_OUT_ELASTIC, {
-////            amplitude: 2.0
-////        }));
-////        // create AR.PropertyAnimation that animates the scaling of the selected-state-drawable to 1.0
-////        var selectedDrawableResizeAnimation = new AR.PropertyAnimation(marker.markerDrawable_selected, 'scaling', null, 1.0, kMarker_AnimationDuration_Resize, new AR.EasingCurve(AR.CONST.EASING_CURVE_TYPE.EASE_OUT_ELASTIC, {
-////            amplitude: 2.0
-////        }));
-////        // create AR.PropertyAnimation that animates the scaling of the title label to 1.0
-////        var titleLabelResizeAnimation = new AR.PropertyAnimation(marker.titleLabel, 'scaling', null, 1.0, kMarker_AnimationDuration_Resize, new AR.EasingCurve(AR.CONST.EASING_CURVE_TYPE.EASE_OUT_ELASTIC, {
-////            amplitude: 2.0
-////        }));
-////        // create AR.PropertyAnimation that animates the scaling of the description label to 1.0
-////        var descriptionLabelResizeAnimation = new AR.PropertyAnimation(marker.descriptionLabel, 'scaling', null, 1.0, kMarker_AnimationDuration_Resize, new AR.EasingCurve(AR.CONST.EASING_CURVE_TYPE.EASE_OUT_ELASTIC, {
-////            amplitude: 2.0
-////        }));
-//
-//        /*
-//            There are two types of AR.AnimationGroups. Parallel animations are running at the same time, sequentials are played one after another. This example uses a parallel AR.AnimationGroup.
-//        */
-//        marker.animationGroup_idle = new AR.AnimationGroup(AR.CONST.ANIMATION_GROUP_TYPE.PARALLEL, [showIdleDrawableAnimation, hideSelectedDrawableAnimation]);
-//    }
+    if (marker.animationGroup_idle === null) {
+
+        // create AR.PropertyAnimation that animates the opacity to 1.0 in order to show the idle-state-drawable
+        var showIdleDrawableAnimation = new AR.PropertyAnimation(marker.markerDrawable_idle, "opacity", null, 0.6, kMarker_AnimationDuration_ChangeDrawable);
+        // create AR.PropertyAnimation that animates the opacity to 0.0 in order to hide the selected-state-drawable
+        var hideSelectedDrawableAnimation = new AR.PropertyAnimation(marker.markerDrawable_selected, "opacity", null, 0, kMarker_AnimationDuration_ChangeDrawable);
+        // create AR.PropertyAnimation that animates the scaling of the idle-state-drawable to 1.0
+        var idleDrawableResizeAnimation = new AR.PropertyAnimation(marker.markerDrawable_idle, 'scaling', null, 1.0, kMarker_AnimationDuration_Resize, new AR.EasingCurve(AR.CONST.EASING_CURVE_TYPE.EASE_OUT_ELASTIC, {
+            amplitude: 2.0
+        }));
+        // create AR.PropertyAnimation that animates the scaling of the selected-state-drawable to 1.0
+        var selectedDrawableResizeAnimation = new AR.PropertyAnimation(marker.markerDrawable_selected, 'scaling', null, 1.0, kMarker_AnimationDuration_Resize, new AR.EasingCurve(AR.CONST.EASING_CURVE_TYPE.EASE_OUT_ELASTIC, {
+            amplitude: 2.0
+        }));
+        // create AR.PropertyAnimation that animates the scaling of the title label to 1.0
+        var titleLabelResizeAnimation = new AR.PropertyAnimation(marker.titleLabel, 'scaling', null, 1.0, kMarker_AnimationDuration_Resize, new AR.EasingCurve(AR.CONST.EASING_CURVE_TYPE.EASE_OUT_ELASTIC, {
+            amplitude: 2.0
+        }));
+        // create AR.PropertyAnimation that animates the scaling of the description label to 1.0
+        var descriptionLabelResizeAnimation = new AR.PropertyAnimation(marker.descriptionLabel, 'scaling', null, 1.0, kMarker_AnimationDuration_Resize, new AR.EasingCurve(AR.CONST.EASING_CURVE_TYPE.EASE_OUT_ELASTIC, {
+            amplitude: 2.0
+        }));
+
+        /*
+            There are two types of AR.AnimationGroups. Parallel animations are running at the same time, sequentials are played one after another. This example uses a parallel AR.AnimationGroup.
+        */
+        marker.animationGroup_idle = new AR.AnimationGroup(AR.CONST.ANIMATION_GROUP_TYPE.PARALLEL, [showIdleDrawableAnimation, hideSelectedDrawableAnimation, idleDrawableResizeAnimation, selectedDrawableResizeAnimation, titleLabelResizeAnimation, descriptionLabelResizeAnimation]);
+    }
 
     // sets the click trigger function for the idle state marker
     marker.markerDrawable_idle.onClick = Marker.prototype.getOnClickTrigger(marker);
@@ -294,8 +294,8 @@ Marker.prototype.setDeselected = function(marker) {
     // disables the direction indicator drawable for the current marker
     marker.directionIndicatorDrawable.enabled = false;
     
-    marker.markerDrawable_idle.opacity = 0.6;
-    marker.markerDrawable_selected.opacity = 0.0;
+//    marker.markerDrawable_idle.opacity = 0.6;
+//    marker.markerDrawable_selected.opacity = 0.0;
     marker.htmlDrawable.opacity = 0.0;
     marker.htmlDrawable.enabled = false;
 //    marker.detailImage.opacity = 0.0;
@@ -304,21 +304,21 @@ Marker.prototype.setDeselected = function(marker) {
     
     
     // starts the idle-state animation
-//    marker.animationGroup_idle.start();
+    marker.animationGroup_idle.start();
 };
 
-//Marker.prototype.isAnyAnimationRunning = function(marker) {
-//
-//    if (marker.animationGroup_idle === null || marker.animationGroup_selected === null) {
-//        return false;
-//    } else {
-//        if ((marker.animationGroup_idle.isRunning() === true) || (marker.animationGroup_selected.isRunning() === true)) {
-//            return true;
-//        } else {
-//            return false;
-//        }
-//    }
-//};
+Marker.prototype.isAnyAnimationRunning = function(marker) {
+
+    if (marker.animationGroup_idle === null || marker.animationGroup_selected === null) {
+        return false;
+    } else {
+        if ((marker.animationGroup_idle.isRunning() === true) || (marker.animationGroup_selected.isRunning() === true)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+};
 
 // will truncate all strings longer than given max-length "n". e.g. "foobar".trunc(3) -> "foo..."
 String.prototype.trunc = function(n) {
