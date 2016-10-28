@@ -184,35 +184,28 @@ var World = {
             }
         }
 	},
-//
-//	// returns distance in meters of placemark with maxdistance * 1.1
-//	getMaxDistance: function getMaxDistanceFn() {
-//
-//		// sort palces by distance so the first entry is the one with the maximum distance
-//		World.markerList.sort(World.sortByDistanceSortingDescending);
-//
-//		// use distanceToUser to get max-distance
-//		var maxDistanceMeters = World.markerList[0].distanceToUser;
-//
-//		// return maximum distance times some factor >1.0 so ther is some room left and small movements of user don't cause places far away to disappear
-//		return maxDistanceMeters * 1.1;
-//	},
-//
+
+	// returns distance in meters of placemark with maxdistance * 1.1
+	getMaxDistance: function getMaxDistanceFn() {
+
+		// sort palces by distance so the first entry is the one with the maximum distance
+		World.markerList.sort(World.sortByDistanceSortingDescending);
+
+		// use distanceToUser to get max-distance
+		var maxDistanceMeters = World.markerList[0].distanceToUser;
+
+		// return maximum distance times some factor >1.0 so ther is some room left and small movements of user don't cause places far away to disappear
+		return maxDistanceMeters * 1.1;
+	},
+
     captureScreen: function captureScreenFn() {
         if (World.initialized) {
             document.location = "architectsdk://button?action=captureScreen";
         }
-    }
+    },
 
 //	// request POI data
 //	requestDataFromServer: function requestDataFromServerFn(lat, lon) {
-//        
-//        
-//        
-//        
-//        
-//        
-//
 //		// set helper var to avoid requesting places while loading
 //		World.isRequestingData = true;
 //		World.updateStatusMessage('Requesting places from web-service');
@@ -232,15 +225,15 @@ var World = {
 //			});
 //	},
 //
-//	// helper to sort places by distance
-//	sortByDistanceSorting: function(a, b) {
-//		return a.distanceToUser - b.distanceToUser;
-//	},
-//
-//	// helper to sort places by distance, descending
-//	sortByDistanceSortingDescending: function(a, b) {
-//		return b.distanceToUser - a.distanceToUser;
-//	}
+	// helper to sort places by distance
+	sortByDistanceSorting: function(a, b) {
+		return a.distanceToUser - b.distanceToUser;
+	},
+
+	// helper to sort places by distance, descending
+	sortByDistanceSortingDescending: function(a, b) {
+		return b.distanceToUser - a.distanceToUser;
+	}
     
 };
 
