@@ -37,31 +37,9 @@ function Marker(poiData) {
         onClick: null
     });
     
-    //添加左侧图标
-    this.leftImage = new AR.ImageDrawable(new AR.ImageResource("assets/marker_type1.png"), 2.2, {
-                                          zOrder: 1,
-                                          opacity: 1.0,
-                                          offsetX:-3.3
-                                          });
-    
-//    //添加底部详情图片
-//    var imageres = new AR.ImageResource("http://cdn0.hbimg.cn/store/snsthumbs/160_160/album/201202/8079D7B4EBAD9BB081F0CBCE4BAE84FFCA8021F2FD.jpg");
-//    this.detailImage = new AR.ImageDrawable(imageres, 5 , {
-//                                            zOrder:0,
-//                                            opacity:0.0,
-//                                            offsetY:-4,
-//                                            onClick:function(){
-//                                                World.onDetailImageSelected(this);
-//                                            
-//                                            }
-//                                            });
-    
-    
     var _html="<div class='zdyDemo' style='height:600px;font-size:5em;border-radius:0.3em;background:#fff;position:relative'>";
     _html+="<img src='" + poiData.image + "' style='width:100%;height:600px;border-radius:0.3em'/>";
     _html+="<span style='position:absolute;height:1.5em;bottom:0px;background:rgba(0,0,0,0.6);z-index:100;display:block;width:100%;color:#fff;line-height:1.5em;padding-left:0.4em;font-size:0.6em;border-radius:0 0 0.5em 0.5em;'>"+poiData.title+"</span>";
-//    _html+="<span style='position:absolute;height:1em;bottom:0.5em;width:100%;display:block;z-index:120;padding-left:0.2em;'><img src='https://wap.qlxing.com/images/activity/startOne.png'/><img src='https://wap.qlxing.com/images/activity/startOne.png'/><img src='https://wap.qlxing.com/images/activity/startOne.png'/><img src='https://wap.qlxing.com/images/activity/startOne.png'/><img src='https://wap.qlxing.com/images/activity/startOne.png'/></span>";
-//    _html+="</div>";
     
     this.htmlDrawable = new AR.HtmlDrawable({html:_html}, 9,
         {
