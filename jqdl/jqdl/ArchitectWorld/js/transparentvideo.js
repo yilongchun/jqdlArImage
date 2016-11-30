@@ -5,9 +5,12 @@ var World2 = {
         
     createOverlays: function createOverlaysFn() {
         
-        this.tracker = new AR.ClientTracker("assets2/tracker.wtc", {
+//        this.tracker = new AR.ClientTracker("assets2/tracker.wtc", {
+//                                            
+//        });
+        this.tracker = new AR.ClientTracker("assets2/magazine.wtc", {
                                             
-        });
+                                            });
         
         var video = new AR.VideoDrawable("assets2/transparentVideo.mp4", 0.7, {
                                          offsetX: -0.2,

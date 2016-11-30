@@ -31,9 +31,11 @@
 
     <!-- marker representation-->
     <script src="js/marker.js"></script>
+    <script src="js/line.js"></script>
     <script type="text/javascript" src="js/world.js"></script>
     <script type="text/javascript" src="js/radar.js"></script>
-
+    
+    
     <style>
         
         .paizhao{
@@ -43,7 +45,7 @@
             height:78px;
             left:50%;
             margin-left:-39px;
-            display:block;
+            display:none;
             z-index:900;
         }
     .paizhao img{
@@ -106,24 +108,19 @@
 
                 
                     
-<!--                    <a  href="javascript: World.captureScreen()" class="paizhao" >-->
-<!--                        <img src="assets/camera01.png"/>-->
-<!--                    </a>-->
+                    <a  href="javascript: World.calcuteLine()" class="paizhao" >
+                        <img src="assets/indi.png"/>
+                    </a>
 
-                    
-<!--                    <a class="liebiao">-->
-<!--                        <img src="assets/ovel59.png" />-->
-<!--                    </a>-->
+                <!-- small status-button 
+                <a style="text-align:right;" id="popupInfoButton" href="#popupInfo" data-rel="popup" data-role="button" class="ui-icon-alt" data-inline="true" data-transition="pop" data-icon="alert" data-theme="e" data-iconpos="notext">Log</a> </p>
 
-<!--                <!-- small status-button -->
-<!--                <a style="text-align:right;" id="popupInfoButton" href="#popupInfo" data-rel="popup" data-role="button" class="ui-icon-alt" data-inline="true" data-transition="pop" data-icon="alert" data-theme="e" data-iconpos="notext">Log</a> </p>-->
-<!---->
-<!--                <!-- popup displayed when button clicked -->
-<!--                <div data-role="popup" id="popupInfo" class="ui-content" data-theme="e" style="max-width:350px;">-->
-<!--                  <p style="text-align:right;" id="status-message">Trying to find out where you are</p>-->
-<!--                </div>-->
+                <!-- popup displayed when button clicked 
+                <div data-role="popup" id="popupInfo" class="ui-content" data-theme="e" style="max-width:350px;">
+                  <p style="text-align:right;" id="status-message">Trying to find out where you are</p>
+                </div>
 
-<!--            </div>-->
+            </div>
 
 
 

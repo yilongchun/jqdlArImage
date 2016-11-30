@@ -153,6 +153,39 @@ Marker.prototype.getOnClickTrigger = function(marker) {
 
             } else {
                 Marker.prototype.setSelected(marker);
+                
+                
+                
+                
+//                World.lineList = [];
+//                
+//                var singlePoi = {
+//
+//                    "latitude": parseFloat(30.82658163046499),
+//                    "longitude": parseFloat(111.3554145377368),
+//                    "altitude": parseFloat(400)
+//    
+//                };
+//                World.markerList.push(new line(singlePoi));
+                
+                
+                
+//                        AR.logger.debug("poiData.length:"+poiData.length);
+//                        for (var currentPlaceNr = 0; currentPlaceNr < 50; currentPlaceNr++) {
+//                //            AR.logger.debug("currentPlaceNr:"+currentPlaceNr);
+//                            var singlePoi = {
+//                
+//                                "latitude": parseFloat(poiData[0].latitude-0.008*currentPlaceNr),
+//                                "longitude": parseFloat(poiData[0].longitude+0.033*currentPlaceNr),
+//                                "altitude": parseFloat(currentPlaceNr)
+//                
+//                            };
+//                //            AR.logger.debug("currentPlaceNr:"+currentPlaceNr);
+//                            World.lineList.push(new line(singlePoi));
+//                            AR.logger.debug(poiData[0].name + "add line");
+//                        }
+                
+                
                 try {
                     World.onMarkerSelected(marker);
                 } catch (err) {

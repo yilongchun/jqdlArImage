@@ -28,6 +28,8 @@
 #import "CategoryList.h"
 #import "Feature2ViewController.h"
 
+
+
 /* this is used to create random positions around you */
 #define WT_RANDOM(startValue, endValue) ((((float) (arc4random() % ((unsigned)RAND_MAX + 1)) / RAND_MAX) * (endValue - startValue)) + startValue)
 
@@ -38,6 +40,9 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     NSString *firsetParams;
     ChooseJqViewController *jqvc;
     CLLocation *myLocation;
+    
+    
+    
 }
 
 /* Add a strong property to the main Wikitude SDK component, the WTArchitectView */
@@ -148,6 +153,12 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
      NOTE: On iOS, an unsupported device might be an iPhone 3GS for image recognition or an iPod Touch 4th generation for Geo augmented reality.
      */
     
+    
+    
+    
+    
+    
+    
     //修改导航栏标题字体颜色
     self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName: [UIColor whiteColor] , NSFontAttributeName : [UIFont boldSystemFontOfSize:19]};
     self.navigationController.navigationBar.barStyle = UIStatusBarStyleDefault;
@@ -219,6 +230,9 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(chooseJq:) name:@"chooseJq" object:nil];
     //景点详情
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showJdDetail:) name:@"showJdDetail" object:nil];
+    
+    
+   
     
     
 }
@@ -388,6 +402,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
         return;
     }];
 }
+
 
 
 #pragma mark - Public Methods

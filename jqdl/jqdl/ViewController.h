@@ -10,9 +10,12 @@
 
 #import "CategoryList.h"
 
+
 @interface ViewController : UIViewController{
 //    NSMutableArray *jingdianDataSource;
     CategoryList *categoryList;//景区
+    
+    
 }
 
 

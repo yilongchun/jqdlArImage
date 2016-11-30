@@ -26,6 +26,11 @@ var World = {
 
 	// list of AR.GeoObjects that are currently shown in the scene / World
 	markerList: [],
+    
+    lineList: [],
+    
+    currentLat:0,
+    currentLng:0,
 
 	// The last selected marker
 	currentMarker: null,
@@ -94,6 +99,9 @@ var World = {
 	// location updates, fired every time you call architectView.setLocation() in native environment
 	locationChanged: function locationChangedFn(lat, lon, alt, acc) {
         AR.logger.debug("lat:"+lat+",log:"+lon+",alt:"+alt+",acc:"+acc);
+        World.currentLat = lat;
+        World.currentLng = lon;
+        AR.logger.debug("currentLat:"+World.currentLat + ",currentLng:"+World.currentLng);
 		// request data if not already present
 		if (!World.initiallyLoadedData) {
 			//World.requestDataFromServer(lat, lon);
@@ -141,7 +149,48 @@ var World = {
         // highlight current one
         marker.setSelected(marker);
         World.currentMarker = marker;
+        
+        AR.logger.debug("目的地位置 latitude:" + marker.poiData.latitude + " , longitude:" + marker.poiData.longitude)
+        AR.logger.debug("起点位置 currentLat:"+World.currentLat + ",currentLng:"+World.currentLng);
+        
+        $(".paizhao").css('display','block');
+        
+//        for(var i = 0;i < 50;i++){
+//            
+//            var singlePoi = {
+//                
+//                "latitude": parseFloat((marker.poiData.latitude-World.currentLat) *i/50+World.currentLat),
+//                "longitude": parseFloat((marker.poiData.longitude-World.currentLng) *i/50+World.currentLng),
+//                "altitude": parseFloat(0)
+//                
+//            };
+//            World.lineList.push(new line(singlePoi));
+//            
+//        }
+//        
+//        AR.logger.debug("添加路线结束 World.lineList.length:"+World.lineList.length);
+        
 	},
+    
+    calcuteLine: function calcuteLine(){
+        AR.logger.debug("计算线路 目的地位置 latitude:" + World.currentMarker.poiData.latitude + " , longitude:" + World.currentMarker.poiData.longitude)
+        AR.logger.debug("计算线路 起点位置 currentLat:"+World.currentLat + ",currentLng:"+World.currentLng);
+        
+        for(var i = 0;i < 50;i++){
+            
+            var singlePoi = {
+                
+                "latitude": parseFloat((World.currentMarker.poiData.latitude-World.currentLat) *i/50+World.currentLat),
+                "longitude": parseFloat((World.currentMarker.poiData.longitude-World.currentLng) *i/50+World.currentLng),
+                "altitude": parseFloat(0)
+                
+            };
+            World.lineList.push(new line(singlePoi));
+            
+        }
+        
+        AR.logger.debug("添加路线结束 World.lineList.length:"+World.lineList.length);
+    },
 //
 //    onDetailImageSelected: function DetailImageSelectedFn(marker){
 //        
@@ -181,6 +230,14 @@ var World = {
             // you may handle clicks on empty AR space too
             if (World.currentMarker) {
                 World.currentMarker.setDeselected(World.currentMarker);
+                AR.logger.debug("开始删除路线 World.lineList.length:"+World.lineList.length);
+                for(var i = 0 ;i<World.lineList.length;i++){
+                    World.lineList[i].lineObject.destroy();
+                }
+                World.lineList = [];
+                AR.logger.debug("删除路线结束 World.lineList.length:"+World.lineList.length);
+                
+                $(".paizhao").css('display','none');
             }
         }
 	},
@@ -238,7 +295,7 @@ var World = {
 };
 
 /* forward locationChanges to custom function */
-//AR.context.onLocationChanged = World.locationChanged;
+AR.context.onLocationChanged = World.locationChanged;
 
 /* forward clicks in empty area to World */
 AR.context.onScreenClick = World.onScreenClick;
