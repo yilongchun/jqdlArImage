@@ -70,23 +70,28 @@ function Marker(poiData) {
     
 
     // create an AR.Label for the marker's title 
-    this.titleLabel = new AR.Label(poiData.title, 1, {
+    this.titleLabel = new AR.Label(poiData.title, 0.9, {
         zOrder: 1,
 //        offsetX:-2,
-//        offsetY: 0.55,
+        offsetY: 0.55,
         horizontalAnchor: AR.CONST.HORIZONTAL_ANCHOR.CENTER,
         style: {
             textColor: '#FFFFFF',
             fontStyle: AR.CONST.FONT_STYLE.BOLD
         }
     });
-
+    
+    
+    var currentUserLocation = new AR.GeoLocation(World.currentLat, World.currentLng);
+    var dist = markerLocation.distanceTo(currentUserLocation);
+    var distanceToUserValue = (dist > 999) ? ((dist / 1000).toFixed(2) + " km") : (Math.round(dist) + " m");
+    
     // create an AR.Label for the marker's description
-    this.descriptionLabel = new AR.Label(poiData.description.trunc(20), 0.8, {
+    this.descriptionLabel = new AR.Label(distanceToUserValue, 0.8, {
         zOrder: 1,
-        offsetX:-2,
+//        offsetX:-2,
         offsetY: -0.55,
-        horizontalAnchor: AR.CONST.HORIZONTAL_ANCHOR.LEFT,
+        horizontalAnchor: AR.CONST.HORIZONTAL_ANCHOR.CENTER,
         style: {
             textColor: '#FFFFFF'
         }
@@ -127,7 +132,7 @@ function Marker(poiData) {
     */
     this.markerObject = new AR.GeoObject(markerLocation, {
         drawables: {
-            cam: [this.markerDrawable_idle, this.markerDrawable_selected, this.titleLabel, this.htmlDrawable],
+            cam: [this.markerDrawable_idle, this.markerDrawable_selected, this.titleLabel, this.descriptionLabel, this.htmlDrawable],
             indicator: this.directionIndicatorDrawable,
 //            enabled:false,
             radar: this.radardrawables

@@ -98,10 +98,11 @@ var World = {
 
 	// location updates, fired every time you call architectView.setLocation() in native environment
 	locationChanged: function locationChangedFn(lat, lon, alt, acc) {
-        AR.logger.debug("lat:"+lat+",log:"+lon+",alt:"+alt+",acc:"+acc);
+        
+//        AR.logger.debug("lat:"+lat+",log:"+lon+",alt:"+alt+",acc:"+acc);
         World.currentLat = lat;
         World.currentLng = lon;
-        AR.logger.debug("currentLat:"+World.currentLat + ",currentLng:"+World.currentLng);
+//        AR.logger.debug("currentLat:"+World.currentLat + ",currentLng:"+World.currentLng);
 		// request data if not already present
 		if (!World.initiallyLoadedData) {
 			//World.requestDataFromServer(lat, lon);
@@ -175,6 +176,10 @@ var World = {
     calcuteLine: function calcuteLine(){
         AR.logger.debug("计算线路 目的地位置 latitude:" + World.currentMarker.poiData.latitude + " , longitude:" + World.currentMarker.poiData.longitude)
         AR.logger.debug("计算线路 起点位置 currentLat:"+World.currentLat + ",currentLng:"+World.currentLng);
+        
+        World.lineList = [];
+        
+        AR.logger.debug("添加路线开始 World.lineList.length:"+World.lineList.length);
         
         for(var i = 0;i < 50;i++){
             
