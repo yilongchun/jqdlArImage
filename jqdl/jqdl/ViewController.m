@@ -36,13 +36,16 @@
 static char *kWTAugmentedRealityViewController_AssociatedPoiManagerKey = "kWTARVCAMEWTP";
 static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "kWTARVCAMECLK";
 
-@interface ViewController () <WTArchitectViewDelegate, WTArchitectViewDebugDelegate, CLLocationManagerDelegate>{
+@interface ViewController () <WTArchitectViewDelegate, WTArchitectViewDebugDelegate, CLLocationManagerDelegate,UITableViewDataSource,UITableViewDelegate>{
     NSString *firsetParams;
     ChooseJqViewController *jqvc;
     CLLocation *myLocation;
     
     
+    UITableView *jingdianTableView;
+    NSMutableArray *jingdianArray;
     
+    UIView *navigationInfoView;
 }
 
 /* Add a strong property to the main Wikitude SDK component, the WTArchitectView */
@@ -154,10 +157,10 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
      */
     
     
+    self.navigationController.navigationBar.translucent = NO;
     
-    
-    
-    
+    UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"leftItemMenu"] style:UIBarButtonItemStyleDone target:self action:@selector(saoyisao)];
+    self.navigationItem.rightBarButtonItem = leftItem;
     
     //修改导航栏标题字体颜色
     self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName: [UIColor whiteColor] , NSFontAttributeName : [UIFont boldSystemFontOfSize:19]};
@@ -219,7 +222,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
         
         NSDictionary *views = NSDictionaryOfVariableBindings(_architectView);
         [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat:@"|[_architectView]|" options:0 metrics:nil views:views] ];
-        [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-64-[_architectView]-49-|" options:0 metrics:nil views:views] ];
+        [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_architectView]-49-|" options:0 metrics:nil views:views] ];
     }
     else {
         NSLog(@"This device is not supported. Show either an alert or use this class method even before presenting the view controller that manages the WTArchitectView. Error: %@", [deviceSupportError localizedDescription]);
@@ -289,6 +292,13 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
             
             NSError *error;
             NSArray *arr = (NSArray*)res.result;
+            
+            
+            if (jingdianArray == nil) {
+                jingdianArray = [NSMutableArray array];
+            }
+            jingdianArray = [NSMutableArray arrayWithArray:arr];
+            
             NSMutableArray *annotations = [NSMutableArray array];
             for (int i = 0;i<arr.count;i++) {
                 NSDictionary *dic = arr[i];
@@ -418,6 +428,195 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     {
         NSDictionary* info = @{};
         [self.architectView captureScreenWithMode: WTScreenshotCaptureMode_CamAndWebView usingSaveMode:WTScreenshotSaveMode_PhotoLibrary saveOptions:WTScreenshotSaveOption_CallDelegateOnSuccess context:info];
+    }
+}
+
+-(void)showList{
+    
+    if (jingdianTableView == nil) {
+        jingdianTableView = [[UITableView alloc] initWithFrame:CGRectMake(Main_Screen_Width, 0, Main_Screen_Width-80, Main_Screen_Height - 49 - 64) style:UITableViewStylePlain];
+        jingdianTableView.alpha = 0.95;
+        jingdianTableView.backgroundColor = [UIColor whiteColor];
+        jingdianTableView.delegate = self;
+        jingdianTableView.dataSource = self;
+        
+        UIView *v = [[UIView alloc] initWithFrame:CGRectZero];
+        [jingdianTableView setTableFooterView:v];
+    }
+    [self.view addSubview:jingdianTableView];
+    [UIView transitionWithView:jingdianTableView duration:0.3 options:0 animations:^{
+        jingdianTableView.frame = CGRectMake(80, 0, Main_Screen_Width-80, Main_Screen_Height- 49 -64);
+    } completion:^(BOOL finished) {
+        
+    }];
+    
+    
+//    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(Main_Screen_Width, 64, Main_Screen_Width-80, Main_Screen_Height - 64 - 49)];
+//    view.backgroundColor = [UIColor whiteColor];
+//    view.alpha = 0.9;
+//    
+//    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideView:)];
+//    [view addGestureRecognizer:tap];
+//    
+//    [self.view addSubview:view];
+//    
+//    
+//    [UIView transitionWithView:view duration:0.3 options:0 animations:^{
+//        view.frame = CGRectMake(80, 64, Main_Screen_Width-80, Main_Screen_Height - 64 - 49);
+//    } completion:^(BOOL finished) {
+//        
+//    }];
+    
+}
+//-(void)hideView:(UIGestureRecognizer *)recogn{
+//    [UIView transitionWithView:recogn.view duration:0.3 options:0 animations:^{
+//        recogn.view.frame = CGRectMake(Main_Screen_Width, 64, Main_Screen_Width-80, Main_Screen_Height - 64 - 49);
+//    } completion:^(BOOL finished) {
+//        [recogn.view removeFromSuperview];
+//    }];
+//}
+
+
+//显示导航数据
+-(void)showNavigationInfoView{
+//    UIView *backgroundView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, Main_Screen_Width, Main_Screen_Height - 49)];
+//    [self.view addSubview:backgroundView];
+    
+    self.architectView.userInteractionEnabled = NO;
+    
+    if (navigationInfoView == nil) {
+        navigationInfoView = [[UIView alloc] initWithFrame:CGRectMake(0, -120, Main_Screen_Width, 120)];
+        
+        UIButton *closeBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
+        [closeBtn setImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
+        [closeBtn addTarget:self action:@selector(hideNavigationInfoView) forControlEvents:UIControlEventTouchUpInside];
+        [navigationInfoView addSubview:closeBtn];
+        
+        
+        UILabel *line = [[UILabel alloc] initWithFrame:CGRectMake(0, 40, Main_Screen_Width, 0.5)];
+        line.backgroundColor = RGB(229, 229, 229);
+        [navigationInfoView addSubview:line];
+        
+        UILabel *label1 = [[UILabel alloc] initWithFrame:CGRectMake(40, 0, Main_Screen_Width - 80, 40)];
+        label1.textAlignment = NSTextAlignmentCenter;
+        label1.text = @"2 分钟   0.1 公里   09:24 到达";
+        label1.font = [UIFont systemFontOfSize:15];
+        [navigationInfoView addSubview:label1];
+        
+        UILabel *label2 = [[UILabel alloc] initWithFrame:CGRectMake(0, 40, Main_Screen_Width, 40)];
+        label2.textAlignment = NSTextAlignmentCenter;
+        label2.font = [UIFont systemFontOfSize:25];
+        label2.text = @"136米";
+        [navigationInfoView addSubview:label2];
+        
+        UILabel *label3 = [[UILabel alloc] initWithFrame:CGRectMake(0, 80, Main_Screen_Width, 40)];
+        label3.textAlignment = NSTextAlignmentCenter;
+        label3.font = [UIFont systemFontOfSize:17];
+        label3.text = @"到达目的地";
+        [navigationInfoView addSubview:label3];
+        
+        navigationInfoView.backgroundColor = [UIColor whiteColor];
+    }
+    
+    
+//    navigationView.alpha = 0.95;
+    [self.view addSubview:navigationInfoView];
+    [UIView transitionWithView:navigationInfoView duration:0.3 options:0 animations:^{
+        navigationInfoView.frame = CGRectMake(0, 0, Main_Screen_Width, 120);
+    } completion:nil];
+}
+
+-(void)hideNavigationInfoView{
+    if (navigationInfoView) {
+        [UIView transitionWithView:navigationInfoView duration:0.3 options:0 animations:^{
+            navigationInfoView.frame = CGRectMake(0, -120, Main_Screen_Width, 120);
+        } completion:^(BOOL finished) {
+            self.architectView.userInteractionEnabled = YES;
+            [navigationInfoView removeFromSuperview];
+        }];
+
+    }
+}
+
+//扫一扫
+-(void)saoyisao{
+    //设置扫码区域参数
+    LBXScanViewStyle *style = [[LBXScanViewStyle alloc]init];
+    style.centerUpOffset = 44;
+    style.photoframeAngleStyle = LBXScanViewPhotoframeAngleStyle_Outer;
+    style.photoframeLineW = 6;
+    style.photoframeAngleW = 24;
+    style.photoframeAngleH = 24;
+    
+    style.anmiationStyle = LBXScanViewAnimationStyle_LineMove;
+    style.colorAngle = [UIColor colorWithRed:38./255 green:203./255. blue:216./255. alpha:1.0];
+    //qq里面的线条图片
+    UIImage *imgLine = [UIImage imageNamed:@"CodeScan.bundle/qrcode_scan_light_green"];
+    style.animationImage = imgLine;
+    
+    LBXScanViewController *vc = [LBXScanViewController new];
+    vc.style = style;
+    vc.isQQSimulator = YES;
+    vc.title = @"扫描二维码";
+    vc.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+#pragma mark - UITableView Delegate
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+    return 1;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    if (jingdianArray) {
+        return jingdianArray.count;
+    }
+    return 0;
+}
+
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return 50;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    static NSString *CellIdentifier = @"cell";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if(!cell)
+    {
+        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+    }
+    
+    NSDictionary *dic = jingdianArray[indexPath.row];
+    NSError *error = nil;
+    CategoryList *jingdianList = [[CategoryList alloc] initWithDictionary:dic error:&error];
+    cell.textLabel.text = jingdianList.name;
+    
+    
+    return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    [UIView transitionWithView:tableView duration:0.3 options:0 animations:^{
+        tableView.frame = CGRectMake(Main_Screen_Width, 0, Main_Screen_Width-80, Main_Screen_Height - 64 - 49);
+    } completion:^(BOOL finished) {
+        [tableView removeFromSuperview];
+    }];
+}
+
+-(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath{
+    if ([tableView respondsToSelector:@selector(setSeparatorInset:)]) {
+        [tableView setSeparatorInset:UIEdgeInsetsZero];
+    }
+    if ([tableView respondsToSelector:@selector(setLayoutMargins:)]) {
+        [tableView setLayoutMargins:UIEdgeInsetsZero];
+    }
+    if ([cell respondsToSelector:@selector(setSeparatorInset:)]) {
+        [cell setSeparatorInset:UIEdgeInsetsZero];
+    }
+    if ([cell respondsToSelector:@selector(setLayoutMargins:)]) {
+        [cell setLayoutMargins:UIEdgeInsetsZero];
     }
 }
 
@@ -580,6 +779,12 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
             if ( [action isEqualToString:@"captureScreen"] )
             {
                 [self captureScreen];
+            }
+            if ([action isEqualToString:@"showList"]) {
+                [self showList];
+            }
+            if ([action isEqualToString:@"showNavigationInfo"]) {
+                [self showNavigationInfoView];
             }
         }
         else if ( [[URL absoluteString] hasPrefix:@"architectsdk://markerselected"])

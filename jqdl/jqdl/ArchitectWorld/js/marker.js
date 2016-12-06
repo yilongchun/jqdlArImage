@@ -87,7 +87,7 @@ function Marker(poiData) {
     var distanceToUserValue = (dist > 999) ? ((dist / 1000).toFixed(2) + " km") : (Math.round(dist) + " m");
     
     // create an AR.Label for the marker's description
-    this.descriptionLabel = new AR.Label(distanceToUserValue, 0.8, {
+    this.descriptionLabel = new AR.Label("", 0.8, {
         zOrder: 1,
 //        offsetX:-2,
         offsetY: -0.55,

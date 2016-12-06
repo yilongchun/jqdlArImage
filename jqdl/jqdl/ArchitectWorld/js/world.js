@@ -77,7 +77,11 @@ var World = {
 	// sets/updates distances of all makers so they are available way faster than calling (time-consuming) distanceToUser() method all the time
 	updateDistanceToUserValues: function updateDistanceToUserValuesFn() {
 		for (var i = 0; i < World.markerList.length; i++) {
-			World.markerList[i].distanceToUser = World.markerList[i].markerObject.locations[0].distanceToUser();
+            var distanceToUser = World.markerList[i].markerObject.locations[0].distanceToUser();
+			World.markerList[i].distanceToUser = distanceToUser;
+            var distanceToUserValue = (distanceToUser > 999) ? ((distanceToUser / 1000).toFixed(2) + " km") : (Math.round(distanceToUser) + " m");
+            World.markerList[i].descriptionLabel.text = distanceToUserValue;
+//            AR.logger.debug("updateDistanceToUserValues " + World.markerList[i].descriptionLabel.text);
 		}
 	},
 
@@ -153,8 +157,8 @@ var World = {
         
         AR.logger.debug("目的地位置 latitude:" + marker.poiData.latitude + " , longitude:" + marker.poiData.longitude)
         AR.logger.debug("起点位置 currentLat:"+World.currentLat + ",currentLng:"+World.currentLng);
-        
-        $(".paizhao").css('display','block');
+        //点击景点 显示路线按钮
+//        $(".paizhao").css('display','block');
         
 //        for(var i = 0;i < 50;i++){
 //            
@@ -174,6 +178,8 @@ var World = {
 	},
     
     calcuteLine: function calcuteLine(){
+        document.location = "architectsdk://button?action=showNavigationInfo";
+        
         AR.logger.debug("计算线路 目的地位置 latitude:" + World.currentMarker.poiData.latitude + " , longitude:" + World.currentMarker.poiData.longitude)
         AR.logger.debug("计算线路 起点位置 currentLat:"+World.currentLat + ",currentLng:"+World.currentLng);
         
@@ -195,6 +201,9 @@ var World = {
         }
         
         AR.logger.debug("添加路线结束 World.lineList.length:"+World.lineList.length);
+        
+        
+        
     },
 //
 //    onDetailImageSelected: function DetailImageSelectedFn(marker){
