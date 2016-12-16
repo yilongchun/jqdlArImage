@@ -11,6 +11,8 @@
 #import "ScanResultViewController.h"
 #import "ScanResultWebViewController.h"
 
+#import "JZNavigationExtension.h"
+
 @interface LBXScanViewController ()
 
 @end
@@ -22,12 +24,25 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
+    
+    
+    
     if ([self respondsToSelector:@selector(setEdgesForExtendedLayout:)]) {
         
         self.edgesForExtendedLayout = UIRectEdgeNone;
     }
     
     self.view.backgroundColor = [UIColor blackColor];
+    
+    
+    
+    
+    
+    
+//    self.jz_navigationBarBackgroundHidden = NO;
+//    self.jz_navigationBarTintColor = [UIColor whiteColor];
+    self.jz_navigationBarBackgroundAlpha = 1.f;
+    self.jz_wantsNavigationBarVisible = YES;
 }
 
 
@@ -51,6 +66,13 @@
    
     
     [self performSelector:@selector(startScan) withObject:nil afterDelay:0.2];
+}
+
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
+    
+    self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName: [UIColor blackColor]};
 }
 
 //绘制扫描区域

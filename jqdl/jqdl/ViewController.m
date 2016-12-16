@@ -28,6 +28,8 @@
 #import "CategoryList.h"
 #import "Feature2ViewController.h"
 
+#import "JZNavigationExtension.h"
+
 
 
 /* this is used to create random positions around you */
@@ -143,6 +145,8 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
@@ -156,15 +160,29 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
      NOTE: On iOS, an unsupported device might be an iPhone 3GS for image recognition or an iPod Touch 4th generation for Geo augmented reality.
      */
     
+    self.jz_navigationBarBackgroundHidden = YES;
+    self.jz_navigationBarTintColor = [UIColor whiteColor];
+    self.jz_navigationBarBackgroundAlpha = 0.f;
     
-    self.navigationController.navigationBar.translucent = NO;
+    
+    UILabel *titleLabel = [[UILabel
+                            alloc] initWithFrame:CGRectMake(0,
+                                                            0, 200, 44)];
+    titleLabel.font = SYSTEMFONT(17);
+    titleLabel.textColor = [UIColor whiteColor];
+    titleLabel.textAlignment = NSTextAlignmentCenter;
+    titleLabel.text = @"东湖海洋世界风景区";
+    self.navigationItem.titleView = titleLabel;
+    
+//    self.title = @"东湖海洋世界风景区";
+    
+//    self.navigationController.navigationBar.translucent = NO;
     
     UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"leftItemMenu"] style:UIBarButtonItemStyleDone target:self action:@selector(saoyisao)];
     self.navigationItem.rightBarButtonItem = leftItem;
     
-    //修改导航栏标题字体颜色
-    self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName: [UIColor whiteColor] , NSFontAttributeName : [UIFont boldSystemFontOfSize:19]};
-    self.navigationController.navigationBar.barStyle = UIStatusBarStyleDefault;
+
+//    self.navigationController.navigationBar.barStyle = UIStatusBarStyleLightContent;
     [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
     
     NSError *deviceSupportError = nil;
@@ -222,7 +240,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
         
         NSDictionary *views = NSDictionaryOfVariableBindings(_architectView);
         [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat:@"|[_architectView]|" options:0 metrics:nil views:views] ];
-        [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_architectView]-49-|" options:0 metrics:nil views:views] ];
+        [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_architectView]|" options:0 metrics:nil views:views] ];
     }
     else {
         NSLog(@"This device is not supported. Show either an alert or use this class method even before presenting the view controller that manages the WTArchitectView. Error: %@", [deviceSupportError localizedDescription]);
@@ -562,6 +580,8 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     [self.navigationController pushViewController:vc animated:YES];
 }
 
+
+
 #pragma mark - UITableView Delegate
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
     return 1;
@@ -691,10 +711,16 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     
+    
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    //修改导航栏标题字体颜色
+    self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName: [UIColor whiteColor]};
     
     /* WTArchitectView rendering is started once the view controllers view will appear */
     [self startWikitudeSDKRendering];

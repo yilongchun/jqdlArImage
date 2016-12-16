@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import "ViewController.h"
 
 
 @interface AppDelegate ()
@@ -21,19 +22,24 @@
     NSURLCache *cathe = [[NSURLCache alloc] initWithMemoryCapacity:4*1024*1024 diskCapacity:20*1024*1024 diskPath:nil];
     [NSURLCache setSharedURLCache:cathe];
     
-    //修改导航栏颜色
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0) {
-//        [[UINavigationBar appearance] setBarTintColor:NAVIGATION_BAR_COLOR];
-        [[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"nav_bg"] forBarMetrics:UIBarMetricsDefault];
-        [UINavigationBar appearance].translucent = YES;
-    }
+//    //修改导航栏颜色
+//    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0) {
+////        [[UINavigationBar appearance] setBarTintColor:NAVIGATION_BAR_COLOR];
+//        [[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"nav_bg"] forBarMetrics:UIBarMetricsDefault];
+//        [UINavigationBar appearance].translucent = YES;
+//    }
     
     //统一修改返回按钮
     UIImage *backImage = [UIImage imageNamed:@"navi_back"];
     [[UIBarButtonItem appearance] setBackButtonBackgroundImage:[backImage resizableImageWithCapInsets:UIEdgeInsetsMake(0, backImage.size.width, 0, 0)]                                                       forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
     [[UIBarButtonItem appearance] setBackButtonTitlePositionAdjustment:UIOffsetMake(-233, -230) forBarMetrics:UIBarMetricsDefault];
     
-    
+    ViewController *vc = [ViewController new];
+    UINavigationController *nc = [[UINavigationController alloc] initWithRootViewController:vc];
+//    nc.navigationBar.titleTextAttributes = @{NSFontAttributeName: [UIFont fontWithName:kFont size:20],NSForegroundColorAttributeName:[UIColor whiteColor]};
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    self.window.rootViewController = nc;
+    [self.window makeKeyAndVisible];
     
     return YES;
 }

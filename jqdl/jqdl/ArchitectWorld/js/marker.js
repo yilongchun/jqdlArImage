@@ -260,8 +260,8 @@ Marker.prototype.setSelected = function(marker) {
     marker.htmlDrawable.opacity = 1.0;
     marker.htmlDrawable.enabled = true;
 //    marker.detailImage.opacity = 1.0;
-//    marker.titleLabel.style.textColor = "#43D8E6";
-//    marker.descriptionLabel.style.textColor = "#666666";
+    marker.titleLabel.style.textColor = "#666666";
+    marker.descriptionLabel.style.textColor = "#666666";
     
     // starts the selected-state animation
     marker.animationGroup_selected.start();
@@ -315,8 +315,8 @@ Marker.prototype.setDeselected = function(marker) {
     marker.htmlDrawable.opacity = 0.0;
     marker.htmlDrawable.enabled = false;
 //    marker.detailImage.opacity = 0.0;
-//    marker.titleLabel.style.textColor = "#ffffff";
-//    marker.descriptionLabel.style.textColor = "#ffffff";
+    marker.titleLabel.style.textColor = "#ffffff";
+    marker.descriptionLabel.style.textColor = "#ffffff";
     
     
     // starts the idle-state animation

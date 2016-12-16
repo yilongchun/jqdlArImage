@@ -53,8 +53,8 @@ var World = {
 		World.markerList = [];
 
 		// start loading marker assets
-		World.markerDrawable_idle = new AR.ImageResource("assets/marker_idle.png");
-		World.markerDrawable_selected = new AR.ImageResource("assets/marker_selected.png");
+		World.markerDrawable_idle = new AR.ImageResource("assets/marker_idle3.png");
+		World.markerDrawable_selected = new AR.ImageResource("assets/marker_selected3.png");
 		World.markerDrawable_directionIndicator = new AR.ImageResource("assets/indi.png");
 
 		// loop through POI-information and create an AR.GeoObject (=Marker) per POI
@@ -244,14 +244,14 @@ var World = {
             // you may handle clicks on empty AR space too
             if (World.currentMarker) {
                 World.currentMarker.setDeselected(World.currentMarker);
-                AR.logger.debug("开始删除路线 World.lineList.length:"+World.lineList.length);
-                for(var i = 0 ;i<World.lineList.length;i++){
-                    World.lineList[i].lineObject.destroy();
-                }
-                World.lineList = [];
-                AR.logger.debug("删除路线结束 World.lineList.length:"+World.lineList.length);
-                
-                $(".paizhao").css('display','none');
+//                AR.logger.debug("开始删除路线 World.lineList.length:"+World.lineList.length);
+//                for(var i = 0 ;i<World.lineList.length;i++){
+//                    World.lineList[i].lineObject.destroy();
+//                }
+//                World.lineList = [];
+//                AR.logger.debug("删除路线结束 World.lineList.length:"+World.lineList.length);
+//                
+//                $(".paizhao").css('display','none');
             }
         }
 	},
