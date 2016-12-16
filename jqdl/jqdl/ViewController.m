@@ -29,6 +29,7 @@
 #import "Feature2ViewController.h"
 
 #import "JZNavigationExtension.h"
+#import "BaiduMapViewController.h"
 
 
 
@@ -165,10 +166,8 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     self.jz_navigationBarBackgroundAlpha = 0.f;
     
     
-    UILabel *titleLabel = [[UILabel
-                            alloc] initWithFrame:CGRectMake(0,
-                                                            0, 200, 44)];
-    titleLabel.font = SYSTEMFONT(17);
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
+    titleLabel.font = BOLDSYSTEMFONT(17);
     titleLabel.textColor = [UIColor whiteColor];
     titleLabel.textAlignment = NSTextAlignmentCenter;
     titleLabel.text = @"东湖海洋世界风景区";
@@ -178,8 +177,12 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     
 //    self.navigationController.navigationBar.translucent = NO;
     
-    UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"leftItemMenu"] style:UIBarButtonItemStyleDone target:self action:@selector(saoyisao)];
-    self.navigationItem.rightBarButtonItem = leftItem;
+    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"leftItemMenu"] style:UIBarButtonItemStyleDone target:self action:@selector(saoyisao)];
+    self.navigationItem.rightBarButtonItem = rightItem;
+    
+    
+    UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithTitle:@"地图" style:UIBarButtonSystemItemDone target:self action:@selector(toMap)];
+    self.navigationItem.leftBarButtonItem = leftItem;
     
 
 //    self.navigationController.navigationBar.barStyle = UIStatusBarStyleLightContent;
@@ -554,6 +557,11 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
         }];
 
     }
+}
+
+-(void)toMap{
+    BaiduMapViewController *vc = [BaiduMapViewController new];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 //扫一扫

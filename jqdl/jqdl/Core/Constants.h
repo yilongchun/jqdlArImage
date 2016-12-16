@@ -16,10 +16,8 @@ typedef NS_ENUM(NSInteger, ResultCodeType){
     ResultCodeFail = 502//操作失败
 };
 
-//高德地图API_KEY
-//const static NSString *GAODE_APIKey = @"3623137f302cb22fa65c6860f51246f7";
-//狮子关
-//const static NSString *GAODE_APIKey = @"c65b82dabcec916a69f8f17e966a4630";
+
+#define kBaiduAK @"y63FqvA3ResevIFcSQMbTmOIFdLIXP5D"
 
 #define kHost @"http://g.ticket168.com/"
 

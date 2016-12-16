@@ -19,8 +19,17 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     
-    NSURLCache *cathe = [[NSURLCache alloc] initWithMemoryCapacity:4*1024*1024 diskCapacity:20*1024*1024 diskPath:nil];
-    [NSURLCache setSharedURLCache:cathe];
+    _mapManager = [[BMKMapManager alloc]init];
+    // 如果要关注网络及授权验证事件，请设定     generalDelegate参数
+    BOOL ret = [_mapManager start:kBaiduAK  generalDelegate:nil];
+    if (!ret) {
+        NSLog(@"manager start failed!");
+    }else{
+        NSLog(@"manager start successed!");
+    }
+    
+//    NSURLCache *cathe = [[NSURLCache alloc] initWithMemoryCapacity:4*1024*1024 diskCapacity:20*1024*1024 diskPath:nil];
+//    [NSURLCache setSharedURLCache:cathe];
     
 //    //修改导航栏颜色
 //    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0) {

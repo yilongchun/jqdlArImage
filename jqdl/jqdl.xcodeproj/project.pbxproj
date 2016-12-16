@@ -347,6 +347,11 @@
 		444D77C51E037A180040F0A7 /* UIToolbar+JZExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 444D77BC1E037A180040F0A7 /* UIToolbar+JZExtension.m */; };
 		444D77C61E037A180040F0A7 /* UINavigationController+JZExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 444D77BE1E037A180040F0A7 /* UINavigationController+JZExtension.m */; };
 		444D77C71E037A180040F0A7 /* UIViewController+JZExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 444D77C01E037A180040F0A7 /* UIViewController+JZExtension.m */; };
+		444D77C91E0389830040F0A7 /* BaiduMapAPI_Base.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 444D77C81E0389830040F0A7 /* BaiduMapAPI_Base.framework */; };
+		444D77CD1E038B140040F0A7 /* mapapi.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 444D77CC1E038B140040F0A7 /* mapapi.bundle */; };
+		444D77D61E038D600040F0A7 /* BaiduMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 444D77D41E038D600040F0A7 /* BaiduMapViewController.m */; };
+		444D77D71E038D600040F0A7 /* BaiduMapViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 444D77D51E038D600040F0A7 /* BaiduMapViewController.xib */; };
+		444D77D91E038DD90040F0A7 /* BaiduMapAPI_Map.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 444D77D81E038DD90040F0A7 /* BaiduMapAPI_Map.framework */; };
 		44988C1A1C04575400D5C59C /* btnCheck.png in Resources */ = {isa = PBXBuildFile; fileRef = 44988C141C04575400D5C59C /* btnCheck.png */; };
 		44988C1B1C04575400D5C59C /* btnCheck@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44988C151C04575400D5C59C /* btnCheck@2x.png */; };
 		44988C1C1C04575400D5C59C /* HUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 44988C171C04575400D5C59C /* HUD.m */; };
@@ -1076,6 +1081,12 @@
 		444D77BE1E037A180040F0A7 /* UINavigationController+JZExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UINavigationController+JZExtension.m"; sourceTree = "<group>"; };
 		444D77BF1E037A180040F0A7 /* UIViewController+JZExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+JZExtension.h"; sourceTree = "<group>"; };
 		444D77C01E037A180040F0A7 /* UIViewController+JZExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+JZExtension.m"; sourceTree = "<group>"; };
+		444D77C81E0389830040F0A7 /* BaiduMapAPI_Base.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BaiduMapAPI_Base.framework; path = ThiredPartyLib/BaiduMap/BaiduMapAPI_Base.framework; sourceTree = "<group>"; };
+		444D77CC1E038B140040F0A7 /* mapapi.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = mapapi.bundle; path = "../../../../qlxing/ar/百度地图/BaiduMap_IOSSDK_v3.0_All/BaiduMap_IOSSDK_v3.0.0_Sample/BMKOCDemo/BaiduMapAPI/BaiduMapAPI_Map.framework/Resources/mapapi.bundle"; sourceTree = "<group>"; };
+		444D77D31E038D600040F0A7 /* BaiduMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaiduMapViewController.h; sourceTree = "<group>"; };
+		444D77D41E038D600040F0A7 /* BaiduMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaiduMapViewController.m; sourceTree = "<group>"; };
+		444D77D51E038D600040F0A7 /* BaiduMapViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BaiduMapViewController.xib; sourceTree = "<group>"; };
+		444D77D81E038DD90040F0A7 /* BaiduMapAPI_Map.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BaiduMapAPI_Map.framework; path = ThiredPartyLib/BaiduMap/BaiduMapAPI_Map.framework; sourceTree = "<group>"; };
 		4464FCE21BFEB56C0015320B /* jqdl.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = jqdl.pch; sourceTree = "<group>"; };
 		44988C141C04575400D5C59C /* btnCheck.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btnCheck.png; sourceTree = "<group>"; };
 		44988C151C04575400D5C59C /* btnCheck@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btnCheck@2x.png"; sourceTree = "<group>"; };
@@ -1118,9 +1129,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				444D77D91E038DD90040F0A7 /* BaiduMapAPI_Map.framework in Frameworks */,
+				442ED7BE1DB9A7050058DD4C /* libsqlite3.0.tbd in Frameworks */,
+				444D77C91E0389830040F0A7 /* BaiduMapAPI_Base.framework in Frameworks */,
 				44A4C21E1DEBC13D0031F7F2 /* GLKit.framework in Frameworks */,
 				442ED7DB1DB9A9340058DD4C /* MediaPlayer.framework in Frameworks */,
-				442ED7BE1DB9A7050058DD4C /* libsqlite3.0.tbd in Frameworks */,
 				442ED7BA1DB9A6EC0058DD4C /* libc++.tbd in Frameworks */,
 				44B516B51BFEB85B00E74E13 /* Security.framework in Frameworks */,
 				442ED7B81DB9A6C80058DD4C /* OpenGLES.framework in Frameworks */,
@@ -1196,6 +1209,9 @@
 				442ED7D31DB9A78F0058DD4C /* DetailViewController.h */,
 				442ED7D41DB9A78F0058DD4C /* DetailViewController.m */,
 				442ED7D51DB9A78F0058DD4C /* DetailViewController.xib */,
+				444D77D31E038D600040F0A7 /* BaiduMapViewController.h */,
+				444D77D41E038D600040F0A7 /* BaiduMapViewController.m */,
+				444D77D51E038D600040F0A7 /* BaiduMapViewController.xib */,
 				44003D2F1BFB270700CB747A /* MainTabBarController.h */,
 				44003D301BFB270700CB747A /* MainTabBarController.m */,
 				44003D051BFB24ED00CB747A /* Main.storyboard */,
@@ -2416,6 +2432,7 @@
 		44B516BA1BFEBCE200E74E13 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				444D77CC1E038B140040F0A7 /* mapapi.bundle */,
 			);
 			name = Resources;
 			path = Core;
@@ -2464,6 +2481,8 @@
 		44D44B7D1BFC29C5005D8E98 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				444D77D81E038DD90040F0A7 /* BaiduMapAPI_Map.framework */,
+				444D77C81E0389830040F0A7 /* BaiduMapAPI_Base.framework */,
 				44A4C21D1DEBC13D0031F7F2 /* GLKit.framework */,
 				442ED7DA1DB9A9340058DD4C /* MediaPlayer.framework */,
 				442ED7BD1DB9A7050058DD4C /* libsqlite3.0.tbd */,
@@ -2612,6 +2631,8 @@
 			files = (
 				44988C1B1C04575400D5C59C /* btnCheck@2x.png in Resources */,
 				442ED7D91DB9A7D10058DD4C /* ArchitectWorld in Resources */,
+				444D77CD1E038B140040F0A7 /* mapapi.bundle in Resources */,
+				444D77D71E038D600040F0A7 /* BaiduMapViewController.xib in Resources */,
 				44F029DD1C1E569D00EF9218 /* Feature2ViewController.xib in Resources */,
 				44003D091BFB24ED00CB747A /* Assets.xcassets in Resources */,
 				441179961C11763E0071E1C0 /* CodeScan.bundle in Resources */,
@@ -2837,6 +2858,7 @@
 				441179AB1C11763E0071E1C0 /* ZXAbstractDoCoMoResultParser.m in Sources */,
 				441179D31C11763E0071E1C0 /* ZXMonochromeRectangleDetector.m in Sources */,
 				44117A4A1C11763E0071E1C0 /* ZXPDF417BarcodeValue.m in Sources */,
+				444D77D61E038D600040F0A7 /* BaiduMapViewController.m in Sources */,
 				441179F91C11763E0071E1C0 /* ZXDataMatrixVersion.m in Sources */,
 				441179E31C11763E0071E1C0 /* ZXGridSampler.m in Sources */,
 				441179FF1C11763E0071E1C0 /* ZXDataMatrixEdifactEncoder.m in Sources */,
@@ -3109,12 +3131,18 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/jqdl/Extern",
 					"$(PROJECT_DIR)/jqdl",
+					"$(PROJECT_DIR)/jqdl/ThiredPartyLib/BaiduMap",
 				);
+				GCC_INPUT_FILETYPE = automatic;
 				GCC_PREFIX_HEADER = jqdl/jqdl.pch;
 				HEADER_SEARCH_PATHS = "$(SDKROOT)/usr/include/libxml2";
 				INFOPLIST_FILE = jqdl/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/jqdl/ThiredPartyLib/BaiduMap/BaiduMapAPI_Base.framework",
+				);
 				OTHER_CFLAGS = "";
 				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
 				OTHER_LDFLAGS = "-ObjC";
@@ -3135,12 +3163,18 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/jqdl/Extern",
 					"$(PROJECT_DIR)/jqdl",
+					"$(PROJECT_DIR)/jqdl/ThiredPartyLib/BaiduMap",
 				);
+				GCC_INPUT_FILETYPE = automatic;
 				GCC_PREFIX_HEADER = jqdl/jqdl.pch;
 				HEADER_SEARCH_PATHS = "$(SDKROOT)/usr/include/libxml2";
 				INFOPLIST_FILE = jqdl/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/jqdl/ThiredPartyLib/BaiduMap/BaiduMapAPI_Base.framework",
+				);
 				OTHER_CFLAGS = "";
 				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
 				OTHER_LDFLAGS = "-ObjC";
