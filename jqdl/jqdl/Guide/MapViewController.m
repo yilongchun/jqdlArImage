@@ -67,6 +67,8 @@ BOOL locationFlag;
 
 //扫一扫
 -(void)saoyisao{
+    
+    
     //设置扫码区域参数
     LBXScanViewStyle *style = [[LBXScanViewStyle alloc]init];
     style.centerUpOffset = 44;
@@ -87,6 +89,9 @@ BOOL locationFlag;
     vc.title = @"扫描二维码";
     vc.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:vc animated:YES];
+    
+    
+    
 }
 
 - (void)openScanVCWithStyle:(LBXScanViewStyle*)style

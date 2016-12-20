@@ -352,6 +352,7 @@
 		444D77D61E038D600040F0A7 /* BaiduMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 444D77D41E038D600040F0A7 /* BaiduMapViewController.m */; };
 		444D77D71E038D600040F0A7 /* BaiduMapViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 444D77D51E038D600040F0A7 /* BaiduMapViewController.xib */; };
 		444D77D91E038DD90040F0A7 /* BaiduMapAPI_Map.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 444D77D81E038DD90040F0A7 /* BaiduMapAPI_Map.framework */; };
+		448738D01E03C16000E5862C /* BaiduMapAPI_Location.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 448738CF1E03C16000E5862C /* BaiduMapAPI_Location.framework */; };
 		44988C1A1C04575400D5C59C /* btnCheck.png in Resources */ = {isa = PBXBuildFile; fileRef = 44988C141C04575400D5C59C /* btnCheck.png */; };
 		44988C1B1C04575400D5C59C /* btnCheck@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44988C151C04575400D5C59C /* btnCheck@2x.png */; };
 		44988C1C1C04575400D5C59C /* HUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 44988C171C04575400D5C59C /* HUD.m */; };
@@ -1088,6 +1089,7 @@
 		444D77D51E038D600040F0A7 /* BaiduMapViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BaiduMapViewController.xib; sourceTree = "<group>"; };
 		444D77D81E038DD90040F0A7 /* BaiduMapAPI_Map.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BaiduMapAPI_Map.framework; path = ThiredPartyLib/BaiduMap/BaiduMapAPI_Map.framework; sourceTree = "<group>"; };
 		4464FCE21BFEB56C0015320B /* jqdl.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = jqdl.pch; sourceTree = "<group>"; };
+		448738CF1E03C16000E5862C /* BaiduMapAPI_Location.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BaiduMapAPI_Location.framework; path = ThiredPartyLib/BaiduMap/BaiduMapAPI_Location.framework; sourceTree = "<group>"; };
 		44988C141C04575400D5C59C /* btnCheck.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btnCheck.png; sourceTree = "<group>"; };
 		44988C151C04575400D5C59C /* btnCheck@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btnCheck@2x.png"; sourceTree = "<group>"; };
 		44988C161C04575400D5C59C /* HUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HUD.h; sourceTree = "<group>"; };
@@ -1129,6 +1131,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				448738D01E03C16000E5862C /* BaiduMapAPI_Location.framework in Frameworks */,
 				444D77D91E038DD90040F0A7 /* BaiduMapAPI_Map.framework in Frameworks */,
 				442ED7BE1DB9A7050058DD4C /* libsqlite3.0.tbd in Frameworks */,
 				444D77C91E0389830040F0A7 /* BaiduMapAPI_Base.framework in Frameworks */,
@@ -2481,6 +2484,7 @@
 		44D44B7D1BFC29C5005D8E98 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				448738CF1E03C16000E5862C /* BaiduMapAPI_Location.framework */,
 				444D77D81E038DD90040F0A7 /* BaiduMapAPI_Map.framework */,
 				444D77C81E0389830040F0A7 /* BaiduMapAPI_Base.framework */,
 				44A4C21D1DEBC13D0031F7F2 /* GLKit.framework */,

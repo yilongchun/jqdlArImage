@@ -170,23 +170,30 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     titleLabel.font = BOLDSYSTEMFONT(17);
     titleLabel.textColor = [UIColor whiteColor];
     titleLabel.textAlignment = NSTextAlignmentCenter;
-    titleLabel.text = @"东湖海洋世界风景区";
+    titleLabel.text = @"沿江大道";
     self.navigationItem.titleView = titleLabel;
     
 //    self.title = @"东湖海洋世界风景区";
     
 //    self.navigationController.navigationBar.translucent = NO;
     
-    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"leftItemMenu"] style:UIBarButtonItemStyleDone target:self action:@selector(saoyisao)];
-    self.navigationItem.rightBarButtonItem = rightItem;
-    
-    
-    UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithTitle:@"地图" style:UIBarButtonSystemItemDone target:self action:@selector(toMap)];
+    UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithTitle:@"地图" style:UIBarButtonItemStyleDone target:self action:@selector(toMap)];
+    [leftItem setTintColor:[UIColor whiteColor]];
     self.navigationItem.leftBarButtonItem = leftItem;
     
-
+    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"msg"] style:UIBarButtonItemStyleDone target:self action:@selector(saoyisao)];
+    [rightItem setTintColor:[UIColor whiteColor]];
+    self.navigationItem.rightBarButtonItem = rightItem;
+    
+    UIBarButtonItem *backItem=[[UIBarButtonItem alloc] init];
+    UIImage *backImage = [UIImage imageNamed:@"navi_back2"];
+    [backItem setBackButtonBackgroundImage:[backImage resizableImageWithCapInsets:UIEdgeInsetsMake(0, backImage.size.width, 0, 0)] forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];//更改背景图片
+    self.navigationItem.backBarButtonItem = backItem;
+    
+    
+    
 //    self.navigationController.navigationBar.barStyle = UIStatusBarStyleLightContent;
-    [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
+//    [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
     
     NSError *deviceSupportError = nil;
     if ( [WTArchitectView isDeviceSupportedForRequiredFeatures:WTFeature_2DTracking error:&deviceSupportError] ) {
@@ -257,7 +264,9 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     
     
    
-    
+    UIButton *searchBtn = [[UIButton alloc] initWithFrame:CGRectMake(Main_Screen_Width-49, Main_Screen_Height-50-38-10, 49, 50)];
+    [searchBtn setImage:[UIImage imageNamed:@"searchBtn"] forState:UIControlStateNormal];
+    [self.view addSubview:searchBtn];
     
 }
 
@@ -560,12 +569,15 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
 }
 
 -(void)toMap{
+    
+    
     BaiduMapViewController *vc = [BaiduMapViewController new];
     [self.navigationController pushViewController:vc animated:YES];
 }
 
 //扫一扫
 -(void)saoyisao{
+    
     //设置扫码区域参数
     LBXScanViewStyle *style = [[LBXScanViewStyle alloc]init];
     style.centerUpOffset = 44;
