@@ -31,6 +31,9 @@
 #import "JZNavigationExtension.h"
 #import "BaiduMapViewController.h"
 
+#import "MoreFunctionViewController.h"
+#import "DetailViewController.h"
+
 
 
 /* this is used to create random positions around you */
@@ -177,11 +180,11 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     
 //    self.navigationController.navigationBar.translucent = NO;
     
-    UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithTitle:@"地图" style:UIBarButtonItemStyleDone target:self action:@selector(toMap)];
-    [leftItem setTintColor:[UIColor whiteColor]];
-    self.navigationItem.leftBarButtonItem = leftItem;
+//    UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithTitle:@"地图" style:UIBarButtonItemStyleDone target:self action:@selector(toMap)];
+//    [leftItem setTintColor:[UIColor whiteColor]];
+//    self.navigationItem.leftBarButtonItem = leftItem;
     
-    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"msg"] style:UIBarButtonItemStyleDone target:self action:@selector(saoyisao)];
+    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"msg"] style:UIBarButtonItemStyleDone target:self action:@selector(openMoreFunctionView)];
     [rightItem setTintColor:[UIColor whiteColor]];
     self.navigationItem.rightBarButtonItem = rightItem;
     
@@ -575,6 +578,13 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     [self.navigationController pushViewController:vc animated:YES];
 }
 
+-(void)openMoreFunctionView{
+    MoreFunctionViewController *vc = [MoreFunctionViewController new];
+    UINavigationController *nc = [[UINavigationController alloc] initWithRootViewController:vc];
+    nc.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+    [self presentViewController:nc animated:YES completion:nil];
+}
+
 //扫一扫
 -(void)saoyisao{
     
@@ -597,6 +607,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     vc.isQQSimulator = YES;
     vc.title = @"扫描二维码";
     vc.hidesBottomBarWhenPushed = YES;
+    
     [self.navigationController pushViewController:vc animated:YES];
 }
 
@@ -722,7 +733,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
 
 - (void)showPhotoLibraryAlert
 {
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success" message:@"Shapshot was stored in your photo library" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"成功" message:@"截图已保存到手机相册" delegate:nil cancelButtonTitle:@"好" otherButtonTitles:nil];
     [alert show];
 }
 
@@ -827,7 +838,8 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                 [self captureScreen];
             }
             if ([action isEqualToString:@"showList"]) {
-                [self showList];
+//                [self showList];
+                [self toMap];
             }
             if ([action isEqualToString:@"showNavigationInfo"]) {
                 [self showNavigationInfoView];
@@ -840,31 +852,36 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     }
 }
 
+//从AR点击景点详情 
 - (void)presentPoiDetails:(NSDictionary *)poiDetails
 {
-    NSString *poiIdentifier = [poiDetails objectForKey:@"id"];
-    NSString *poiName = [poiDetails objectForKey:@"title"];
-    NSString *poiDescription = [poiDetails objectForKey:@"description"];
-    NSString *poiImage = [poiDetails objectForKey:@"image"];
+//    NSString *poiIdentifier = [poiDetails objectForKey:@"id"];
+//    NSString *poiName = [poiDetails objectForKey:@"title"];
+//    NSString *poiDescription = [poiDetails objectForKey:@"description"];
+//    NSString *poiImage = [poiDetails objectForKey:@"image"];
+//    
+//    WTPoi *poi = [[WTPoi alloc] initWithIdentifier:poiIdentifier location:nil name:poiName detailedDescription:poiDescription image:poiImage];
+//    
+//    if (poi)
+//    {
+//        
+//        
+//        NSString *str = [poi.name stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+//        DLog(@"%@",str);
+//        NSLog(@"%@ %@ %@",str,poi.detailedDescription,poi.image);
+//        
+//        Feature2ViewController *vc = [[Feature2ViewController alloc] init];
+//        vc.title = str;
+//        vc.url = [NSString stringWithFormat:@"view-%@-",poiDescription];
+//        vc.hidesBottomBarWhenPushed = YES;
+//        [self.navigationController pushViewController:vc animated:YES];
+//        
+//        
+//    }
     
-    WTPoi *poi = [[WTPoi alloc] initWithIdentifier:poiIdentifier location:nil name:poiName detailedDescription:poiDescription image:poiImage];
+    DetailViewController *vc = [[DetailViewController alloc] init];
+    [self.navigationController pushViewController:vc animated:YES];
     
-    if (poi)
-    {
-        
-        
-        NSString *str = [poi.name stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-        DLog(@"%@",str);
-        NSLog(@"%@ %@ %@",str,poi.detailedDescription,poi.image);
-        
-        Feature2ViewController *vc = [[Feature2ViewController alloc] init];
-        vc.title = str;
-        vc.url = [NSString stringWithFormat:@"view-%@-",poiDescription];
-        vc.hidesBottomBarWhenPushed = YES;
-        [self.navigationController pushViewController:vc animated:YES];
-        
-        
-    }
 }
 
 /* The debug delegate can be used to respond to internal issues, e.g. the user declined camera or GPS access.

@@ -340,6 +340,8 @@
 		442ED7D71DB9A78F0058DD4C /* DetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 442ED7D51DB9A78F0058DD4C /* DetailViewController.xib */; };
 		442ED7D91DB9A7D10058DD4C /* ArchitectWorld in Resources */ = {isa = PBXBuildFile; fileRef = 442ED7D81DB9A7D10058DD4C /* ArchitectWorld */; };
 		442ED7DB1DB9A9340058DD4C /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 442ED7DA1DB9A9340058DD4C /* MediaPlayer.framework */; };
+		443DA7CB1E08C1130014C9B8 /* MoreFunctionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 443DA7C91E08C1130014C9B8 /* MoreFunctionViewController.m */; };
+		443DA7CC1E08C1130014C9B8 /* MoreFunctionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 443DA7CA1E08C1130014C9B8 /* MoreFunctionViewController.xib */; };
 		444D77C11E037A180040F0A7 /* _JZNavigationInteractiveTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 444D77B41E037A180040F0A7 /* _JZNavigationInteractiveTransition.m */; };
 		444D77C21E037A180040F0A7 /* _JZValue.m in Sources */ = {isa = PBXBuildFile; fileRef = 444D77B61E037A180040F0A7 /* _JZValue.m */; };
 		444D77C31E037A180040F0A7 /* NSNumber+JZExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 444D77B81E037A180040F0A7 /* NSNumber+JZExtension.m */; };
@@ -1066,6 +1068,9 @@
 		442ED7D51DB9A78F0058DD4C /* DetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DetailViewController.xib; sourceTree = "<group>"; };
 		442ED7D81DB9A7D10058DD4C /* ArchitectWorld */ = {isa = PBXFileReference; lastKnownFileType = folder; name = ArchitectWorld; path = jqdl/ArchitectWorld; sourceTree = "<group>"; };
 		442ED7DA1DB9A9340058DD4C /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
+		443DA7C81E08C1130014C9B8 /* MoreFunctionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MoreFunctionViewController.h; sourceTree = "<group>"; };
+		443DA7C91E08C1130014C9B8 /* MoreFunctionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MoreFunctionViewController.m; sourceTree = "<group>"; };
+		443DA7CA1E08C1130014C9B8 /* MoreFunctionViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MoreFunctionViewController.xib; sourceTree = "<group>"; };
 		444D77B01E037A180040F0A7 /* JZNavigationExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JZNavigationExtension.h; sourceTree = "<group>"; };
 		444D77B21E037A180040F0A7 /* _JZ-objc-internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "_JZ-objc-internal.h"; sourceTree = "<group>"; };
 		444D77B31E037A180040F0A7 /* _JZNavigationInteractiveTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _JZNavigationInteractiveTransition.h; sourceTree = "<group>"; };
@@ -1217,6 +1222,9 @@
 				444D77D51E038D600040F0A7 /* BaiduMapViewController.xib */,
 				44003D2F1BFB270700CB747A /* MainTabBarController.h */,
 				44003D301BFB270700CB747A /* MainTabBarController.m */,
+				443DA7C81E08C1130014C9B8 /* MoreFunctionViewController.h */,
+				443DA7C91E08C1130014C9B8 /* MoreFunctionViewController.m */,
+				443DA7CA1E08C1130014C9B8 /* MoreFunctionViewController.xib */,
 				44003D051BFB24ED00CB747A /* Main.storyboard */,
 				44003D081BFB24ED00CB747A /* Assets.xcassets */,
 				44003D0D1BFB24ED00CB747A /* Info.plist */,
@@ -2647,6 +2655,7 @@
 				44003D071BFB24ED00CB747A /* Main.storyboard in Resources */,
 				44117ABA1C11777A0071E1C0 /* AboutMeViewController.xib in Resources */,
 				44988C1A1C04575400D5C59C /* btnCheck.png in Resources */,
+				443DA7CC1E08C1130014C9B8 /* MoreFunctionViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2710,6 +2719,7 @@
 				44117A241C11763E0071E1C0 /* ZXRSSExpandedReader.m in Sources */,
 				44117A351C11763E0071E1C0 /* ZXEAN8Reader.m in Sources */,
 				44E972BE1C2152010014E301 /* ScanResultWebViewController.m in Sources */,
+				443DA7CB1E08C1130014C9B8 /* MoreFunctionViewController.m in Sources */,
 				441179EC1C11763E0071E1C0 /* ZXDimension.m in Sources */,
 				441179F81C11763E0071E1C0 /* ZXDataMatrixDecoder.m in Sources */,
 				441179BE1C11763E0071E1C0 /* ZXResultParser.m in Sources */,

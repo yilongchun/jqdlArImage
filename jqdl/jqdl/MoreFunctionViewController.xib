@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9060" systemVersion="15A284" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9051"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MoreFunctionViewController">
+            <connections>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7N4-WF-kV9">
+                    <rect key="frame" x="60" y="184" width="81" height="80"/>
+                    <animations/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="81" id="FcV-cZ-CHF"/>
+                        <constraint firstAttribute="height" constant="80" id="YtR-Nk-WZf"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                    <inset key="titleEdgeInsets" minX="-34" minY="0.0" maxX="11" maxY="-56"/>
+                    <inset key="imageEdgeInsets" minX="8" minY="-23" maxX="0.0" maxY="0.0"/>
+                    <state key="normal" title="扫一扫" image="group21">
+                        <color key="titleColor" red="0.52941176470588236" green="0.52941176470588236" blue="0.52941176470588236" alpha="1" colorSpace="calibratedRGB"/>
+                    </state>
+                    <connections>
+                        <action selector="span:" destination="-1" eventType="touchUpInside" id="o4E-Ic-ZuU"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eEH-1U-7e8">
+                    <rect key="frame" x="180" y="184" width="81" height="80"/>
+                    <animations/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="81" id="Yxf-xa-H2k"/>
+                        <constraint firstAttribute="height" constant="80" id="y7z-vB-jea"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                    <inset key="titleEdgeInsets" minX="-34" minY="0.0" maxX="11" maxY="-56"/>
+                    <inset key="imageEdgeInsets" minX="8" minY="-23" maxX="0.0" maxY="0.0"/>
+                    <state key="normal" title="收藏点" image="group33">
+                        <color key="titleColor" red="0.52941176469999995" green="0.52941176469999995" blue="0.52941176469999995" alpha="1" colorSpace="calibratedRGB"/>
+                    </state>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qYb-hj-Q8P">
+                    <rect key="frame" x="53" y="304" width="94" height="80"/>
+                    <animations/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="80" id="UO4-iA-z8D"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                    <inset key="titleEdgeInsets" minX="-34" minY="0.0" maxX="11" maxY="-56"/>
+                    <inset key="imageEdgeInsets" minX="16" minY="-23" maxX="6" maxY="0.0"/>
+                    <state key="normal" title="实时分享" image="rectangle">
+                        <color key="titleColor" red="0.52941176469999995" green="0.52941176469999995" blue="0.52941176469999995" alpha="1" colorSpace="calibratedRGB"/>
+                    </state>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Rpf-DV-Wb4">
+                    <rect key="frame" x="173" y="304" width="94" height="80"/>
+                    <animations/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="80" id="Kie-ig-DaJ"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                    <inset key="titleEdgeInsets" minX="-34" minY="0.0" maxX="11" maxY="-56"/>
+                    <inset key="imageEdgeInsets" minX="16" minY="-23" maxX="6" maxY="0.0"/>
+                    <state key="normal" title="我的卷包" image="group28">
+                        <color key="titleColor" red="0.52941176469999995" green="0.52941176469999995" blue="0.52941176469999995" alpha="1" colorSpace="calibratedRGB"/>
+                    </state>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Qap-eH-vxQ">
+                    <rect key="frame" x="132" y="472" width="56" height="56"/>
+                    <animations/>
+                    <state key="normal" image="oval8"/>
+                    <connections>
+                        <action selector="close:" destination="-1" eventType="touchUpInside" id="0cW-gM-x6c"/>
+                    </connections>
+                </button>
+            </subviews>
+            <animations/>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="7N4-WF-kV9" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" constant="-60" id="AHV-yO-OIO"/>
+                <constraint firstItem="Rpf-DV-Wb4" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" constant="60" id="Fl8-5U-s6E"/>
+                <constraint firstItem="qYb-hj-Q8P" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" constant="-60" id="GFB-Iq-Bhd"/>
+                <constraint firstItem="7N4-WF-kV9" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" constant="-60" id="GMb-Nh-eRd"/>
+                <constraint firstItem="eEH-1U-7e8" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" constant="60" id="GcY-wd-ek0"/>
+                <constraint firstItem="Qap-eH-vxQ" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="HgY-A8-7lL"/>
+                <constraint firstItem="qYb-hj-Q8P" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" constant="60" id="Moz-h6-c3B"/>
+                <constraint firstItem="eEH-1U-7e8" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" constant="-60" id="Oia-aC-AKi"/>
+                <constraint firstAttribute="bottom" secondItem="Qap-eH-vxQ" secondAttribute="bottom" constant="40" id="hEP-45-jbH"/>
+                <constraint firstItem="Rpf-DV-Wb4" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" constant="60" id="k0u-OE-wew"/>
+            </constraints>
+            <point key="canvasLocation" x="479" y="289"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="group21" width="42" height="38"/>
+        <image name="group28" width="42" height="40"/>
+        <image name="group33" width="42" height="38"/>
+        <image name="oval8" width="56" height="56"/>
+        <image name="rectangle" width="42" height="38"/>
+    </resources>
+</document>

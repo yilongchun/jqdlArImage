@@ -55,22 +55,22 @@
     _locService.delegate = self;
     
     CLLocationCoordinate2D coors;
-    coors.latitude = 39.915;
-    coors.longitude = 116.404;
+    coors.latitude = 30.738861;
+    coors.longitude = 111.327933;
     BMKGroundOverlay* ground = [BMKGroundOverlay groundOverlayWithPosition:coors
-                                                                 zoomLevel:11 anchor:CGPointMake(0.0f,0.0f)
+                                                                 zoomLevel:18 anchor:CGPointMake(0.0f,0.0f)
                                                                       icon:[UIImage imageNamed:@"smap"]];
     [_mapView addOverlay:ground];
     
     
-    // 添加一个PointAnnotation
-    BMKPointAnnotation* annotation = [[BMKPointAnnotation alloc]init];
-    CLLocationCoordinate2D coor;
-    coor.latitude = 39.915;
-    coor.longitude = 116.404;
-    annotation.coordinate = coor;
-    annotation.title = @"这里是北京";
-    [_mapView addAnnotation:annotation];
+//    // 添加一个PointAnnotation
+//    BMKPointAnnotation* annotation = [[BMKPointAnnotation alloc]init];
+//    CLLocationCoordinate2D coor;
+//    coor.latitude = 39.915;
+//    coor.longitude = 116.404;
+//    annotation.coordinate = coor;
+//    annotation.title = @"这里是北京";
+//    [_mapView addAnnotation:annotation];
     
     
     
@@ -92,7 +92,7 @@
 -(void)viewDidAppear:(BOOL)animated{
     
     [super viewDidAppear:animated];
-    
+    [self location];//定位
     
 }
 
