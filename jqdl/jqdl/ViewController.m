@@ -178,7 +178,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     
 //    self.title = @"东湖海洋世界风景区";
     
-//    self.navigationController.navigationBar.translucent = NO;
+    self.navigationController.navigationBar.translucent = YES;
     
 //    UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithTitle:@"地图" style:UIBarButtonItemStyleDone target:self action:@selector(toMap)];
 //    [leftItem setTintColor:[UIColor whiteColor]];
@@ -266,10 +266,10 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showJdDetail:) name:@"showJdDetail" object:nil];
     
     
-   
-    UIButton *searchBtn = [[UIButton alloc] initWithFrame:CGRectMake(Main_Screen_Width-49, Main_Screen_Height-50-38-10, 49, 50)];
-    [searchBtn setImage:[UIImage imageNamed:@"searchBtn"] forState:UIControlStateNormal];
-    [self.view addSubview:searchBtn];
+   //右下角搜索按钮
+//    UIButton *searchBtn = [[UIButton alloc] initWithFrame:CGRectMake(Main_Screen_Width-49, Main_Screen_Height-50-38-10, 49, 50)];
+//    [searchBtn setImage:[UIImage imageNamed:@"searchBtn"] forState:UIControlStateNormal];
+//    [self.view addSubview:searchBtn];
     
 }
 
@@ -572,7 +572,10 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
 }
 
 -(void)toMap{
-    
+    UIBarButtonItem *backItem=[[UIBarButtonItem alloc] init];
+    UIImage *backImage = [UIImage imageNamed:@"navi_back2"];
+    [backItem setBackButtonBackgroundImage:[backImage resizableImageWithCapInsets:UIEdgeInsetsMake(0, backImage.size.width, 0, 0)] forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];//更改背景图片
+    self.navigationItem.backBarButtonItem = backItem;
     
     BaiduMapViewController *vc = [BaiduMapViewController new];
     [self.navigationController pushViewController:vc animated:YES];
@@ -879,6 +882,10 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
 //        
 //    }
     
+    UIBarButtonItem *backItem=[[UIBarButtonItem alloc] init];
+    UIImage *backImage = [UIImage imageNamed:@"navi_back"];
+    [backItem setBackButtonBackgroundImage:[backImage resizableImageWithCapInsets:UIEdgeInsetsMake(0, backImage.size.width, 0, 0)] forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];//更改背景图片
+    self.navigationItem.backBarButtonItem = backItem;
     DetailViewController *vc = [[DetailViewController alloc] init];
     [self.navigationController pushViewController:vc animated:YES];
     

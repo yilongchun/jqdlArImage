@@ -10,4 +10,6 @@
 
 @interface DetailViewController : UIViewController
 
+@property (weak, nonatomic) IBOutlet UIScrollView *myScrollView;
+
 @end
