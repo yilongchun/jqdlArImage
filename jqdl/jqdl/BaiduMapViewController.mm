@@ -17,6 +17,7 @@
 #import "WTPoi.h"
 #import "MyPointAnnotation.h"
 #import "DetailViewController.h"
+#import "FeatureTableViewController.h"
 
 #define MYBUNDLE_NAME @ "mapapi.bundle"
 #define MYBUNDLE_PATH [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: MYBUNDLE_NAME]
@@ -69,6 +70,9 @@
     
     self.jz_navigationBarBackgroundAlpha = 1.f;
     self.jz_wantsNavigationBarVisible = YES;
+    
+    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithTitle:@"列表" style:UIBarButtonItemStyleDone target:self action:@selector(tableStyle)];
+    self.navigationItem.rightBarButtonItem = rightItem;
     
     _mapView = [[BMKMapView alloc]initWithFrame:self.view.frame];
     [_mapView setZoomLevel:13];
@@ -207,7 +211,7 @@
     if ([view.annotation isKindOfClass:[MyPointAnnotation class]]) {
         MyPointAnnotation *annotation = (MyPointAnnotation *)view.annotation;
         
-        DLog(@"%@",annotation.poi);
+        DLog(@"%@",annotation.poi.image);
         
         DetailViewController *vc = [[DetailViewController alloc] init];
         vc.poi = annotation.poi;
@@ -441,6 +445,18 @@
         return s;
     }
     return nil ;
+}
+
+//列表模式
+-(void)tableStyle{
+    UIBarButtonItem *backItem=[[UIBarButtonItem alloc] init];
+    UIImage *backImage = [UIImage imageNamed:@"navi_back2"];
+    [backItem setBackButtonBackgroundImage:[backImage resizableImageWithCapInsets:UIEdgeInsetsMake(0, backImage.size.width, 0, 0)] forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];//更改背景图片
+    self.navigationItem.backBarButtonItem = backItem;
+    
+    FeatureTableViewController *vc = [FeatureTableViewController new];
+    vc.jingdianArray = _jingdianArray;
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (BMKAnnotationView*)getRouteAnnotationView:(BMKMapView *)mapview viewForAnnotation:(RouteAnnotation*)routeAnnotation
