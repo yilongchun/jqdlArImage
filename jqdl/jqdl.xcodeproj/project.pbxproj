@@ -310,6 +310,7 @@
 		44117AC31C11789B0071E1C0 /* ChooseJqViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44117AC01C11789B0071E1C0 /* ChooseJqViewController.m */; };
 		44117AC61C1184CF0071E1C0 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 44117AC51C1184CF0071E1C0 /* libxml2.tbd */; };
 		44166BFD1CC0EB36005628F5 /* UITextView+PlaceHolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 44166BFC1CC0EB36005628F5 /* UITextView+PlaceHolder.m */; };
+		44270EFA1E16465800561C69 /* MyPointAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 44270EF91E16465800561C69 /* MyPointAnnotation.m */; };
 		442ED7A81DB9A6470058DD4C /* WikitudeSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 442ED7A71DB9A6470058DD4C /* WikitudeSDK.framework */; };
 		442ED7AA1DB9A66A0058DD4C /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 442ED7A91DB9A66A0058DD4C /* Accelerate.framework */; };
 		442ED7AC1DB9A6730058DD4C /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 442ED7AB1DB9A6730058DD4C /* AssetsLibrary.framework */; };
@@ -1033,6 +1034,8 @@
 		44117AC51C1184CF0071E1C0 /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
 		44166BFB1CC0EB36005628F5 /* UITextView+PlaceHolder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITextView+PlaceHolder.h"; sourceTree = "<group>"; };
 		44166BFC1CC0EB36005628F5 /* UITextView+PlaceHolder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITextView+PlaceHolder.m"; sourceTree = "<group>"; };
+		44270EF81E16465800561C69 /* MyPointAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyPointAnnotation.h; sourceTree = "<group>"; };
+		44270EF91E16465800561C69 /* MyPointAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyPointAnnotation.m; sourceTree = "<group>"; };
 		442ED7A71DB9A6470058DD4C /* WikitudeSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = WikitudeSDK.framework; sourceTree = "<group>"; };
 		442ED7A91DB9A66A0058DD4C /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		442ED7AB1DB9A6730058DD4C /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
@@ -1262,6 +1265,8 @@
 				444D77D31E038D600040F0A7 /* BaiduMapViewController.h */,
 				444D77D41E038D600040F0A7 /* BaiduMapViewController.mm */,
 				444D77D51E038D600040F0A7 /* BaiduMapViewController.xib */,
+				44270EF81E16465800561C69 /* MyPointAnnotation.h */,
+				44270EF91E16465800561C69 /* MyPointAnnotation.m */,
 				44003D2F1BFB270700CB747A /* MainTabBarController.h */,
 				44003D301BFB270700CB747A /* MainTabBarController.m */,
 				443DA7C81E08C1130014C9B8 /* MoreFunctionViewController.h */,
@@ -2952,6 +2957,7 @@
 				44117A321C11763E0071E1C0 /* ZXCode93Reader.m in Sources */,
 				44117A521C11763E0071E1C0 /* ZXPDF417ScanningDecoder.m in Sources */,
 				441179D51C11763E0071E1C0 /* ZXGenericGF.m in Sources */,
+				44270EFA1E16465800561C69 /* MyPointAnnotation.m in Sources */,
 				44117A151C11763E0071E1C0 /* ZXAI013x0xDecoder.m in Sources */,
 				441179E71C11763E0071E1C0 /* ZXStringUtils.m in Sources */,
 				4411798E1C11763E0071E1C0 /* JSONModelClassProperty.m in Sources */,

@@ -14,6 +14,10 @@
 #import <BaiduMapAPI_Utils/BMKUtilsComponent.h>
 #import "UIImage+Rotate.h"
 
+#import "WTPoi.h"
+#import "MyPointAnnotation.h"
+#import "DetailViewController.h"
+
 #define MYBUNDLE_NAME @ "mapapi.bundle"
 #define MYBUNDLE_PATH [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: MYBUNDLE_NAME]
 #define MYBUNDLE [NSBundle bundleWithPath: MYBUNDLE_PATH]
@@ -67,7 +71,7 @@
     self.jz_wantsNavigationBarVisible = YES;
     
     _mapView = [[BMKMapView alloc]initWithFrame:self.view.frame];
-    [_mapView setZoomLevel:18];
+    [_mapView setZoomLevel:13];
     self.view = _mapView;
     
     _routesearch = [[BMKRouteSearch alloc]init];
@@ -78,37 +82,29 @@
     [locationBtn addTarget:self action:@selector(location) forControlEvents:UIControlEventTouchUpInside];
     [_mapView addSubview:locationBtn];
     
-    
-    
-    
-    
     _mapView.delegate = self; // 此处记得不用的时候需要置nil，否则影响内存的释放
     _locService.delegate = self;
-    
-    CLLocationCoordinate2D coors;
-    coors.latitude = 30.738861;
-    coors.longitude = 111.327933;
-    
-    BMKGroundOverlay* ground = [BMKGroundOverlay groundOverlayWithPosition:coors
-                                                                 zoomLevel:18 anchor:CGPointMake(0.0f,0.0f)
-                                                                      icon:[UIImage imageNamed:@"smap"]];
-    [_mapView addOverlay:ground];
-    
-    
+
+    //添加手绘地图
+//    CLLocationCoordinate2D coors;
+//    coors.latitude = 30.738861;
+//    coors.longitude = 111.327933;
+//    BMKGroundOverlay* ground = [BMKGroundOverlay groundOverlayWithPosition:coors
+//                                                                 zoomLevel:18 anchor:CGPointMake(0.0f,0.0f)
+//                                                                      icon:[UIImage imageNamed:@"smap"]];
+//    [_mapView addOverlay:ground];
     
     
-    
-    
-//    // 添加一个PointAnnotation
-    BMKPointAnnotation* annotation = [[BMKPointAnnotation alloc]init];
-    CLLocationCoordinate2D coor;
-    coor.latitude = 30.734320;
-    coor.longitude = 111.331430;
-    
-    annotation.coordinate = coor;
-    annotation.title = @"目的地";
-    [_mapView addAnnotation:annotation];
-    
+    for (int i = 0; i < _jingdianArray.count; i++) {
+        WTPoi *poi = [_jingdianArray objectAtIndex:i];
+        //添加PointAnnotation
+        MyPointAnnotation* annotation = [[MyPointAnnotation alloc]init];
+        CLLocationCoordinate2D coor = poi.location.coordinate;
+        annotation.coordinate = coor;
+        annotation.title = poi.name;
+        annotation.poi = poi;
+        [_mapView addAnnotation:annotation];
+    }
     
     
 }
@@ -190,10 +186,12 @@
 }
 
 - (void)mapView:(BMKMapView *)mapView didSelectAnnotationView:(BMKAnnotationView *)view{
-    if ([view.annotation isKindOfClass:[BMKPointAnnotation class]]) {
+    if ([view.annotation isKindOfClass:[MyPointAnnotation class]]) {
         DLog(@"%@",view);
         DLog(@"%@",view.annotation);
-        BMKPointAnnotation *annotation = (BMKPointAnnotation *)view.annotation;
+        MyPointAnnotation *annotation = (MyPointAnnotation *)view.annotation;
+        
+        DLog(@"%@",annotation.title);
         
         CLLocationCoordinate2D coors;
         coors.latitude = annotation.coordinate.latitude;
@@ -203,6 +201,19 @@
         DLog(@"%f %f",annotation.coordinate.latitude,annotation.coordinate.longitude);
     }
     
+}
+
+- (void)mapView:(BMKMapView *)mapView annotationViewForBubble:(BMKAnnotationView *)view{
+    if ([view.annotation isKindOfClass:[MyPointAnnotation class]]) {
+        MyPointAnnotation *annotation = (MyPointAnnotation *)view.annotation;
+        
+        DLog(@"%@",annotation.poi);
+        
+        DetailViewController *vc = [[DetailViewController alloc] init];
+        vc.poi = annotation.poi;
+        [self.navigationController pushViewController:vc animated:YES];
+        
+    }
 }
 
 - (BMKOverlayView *)mapView:(BMKMapView *)mapView viewForOverlay:(id<BMKOverlay>)overlay{
@@ -226,8 +237,10 @@
     if ([annotation isKindOfClass:[RouteAnnotation class]]) {
         return [self getRouteAnnotationView:mapView viewForAnnotation:(RouteAnnotation*)annotation];
     }
-    if ([annotation isKindOfClass:[BMKPointAnnotation class]]) {
+    if ([annotation isKindOfClass:[MyPointAnnotation class]]) {
         BMKAnnotationView * view = [[BMKAnnotationView alloc]initWithAnnotation:annotation reuseIdentifier:@"annotation"];
+        
+        
         //设置标注的图片
         view.image=[UIImage imageNamed:@"greenPoint"];
         //点击显示图详情视图 必须MJPointAnnotation对象设置了标题和副标题
@@ -239,7 +252,10 @@
 //        view2.backgroundColor=[UIColor blueColor];
         
         UIButton *daohangBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 6, 32, 32)];
-        [daohangBtn setImage:[UIImage imageNamed:@"daohang"] forState:UIControlStateNormal];
+        daohangBtn.titleLabel.font = SYSTEMFONT(13);
+        [daohangBtn setTitle:@"导航" forState:UIControlStateNormal];
+        [daohangBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+//        [daohangBtn setImage:[UIImage imageNamed:@"daohang"] forState:UIControlStateNormal];
         [daohangBtn addTarget:self action:@selector(onClickWalkSearch) forControlEvents:UIControlEventTouchUpInside];
 //        [view2 addSubview:daohangBtn];
 //        //设置左右辅助视图
@@ -262,8 +278,23 @@
 - (void)onGetWalkingRouteResult:(BMKRouteSearch*)searcher result:(BMKWalkingRouteResult*)result errorCode:(BMKSearchErrorCode)error
 {
     NSArray* array = [NSArray arrayWithArray:_mapView.annotations];
-    [_mapView removeAnnotations:array];
-//    array = [NSArray arrayWithArray:_mapView.overlays];
+    
+    
+    [array enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([obj isKindOfClass:[RouteAnnotation class]]) {
+            [_mapView removeAnnotation:obj];
+        }
+    }];
+    
+//    [_mapView removeAnnotations:array];
+    array = [NSArray arrayWithArray:_mapView.overlays];
+    
+    [array enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([obj isKindOfClass:[BMKPolyline class]]) {
+            [_mapView removeOverlay:obj];
+        }
+    }];
+    
 //    [_mapView removeOverlays:array];
     if (error == BMK_SEARCH_NO_ERROR) {
         BMKWalkingRouteLine* plan = (BMKWalkingRouteLine*)[result.routes objectAtIndex:0];

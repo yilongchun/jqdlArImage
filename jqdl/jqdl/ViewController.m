@@ -574,6 +574,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     }
 }
 
+//进入地图模式
 -(void)toMap{
     UIBarButtonItem *backItem=[[UIBarButtonItem alloc] init];
     UIImage *backImage = [UIImage imageNamed:@"navi_back2"];
@@ -581,6 +582,10 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     self.navigationItem.backBarButtonItem = backItem;
     
     BaiduMapViewController *vc = [BaiduMapViewController new];
+    
+    WTPoiManager *poiManager = objc_getAssociatedObject(self, kWTAugmentedRealityViewController_AssociatedPoiManagerKey);
+    
+    vc.jingdianArray = poiManager.pois;
     [self.navigationController pushViewController:vc animated:YES];
 }
 
@@ -862,17 +867,18 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
 //从AR点击景点详情 
 - (void)presentPoiDetails:(NSDictionary *)poiDetails
 {
-//    NSString *poiIdentifier = [poiDetails objectForKey:@"id"];
-//    NSString *poiName = [poiDetails objectForKey:@"title"];
-//    NSString *poiDescription = [poiDetails objectForKey:@"description"];
-//    NSString *poiImage = [poiDetails objectForKey:@"image"];
-//    
-//    WTPoi *poi = [[WTPoi alloc] initWithIdentifier:poiIdentifier location:nil name:poiName detailedDescription:poiDescription image:poiImage];
-//    
-//    if (poi)
-//    {
-//        
-//        
+    NSString *poiIdentifier = [poiDetails objectForKey:@"id"];
+    NSString *poiName = [poiDetails objectForKey:@"title"];
+    NSString *poiDescription = [poiDetails objectForKey:@"description"];
+    NSString *poiImage = [poiDetails objectForKey:@"image"];
+    NSString *poiVoice = [poiDetails objectForKey:@"voice"];
+    
+    WTPoi *poi = [[WTPoi alloc] initWithIdentifier:poiIdentifier location:nil name:poiName detailedDescription:poiDescription image:poiImage voice:poiVoice];
+    
+    if (poi)
+    {
+        
+        
 //        NSString *str = [poi.name stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
 //        DLog(@"%@",str);
 //        NSLog(@"%@ %@ %@",str,poi.detailedDescription,poi.image);
@@ -882,19 +888,21 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
 //        vc.url = [NSString stringWithFormat:@"view-%@-",poiDescription];
 //        vc.hidesBottomBarWhenPushed = YES;
 //        [self.navigationController pushViewController:vc animated:YES];
-//        
-//        
-//    }
+        
+        
+        UIBarButtonItem *backItem=[[UIBarButtonItem alloc] init];
+        UIImage *backImage = [UIImage imageNamed:@"navi_back"];
+        [backItem setBackButtonBackgroundImage:[backImage resizableImageWithCapInsets:UIEdgeInsetsMake(0, backImage.size.width, 0, 0)] forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];//更改背景图片
+        self.navigationItem.backBarButtonItem = backItem;
+        DetailViewController *vc = [[DetailViewController alloc] init];
+        vc.poi = poi;
+        [self.navigationController pushViewController:vc animated:YES];
+        
+    }
     
-    DLog(@"%@",poiDetails);
+//    DLog(@"%@",poiDetails);
     
-    UIBarButtonItem *backItem=[[UIBarButtonItem alloc] init];
-    UIImage *backImage = [UIImage imageNamed:@"navi_back"];
-    [backItem setBackButtonBackgroundImage:[backImage resizableImageWithCapInsets:UIEdgeInsetsMake(0, backImage.size.width, 0, 0)] forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];//更改背景图片
-    self.navigationItem.backBarButtonItem = backItem;
-    DetailViewController *vc = [[DetailViewController alloc] init];
-    vc.poiDetails = poiDetails;
-    [self.navigationController pushViewController:vc animated:YES];
+    
     
 }
 

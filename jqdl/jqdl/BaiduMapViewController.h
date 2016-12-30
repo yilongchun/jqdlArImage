@@ -10,4 +10,6 @@
 
 @interface BaiduMapViewController : UIViewController
 
+@property(strong,nonatomic) NSArray *jingdianArray;
+
 @end

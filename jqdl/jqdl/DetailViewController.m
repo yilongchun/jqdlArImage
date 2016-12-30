@@ -44,17 +44,13 @@
 //设置内容
 -(void)setContent{
     //顶部广告
-    NSMutableArray *arr = [NSMutableArray arrayWithObjects:[_poiDetails objectForKey:@"image"], nil];
+    NSMutableArray *arr = [NSMutableArray arrayWithObjects: _poi.image, nil];
     NSMutableArray *strArr = [NSMutableArray arrayWithObjects:@"1", nil];
-    
-    
-    
-    
     
     BMAdScrollView *adView = [[BMAdScrollView alloc] initWithFrame:CGRectMake(0, 0, Main_Screen_Width, 250) images:arr titles:strArr];
     [_myScrollView addSubview:adView];
     //标题
-    NSString *slogan = @"海底隧道";
+    NSString *slogan = _poi.name;
     UILabel *titleLabel = [UILabel new];
     CGRect titleRect = CGRectMake(15, 210, Main_Screen_Width - 50, 30);
     [titleLabel setFrame:titleRect];
@@ -116,7 +112,7 @@
     //控制播放按钮
     if ([[Player sharedManager] isPlaying]) {
         NSString *playingUrlStr = [[[Player sharedManager] url] absoluteString];
-        NSString *path = [NSString stringWithFormat:@"%@%@",kHost,[_poiDetails objectForKey:@"voice"]];
+        NSString *path = [NSString stringWithFormat:@"%@%@",kHost,_poi.voice];
         if ([playingUrlStr isEqualToString:path]) {//当前播放的就是该景点的语音 停止播放
             
         }else{//不是该景点的 重新播放
@@ -126,6 +122,7 @@
     }
 }
 
+//语音播放
 -(void)playVoice{
     
     
@@ -141,7 +138,7 @@
         DLog(@"停止播放 重新播放");
         [[Player sharedManager] stop];
 //        [self.calloutView.jieshuoBtn setImage:[UIImage imageNamed:@"stop"] forState:UIControlStateNormal];
-        NSString *path = [NSString stringWithFormat:@"%@%@",kHost,[_poiDetails objectForKey:@"voice"]];
+        NSString *path = [NSString stringWithFormat:@"%@%@",kHost,_poi.voice];
         DLog(@"%@",path);
         NSURL *url=[NSURL URLWithString:path];
         [[Player sharedManager] setUrl:url];
@@ -149,6 +146,14 @@
     }
     
     
+    
+    
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     
     
 }

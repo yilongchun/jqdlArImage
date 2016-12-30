@@ -7,10 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "WTPoi.h"
 
 @interface DetailViewController : UIViewController
 
-@property (strong,nonatomic) NSDictionary *poiDetails;
+@property (strong,nonatomic) WTPoi *poi;
 @property (weak, nonatomic) IBOutlet UIScrollView *myScrollView;
 
 @end
