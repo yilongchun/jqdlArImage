@@ -111,9 +111,27 @@
     UIButton *daohangBtn = [[UIButton alloc] initWithFrame:CGRectMake(Main_Screen_Width - 25 - 38, CGRectGetMinY(addressValueLabel.frame), 38, 38)];
     [daohangBtn setImage:[UIImage imageNamed:@"daohang"] forState:UIControlStateNormal];
     [_myScrollView addSubview:daohangBtn];
+    
+    
+    //控制播放按钮
+    if ([[Player sharedManager] isPlaying]) {
+        NSString *playingUrlStr = [[[Player sharedManager] url] absoluteString];
+        NSString *path = [NSString stringWithFormat:@"%@%@",kHost,[_poiDetails objectForKey:@"voice"]];
+        if ([playingUrlStr isEqualToString:path]) {//当前播放的就是该景点的语音 停止播放
+            
+        }else{//不是该景点的 重新播放
+            
+        }
+        
+    }
 }
 
 -(void)playVoice{
+    
+    
+    
+   
+    
     
     if ([[Player sharedManager] isPlaying]) {
         DLog(@"停止播放");
