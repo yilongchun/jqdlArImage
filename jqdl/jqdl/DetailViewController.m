@@ -10,6 +10,7 @@
 #import "BMAdScrollView.h"
 #import "JZNavigationExtension.h"
 #import "UILabel+SetLabelSpace.h"
+#import "Player.h"
 
 @interface DetailViewController ()
 
@@ -43,8 +44,12 @@
 //设置内容
 -(void)setContent{
     //顶部广告
-    NSMutableArray *arr = [NSMutableArray arrayWithObjects:@"smap",@"smap", nil];
-    NSMutableArray *strArr = [NSMutableArray arrayWithObjects:@"1",@"2", nil];
+    NSMutableArray *arr = [NSMutableArray arrayWithObjects:[_poiDetails objectForKey:@"image"], nil];
+    NSMutableArray *strArr = [NSMutableArray arrayWithObjects:@"1", nil];
+    
+    
+    
+    
     
     BMAdScrollView *adView = [[BMAdScrollView alloc] initWithFrame:CGRectMake(0, 0, Main_Screen_Width, 250) images:arr titles:strArr];
     [_myScrollView addSubview:adView];
@@ -61,6 +66,7 @@
     //解说按钮
     UIButton *jieshuoBtn = [[UIButton alloc] initWithFrame:CGRectMake(20, CGRectGetMaxY(adView.frame) + 10, 98, 36)];
     [jieshuoBtn setImage:[UIImage imageNamed:@"ypjs"] forState:UIControlStateNormal];
+    [jieshuoBtn addTarget:self action:@selector(playVoice) forControlEvents:UIControlEventTouchUpInside];
     [_myScrollView addSubview:jieshuoBtn];
     //文本介绍
     UILabel *contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(25, CGRectGetMaxY(jieshuoBtn.frame) + 12, Main_Screen_Width - 50, 10)];
@@ -107,6 +113,27 @@
     [_myScrollView addSubview:daohangBtn];
 }
 
+-(void)playVoice{
+    
+    if ([[Player sharedManager] isPlaying]) {
+        DLog(@"停止播放");
+//        [self.calloutView.jieshuoBtn setImage:[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
+        [[Player sharedManager] stop];
+    }else{
+        DLog(@"停止播放 重新播放");
+        [[Player sharedManager] stop];
+//        [self.calloutView.jieshuoBtn setImage:[UIImage imageNamed:@"stop"] forState:UIControlStateNormal];
+        NSString *path = [NSString stringWithFormat:@"%@%@",kHost,[_poiDetails objectForKey:@"voice"]];
+        DLog(@"%@",path);
+        NSURL *url=[NSURL URLWithString:path];
+        [[Player sharedManager] setUrl:url];
+        [[Player sharedManager] play];
+    }
+    
+    
+    
+    
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

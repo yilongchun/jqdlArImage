@@ -135,7 +135,8 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                                               location:location
                                                   name:poiName
                                    detailedDescription:poiDescription
-                                                 image:@""];
+                                                 image:@""
+                                                voice:@""];
         
         
         [poiManager addPoi:poi];
@@ -184,9 +185,9 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
 //    [leftItem setTintColor:[UIColor whiteColor]];
 //    self.navigationItem.leftBarButtonItem = leftItem;
     
-    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"msg"] style:UIBarButtonItemStyleDone target:self action:@selector(openMoreFunctionView)];
-    [rightItem setTintColor:[UIColor whiteColor]];
-    self.navigationItem.rightBarButtonItem = rightItem;
+//    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"msg"] style:UIBarButtonItemStyleDone target:self action:@selector(openMoreFunctionView)];
+//    [rightItem setTintColor:[UIColor whiteColor]];
+//    self.navigationItem.rightBarButtonItem = rightItem;
     
     UIBarButtonItem *backItem=[[UIBarButtonItem alloc] init];
     UIImage *backImage = [UIImage imageNamed:@"navi_back2"];
@@ -361,7 +362,9 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                                                           location:location
                                                               name:jingdianList.name
                                                detailedDescription:jingdianList.urlCode
-                                                             image:[NSString stringWithFormat:@"%@%@",kHost,jingdianList.image]];
+                                                             image:[NSString stringWithFormat:@"%@%@",kHost,jingdianList.image]
+                                                             voice:jingdianList.voice
+                                ];
                     DLog(@"%@",poi.jsonRepresentation);
                     
                     [poiManager addPoi:poi];
@@ -838,7 +841,8 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
             NSString *action = [parameters objectForKey:@"action"];
             if ( [action isEqualToString:@"captureScreen"] )
             {
-                [self captureScreen];
+//                [self captureScreen];
+                [self openMoreFunctionView];
             }
             if ([action isEqualToString:@"showList"]) {
 //                [self showList];
@@ -882,11 +886,14 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
 //        
 //    }
     
+    DLog(@"%@",poiDetails);
+    
     UIBarButtonItem *backItem=[[UIBarButtonItem alloc] init];
     UIImage *backImage = [UIImage imageNamed:@"navi_back"];
     [backItem setBackButtonBackgroundImage:[backImage resizableImageWithCapInsets:UIEdgeInsetsMake(0, backImage.size.width, 0, 0)] forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];//更改背景图片
     self.navigationItem.backBarButtonItem = backItem;
     DetailViewController *vc = [[DetailViewController alloc] init];
+    vc.poiDetails = poiDetails;
     [self.navigationController pushViewController:vc animated:YES];
     
 }

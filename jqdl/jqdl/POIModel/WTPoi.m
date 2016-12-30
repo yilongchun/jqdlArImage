@@ -28,13 +28,13 @@
          detailedDescription
         )
     {
-        poi = [[WTPoi alloc] initWithIdentifier:identifier location:location name:name detailedDescription:detailedDescription image:@""];
+        poi = [[WTPoi alloc] initWithIdentifier:identifier location:location name:name detailedDescription:detailedDescription image:@"" voice:@""];
     }
     
     return poi;
 }
 
-- (instancetype)initWithIdentifier:(NSString *)identifier location:(CLLocation *)location name:(NSString *)name detailedDescription:(NSString *)detailedDescription image:(NSString *)image
+- (instancetype)initWithIdentifier:(NSString *)identifier location:(CLLocation *)location name:(NSString *)name detailedDescription:(NSString *)detailedDescription image:(NSString *)image voice:(NSString *)voice
 {
     self = [super init];
     if (self)
@@ -44,6 +44,7 @@
         _name = name;
         _detailedDescription = detailedDescription;
         _image = image;
+        _voice = voice;
     }
     
     return self;
@@ -59,7 +60,9 @@
                             @(self.location.altitude),
                             self.name,
                             self.detailedDescription,
-                            self.image];
+                            self.image,
+                            self.voice
+                            ];
     
     NSArray *poiKeys = @[@"id",
                          @"latitude",
@@ -67,7 +70,8 @@
                          @"altitude",
                          @"name",
                          @"description",
-                         @"image"];
+                         @"image",
+                         @"voice"];
 
     NSDictionary *jsonRepresentation = [NSDictionary dictionaryWithObjects:poiObjects forKeys:poiKeys];
 

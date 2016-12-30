@@ -66,7 +66,8 @@ var World = {
 				"altitude": parseFloat(currentPlaceNr*50),
 				"title": poiData[currentPlaceNr].name,
 				"description": poiData[currentPlaceNr].description,
-                "image":poiData[currentPlaceNr].image
+                "image":poiData[currentPlaceNr].image,
+                "voice":poiData[currentPlaceNr].voice
 			};
 			World.markerList.push(new Marker(singlePoi));
 		}

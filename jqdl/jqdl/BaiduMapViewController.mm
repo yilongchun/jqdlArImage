@@ -18,6 +18,8 @@
 #define MYBUNDLE_PATH [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: MYBUNDLE_NAME]
 #define MYBUNDLE [NSBundle bundleWithPath: MYBUNDLE_PATH]
 
+#define WT_RANDOM(startValue, endValue) ((((float) (arc4random() % ((unsigned)RAND_MAX + 1)) / RAND_MAX) * (endValue - startValue)) + startValue)
+
 @interface RouteAnnotation : BMKPointAnnotation
 {
     int _type; ///<0:起点 1：终点 2：公交 3：地铁 4:驾乘 5:途经点
@@ -93,12 +95,16 @@
     [_mapView addOverlay:ground];
     
     
+    
+    
+    
+    
 //    // 添加一个PointAnnotation
     BMKPointAnnotation* annotation = [[BMKPointAnnotation alloc]init];
     CLLocationCoordinate2D coor;
     coor.latitude = 30.734320;
     coor.longitude = 111.331430;
-    end2d = coor;
+    
     annotation.coordinate = coor;
     annotation.title = @"目的地";
     [_mapView addAnnotation:annotation];
@@ -158,6 +164,17 @@
         [_mapView setCenterCoordinate:userLocation.location.coordinate animated:YES];
         locationFlag = YES;
     }
+    
+//    for (int i = 0; i < 10 ; i++) {
+//        CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake(userLocation.location.coordinate.latitude + WT_RANDOM(-0.1, 0.1), userLocation.location.coordinate.longitude + WT_RANDOM(-0.1, 0.1));
+//        BMKPointAnnotation* annotation = [[BMKPointAnnotation alloc]init];
+//        
+//        
+//        annotation.coordinate = locationCoordinate;
+//        annotation.title = [NSString stringWithFormat:@"%d",i+1];
+//        [_mapView addAnnotation:annotation];
+//    }
+    
 }
 
 #pragma mark - BMKMapViewDelegate
@@ -172,7 +189,21 @@
     DLog(@"%f %f",coordinate.latitude,coordinate.longitude);
 }
 
-#pragma mark - BMKMapViewDelegate
+- (void)mapView:(BMKMapView *)mapView didSelectAnnotationView:(BMKAnnotationView *)view{
+    if ([view.annotation isKindOfClass:[BMKPointAnnotation class]]) {
+        DLog(@"%@",view);
+        DLog(@"%@",view.annotation);
+        BMKPointAnnotation *annotation = (BMKPointAnnotation *)view.annotation;
+        
+        CLLocationCoordinate2D coors;
+        coors.latitude = annotation.coordinate.latitude;
+        coors.longitude = annotation.coordinate.longitude;
+        end2d = coors;
+        
+        DLog(@"%f %f",annotation.coordinate.latitude,annotation.coordinate.longitude);
+    }
+    
+}
 
 - (BMKOverlayView *)mapView:(BMKMapView *)mapView viewForOverlay:(id<BMKOverlay>)overlay{
     if ([overlay isKindOfClass:[BMKPolyline class]]) {
