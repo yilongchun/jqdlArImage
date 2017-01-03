@@ -10,8 +10,12 @@
 #import "WTpoi.h"
 #import "FeatureTableViewCell.h"
 #import "UIImageView+AFNetworking.h"
+#import "Player.h"
+#import "DetailViewController.h"
 
-@interface FeatureTableViewController ()
+@interface FeatureTableViewController (){
+    UIButton *oldPlayBtn;
+}
 
 @end
 
@@ -34,6 +38,71 @@
     self.navigationItem.titleView = titleLabel;
     
     [self.tableView reloadData];
+}
+
+-(void)playVoice:(UIButton *)btn{
+    
+    WTPoi *poi = [_jingdianArray objectAtIndex:btn.tag];
+    NSString *voice = poi.voice;
+    
+    
+    
+    if ([[Player sharedManager] isPlaying]) {//当前正在播放
+        NSString *playingUrlStr = [[[Player sharedManager] url] absoluteString];
+        NSString *path = [NSString stringWithFormat:@"%@%@",kHost,voice];
+        if ([playingUrlStr isEqualToString:path]) {//当前播放的就是该景点的语音 停止播放
+            [[Player sharedManager] stop];//先停止播放
+            btn.titleLabel.text = @"解说";
+            [btn setTitle:@"解说" forState:UIControlStateNormal];
+            oldPlayBtn = nil;
+        }else{//不是该景点的 重新播放
+            [[Player sharedManager] stop];//先停止播放
+            oldPlayBtn.titleLabel.text = @"解说";
+            [oldPlayBtn setTitle:@"解说" forState:UIControlStateNormal];
+            
+            [[Player sharedManager] setUrl:[NSURL URLWithString:path]];
+            [[Player sharedManager] play];
+            btn.titleLabel.text = @"暂停";
+            [btn setTitle:@"暂停" forState:UIControlStateNormal];
+            oldPlayBtn = btn;
+        }
+    }else{//当前没有播放
+        
+        [[Player sharedManager] pause];
+        
+        NSString *path = [NSString stringWithFormat:@"%@%@",kHost,voice];
+        [[Player sharedManager] setUrl:[NSURL URLWithString:path]];
+        [[Player sharedManager] play];
+        btn.titleLabel.text = @"暂停";
+        [btn setTitle:@"暂停" forState:UIControlStateNormal];
+        oldPlayBtn = btn;
+    }
+    
+    
+    //    if ([[Player sharedManager] isPlaying]) {
+    //        DLog(@"停止播放");
+    //        //        [self.calloutView.jieshuoBtn setImage:[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
+    //        [[Player sharedManager] stop];
+    //    }else{
+    //        DLog(@"停止播放 重新播放");
+    //        [[Player sharedManager] stop];
+    //        //        [self.calloutView.jieshuoBtn setImage:[UIImage imageNamed:@"stop"] forState:UIControlStateNormal];
+    //        NSString *path = [NSString stringWithFormat:@"%@%@",kHost,voice];
+    //        DLog(@"%@",path);
+    //        NSURL *url=[NSURL URLWithString:path];
+    //        [[Player sharedManager] setUrl:url];
+    //        [[Player sharedManager] play];
+    //    }
+    
+    
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
+    
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -68,6 +137,8 @@
     [cell.myImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@",poi.image]]];
     cell.name.text = poi.name;
     cell.desLabel.text = @"世界上最多样生态系统的森林，穿行其中绝对是一场极富挑战性的奇幻冒险; 世界上最多样生态系统的森林，穿行其...";
+    cell.playBtn.tag = indexPath.row;
+    [cell.playBtn addTarget:self action:@selector(playVoice:) forControlEvents:UIControlEventTouchUpInside];
     return cell;
 }
 
@@ -113,6 +184,11 @@
 // In a xib-based application, navigation from a table can be handled in -tableView:didSelectRowAtIndexPath:
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
+    DetailViewController *vc = [[DetailViewController alloc] init];
+    WTPoi *poi = [_jingdianArray objectAtIndex:indexPath.row];
+    vc.poi = poi;
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath{
