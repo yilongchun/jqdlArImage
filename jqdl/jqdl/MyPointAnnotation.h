@@ -15,5 +15,6 @@
 @interface MyPointAnnotation : BMKPointAnnotation
 
 @property(strong,nonatomic) WTPoi *poi;
+@property int index;
 
 @end

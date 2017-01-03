@@ -18,6 +18,10 @@
 #import "MyPointAnnotation.h"
 #import "DetailViewController.h"
 #import "FeatureTableViewController.h"
+#import "MyView.h"
+#import "UIImageView+AFNetworking.h"
+#import "UILabel+SetLabelSpace.h"
+#import "Player.h"
 
 #define MYBUNDLE_NAME @ "mapapi.bundle"
 #define MYBUNDLE_PATH [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: MYBUNDLE_NAME]
@@ -42,14 +46,21 @@
 @end
 
 
-@interface BaiduMapViewController ()<BMKMapViewDelegate,BMKLocationServiceDelegate,BMKRouteSearchDelegate>{
+@interface BaiduMapViewController ()<BMKMapViewDelegate,BMKLocationServiceDelegate,BMKRouteSearchDelegate,UIScrollViewDelegate>{
     BMKMapView* _mapView;
     BMKLocationService *_locService;
     BMKRouteSearch* _routesearch;
     BOOL locationFlag;
+    BOOL locationFlag2;
 
     CLLocationCoordinate2D start2d;
     CLLocationCoordinate2D end2d;
+    
+    NSMutableArray *annotations;
+    UIScrollView *sv;
+    
+    UIButton *oldPlayBtn;
+    
     
 }
 
@@ -61,6 +72,8 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
+    self.view.backgroundColor = [UIColor whiteColor];
+    
     UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
     titleLabel.font = BOLDSYSTEMFONT(17);
     titleLabel.textColor = [UIColor blackColor];
@@ -71,23 +84,27 @@
     self.jz_navigationBarBackgroundAlpha = 1.f;
     self.jz_wantsNavigationBarVisible = YES;
     
-    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithTitle:@"列表" style:UIBarButtonItemStyleDone target:self action:@selector(tableStyle)];
+    //右上角按钮
+    UIImage *image = [[UIImage imageNamed:@"listIcon"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithImage:image style:UIBarButtonItemStyleDone target:self action:@selector(tableStyle)];
     self.navigationItem.rightBarButtonItem = rightItem;
     
-    _mapView = [[BMKMapView alloc]initWithFrame:self.view.frame];
+    //添加地图
+    _mapView = [[BMKMapView alloc]initWithFrame:CGRectMake(0, 64, Main_Screen_Width, Main_Screen_Height - 64)];
     [_mapView setZoomLevel:13];
-    self.view = _mapView;
+    [self.view addSubview:_mapView];
     
     _routesearch = [[BMKRouteSearch alloc]init];
     _locService = [[BMKLocationService alloc]init];
     
-    UIButton *locationBtn = [[UIButton alloc] initWithFrame:CGRectMake(14, Main_Screen_Height - 44 - 134, 44, 44)];
+    _mapView.delegate = self; // 此处记得不用的时候需要置nil，否则影响内存的释放
+    _locService.delegate = self;
+    
+    //定位按钮
+    UIButton *locationBtn = [[UIButton alloc] initWithFrame:CGRectMake(14, _mapView.frame.size.height - 108 - 15 - 15 - 44, 44, 44)];
     [locationBtn setImage:[UIImage imageNamed:@"location"] forState:UIControlStateNormal];
     [locationBtn addTarget:self action:@selector(location) forControlEvents:UIControlEventTouchUpInside];
     [_mapView addSubview:locationBtn];
-    
-    _mapView.delegate = self; // 此处记得不用的时候需要置nil，否则影响内存的释放
-    _locService.delegate = self;
 
     //添加手绘地图
 //    CLLocationCoordinate2D coors;
@@ -98,7 +115,8 @@
 //                                                                      icon:[UIImage imageNamed:@"smap"]];
 //    [_mapView addOverlay:ground];
     
-    
+    annotations = [NSMutableArray array];
+    //添加景点标注
     for (int i = 0; i < _jingdianArray.count; i++) {
         WTPoi *poi = [_jingdianArray objectAtIndex:i];
         //添加PointAnnotation
@@ -107,10 +125,148 @@
         annotation.coordinate = coor;
         annotation.title = poi.name;
         annotation.poi = poi;
+        annotation.index = i;
         [_mapView addAnnotation:annotation];
+        [annotations addObject:annotation];
     }
     
     
+    
+    //添加底部景点卡片
+    MyView *view = [[MyView alloc] initWithFrame:CGRectMake(0, Main_Screen_Height - 15 - 108, Main_Screen_Width, 108)];
+    sv = [[UIScrollView alloc] initWithFrame:CGRectMake(10, 0, Main_Screen_Width - 30, 108)];
+    sv.delegate = self;
+    sv.clipsToBounds = NO;
+    sv.pagingEnabled = YES;
+    sv.showsHorizontalScrollIndicator = NO;
+    
+    CGFloat x = 10;
+    for (int i = 0; i < _jingdianArray.count; i++) {
+        WTPoi *poi = [_jingdianArray objectAtIndex:i];
+        UIView *v = [[UIView alloc] initWithFrame:CGRectMake(x, 0, Main_Screen_Width - 40, 108)];
+        
+        
+        v.backgroundColor = [UIColor whiteColor];
+        ViewBorderRadius(v, 5, 1, RGBA(0, 0, 0, 0.15));
+        //图片
+        UIImageView *imageview = [[UIImageView alloc] initWithFrame:CGRectMake(12, 12, 108 - 12 * 2, 108 - 12 * 2)];
+        imageview.tag = i;
+        imageview.userInteractionEnabled = YES;
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toDetail:)];
+        [imageview addGestureRecognizer:tap];
+        
+        imageview.backgroundColor = [UIColor lightGrayColor];
+        [imageview setImageWithURL:[NSURL URLWithString:poi.image]];
+        ViewBorderRadius(imageview, 2, 0, [UIColor whiteColor]);
+        [v addSubview:imageview];
+        //文字
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(imageview.frame) + 12, 12, 0, 0)];
+        label.font = BOLDSYSTEMFONT(14);
+        label.textColor = RGB(102, 102, 102);
+        label.text = [NSString stringWithFormat:@"%d.%@",i+1,poi.name];
+        [label sizeToFit];
+        [v addSubview:label];
+        //描述
+        UILabel *desLabel = [[UILabel alloc] initWithFrame:CGRectMake(label.frame.origin.x, CGRectGetMaxY(label.frame), CGRectGetWidth(v.frame) - label.frame.origin.x - 10, 108 - CGRectGetMaxY(label.frame) - 31)];
+        desLabel.font = SYSTEMFONT(12);
+        desLabel.textColor = RGB(151, 151, 151);
+        desLabel.numberOfLines = 0;
+        desLabel.text = @"在海底隧道馆，可以滴水不沾的穿越海洋了!享受海底漫步的乐趣，不仅可…";
+//        desLabel.backgroundColor = [UIColor grayColor];
+        [UILabel setLabelSpace:desLabel withValue:@"在海底隧道馆，可以滴水不沾的穿越海洋了!享受海底漫步的乐趣，不仅可…" withFont:desLabel.font];
+        [v addSubview:desLabel];
+        
+        
+        
+//        BMKMapPoint point1 = BMKMapPointForCoordinate(poi.location.coordinate);
+//        
+//        BMKMapPoint point2 = BMKMapPointForCoordinate(CLLocationCoordinate2DMake(, ));
+//        
+//        CLLocationDistance distance = BMKMetersBetweenMapPoints(point1,point2);
+        
+        UIButton *playBtn = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetWidth(v.frame) - 56, CGRectGetHeight(v.frame) - 28, 46, 18)];
+        playBtn.tag = i;
+        playBtn.titleLabel.font = SYSTEMFONT(10);
+        [playBtn addTarget:self action:@selector(playVoice:) forControlEvents:UIControlEventTouchUpInside];
+        [playBtn setTitle:@"播放" forState:UIControlStateNormal];
+        [playBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        playBtn.backgroundColor = RGB(255, 192, 20);
+        [v addSubview:playBtn];
+        
+        
+        [sv addSubview:v];
+        x += CGRectGetWidth(v.frame) + 10;
+    }
+    x-=10;
+    [sv setContentSize:CGSizeMake(x, 108)];
+    [view addSubview:sv];
+    [self.view addSubview:view];
+    
+    if (annotations.count > 0) {
+        [_mapView selectAnnotation:annotations[0] animated:YES];
+    }
+}
+
+-(void)playVoice:(UIButton *)btn{
+    
+    MyPointAnnotation *anno = annotations[btn.tag];
+    NSString *voice = anno.poi.voice;
+    
+    
+    
+    if ([[Player sharedManager] isPlaying]) {//当前正在播放
+        NSString *playingUrlStr = [[[Player sharedManager] url] absoluteString];
+        NSString *path = [NSString stringWithFormat:@"%@%@",kHost,voice];
+        if ([playingUrlStr isEqualToString:path]) {//当前播放的就是该景点的语音 停止播放
+            [[Player sharedManager] stop];//先停止播放
+            [btn setTitle:@"播放" forState:UIControlStateNormal];
+            oldPlayBtn = nil;
+        }else{//不是该景点的 重新播放
+            [[Player sharedManager] stop];//先停止播放
+            [oldPlayBtn setTitle:@"播放" forState:UIControlStateNormal];
+            
+            [[Player sharedManager] setUrl:[NSURL URLWithString:path]];
+            [[Player sharedManager] play];
+            [btn setTitle:@"暂停" forState:UIControlStateNormal];
+            oldPlayBtn = btn;
+        }
+    }else{//当前没有播放
+        
+        [[Player sharedManager] pause];
+        
+        NSString *path = [NSString stringWithFormat:@"%@%@",kHost,voice];
+        [[Player sharedManager] setUrl:[NSURL URLWithString:path]];
+        [[Player sharedManager] play];
+        [btn setTitle:@"暂停" forState:UIControlStateNormal];
+        oldPlayBtn = btn;
+    }
+    
+    
+//    if ([[Player sharedManager] isPlaying]) {
+//        DLog(@"停止播放");
+//        //        [self.calloutView.jieshuoBtn setImage:[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
+//        [[Player sharedManager] stop];
+//    }else{
+//        DLog(@"停止播放 重新播放");
+//        [[Player sharedManager] stop];
+//        //        [self.calloutView.jieshuoBtn setImage:[UIImage imageNamed:@"stop"] forState:UIControlStateNormal];
+//        NSString *path = [NSString stringWithFormat:@"%@%@",kHost,voice];
+//        DLog(@"%@",path);
+//        NSURL *url=[NSURL URLWithString:path];
+//        [[Player sharedManager] setUrl:url];
+//        [[Player sharedManager] play];
+//    }
+    
+    
+}
+
+//景点详情
+-(void)toDetail:(UITapGestureRecognizer *)sender{
+    DLog(@"%@",sender);
+    DetailViewController *vc = [[DetailViewController alloc] init];
+    MyPointAnnotation *anno = annotations[sender.view.tag];
+    vc.poi = anno.poi;
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -130,7 +286,11 @@
 -(void)viewDidAppear:(BOOL)animated{
     
     [super viewDidAppear:animated];
-    [self location];//定位
+    if (!locationFlag2) {
+        locationFlag2 = !locationFlag2;
+        [self location];//定位
+    }
+    
     
 }
 
@@ -140,6 +300,33 @@
     _mapView.delegate = nil; // 不用时，置nil
     _locService.delegate = nil;
     _routesearch.delegate = nil; // 此处记得不用的时候需要置nil，否则影响内存的释放
+}
+
+#pragma mark - UIScrollViewDelegate
+
+//- (void) scrollViewDidScroll:(UIScrollView *)sender {
+//    // 得到每页宽度
+//    CGFloat pageWidth = sender.frame.size.width;
+//    // 根据当前的x坐标和页宽度计算出当前页数
+//    int currentPage = floor((sender.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
+//    DLog(@"%d",currentPage);
+//}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)sender{
+    // 得到每页宽度
+    CGFloat pageWidth = sender.frame.size.width;
+    // 根据当前的x坐标和页宽度计算出当前页数
+    int currentPage = floor((sender.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
+    DLog(@"%d",currentPage);
+    
+    if (currentPage >= 0 & currentPage < annotations.count) {
+        MyPointAnnotation* annotation = [annotations objectAtIndex:currentPage];
+        [_mapView selectAnnotation:annotation animated:YES];
+        [_mapView setCenterCoordinate:annotation.coordinate animated:YES];
+    }
+    
+    
+    
 }
 
 #pragma mark - BMKLocationServiceDelegate
@@ -203,6 +390,10 @@
         end2d = coors;
         
         DLog(@"%f %f",annotation.coordinate.latitude,annotation.coordinate.longitude);
+        
+        
+        [sv setContentOffset:CGPointMake(annotation.index * sv.frame.size.width, 0) animated:NO];
+        [_mapView setCenterCoordinate:annotation.coordinate animated:YES];
     }
     
 }
@@ -249,24 +440,13 @@
         view.image=[UIImage imageNamed:@"greenPoint"];
         //点击显示图详情视图 必须MJPointAnnotation对象设置了标题和副标题
         view.canShowCallout=YES;
-//        //创建了两个view
-//        UIView * view1 = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 50, 50)];
-//        view1.backgroundColor=[UIColor redColor];
-//        UIView * view2 = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 50, 50)];
-//        view2.backgroundColor=[UIColor blueColor];
         
-        UIButton *daohangBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 6, 32, 32)];
-        daohangBtn.titleLabel.font = SYSTEMFONT(13);
-        [daohangBtn setTitle:@"导航" forState:UIControlStateNormal];
-        [daohangBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-//        [daohangBtn setImage:[UIImage imageNamed:@"daohang"] forState:UIControlStateNormal];
-        [daohangBtn addTarget:self action:@selector(onClickWalkSearch) forControlEvents:UIControlEventTouchUpInside];
-//        [view2 addSubview:daohangBtn];
-//        //设置左右辅助视图
-//        view.leftCalloutAccessoryView=view1;
-        view.rightCalloutAccessoryView=daohangBtn;
-        //设置拖拽 可以通过点击不放进行拖拽
-//        view.draggable=YES;
+//        UIButton *daohangBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 6, 32, 32)];
+//        daohangBtn.titleLabel.font = SYSTEMFONT(13);
+//        [daohangBtn setTitle:@"导航" forState:UIControlStateNormal];
+//        [daohangBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+//        [daohangBtn addTarget:self action:@selector(onClickWalkSearch) forControlEvents:UIControlEventTouchUpInside];
+//        view.rightCalloutAccessoryView=daohangBtn;
         return view;
         
 //        BMKPinAnnotationView *newAnnotationView = [[BMKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"myAnnotation"];

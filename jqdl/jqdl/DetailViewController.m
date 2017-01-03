@@ -124,12 +124,6 @@
 
 //语音播放
 -(void)playVoice{
-    
-    
-    
-   
-    
-    
     if ([[Player sharedManager] isPlaying]) {
         DLog(@"停止播放");
 //        [self.calloutView.jieshuoBtn setImage:[UIImage imageNamed:@"play"] forState:UIControlStateNormal];

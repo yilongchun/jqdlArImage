@@ -78,6 +78,7 @@
 		440E7F941E1B49EE00B5277E /* IQToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 440E7F831E1B49EE00B5277E /* IQToolbar.m */; };
 		440E7F951E1B49EE00B5277E /* IQUIView+IQKeyboardToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 440E7F851E1B49EE00B5277E /* IQUIView+IQKeyboardToolbar.m */; };
 		440E7F961E1B49EE00B5277E /* IQKeyboardManager.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 440E7F871E1B49EE00B5277E /* IQKeyboardManager.bundle */; };
+		440E7FA21E1B6EE400B5277E /* MyView.m in Sources */ = {isa = PBXBuildFile; fileRef = 440E7FA11E1B6EE400B5277E /* MyView.m */; };
 		4411797A1C11763E0071E1C0 /* FFMNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 441176F91C11763D0071E1C0 /* FFMNetworking.m */; };
 		4411797B1C11763E0071E1C0 /* audio_queue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 441176FC1C11763D0071E1C0 /* audio_queue.cpp */; };
 		4411797C1C11763E0071E1C0 /* audio_stream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 441176FE1C11763D0071E1C0 /* audio_stream.cpp */; };
@@ -618,6 +619,8 @@
 		440E7F841E1B49EE00B5277E /* IQUIView+IQKeyboardToolbar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "IQUIView+IQKeyboardToolbar.h"; sourceTree = "<group>"; };
 		440E7F851E1B49EE00B5277E /* IQUIView+IQKeyboardToolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "IQUIView+IQKeyboardToolbar.m"; sourceTree = "<group>"; };
 		440E7F871E1B49EE00B5277E /* IQKeyboardManager.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = IQKeyboardManager.bundle; sourceTree = "<group>"; };
+		440E7FA01E1B6EE400B5277E /* MyView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyView.h; sourceTree = "<group>"; };
+		440E7FA11E1B6EE400B5277E /* MyView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyView.m; sourceTree = "<group>"; };
 		441176F81C11763D0071E1C0 /* FFMNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFMNetworking.h; sourceTree = "<group>"; };
 		441176F91C11763D0071E1C0 /* FFMNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFMNetworking.m; sourceTree = "<group>"; };
 		441176FC1C11763D0071E1C0 /* audio_queue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = audio_queue.cpp; sourceTree = "<group>"; };
@@ -1456,6 +1459,8 @@
 				442ED7D31DB9A78F0058DD4C /* DetailViewController.h */,
 				442ED7D41DB9A78F0058DD4C /* DetailViewController.m */,
 				442ED7D51DB9A78F0058DD4C /* DetailViewController.xib */,
+				440E7FA01E1B6EE400B5277E /* MyView.h */,
+				440E7FA11E1B6EE400B5277E /* MyView.m */,
 				444D77D31E038D600040F0A7 /* BaiduMapViewController.h */,
 				444D77D41E038D600040F0A7 /* BaiduMapViewController.mm */,
 				444D77D51E038D600040F0A7 /* BaiduMapViewController.xib */,
@@ -3469,6 +3474,7 @@
 				441179D11C11763E0071E1C0 /* ZXImage.m in Sources */,
 				44003D311BFB270700CB747A /* MainTabBarController.m in Sources */,
 				441179E91C11763E0071E1C0 /* ZXBinaryBitmap.m in Sources */,
+				440E7FA21E1B6EE400B5277E /* MyView.m in Sources */,
 				440E7F461E1B36D600B5277E /* NSObject+Property.m in Sources */,
 				44117A101C11763E0071E1C0 /* ZXAI013103decoder.m in Sources */,
 				44117A741C11763E0071E1C0 /* ZXMultiDetector.m in Sources */,
