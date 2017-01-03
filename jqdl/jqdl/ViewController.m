@@ -33,7 +33,7 @@
 
 #import "MoreFunctionViewController.h"
 #import "DetailViewController.h"
-
+#import "LoginViewController.h"
 
 
 /* this is used to create random positions around you */
@@ -174,20 +174,23 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     titleLabel.font = BOLDSYSTEMFONT(17);
     titleLabel.textColor = [UIColor whiteColor];
     titleLabel.textAlignment = NSTextAlignmentCenter;
-    titleLabel.text = @"沿江大道";
+    titleLabel.text = @"东湖海洋世界风景区";
     self.navigationItem.titleView = titleLabel;
     
 //    self.title = @"东湖海洋世界风景区";
     
     self.navigationController.navigationBar.translucent = YES;
     
+    [self setLeftItem];
+    
+    
 //    UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithTitle:@"地图" style:UIBarButtonItemStyleDone target:self action:@selector(toMap)];
 //    [leftItem setTintColor:[UIColor whiteColor]];
 //    self.navigationItem.leftBarButtonItem = leftItem;
     
-//    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"msg"] style:UIBarButtonItemStyleDone target:self action:@selector(openMoreFunctionView)];
-//    [rightItem setTintColor:[UIColor whiteColor]];
-//    self.navigationItem.rightBarButtonItem = rightItem;
+    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"msg"] style:UIBarButtonItemStyleDone target:self action:nil];
+    [rightItem setTintColor:[UIColor whiteColor]];
+    self.navigationItem.rightBarButtonItem = rightItem;
     
     UIBarButtonItem *backItem=[[UIBarButtonItem alloc] init];
     UIImage *backImage = [UIImage imageNamed:@"navi_back2"];
@@ -265,6 +268,8 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(chooseJq:) name:@"chooseJq" object:nil];
     //景点详情
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showJdDetail:) name:@"showJdDetail" object:nil];
+    //刷新左上角头像
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setLeftItem) name:@"setLeftItem" object:nil];
     
     
    //右下角搜索按钮
@@ -274,6 +279,42 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     
 }
 
+//设置左上角头像
+-(void)setLeftItem{
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
+    ViewBorderRadius(imageView, 20, 2, [UIColor whiteColor]);
+    
+    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+    NSDictionary *userInfo = [ud objectForKey:LOGINED_USER];
+    UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithCustomView:imageView];
+    if (userInfo != nil) {
+        imageView.image = [UIImage imageNamed:@"member_no.gif"];
+        imageView.userInteractionEnabled = YES;
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(loginOut)];
+        [imageView addGestureRecognizer:tap];
+    }else{
+        imageView.userInteractionEnabled = YES;
+        imageView.backgroundColor = [UIColor lightGrayColor];
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toLogin)];
+        [imageView addGestureRecognizer:tap];
+    }
+    self.navigationItem.leftBarButtonItem = leftItem;
+}
+
+//退出
+-(void)loginOut{
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"确认退出吗?" message:nil preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
+    UIAlertAction *action2 = [UIAlertAction actionWithTitle:@"退出" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+        NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+        [ud removeObjectForKey:LOGINED_USER];
+        [self setLeftItem];
+        [self showHintInView:self.view hint:@"退出成功"];
+    }];
+    [alert addAction:action1];
+    [alert addAction:action2];
+    [self presentViewController:alert animated:YES completion:nil];
+}
 
 //进入景区列表选择
 -(void)chooseJq{
@@ -411,6 +452,13 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     //        vc.hidesBottomBarWhenPushed = YES;
     //        [self.navigationController pushViewController:vc animated:YES];
     //    }
+}
+
+//跳转登录界面
+-(void)toLogin{
+    LoginViewController *vc = [[LoginViewController alloc] init];
+    UINavigationController *nc = [[UINavigationController alloc] initWithRootViewController:vc];
+    [self presentViewController:nc animated:YES completion:nil];
 }
 
 //加载景区列表 读取第一个默认加载

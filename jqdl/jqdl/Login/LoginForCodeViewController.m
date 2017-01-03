@@ -125,16 +125,17 @@
     [parameters setObject:_account.text forKey:@"identity"];
     [parameters setObject:_password.text forKey:@"code"];
     
-    NSString *url = [NSString stringWithFormat:@"%@%@",kHost,API_AUTH_LOGIN_CODE];
+    NSString *url = [NSString stringWithFormat:@"%@%@",kDlHost,API_AUTH_LOGIN_CODE];
     
     [manager POST:url parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
         [self hideHud];
+        [self showHintInView:self.view hint:@"登录成功"];
         NSDictionary *dic= [NSDictionary dictionaryWithDictionary:responseObject];
         NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
         [ud setObject:dic forKey:LOGINED_USER];
         DLog(@"%@",dic);
         [self.navigationController dismissViewControllerAnimated:YES completion:^{
-//            [[NSNotificationCenter defaultCenter] postNotificationName:KNOTIFICATION_LOGINED_REFRESH_USERCENTER object:nil];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"setLeftItem" object:nil];
         }];
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
         [self hideHud];
@@ -251,7 +252,7 @@
     [parameters setObject:_account.text forKey:@"phone"];
     [parameters setObject:@"1" forKey:@"type"];
     
-    NSString *url = [NSString stringWithFormat:@"%@%@",kHost,API_AUTH_CODE_LOGIN];
+    NSString *url = [NSString stringWithFormat:@"%@%@",kDlHost,API_AUTH_CODE_LOGIN];
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     [manager POST:url parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
         [self hideHud];

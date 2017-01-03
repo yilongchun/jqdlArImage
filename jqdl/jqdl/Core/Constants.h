@@ -30,24 +30,24 @@ typedef NS_ENUM(NSInteger, ResultCodeType){
 
 /***************** API ***************/
 
-#define kDlHost @"https://api.qlxing.com/api/v2"
+#define kDlHost @"https://api.qlxing.com/v2"
 /**
  *  auth
  */
 //登录
-#define API_AUTH_LOGIN @"/auth/login"
+#define API_AUTH_LOGIN @"/login"
 //验证码登录
-#define API_AUTH_LOGIN_CODE @"/auth/login/code"
+#define API_AUTH_LOGIN_CODE @"/login/code"
 //注册
-#define API_AUTH_REGISTER @"/auth/register"
+#define API_AUTH_REGISTER @"/register"
 //重置密码
-#define API_AUTH_RESETPWD @"/auth/resetpwd"
+#define API_AUTH_RESETPWD @"/reset_password"
 //发送注册验证码
-#define API_AUTH_CODE_REGISTER @"/auth/code/register"
+#define API_AUTH_CODE_REGISTER @"/code/register"
 //发送登录验证码
-#define API_AUTH_CODE_LOGIN @"/auth/code/login"
+#define API_AUTH_CODE_LOGIN @"/code/login"
 //发送重置密码验证码
-#define API_AUTH_CODE_RESETPWD @"/auth/code/resetpwd"
+#define API_AUTH_CODE_RESETPWD @"/code/reset_password"
 
 /**
  *  西陵峡
