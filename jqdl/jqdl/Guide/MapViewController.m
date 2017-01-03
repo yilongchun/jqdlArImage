@@ -176,12 +176,12 @@ BOOL locationFlag;
         }else {
             DLog(@"%@",res.reason);
             [self hideHud];
-            [self showHint:res.reason];
+            [self showHintInView:self.view hint:res.reason];
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         DLog(@"Error: %@", error);
         [self hideHud];
-        [self showHint:@"获取失败，请重试!"];
+        [self showHintInView:self.view hint:@"获取失败，请重试!"];
         return;
     }];
 }
@@ -226,17 +226,17 @@ BOOL locationFlag;
                 [[NSNotificationCenter defaultCenter] postNotification:notification];
             }else{
                 [self hideHud];
-                [self showHint:@"暂无景区数据"];
+                [self showHintInView:self.view hint:@"暂无景区数据"];
             }
         }else {
             DLog(@"%@",res.reason);
             [self hideHud];
-            [self showHint:res.reason];
+            [self showHintInView:self.view hint:res.reason];
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         DLog(@"Error: %@", error);
         [self hideHud];
-        [self showHint:@"获取失败!"];
+        [self showHintInView:self.view hint:@"获取失败!"];
         return;
     }];
 }

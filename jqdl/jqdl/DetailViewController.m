@@ -50,7 +50,7 @@
     BMAdScrollView *adView = [[BMAdScrollView alloc] initWithFrame:CGRectMake(0, 0, Main_Screen_Width, 250) images:arr titles:strArr];
     [_myScrollView addSubview:adView];
     //标题
-    NSString *slogan = _poi.name;
+    NSString *slogan = [_poi.name stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     UILabel *titleLabel = [UILabel new];
     CGRect titleRect = CGRectMake(15, 210, Main_Screen_Width - 50, 30);
     [titleLabel setFrame:titleRect];

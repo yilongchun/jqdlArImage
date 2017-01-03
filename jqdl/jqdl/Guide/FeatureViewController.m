@@ -84,16 +84,15 @@
                 [self.myscrollview addSubview:jieshaoWebView];
                 [jieshaoWebView loadHTMLString:[NSString stringWithFormat:@"%@",[info objectForKey:@"description"]] baseURL:nil];
             }
-            
         }else {
             DLog(@"%@",res.reason);
             [self hideHud];
-            [self showHint:res.reason];
+            [self showHintInView:self.view hint:res.reason];
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         DLog(@"Error: %@", error);
         [self hideHud];
-        [self showHint:@"获取失败，请重试!"];
+        [self showHintInView:self.view hint:@"获取失败，请重试!"];
         return;
     }];
 }

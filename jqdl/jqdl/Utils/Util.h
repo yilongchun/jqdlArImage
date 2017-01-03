@@ -22,4 +22,7 @@
 //清空缓存
 +(void)deleteAllCache;
 
+//验证手机号
++(BOOL) isValidateMobile:(NSString *)mobile;
+
 @end

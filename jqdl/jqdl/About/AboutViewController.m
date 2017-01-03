@@ -149,7 +149,7 @@
             //           [Util deleteAllCache];
             [Util removeCache];
             [self hideHud];
-            [self showHint:@"清理完成！"];
+            [self showHintInView:self.view hint:@"清理完成！"];
         });
     }]];
     [self presentViewController:alert animated:YES completion:nil];

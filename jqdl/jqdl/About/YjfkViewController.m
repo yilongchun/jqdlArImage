@@ -83,7 +83,7 @@
         if (res.resultcode == ResultCodeSuccess) {
             
             [self hideHud];
-            [self showHint:@"已反馈，感谢您的支持!"];
+            [self showHintInView:self.view hint:@"已反馈，感谢您的支持!"];
             
             double delayInSeconds = 1.5;
             dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
@@ -93,12 +93,12 @@
         }else {
             DLog(@"%@",res.reason);
             [self hideHud];
-            [self showHint:res.reason];
+            [self showHintInView:self.view hint:res.reason];
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         DLog(@"Error: %@", error);
         [self hideHud];
-        [self showHint:@"反馈失败,请重试!"];
+        [self showHintInView:self.view hint:@"反馈失败,请重试!"];
         return;
     }];
 }

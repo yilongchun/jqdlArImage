@@ -69,12 +69,12 @@
         }else {
             DLog(@"%@",res.reason);
             [_mytableview.mj_header endRefreshing];
-            [self showHint:res.reason];
+            [self showHintInView:self.view hint:res.reason];
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         DLog(@"Error: %@", error);
         [_mytableview.mj_header endRefreshing];
-        [self showHint:@"获取失败，请重试!"];
+        [self showHintInView:self.view hint:@"获取失败，请重试!"];
         return;
     }];
 }

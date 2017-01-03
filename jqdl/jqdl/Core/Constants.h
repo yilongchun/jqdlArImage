@@ -16,10 +16,38 @@ typedef NS_ENUM(NSInteger, ResultCodeType){
     ResultCodeFail = 502//操作失败
 };
 
+//已登录用户
+#define LOGINED_USER @"loginedUser"
+//用户信息
+#define USER_INFO @"kUserInfo"
+
 
 #define kBaiduAK @"y63FqvA3ResevIFcSQMbTmOIFdLIXP5D"
 
 #define kHost @"http://g.ticket168.com/"
+
+
+
+/***************** API ***************/
+
+#define kDlHost @"https://api.qlxing.com/api/v2"
+/**
+ *  auth
+ */
+//登录
+#define API_AUTH_LOGIN @"/auth/login"
+//验证码登录
+#define API_AUTH_LOGIN_CODE @"/auth/login/code"
+//注册
+#define API_AUTH_REGISTER @"/auth/register"
+//重置密码
+#define API_AUTH_RESETPWD @"/auth/resetpwd"
+//发送注册验证码
+#define API_AUTH_CODE_REGISTER @"/auth/code/register"
+//发送登录验证码
+#define API_AUTH_CODE_LOGIN @"/auth/code/login"
+//发送重置密码验证码
+#define API_AUTH_CODE_RESETPWD @"/auth/code/resetpwd"
 
 /**
  *  西陵峡
