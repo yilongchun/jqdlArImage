@@ -105,6 +105,9 @@
     [locationBtn setImage:[UIImage imageNamed:@"location"] forState:UIControlStateNormal];
     [locationBtn addTarget:self action:@selector(location) forControlEvents:UIControlEventTouchUpInside];
     [_mapView addSubview:locationBtn];
+    
+    //添加放大缩小按钮
+    [self setZoomBtn];
 
     //添加手绘地图
 //    CLLocationCoordinate2D coors;
@@ -188,9 +191,12 @@
         playBtn.tag = i;
         playBtn.titleLabel.font = SYSTEMFONT(10);
         [playBtn addTarget:self action:@selector(playVoice:) forControlEvents:UIControlEventTouchUpInside];
-        [playBtn setTitle:@"播放" forState:UIControlStateNormal];
-        [playBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        playBtn.backgroundColor = RGB(255, 192, 20);
+//        [playBtn setTitle:@"播放" forState:UIControlStateNormal];
+//        [playBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        
+        [playBtn setImage:[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
+        
+//        playBtn.backgroundColor = RGB(255, 192, 20);
         [v addSubview:playBtn];
         
         
@@ -210,6 +216,73 @@
     //播放完成通知
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playVoiceEnd) name:@"playVoiceEnd" object:nil];
     
+    
+    
+    //    //计算距离
+    //    BMKMapPoint point1 = BMKMapPointForCoordinate(CLLocationCoordinate2DMake(39.915,116.404));
+    //    BMKMapPoint point2 = BMKMapPointForCoordinate(CLLocationCoordinate2DMake(38.915,115.404));
+    //    CLLocationDistance distance = BMKMetersBetweenMapPoints(point1,point2);
+    
+    //    //其他坐标系转为百度坐标系
+    //    CLLocationCoordinate2D coor = CLLocationCoordinate2DMake(39.90868, 116.3956);//原始坐标
+    //    //转换 google地图、soso地图、aliyun地图、mapabc地图和amap地图所用坐标至百度坐标
+    //    NSDictionary* testdic = BMKConvertBaiduCoorFrom(coor,BMK_COORDTYPE_GPS);
+    //    //转换GPS坐标至百度坐标(加密后的坐标)
+    //    testdic = BMKConvertBaiduCoorFrom(coor,BMK_COORDTYPE_GPS);
+    //    NSLog(@"x=%@,y=%@",[testdic objectForKey:@"x"],[testdic objectForKey:@"y"]);
+    //    //解密加密后的坐标字典
+    //    CLLocationCoordinate2D baiduCoor = BMKCoorDictionaryDecode(testdic);//转换后的百度坐标
+    
+    //    //1.初始化收藏夹管理类：
+    //    BMKFavPoiManager *_favManager = [[BMKFavPoiManager alloc] init];//初始化收藏夹管理类
+    //    //2.添加一个收藏点，核心代码如下：
+    //    //构造收藏点信息
+    //    BMKFavPoiInfo *poiInfo = [[BMKFavPoiInfo alloc] init];
+    //    poiInfo.pt = CLLocationCoordinate2DMake(39.908, 116.204);//收藏点坐标
+    //    poiInfo.poiName = @"收藏点名称";//收藏点名称
+    //    //添加收藏点(收藏点功后会得到favId)
+    //    NSInteger res = [_favManager addFavPoi:poiInfo];
+    //    //3.获取收藏点，核心代码如下：
+    //    //获取所有收藏点
+    //    NSArray *allFavPois = [_favManager getAllFavPois];
+    //    //获取某个收藏点(收藏点成功后会得到favId)
+    //    BMKFavPoiInfo *favPoi = [_favManager getFavPoi:favId];
+    //    //4.删除收藏的点，核心代码如下：
+    //    //删除所有收藏点
+    //    BOOL res = [_favManager clearAllFavPois];
+    //    //删除某个收藏点(收藏点成功后会得到favId)
+    //    BOOL res = [_favManager deleteFavPoi:favId];
+    
+}
+
+-(void)setZoomBtn{
+    UIView *zoomView = [[UIView alloc] initWithFrame:CGRectMake(Main_Screen_Width - 28 - 15, CGRectGetHeight(_mapView.frame)/2 - 28, 28, 57)];
+    zoomView.backgroundColor = [UIColor whiteColor];
+    ViewBorderRadius(zoomView, 3, 0, [UIColor whiteColor]);
+    
+    UIButton *zoomOutBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 28, 28)];
+    [zoomOutBtn setImage:[UIImage imageNamed:@"zoomOut"] forState:UIControlStateNormal];
+    [zoomOutBtn addTarget:self action:@selector(zoomIn) forControlEvents:UIControlEventTouchUpInside];
+    [zoomView addSubview:zoomOutBtn];
+    
+    UILabel *line = [[UILabel alloc] initWithFrame:CGRectMake(6, 28, zoomView.frame.size.width - 12, 0.5)];
+    line.backgroundColor = RGBA(80, 80, 80, 0.5);
+    [zoomView addSubview:line];
+    
+    UIButton *zoomInBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 29, 28, 28)];
+    [zoomInBtn setImage:[UIImage imageNamed:@"zoomIn"] forState:UIControlStateNormal];
+    [zoomInBtn addTarget:self action:@selector(zoomOut) forControlEvents:UIControlEventTouchUpInside];
+    [zoomView addSubview:zoomInBtn];
+    
+    [_mapView addSubview:zoomView];
+}
+
+-(void)zoomIn{
+    [_mapView zoomIn];
+}
+
+-(void)zoomOut{
+    [_mapView zoomOut];
 }
 
 -(void)playVoice:(UIButton *)btn{
@@ -217,22 +290,23 @@
     MyPointAnnotation *anno = annotations[btn.tag];
     NSString *voice = anno.poi.voice;
     
-    
-    
     if ([[Player sharedManager] isPlaying]) {//当前正在播放
         NSString *playingUrlStr = [[[Player sharedManager] url] absoluteString];
         NSString *path = [NSString stringWithFormat:@"%@%@",kHost,voice];
         if ([playingUrlStr isEqualToString:path]) {//当前播放的就是该景点的语音 停止播放
             [[Player sharedManager] stop];//先停止播放
-            [btn setTitle:@"播放" forState:UIControlStateNormal];
+//            [btn setTitle:@"播放" forState:UIControlStateNormal];
+            [btn setImage:[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
             oldPlayBtn = nil;
         }else{//不是该景点的 重新播放
             [[Player sharedManager] stop];//先停止播放
-            [oldPlayBtn setTitle:@"播放" forState:UIControlStateNormal];
+//            [oldPlayBtn setTitle:@"播放" forState:UIControlStateNormal];
+            [oldPlayBtn setImage:[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
             
             [[Player sharedManager] setUrl:[NSURL URLWithString:path]];
             [[Player sharedManager] play];
-            [btn setTitle:@"暂停" forState:UIControlStateNormal];
+//            [btn setTitle:@"暂停" forState:UIControlStateNormal];
+            [btn setImage:[UIImage imageNamed:@"playEnd"] forState:UIControlStateNormal];
             oldPlayBtn = btn;
         }
     }else{//当前没有播放
@@ -242,15 +316,18 @@
         NSString *path = [NSString stringWithFormat:@"%@%@",kHost,voice];
         [[Player sharedManager] setUrl:[NSURL URLWithString:path]];
         [[Player sharedManager] play];
-        [btn setTitle:@"暂停" forState:UIControlStateNormal];
+//        [btn setTitle:@"暂停" forState:UIControlStateNormal];
+        [btn setImage:[UIImage imageNamed:@"playEnd"] forState:UIControlStateNormal];
         oldPlayBtn = btn;
     }
     
 }
 
+//播放结束
 -(void)playVoiceEnd{
     if (oldPlayBtn) {
-        [oldPlayBtn setTitle:@"播放" forState:UIControlStateNormal];
+//        [oldPlayBtn setTitle:@"播放" forState:UIControlStateNormal];
+        [oldPlayBtn setImage:[UIImage imageNamed:@"playEnd"] forState:UIControlStateNormal];
         oldPlayBtn = nil;
     }
 }
