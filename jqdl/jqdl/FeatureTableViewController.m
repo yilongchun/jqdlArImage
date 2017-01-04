@@ -46,25 +46,21 @@
     
     [self.tableView reloadData];
     
+    //播放完成通知
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playVoiceEnd) name:@"playVoiceEnd" object:nil];
     
-    [Player sharedManager].onStateChange = ^(FSAudioStreamState state){
-        DLog(@"%u",state);
-    };
-    [Player sharedManager].onCompletion = ^(){
-        DLog(@"播放完成");
-        if (oldPlayBtn) {
-            [oldPlayBtn setImage:[UIImage imageNamed:@"js"] forState:UIControlStateNormal];
-            playIndex = -1;
-        }
-    };
-    
-    
-    
-    
-    
-    
-    
-    
+}
+
+-(void)playVoiceEnd{
+    if (oldPlayBtn) {
+        [oldPlayBtn setImage:[UIImage imageNamed:@"js"] forState:UIControlStateNormal];
+        playIndex = -1;
+    }
+}
+
+-(void)viewDidDisappear:(BOOL)animated{
+    [super viewDidDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"playVoiceEnd" object:nil];
 }
 
 -(void)playVoice:(UIButton *)btn{

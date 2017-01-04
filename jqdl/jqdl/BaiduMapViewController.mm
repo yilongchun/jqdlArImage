@@ -207,13 +207,9 @@
         [_mapView selectAnnotation:annotations[0] animated:YES];
     }
     
-    [Player sharedManager].onCompletion = ^(){
-        DLog(@"播放完成");
-        if (oldPlayBtn) {
-            [oldPlayBtn setTitle:@"播放" forState:UIControlStateNormal];
-            oldPlayBtn = nil;
-        }
-    };
+    //播放完成通知
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playVoiceEnd) name:@"playVoiceEnd" object:nil];
+    
 }
 
 -(void)playVoice:(UIButton *)btn{
@@ -250,23 +246,13 @@
         oldPlayBtn = btn;
     }
     
-    
-//    if ([[Player sharedManager] isPlaying]) {
-//        DLog(@"停止播放");
-//        //        [self.calloutView.jieshuoBtn setImage:[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
-//        [[Player sharedManager] stop];
-//    }else{
-//        DLog(@"停止播放 重新播放");
-//        [[Player sharedManager] stop];
-//        //        [self.calloutView.jieshuoBtn setImage:[UIImage imageNamed:@"stop"] forState:UIControlStateNormal];
-//        NSString *path = [NSString stringWithFormat:@"%@%@",kHost,voice];
-//        DLog(@"%@",path);
-//        NSURL *url=[NSURL URLWithString:path];
-//        [[Player sharedManager] setUrl:url];
-//        [[Player sharedManager] play];
-//    }
-    
-    
+}
+
+-(void)playVoiceEnd{
+    if (oldPlayBtn) {
+        [oldPlayBtn setTitle:@"播放" forState:UIControlStateNormal];
+        oldPlayBtn = nil;
+    }
 }
 
 //景点详情
@@ -301,8 +287,11 @@
         locationFlag2 = !locationFlag2;
         [self location];//定位
     }
-    
-    
+}
+
+-(void)viewDidDisappear:(BOOL)animated{
+    [super viewDidDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"playVoiceEnd" object:nil];
 }
 
 -(void)viewWillDisappear:(BOOL)animated

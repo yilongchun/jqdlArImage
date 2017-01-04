@@ -35,6 +35,8 @@
 #import "DetailViewController.h"
 #import "LoginViewController.h"
 
+#import <BaiduMapAPI_Utils/BMKUtilsComponent.h>
+
 
 /* this is used to create random positions around you */
 #define WT_RANDOM(startValue, endValue) ((((float) (arc4random() % ((unsigned)RAND_MAX + 1)) / RAND_MAX) * (endValue - startValue)) + startValue)
@@ -262,6 +264,22 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     else {
         NSLog(@"This device is not supported. Show either an alert or use this class method even before presenting the view controller that manages the WTArchitectView. Error: %@", [deviceSupportError localizedDescription]);
     }
+    
+//    //计算距离
+//    BMKMapPoint point1 = BMKMapPointForCoordinate(CLLocationCoordinate2DMake(39.915,116.404));
+//    BMKMapPoint point2 = BMKMapPointForCoordinate(CLLocationCoordinate2DMake(38.915,115.404));
+//    CLLocationDistance distance = BMKMetersBetweenMapPoints(point1,point2);
+//    //其他坐标系转为百度坐标系
+//    CLLocationCoordinate2D coor = CLLocationCoordinate2DMake(39.90868, 116.3956);//原始坐标
+//    //转换 google地图、soso地图、aliyun地图、mapabc地图和amap地图所用坐标至百度坐标
+//    NSDictionary* testdic = BMKConvertBaiduCoorFrom(coor,BMK_COORDTYPE_GPS);
+//    //转换GPS坐标至百度坐标(加密后的坐标)
+//    testdic = BMKConvertBaiduCoorFrom(coor,BMK_COORDTYPE_GPS);
+//    NSLog(@"x=%@,y=%@",[testdic objectForKey:@"x"],[testdic objectForKey:@"y"]);
+//    //解密加密后的坐标字典
+//    CLLocationCoordinate2D baiduCoor = BMKCoorDictionaryDecode(testdic);//转换后的百度坐标
+    
+    
     
     
     //选择景区

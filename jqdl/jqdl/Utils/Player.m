@@ -23,6 +23,7 @@ static Player *__helper = nil;
         };
         __helper.onCompletion=^(){
             NSLog(@"播放完成!");
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"playVoiceEnd" object:nil];
         };
     });
     return __helper;

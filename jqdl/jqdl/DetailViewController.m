@@ -110,11 +110,8 @@
     [daohangBtn setImage:[UIImage imageNamed:@"daohang"] forState:UIControlStateNormal];
     [_myScrollView addSubview:daohangBtn];
     
-    
-    [Player sharedManager].onCompletion = ^(){
-        DLog(@"播放完成");
-        [jieshuoBtn setImage:[UIImage imageNamed:@"ypjs"] forState:UIControlStateNormal];
-    };
+    //播放完成通知
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playVoiceEnd) name:@"playVoiceEnd" object:nil];
     
     //控制播放按钮
     if ([[Player sharedManager] isPlaying]) {
@@ -127,6 +124,10 @@
         }
         
     }
+}
+
+-(void)playVoiceEnd{
+    [jieshuoBtn setImage:[UIImage imageNamed:@"ypjs"] forState:UIControlStateNormal];
 }
 
 //语音播放
@@ -160,10 +161,12 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
-    
-    
+}
+
+-(void)viewDidDisappear:(BOOL)animated{
+    [super viewDidDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"playVoiceEnd" object:nil];
 }
 
 - (void)didReceiveMemoryWarning {
