@@ -12,7 +12,9 @@
 #import "UILabel+SetLabelSpace.h"
 #import "Player.h"
 
-@interface DetailViewController ()
+@interface DetailViewController (){
+    UIButton *jieshuoBtn;
+}
 
 @end
 
@@ -60,7 +62,7 @@
     titleLabel.textColor=[UIColor whiteColor];
     [_myScrollView addSubview:titleLabel];
     //解说按钮
-    UIButton *jieshuoBtn = [[UIButton alloc] initWithFrame:CGRectMake(25, CGRectGetMaxY(adView.frame) + 10, 88, 25)];
+    jieshuoBtn = [[UIButton alloc] initWithFrame:CGRectMake(25, CGRectGetMaxY(adView.frame) + 10, 88, 25)];
     [jieshuoBtn setImage:[UIImage imageNamed:@"ypjs"] forState:UIControlStateNormal];
     [jieshuoBtn addTarget:self action:@selector(playVoice) forControlEvents:UIControlEventTouchUpInside];
     [_myScrollView addSubview:jieshuoBtn];
@@ -114,9 +116,9 @@
         NSString *playingUrlStr = [[[Player sharedManager] url] absoluteString];
         NSString *path = [NSString stringWithFormat:@"%@%@",kHost,_poi.voice];
         if ([playingUrlStr isEqualToString:path]) {//当前播放的就是该景点的语音 停止播放
-            
+            [jieshuoBtn setImage:[UIImage imageNamed:@"ztbf"] forState:UIControlStateNormal];
         }else{//不是该景点的 重新播放
-            
+            [jieshuoBtn setImage:[UIImage imageNamed:@"ypjs"] forState:UIControlStateNormal];
         }
         
     }
@@ -125,23 +127,30 @@
 //语音播放
 -(void)playVoice{
     if ([[Player sharedManager] isPlaying]) {
-        DLog(@"停止播放");
-//        [self.calloutView.jieshuoBtn setImage:[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
-        [[Player sharedManager] stop];
+        NSString *playingUrlStr = [[[Player sharedManager] url] absoluteString];
+        NSString *path = [NSString stringWithFormat:@"%@%@",kHost,_poi.voice];
+        if ([playingUrlStr isEqualToString:path]) {//当前播放的就是该景点的语音 停止播放
+            [jieshuoBtn setImage:[UIImage imageNamed:@"ypjs"] forState:UIControlStateNormal];
+            [[Player sharedManager] stop];
+            DLog(@"停止播放");
+        }else{//不是该景点的 重新播放            
+            [[Player sharedManager] stop];
+            [jieshuoBtn setImage:[UIImage imageNamed:@"ztbf"] forState:UIControlStateNormal];
+            NSURL *url=[NSURL URLWithString:path];
+            [[Player sharedManager] setUrl:url];
+            [[Player sharedManager] play];
+            DLog(@"停止播放 重新播放");
+        }
     }else{
-        DLog(@"停止播放 重新播放");
+        DLog(@"播放");
         [[Player sharedManager] stop];
-//        [self.calloutView.jieshuoBtn setImage:[UIImage imageNamed:@"stop"] forState:UIControlStateNormal];
+        [jieshuoBtn setImage:[UIImage imageNamed:@"ztbf"] forState:UIControlStateNormal];
         NSString *path = [NSString stringWithFormat:@"%@%@",kHost,_poi.voice];
         DLog(@"%@",path);
         NSURL *url=[NSURL URLWithString:path];
         [[Player sharedManager] setUrl:url];
         [[Player sharedManager] play];
     }
-    
-    
-    
-    
 }
 
 - (void)viewWillAppear:(BOOL)animated {
