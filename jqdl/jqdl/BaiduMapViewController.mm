@@ -206,6 +206,14 @@
     if (annotations.count > 0) {
         [_mapView selectAnnotation:annotations[0] animated:YES];
     }
+    
+    [Player sharedManager].onCompletion = ^(){
+        DLog(@"播放完成");
+        if (oldPlayBtn) {
+            [oldPlayBtn setTitle:@"播放" forState:UIControlStateNormal];
+            oldPlayBtn = nil;
+        }
+    };
 }
 
 -(void)playVoice:(UIButton *)btn{

@@ -400,6 +400,7 @@
 		442ED7D71DB9A78F0058DD4C /* DetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 442ED7D51DB9A78F0058DD4C /* DetailViewController.xib */; };
 		442ED7D91DB9A7D10058DD4C /* ArchitectWorld in Resources */ = {isa = PBXBuildFile; fileRef = 442ED7D81DB9A7D10058DD4C /* ArchitectWorld */; };
 		442ED7DB1DB9A9340058DD4C /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 442ED7DA1DB9A9340058DD4C /* MediaPlayer.framework */; };
+		4434AEC11E1CAA490014BE2D /* UIImage+Color.m in Sources */ = {isa = PBXBuildFile; fileRef = 4434AEC01E1CAA490014BE2D /* UIImage+Color.m */; };
 		443DA7CB1E08C1130014C9B8 /* MoreFunctionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 443DA7C91E08C1130014C9B8 /* MoreFunctionViewController.m */; };
 		443DA7CC1E08C1130014C9B8 /* MoreFunctionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 443DA7CA1E08C1130014C9B8 /* MoreFunctionViewController.xib */; };
 		444D77C11E037A180040F0A7 /* _JZNavigationInteractiveTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 444D77B41E037A180040F0A7 /* _JZNavigationInteractiveTransition.m */; };
@@ -1262,6 +1263,8 @@
 		442ED7D51DB9A78F0058DD4C /* DetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DetailViewController.xib; sourceTree = "<group>"; };
 		442ED7D81DB9A7D10058DD4C /* ArchitectWorld */ = {isa = PBXFileReference; lastKnownFileType = folder; name = ArchitectWorld; path = jqdl/ArchitectWorld; sourceTree = "<group>"; };
 		442ED7DA1DB9A9340058DD4C /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
+		4434AEBF1E1CAA490014BE2D /* UIImage+Color.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Color.h"; sourceTree = "<group>"; };
+		4434AEC01E1CAA490014BE2D /* UIImage+Color.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Color.m"; sourceTree = "<group>"; };
 		443DA7C81E08C1130014C9B8 /* MoreFunctionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MoreFunctionViewController.h; sourceTree = "<group>"; };
 		443DA7C91E08C1130014C9B8 /* MoreFunctionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MoreFunctionViewController.m; sourceTree = "<group>"; };
 		443DA7CA1E08C1130014C9B8 /* MoreFunctionViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MoreFunctionViewController.xib; sourceTree = "<group>"; };
@@ -2900,6 +2903,8 @@
 				44621B911E12029400EB3AFC /* UIKit+AFNetworking */,
 				44166BFB1CC0EB36005628F5 /* UITextView+PlaceHolder.h */,
 				44166BFC1CC0EB36005628F5 /* UITextView+PlaceHolder.m */,
+				4434AEBF1E1CAA490014BE2D /* UIImage+Color.h */,
+				4434AEC01E1CAA490014BE2D /* UIImage+Color.m */,
 			);
 			path = Category;
 			sourceTree = "<group>";
@@ -3348,6 +3353,7 @@
 				44117A5F1C11763E0071E1C0 /* ZXQRCodeBitMatrixParser.m in Sources */,
 				440E7F8E1E1B49EE00B5277E /* IQKeyboardManager.m in Sources */,
 				44117A201C11763E0071E1C0 /* ZXRSSExpandedFieldParser.m in Sources */,
+				4434AEC11E1CAA490014BE2D /* UIImage+Color.m in Sources */,
 				44621B8C1E1200E700EB3AFC /* AFSecurityPolicy.m in Sources */,
 				441179C01C11763E0071E1C0 /* ZXSMSParsedResult.m in Sources */,
 				441179DD1C11763E0071E1C0 /* ZXByteArray.m in Sources */,

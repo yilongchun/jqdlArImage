@@ -13,9 +13,12 @@
 #import "Player.h"
 #import "DetailViewController.h"
 #import "JZNavigationExtension.h"
+#import "UIImage+Color.h"
+#import "FSAudioStream.h"
 
 @interface FeatureTableViewController (){
     UIButton *oldPlayBtn;
+    long playIndex;
 }
 
 @end
@@ -42,6 +45,26 @@
     self.navigationItem.titleView = titleLabel;
     
     [self.tableView reloadData];
+    
+    
+    [Player sharedManager].onStateChange = ^(FSAudioStreamState state){
+        DLog(@"%u",state);
+    };
+    [Player sharedManager].onCompletion = ^(){
+        DLog(@"播放完成");
+        if (oldPlayBtn) {
+            [oldPlayBtn setImage:[UIImage imageNamed:@"js"] forState:UIControlStateNormal];
+            playIndex = -1;
+        }
+    };
+    
+    
+    
+    
+    
+    
+    
+    
 }
 
 -(void)playVoice:(UIButton *)btn{
@@ -51,35 +74,49 @@
     
     
     
+    
     if ([[Player sharedManager] isPlaying]) {//当前正在播放
         NSString *playingUrlStr = [[[Player sharedManager] url] absoluteString];
         NSString *path = [NSString stringWithFormat:@"%@%@",kHost,voice];
         if ([playingUrlStr isEqualToString:path]) {//当前播放的就是该景点的语音 停止播放
             [[Player sharedManager] stop];//先停止播放
-            btn.titleLabel.text = @"解说";
-            [btn setTitle:@"解说" forState:UIControlStateNormal];
+//            btn.titleLabel.text = @"解说";
+//            [btn setTitle:@"解说" forState:UIControlStateNormal];
+            
+            [btn setImage:[UIImage imageNamed:@"js"] forState:UIControlStateNormal];
             oldPlayBtn = nil;
+            playIndex = -1;
         }else{//不是该景点的 重新播放
             [[Player sharedManager] stop];//先停止播放
-            oldPlayBtn.titleLabel.text = @"解说";
-            [oldPlayBtn setTitle:@"解说" forState:UIControlStateNormal];
+//            oldPlayBtn.titleLabel.text = @"解说";
+//            [oldPlayBtn setTitle:@"解说" forState:UIControlStateNormal];
+            [oldPlayBtn setImage:[UIImage imageNamed:@"js"] forState:UIControlStateNormal];
             
             [[Player sharedManager] setUrl:[NSURL URLWithString:path]];
             [[Player sharedManager] play];
-            btn.titleLabel.text = @"暂停";
-            [btn setTitle:@"暂停" forState:UIControlStateNormal];
+//            btn.titleLabel.text = @"暂停";
+//            [btn setTitle:@"暂停" forState:UIControlStateNormal];
+            [btn setImage:[UIImage imageNamed:@"zt"] forState:UIControlStateNormal];
             oldPlayBtn = btn;
+            playIndex = btn.tag;
         }
     }else{//当前没有播放
+        
+        if (oldPlayBtn) {
+            [oldPlayBtn setImage:[UIImage imageNamed:@"js"] forState:UIControlStateNormal];
+            playIndex = -1;
+        }
         
         [[Player sharedManager] pause];
         
         NSString *path = [NSString stringWithFormat:@"%@%@",kHost,voice];
         [[Player sharedManager] setUrl:[NSURL URLWithString:path]];
         [[Player sharedManager] play];
-        btn.titleLabel.text = @"暂停";
-        [btn setTitle:@"暂停" forState:UIControlStateNormal];
+//        btn.titleLabel.text = @"暂停";
+//        [btn setTitle:@"暂停" forState:UIControlStateNormal];
+        [btn setImage:[UIImage imageNamed:@"zt"] forState:UIControlStateNormal];
         oldPlayBtn = btn;
+        playIndex = btn.tag;
     }
     
     
@@ -134,7 +171,9 @@
     FeatureTableViewCell *cell = (FeatureTableViewCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil){
         cell= (FeatureTableViewCell *)[[[NSBundle  mainBundle]  loadNibNamed:@"FeatureTableViewCell" owner:self options:nil]  lastObject];
-        
+//        cell.playBtn.backgroundColor = RGBA(255, 255, 255, 0.5);
+        [cell.playBtn setBackgroundImage:[UIImage imageWithColor:RGBA(255, 255, 255, 0.5) size:CGSizeMake(65, 25)] forState:UIControlStateNormal];
+        ViewBorderRadius(cell.playBtn, 12.5, 0, [UIColor whiteColor]);
     }
     WTPoi *poi = [_jingdianArray objectAtIndex:indexPath.row];
     DLog(@"%@",poi.image);
@@ -143,6 +182,13 @@
     cell.desLabel.text = @"世界上最多样生态系统的森林，穿行其中绝对是一场极富挑战性的奇幻冒险; 世界上最多样生态系统的森林，穿行其...";
     cell.playBtn.tag = indexPath.row;
     [cell.playBtn addTarget:self action:@selector(playVoice:) forControlEvents:UIControlEventTouchUpInside];
+   
+    if (oldPlayBtn != nil && cell.playBtn.tag == playIndex) {
+        [cell.playBtn setImage:[UIImage imageNamed:@"zt"] forState:UIControlStateNormal];
+    }else{
+        [cell.playBtn setImage:[UIImage imageNamed:@"js"] forState:UIControlStateNormal];
+    }
+    
     return cell;
 }
 

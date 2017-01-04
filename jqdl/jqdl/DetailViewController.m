@@ -111,6 +111,11 @@
     [_myScrollView addSubview:daohangBtn];
     
     
+    [Player sharedManager].onCompletion = ^(){
+        DLog(@"播放完成");
+        [jieshuoBtn setImage:[UIImage imageNamed:@"ypjs"] forState:UIControlStateNormal];
+    };
+    
     //控制播放按钮
     if ([[Player sharedManager] isPlaying]) {
         NSString *playingUrlStr = [[[Player sharedManager] url] absoluteString];

@@ -25,15 +25,14 @@
                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vj9-sm-Dzc">
-                        <rect key="frame" x="15" y="98" width="65" height="30"/>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vj9-sm-Dzc">
+                        <rect key="frame" x="15" y="103" width="65" height="25"/>
                         <animations/>
                         <constraints>
-                            <constraint firstAttribute="height" constant="30" id="CWR-iB-rJ0"/>
+                            <constraint firstAttribute="height" constant="25" id="CWR-iB-rJ0"/>
                             <constraint firstAttribute="width" constant="65" id="bOA-Bh-pe4"/>
                         </constraints>
-                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                        <state key="normal" title="解说"/>
+                        <state key="normal" image="js"/>
                     </button>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XfN-Ys-Il4">
                         <rect key="frame" x="15" y="45" width="290" height="16"/>
@@ -69,4 +68,7 @@
             <point key="canvasLocation" x="530" y="396"/>
         </tableViewCell>
     </objects>
+    <resources>
+        <image name="js" width="65" height="25"/>
+    </resources>
 </document>
