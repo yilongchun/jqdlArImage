@@ -103,7 +103,7 @@
             playIndex = -1;
         }
         
-        [[Player sharedManager] pause];
+        [[Player sharedManager] stop];
         
         NSString *path = [NSString stringWithFormat:@"%@%@",kHost,voice];
         [[Player sharedManager] setUrl:[NSURL URLWithString:path]];

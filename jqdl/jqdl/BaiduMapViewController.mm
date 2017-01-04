@@ -266,7 +266,7 @@
     [zoomView addSubview:zoomOutBtn];
     
     UILabel *line = [[UILabel alloc] initWithFrame:CGRectMake(6, 28, zoomView.frame.size.width - 12, 0.5)];
-    line.backgroundColor = RGBA(80, 80, 80, 0.5);
+    line.backgroundColor = RGBA(80, 80, 80, 0.3);
     [zoomView addSubview:line];
     
     UIButton *zoomInBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 29, 28, 28)];
@@ -311,7 +311,7 @@
         }
     }else{//当前没有播放
         
-        [[Player sharedManager] pause];
+        [[Player sharedManager] stop];
         
         NSString *path = [NSString stringWithFormat:@"%@%@",kHost,voice];
         [[Player sharedManager] setUrl:[NSURL URLWithString:path]];
@@ -327,7 +327,7 @@
 -(void)playVoiceEnd{
     if (oldPlayBtn) {
 //        [oldPlayBtn setTitle:@"播放" forState:UIControlStateNormal];
-        [oldPlayBtn setImage:[UIImage imageNamed:@"playEnd"] forState:UIControlStateNormal];
+        [oldPlayBtn setImage:[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
         oldPlayBtn = nil;
     }
 }
@@ -459,18 +459,18 @@
 
 - (void)mapView:(BMKMapView *)mapView didSelectAnnotationView:(BMKAnnotationView *)view{
     if ([view.annotation isKindOfClass:[MyPointAnnotation class]]) {
-        DLog(@"%@",view);
-        DLog(@"%@",view.annotation);
+//        DLog(@"%@",view);
+//        DLog(@"%@",view.annotation);
         MyPointAnnotation *annotation = (MyPointAnnotation *)view.annotation;
         
-        DLog(@"%@",annotation.title);
+//        DLog(@"%@",annotation.title);
         
         CLLocationCoordinate2D coors;
         coors.latitude = annotation.coordinate.latitude;
         coors.longitude = annotation.coordinate.longitude;
         end2d = coors;
         
-        DLog(@"%f %f",annotation.coordinate.latitude,annotation.coordinate.longitude);
+//        DLog(@"%f %f",annotation.coordinate.latitude,annotation.coordinate.longitude);
         
         
         [sv setContentOffset:CGPointMake(annotation.index * sv.frame.size.width, 0) animated:NO];
@@ -483,7 +483,7 @@
     if ([view.annotation isKindOfClass:[MyPointAnnotation class]]) {
         MyPointAnnotation *annotation = (MyPointAnnotation *)view.annotation;
         
-        DLog(@"%@",annotation.poi.image);
+//        DLog(@"%@",annotation.poi.image);
         
         DetailViewController *vc = [[DetailViewController alloc] init];
         vc.poi = annotation.poi;
