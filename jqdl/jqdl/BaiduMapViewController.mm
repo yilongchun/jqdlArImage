@@ -200,6 +200,7 @@
     x-=10;
     [sv setContentSize:CGSizeMake(x, 108)];
     [view addSubview:sv];
+    
     [self.view addSubview:view];
     
     if (annotations.count > 0) {
@@ -281,6 +282,8 @@
     _locService.delegate = self;
     _routesearch.delegate = self; // 此处记得不用的时候需要置nil，否则影响内存的释放
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
+    
+    sv.clipsToBounds = NO;
 }
 
 -(void)viewDidAppear:(BOOL)animated{
@@ -300,6 +303,7 @@
     _mapView.delegate = nil; // 不用时，置nil
     _locService.delegate = nil;
     _routesearch.delegate = nil; // 此处记得不用的时候需要置nil，否则影响内存的释放
+    sv.clipsToBounds = YES;
 }
 
 #pragma mark - UIScrollViewDelegate
@@ -321,6 +325,9 @@
     
     if (currentPage >= 0 & currentPage < annotations.count) {
         MyPointAnnotation* annotation = [annotations objectAtIndex:currentPage];
+        
+        
+        
         [_mapView selectAnnotation:annotation animated:YES];
         [_mapView setCenterCoordinate:annotation.coordinate animated:YES];
     }
@@ -433,6 +440,7 @@
         return [self getRouteAnnotationView:mapView viewForAnnotation:(RouteAnnotation*)annotation];
     }
     if ([annotation isKindOfClass:[MyPointAnnotation class]]) {
+        
         BMKAnnotationView * view = [[BMKAnnotationView alloc]initWithAnnotation:annotation reuseIdentifier:@"annotation"];
         
         

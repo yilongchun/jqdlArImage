@@ -60,7 +60,7 @@
     titleLabel.textColor=[UIColor whiteColor];
     [_myScrollView addSubview:titleLabel];
     //解说按钮
-    UIButton *jieshuoBtn = [[UIButton alloc] initWithFrame:CGRectMake(20, CGRectGetMaxY(adView.frame) + 10, 98, 36)];
+    UIButton *jieshuoBtn = [[UIButton alloc] initWithFrame:CGRectMake(25, CGRectGetMaxY(adView.frame) + 10, 88, 25)];
     [jieshuoBtn setImage:[UIImage imageNamed:@"ypjs"] forState:UIControlStateNormal];
     [jieshuoBtn addTarget:self action:@selector(playVoice) forControlEvents:UIControlEventTouchUpInside];
     [_myScrollView addSubview:jieshuoBtn];

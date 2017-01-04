@@ -12,6 +12,7 @@
 #import "UIImageView+AFNetworking.h"
 #import "Player.h"
 #import "DetailViewController.h"
+#import "JZNavigationExtension.h"
 
 @interface FeatureTableViewController (){
     UIButton *oldPlayBtn;
@@ -29,6 +30,9 @@
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    
+    self.jz_navigationBarBackgroundAlpha = 1.f;
+    self.jz_wantsNavigationBarVisible = YES;
     
     UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
     titleLabel.font = BOLDSYSTEMFONT(17);
