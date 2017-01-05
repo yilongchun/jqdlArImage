@@ -26,12 +26,16 @@ var World2 = {
                                                cam: [video]
                                            },
                                            onEnterFieldOfVision: function onEnterFieldOfVisionFn() {
-                                               AR.logger.debug("识别到物品,播放视频");
-                                               video.resume();
+                                               AR.logger.debug("识别到物品");
+//                                               video.resume();
+                                               
+                                               var architectSdkUrl = "architectsdk://tracker?id=123";
+                                               document.location = architectSdkUrl;
+                                               
                                            },
                                            onExitFieldOfVision: function onExitFieldOfVisionFn() {
                                                AR.logger.debug("识别结束,视频暂停");
-                                               video.pause();
+//                                               video.pause();
                                            }
        });
     }

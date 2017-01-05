@@ -415,6 +415,9 @@
 		444D77D61E038D600040F0A7 /* BaiduMapViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 444D77D41E038D600040F0A7 /* BaiduMapViewController.mm */; };
 		444D77D71E038D600040F0A7 /* BaiduMapViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 444D77D51E038D600040F0A7 /* BaiduMapViewController.xib */; };
 		444D77D91E038DD90040F0A7 /* BaiduMapAPI_Map.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 444D77D81E038DD90040F0A7 /* BaiduMapAPI_Map.framework */; };
+		445C4A781E1DECF800A5B375 /* TrackerResultViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 445C4A761E1DECF800A5B375 /* TrackerResultViewController.m */; };
+		445C4A791E1DECF800A5B375 /* TrackerResultViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 445C4A771E1DECF800A5B375 /* TrackerResultViewController.xib */; };
+		445C4A7B1E1DF3B800A5B375 /* timg.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 445C4A7A1E1DF3B800A5B375 /* timg.jpeg */; };
 		44621B561E11FFA300EB3AFC /* BMAdScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 44621B551E11FFA300EB3AFC /* BMAdScrollView.m */; };
 		44621B881E1200E700EB3AFC /* AFHTTPRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 44621B761E1200E700EB3AFC /* AFHTTPRequestOperation.m */; };
 		44621B891E1200E700EB3AFC /* AFHTTPRequestOperationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 44621B781E1200E700EB3AFC /* AFHTTPRequestOperationManager.m */; };
@@ -1290,6 +1293,10 @@
 		444D77D41E038D600040F0A7 /* BaiduMapViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = BaiduMapViewController.mm; sourceTree = "<group>"; };
 		444D77D51E038D600040F0A7 /* BaiduMapViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BaiduMapViewController.xib; sourceTree = "<group>"; };
 		444D77D81E038DD90040F0A7 /* BaiduMapAPI_Map.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BaiduMapAPI_Map.framework; path = ThiredPartyLib/BaiduMap/BaiduMapAPI_Map.framework; sourceTree = "<group>"; };
+		445C4A751E1DECF800A5B375 /* TrackerResultViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackerResultViewController.h; sourceTree = "<group>"; };
+		445C4A761E1DECF800A5B375 /* TrackerResultViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrackerResultViewController.m; sourceTree = "<group>"; };
+		445C4A771E1DECF800A5B375 /* TrackerResultViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TrackerResultViewController.xib; sourceTree = "<group>"; };
+		445C4A7A1E1DF3B800A5B375 /* timg.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = timg.jpeg; sourceTree = "<group>"; };
 		44621B541E11FFA300EB3AFC /* BMAdScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMAdScrollView.h; sourceTree = "<group>"; };
 		44621B551E11FFA300EB3AFC /* BMAdScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BMAdScrollView.m; sourceTree = "<group>"; };
 		44621B751E1200E700EB3AFC /* AFHTTPRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPRequestOperation.h; sourceTree = "<group>"; };
@@ -1462,6 +1469,9 @@
 				442ED7D31DB9A78F0058DD4C /* DetailViewController.h */,
 				442ED7D41DB9A78F0058DD4C /* DetailViewController.m */,
 				442ED7D51DB9A78F0058DD4C /* DetailViewController.xib */,
+				445C4A751E1DECF800A5B375 /* TrackerResultViewController.h */,
+				445C4A761E1DECF800A5B375 /* TrackerResultViewController.m */,
+				445C4A771E1DECF800A5B375 /* TrackerResultViewController.xib */,
 				440E7FA01E1B6EE400B5277E /* MyView.h */,
 				440E7FA11E1B6EE400B5277E /* MyView.m */,
 				444D77D31E038D600040F0A7 /* BaiduMapViewController.h */,
@@ -3067,6 +3077,7 @@
 		44B516BA1BFEBCE200E74E13 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				445C4A7A1E1DF3B800A5B375 /* timg.jpeg */,
 				440E7F611E1B423700B5277E /* member_no.gif */,
 				444D77CC1E038B140040F0A7 /* mapapi.bundle */,
 			);
@@ -3289,6 +3300,8 @@
 				44270F041E164F1B00561C69 /* FeatureTableViewCell.xib in Resources */,
 				44003D071BFB24ED00CB747A /* Main.storyboard in Resources */,
 				44117ABA1C11777A0071E1C0 /* AboutMeViewController.xib in Resources */,
+				445C4A791E1DECF800A5B375 /* TrackerResultViewController.xib in Resources */,
+				445C4A7B1E1DF3B800A5B375 /* timg.jpeg in Resources */,
 				440E7ED41E1B367C00B5277E /* LoginForCodeViewController.xib in Resources */,
 				44988C1A1C04575400D5C59C /* btnCheck.png in Resources */,
 				443DA7CC1E08C1130014C9B8 /* MoreFunctionViewController.xib in Resources */,
@@ -3393,6 +3406,7 @@
 				440E7F5E1E1B371E00B5277E /* UIViewController+HUD.m in Sources */,
 				44117A6D1C11763E0071E1C0 /* ZXQRCodeFinderPatternFinder.m in Sources */,
 				441179D81C11763E0071E1C0 /* ZXReedSolomonEncoder.m in Sources */,
+				445C4A781E1DECF800A5B375 /* TrackerResultViewController.m in Sources */,
 				441179C61C11763E0071E1C0 /* ZXURIParsedResult.m in Sources */,
 				44117A0F1C11763E0071E1C0 /* ZXAbstractExpandedDecoder.m in Sources */,
 				44117A811C11763E0071E1C0 /* MJRefreshComponent.m in Sources */,

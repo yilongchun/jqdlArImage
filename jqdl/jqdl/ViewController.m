@@ -34,7 +34,8 @@
 #import "MoreFunctionViewController.h"
 #import "DetailViewController.h"
 #import "LoginViewController.h"
-
+#import "TrackerResultViewController.h"
+#import "NSObject+Blocks.h"
 
 
 
@@ -294,12 +295,13 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     NSDictionary *userInfo = [ud objectForKey:LOGINED_USER];
     UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithCustomView:imageView];
     if (userInfo != nil) {
-        imageView.image = [UIImage imageNamed:@"member_no.gif"];
+        imageView.image = [UIImage imageNamed:@"timg.jpeg"];
         imageView.userInteractionEnabled = YES;
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(loginOut)];
         [imageView addGestureRecognizer:tap];
     }else{
         imageView.userInteractionEnabled = YES;
+        imageView.image = [UIImage imageNamed:@"member_no.gif"];
         imageView.backgroundColor = [UIColor lightGrayColor];
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toLogin)];
         [imageView addGestureRecognizer:tap];
@@ -915,6 +917,24 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
         {
             [self presentPoiDetails:parameters];
         }
+        else if ( [[URL absoluteString] hasPrefix:@"architectsdk://tracker"])//识别到结果 跳转识别结果界面
+        {
+            
+            [self showHintInView:self.view hint:@"识别成功"];
+            
+            UIBarButtonItem *backItem=[[UIBarButtonItem alloc] init];
+            UIImage *backImage = [UIImage imageNamed:@"navi_back2"];
+            [backItem setBackButtonBackgroundImage:[backImage resizableImageWithCapInsets:UIEdgeInsetsMake(0, backImage.size.width, 0, 0)] forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];//更改背景图片
+            self.navigationItem.backBarButtonItem = backItem;
+            
+            [self performBlock:^{
+                TrackerResultViewController *vc = [[TrackerResultViewController alloc] init];
+                [self.navigationController pushViewController:vc animated:YES];
+                DLog(@"%@",parameters);
+            } afterDelay:1.5];
+            
+        }
+        
     }
 }
 
