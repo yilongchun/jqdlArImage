@@ -375,8 +375,6 @@
 		44117AC61C1184CF0071E1C0 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 44117AC51C1184CF0071E1C0 /* libxml2.tbd */; };
 		44166BFD1CC0EB36005628F5 /* UITextView+PlaceHolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 44166BFC1CC0EB36005628F5 /* UITextView+PlaceHolder.m */; };
 		44270EFA1E16465800561C69 /* MyPointAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 44270EF91E16465800561C69 /* MyPointAnnotation.m */; };
-		44270EFE1E164CE200561C69 /* FeatureTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44270EFC1E164CE200561C69 /* FeatureTableViewController.m */; };
-		44270EFF1E164CE200561C69 /* FeatureTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44270EFD1E164CE200561C69 /* FeatureTableViewController.xib */; };
 		44270F031E164F1B00561C69 /* FeatureTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 44270F011E164F1B00561C69 /* FeatureTableViewCell.m */; };
 		44270F041E164F1B00561C69 /* FeatureTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44270F021E164F1B00561C69 /* FeatureTableViewCell.xib */; };
 		442ED7A81DB9A6470058DD4C /* WikitudeSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 442ED7A71DB9A6470058DD4C /* WikitudeSDK.framework */; };
@@ -465,6 +463,8 @@
 		44EE4BFB1C053FC200031251 /* Util.m in Sources */ = {isa = PBXBuildFile; fileRef = 44EE4BFA1C053FC200031251 /* Util.m */; };
 		44F029DC1C1E569D00EF9218 /* Feature2ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44F029DA1C1E569D00EF9218 /* Feature2ViewController.m */; };
 		44F029DD1C1E569D00EF9218 /* Feature2ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44F029DB1C1E569D00EF9218 /* Feature2ViewController.xib */; };
+		44F6146B1E1F92BB00482D23 /* FeatureListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44F614691E1F92BB00482D23 /* FeatureListViewController.m */; };
+		44F6146C1E1F92BB00482D23 /* FeatureListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44F6146A1E1F92BB00482D23 /* FeatureListViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1231,9 +1231,6 @@
 		44166BFC1CC0EB36005628F5 /* UITextView+PlaceHolder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITextView+PlaceHolder.m"; sourceTree = "<group>"; };
 		44270EF81E16465800561C69 /* MyPointAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyPointAnnotation.h; sourceTree = "<group>"; };
 		44270EF91E16465800561C69 /* MyPointAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyPointAnnotation.m; sourceTree = "<group>"; };
-		44270EFB1E164CE200561C69 /* FeatureTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeatureTableViewController.h; sourceTree = "<group>"; };
-		44270EFC1E164CE200561C69 /* FeatureTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeatureTableViewController.m; sourceTree = "<group>"; };
-		44270EFD1E164CE200561C69 /* FeatureTableViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FeatureTableViewController.xib; sourceTree = "<group>"; };
 		44270F001E164F1B00561C69 /* FeatureTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeatureTableViewCell.h; sourceTree = "<group>"; };
 		44270F011E164F1B00561C69 /* FeatureTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeatureTableViewCell.m; sourceTree = "<group>"; };
 		44270F021E164F1B00561C69 /* FeatureTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FeatureTableViewCell.xib; sourceTree = "<group>"; };
@@ -1378,6 +1375,9 @@
 		44F029D91C1E569D00EF9218 /* Feature2ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Feature2ViewController.h; path = jqdl/Guide/Feature2ViewController.h; sourceTree = SOURCE_ROOT; };
 		44F029DA1C1E569D00EF9218 /* Feature2ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Feature2ViewController.m; path = jqdl/Guide/Feature2ViewController.m; sourceTree = SOURCE_ROOT; };
 		44F029DB1C1E569D00EF9218 /* Feature2ViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = Feature2ViewController.xib; path = jqdl/Guide/Feature2ViewController.xib; sourceTree = SOURCE_ROOT; };
+		44F614681E1F92BB00482D23 /* FeatureListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeatureListViewController.h; sourceTree = "<group>"; };
+		44F614691E1F92BB00482D23 /* FeatureListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeatureListViewController.m; sourceTree = "<group>"; };
+		44F6146A1E1F92BB00482D23 /* FeatureListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FeatureListViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1479,9 +1479,9 @@
 				444D77D51E038D600040F0A7 /* BaiduMapViewController.xib */,
 				44270EF81E16465800561C69 /* MyPointAnnotation.h */,
 				44270EF91E16465800561C69 /* MyPointAnnotation.m */,
-				44270EFB1E164CE200561C69 /* FeatureTableViewController.h */,
-				44270EFC1E164CE200561C69 /* FeatureTableViewController.m */,
-				44270EFD1E164CE200561C69 /* FeatureTableViewController.xib */,
+				44F614681E1F92BB00482D23 /* FeatureListViewController.h */,
+				44F614691E1F92BB00482D23 /* FeatureListViewController.m */,
+				44F6146A1E1F92BB00482D23 /* FeatureListViewController.xib */,
 				44270F001E164F1B00561C69 /* FeatureTableViewCell.h */,
 				44270F011E164F1B00561C69 /* FeatureTableViewCell.m */,
 				44270F021E164F1B00561C69 /* FeatureTableViewCell.xib */,
@@ -3283,9 +3283,9 @@
 				44988C1B1C04575400D5C59C /* btnCheck@2x.png in Resources */,
 				440E7ED81E1B367C00B5277E /* RegisterViewController.xib in Resources */,
 				442ED7D91DB9A7D10058DD4C /* ArchitectWorld in Resources */,
-				44270EFF1E164CE200561C69 /* FeatureTableViewController.xib in Resources */,
 				440E7ED21E1B367C00B5277E /* ForgetPwdViewController.xib in Resources */,
 				444D77CD1E038B140040F0A7 /* mapapi.bundle in Resources */,
+				44F6146C1E1F92BB00482D23 /* FeatureListViewController.xib in Resources */,
 				444D77D71E038D600040F0A7 /* BaiduMapViewController.xib in Resources */,
 				44F029DD1C1E569D00EF9218 /* Feature2ViewController.xib in Resources */,
 				44003D091BFB24ED00CB747A /* Assets.xcassets in Resources */,
@@ -3396,6 +3396,7 @@
 				44117A271C11763E0071E1C0 /* ZXRSS14Reader.m in Sources */,
 				4411798C1C11763E0071E1C0 /* JSONModel.m in Sources */,
 				441179971C11763E0071E1C0 /* LBXScanLineAnimation.m in Sources */,
+				44F6146B1E1F92BB00482D23 /* FeatureListViewController.m in Sources */,
 				44117A6F1C11763E0071E1C0 /* ZXQRCode.m in Sources */,
 				441179DB1C11763E0071E1C0 /* ZXBitSource.m in Sources */,
 				44117A191C11763E0071E1C0 /* ZXAnyAIDecoder.m in Sources */,
@@ -3551,7 +3552,6 @@
 				44117A761C11763E0071E1C0 /* ZXQRCodeMultiReader.m in Sources */,
 				44F029DC1C1E569D00EF9218 /* Feature2ViewController.m in Sources */,
 				440E7F5D1E1B371E00B5277E /* UIViewController+DismissKeyboard.m in Sources */,
-				44270EFE1E164CE200561C69 /* FeatureTableViewController.m in Sources */,
 				44117A2A1C11763E0071E1C0 /* ZXRSSPair.m in Sources */,
 				44117A211C11763E0071E1C0 /* ZXRSSExpandedGeneralAppIdDecoder.m in Sources */,
 				441179C81C11763E0071E1C0 /* ZXURLTOResultParser.m in Sources */,

@@ -17,7 +17,7 @@
 #import "WTPoi.h"
 #import "MyPointAnnotation.h"
 #import "DetailViewController.h"
-#import "FeatureTableViewController.h"
+#import "FeatureListViewController.h"
 #import "MyView.h"
 #import "UIImageView+AFNetworking.h"
 #import "UILabel+SetLabelSpace.h"
@@ -716,7 +716,7 @@
     [backItem setBackButtonBackgroundImage:[backImage resizableImageWithCapInsets:UIEdgeInsetsMake(0, backImage.size.width, 0, 0)] forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];//更改背景图片
     self.navigationItem.backBarButtonItem = backItem;
     
-    FeatureTableViewController *vc = [FeatureTableViewController new];
+    FeatureListViewController *vc = [FeatureListViewController new];
     vc.jingdianArray = _jingdianArray;
     [self.navigationController pushViewController:vc animated:YES];
 }
