@@ -55,6 +55,8 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     NSMutableArray *jingdianArray;
     
     UIView *navigationInfoView;
+    
+    BOOL trackerFlag;
 }
 
 /* Add a strong property to the main Wikitude SDK component, the WTArchitectView */
@@ -173,6 +175,8 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     self.jz_navigationBarBackgroundAlpha = 0.f;
     
     
+    
+    
     UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
     titleLabel.font = BOLDSYSTEMFONT(17);
     titleLabel.textColor = [UIColor whiteColor];
@@ -283,7 +287,6 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
 //    UIButton *searchBtn = [[UIButton alloc] initWithFrame:CGRectMake(Main_Screen_Width-49, Main_Screen_Height-50-38-10, 49, 50)];
 //    [searchBtn setImage:[UIImage imageNamed:@"searchBtn"] forState:UIControlStateNormal];
 //    [self.view addSubview:searchBtn];
-    
 }
 
 //设置左上角头像
@@ -920,18 +923,30 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
         else if ( [[URL absoluteString] hasPrefix:@"architectsdk://tracker"])//识别到结果 跳转识别结果界面
         {
             
-            [self showHintInView:self.view hint:@"识别成功"];
+            if (!trackerFlag) {
+                trackerFlag = YES;
+                
+                [self showHintInView:self.view hint:@"识别成功"];
+                
+                UIBarButtonItem *backItem=[[UIBarButtonItem alloc] init];
+                UIImage *backImage = [UIImage imageNamed:@"navi_back2"];
+                [backItem setBackButtonBackgroundImage:[backImage resizableImageWithCapInsets:UIEdgeInsetsMake(0, backImage.size.width, 0, 0)] forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];//更改背景图片
+                self.navigationItem.backBarButtonItem = backItem;
+                
+                [self performBlock:^{
+                    TrackerResultViewController *vc = [[TrackerResultViewController alloc] init];
+                    [self.navigationController pushViewController:vc animated:YES];
+                    DLog(@"%@",parameters);
+                    
+                    trackerFlag = NO;
+                } afterDelay:1.5];
+                
+                
+                
+                
+            }
             
-            UIBarButtonItem *backItem=[[UIBarButtonItem alloc] init];
-            UIImage *backImage = [UIImage imageNamed:@"navi_back2"];
-            [backItem setBackButtonBackgroundImage:[backImage resizableImageWithCapInsets:UIEdgeInsetsMake(0, backImage.size.width, 0, 0)] forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];//更改背景图片
-            self.navigationItem.backBarButtonItem = backItem;
             
-            [self performBlock:^{
-                TrackerResultViewController *vc = [[TrackerResultViewController alloc] init];
-                [self.navigationController pushViewController:vc animated:YES];
-                DLog(@"%@",parameters);
-            } afterDelay:1.5];
             
         }
         

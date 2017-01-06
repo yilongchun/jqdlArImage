@@ -35,7 +35,54 @@
 }
 
 -(void)setContent{
-    UILabel *contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(25, 64 + 25, Main_Screen_Width - 50, 0)];
+    
+    UIImageView *imageview = [[UIImageView alloc] initWithFrame:CGRectMake(Main_Screen_Width/2 - 50, 64 + 30, 100, 100)];
+    imageview.image = [UIImage imageNamed:@"mask"];
+    [self.view addSubview:imageview];
+    
+    UILabel *label = [[UILabel alloc] init];
+    label.text = @"鳐鱼";
+    label.textColor = RGB(51, 51, 51);
+    label.font = [UIFont systemFontOfSize:23];
+    [label sizeToFit];
+    [label setFrame:CGRectMake(Main_Screen_Width/2 - CGRectGetWidth(label.frame)/2, CGRectGetMaxY(imageview.frame) + 30, CGRectGetWidth(label.frame), CGRectGetHeight(label.frame))];
+    [self.view addSubview:label];
+    
+    UILabel *label2 = [[UILabel alloc] initWithFrame:CGRectMake(32, CGRectGetMaxY(label.frame) + 30, 0, 0)];
+    label2.text = @"出现地点:";
+    label2.textColor = RGB(51, 51, 51);
+    label2.font = SYSTEMFONT(14);
+    [label2 sizeToFit];
+    [self.view addSubview:label2];
+    
+    UILabel *label3 = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(label2.frame) + 14, CGRectGetMinY(label2.frame), 0, 0)];
+    label3.text = @"海底隧道";
+    label3.textColor = RGB(135, 135, 135);
+    label3.font = SYSTEMFONT(14);
+    [label3 sizeToFit];
+    [self.view addSubview:label3];
+    
+    UILabel *label4 = [[UILabel alloc] initWithFrame:CGRectMake(32, CGRectGetMaxY(label2.frame) + 10, 0, 0)];
+    label4.text = @"所属景区:";
+    label4.textColor = RGB(51, 51, 51);
+    label4.font = SYSTEMFONT(14);
+    [label4 sizeToFit];
+    [self.view addSubview:label4];
+    
+    UILabel *label5 = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(label4.frame) + 14, CGRectGetMinY(label4.frame), 0, 0)];
+    label5.text = @"东湖海洋世界景区";
+    label5.textColor = RGB(135, 135, 135);
+    label5.font = SYSTEMFONT(14);
+    [label5 sizeToFit];
+    [self.view addSubview:label5];
+    
+    UILabel *line = [[UILabel alloc] initWithFrame:CGRectMake(32, CGRectGetMaxY(label4.frame) + 20, Main_Screen_Width - 64, 1)];
+    line.backgroundColor = RGBA(103, 103, 103, 0.1);
+    [self.view addSubview:line];
+    
+    
+    
+    UILabel *contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(32, CGRectGetMaxY(line.frame) + 20, Main_Screen_Width - 64, 0)];
     contentLabel.numberOfLines = 0;
     contentLabel.textColor = RGB(135, 135, 135);
     contentLabel.font = SYSTEMFONT(14);
