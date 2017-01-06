@@ -35,7 +35,10 @@
     self.view.backgroundColor = [UIColor blackColor];
     
     
-    
+    UIBarButtonItem *backItem=[[UIBarButtonItem alloc] init];
+    UIImage *backImage = [UIImage imageNamed:@"navi_back2"];
+    [backItem setBackButtonBackgroundImage:[backImage resizableImageWithCapInsets:UIEdgeInsetsMake(0, backImage.size.width, 0, 0)] forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];//更改背景图片
+    self.navigationItem.backBarButtonItem = backItem;
     
     
     
@@ -292,6 +295,7 @@
 //    [self.navigationController pushViewController:vc animated:YES];
     
     ScanResultWebViewController *vc = [[ScanResultWebViewController alloc] init];
+    DLog(@"%@",strResult.strScanned);
     vc.url = strResult.strScanned;
     [self.navigationController pushViewController:vc animated:YES];
     
