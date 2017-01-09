@@ -21,6 +21,8 @@
  */
 - (void)startAnimatingWithRect:(CGRect)animationRect InView:(UIView*)parentView Image:(UIImage*)image;
 
+- (void)startAnimatingWithRect2:(CGRect)animationRect InView:(UIView*)parentView Image:(UIImage*)image;
+
 /**
  *  停止动画
  */

@@ -36,7 +36,7 @@
 #import "LoginViewController.h"
 #import "TrackerResultViewController.h"
 #import "NSObject+Blocks.h"
-
+#import "LBXScanNetAnimation.h"
 
 
 /* this is used to create random positions around you */
@@ -45,7 +45,7 @@
 static char *kWTAugmentedRealityViewController_AssociatedPoiManagerKey = "kWTARVCAMEWTP";
 static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "kWTARVCAMECLK";
 
-@interface ViewController () <WTArchitectViewDelegate, WTArchitectViewDebugDelegate, CLLocationManagerDelegate,UITableViewDataSource,UITableViewDelegate>{
+@interface ViewController () <WTArchitectViewDelegate, WTArchitectViewDebugDelegate, CLLocationManagerDelegate,UITableViewDataSource,UITableViewDelegate,UIScrollViewDelegate>{
     NSString *firsetParams;
     ChooseJqViewController *jqvc;
     CLLocation *myLocation;
@@ -57,6 +57,14 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     UIView *navigationInfoView;
     
     BOOL trackerFlag;
+    
+    UIView *guideView;//引导页面
+    UIView *maskView;//灰色覆盖
+    UIPageControl *pageControl;
+    UIButton *guideCloseBtn;
+    
+    
+    UIButton *bottomBtn;
 }
 
 /* Add a strong property to the main Wikitude SDK component, the WTArchitectView */
@@ -287,6 +295,90 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
 //    UIButton *searchBtn = [[UIButton alloc] initWithFrame:CGRectMake(Main_Screen_Width-49, Main_Screen_Height-50-38-10, 49, 50)];
 //    [searchBtn setImage:[UIImage imageNamed:@"searchBtn"] forState:UIControlStateNormal];
 //    [self.view addSubview:searchBtn];
+    
+    
+    //扫描动画
+//    UIImage *imgNet = [UIImage imageNamed:@"scan"];
+//    LBXScanNetAnimation *scanNetAnimation = [[LBXScanNetAnimation alloc] init];
+//    [scanNetAnimation startAnimatingWithRect2:CGRectMake(0, 0, Main_Screen_Width, Main_Screen_Height)
+//                                      InView:self.view
+//                                       Image:imgNet];
+    
+    
+    
+    
+//    // 得到当前应用的版本号
+//    NSDictionary *infoDictionary = [NSBundle mainBundle].infoDictionary;
+//    NSString *currentAppVersion = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
+//    
+//    // 取出之前保存的版本号
+//    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+//    NSString *appVersion = [userDefaults objectForKey:@"appVersion"];
+//    
+//    if (appVersion == nil || ![appVersion isEqualToString:currentAppVersion]) {
+//        // 保存最新的版本号
+//        [userDefaults setValue:currentAppVersion forKey:@"appVersion"];
+        [self initGuideView];
+//
+//    }
+}
+
+//初始化引导页面
+-(void)initGuideView{
+    maskView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, Main_Screen_Width, Main_Screen_Height)];
+    maskView.backgroundColor = RGBA(0, 0, 0, 0.7);
+
+    guideView = [[UIView alloc] initWithFrame:CGRectMake((Main_Screen_Width - 263)/2, (Main_Screen_Height - 353) / 2, 263, 363)];
+    guideView.backgroundColor = [UIColor whiteColor];
+    ViewBorderRadius(guideView, 5, 0, [UIColor whiteColor]);
+    
+    UIScrollView *guideScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, guideView.frame.size.width, guideView.frame.size.height)];
+    guideScrollView.pagingEnabled = YES;
+    guideScrollView.bounces = NO;
+    guideScrollView.showsHorizontalScrollIndicator = NO;
+    guideScrollView.delegate = self;
+    [guideScrollView setContentSize:CGSizeMake(guideView.frame.size.width*2, guideView.frame.size.height)];
+    UIImageView *image1 = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, guideView.frame.size.width, guideView.frame.size.height)];
+    image1.image = [UIImage imageNamed:@"mask1"];
+    UIImageView *image2 = [[UIImageView alloc] initWithFrame:CGRectMake(guideView.frame.size.width, 0, guideView.frame.size.width, guideView.frame.size.height)];
+    image2.image = [UIImage imageNamed:@"mask2"];
+    [guideScrollView addSubview:image1];
+    [guideScrollView addSubview:image2];
+    [guideView addSubview:guideScrollView];
+    
+    
+    guideCloseBtn = [[UIButton alloc] initWithFrame:CGRectMake((Main_Screen_Width - 40) / 2, CGRectGetMaxY(guideView.frame) + 30, 40, 40)];
+    [guideCloseBtn setImage:[UIImage imageNamed:@"guideCloseBtn"] forState:UIControlStateNormal];
+    guideCloseBtn.alpha = 0;
+    guideCloseBtn.userInteractionEnabled = NO;
+    [guideCloseBtn addTarget:self action:@selector(closeGuideView) forControlEvents:UIControlEventTouchUpInside];
+    [maskView addSubview:guideCloseBtn];
+    
+    [maskView addSubview:guideView];
+    
+    pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(0, guideView.frame.size.height - 20, CGRectGetWidth(guideView.frame), 10)];
+//    pageControl.backgroundColor = [UIColor blackColor];
+    pageControl.userInteractionEnabled = NO;
+    pageControl.currentPageIndicatorTintColor = RGB(66, 216, 230);
+    pageControl.pageIndicatorTintColor = RGB(218, 218, 218);
+    pageControl.numberOfPages = 2;
+    [guideView addSubview:pageControl];
+    
+    
+    [self.navigationController.view addSubview:maskView];
+//    [self.navigationController.view addSubview:guideView];
+}
+
+//关闭引导
+-(void)closeGuideView{
+    
+    [UIView animateWithDuration:0.5 animations:^{
+        maskView.alpha = 0;
+    } completion:^(BOOL finished) {
+        [maskView removeFromSuperview];
+    }];
+    
+    
 }
 
 //设置左上角头像
@@ -508,6 +600,20 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     }];
 }
 
+#pragma mark - UIScrollViewDelegate
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    
+    CGFloat percent = scrollView.contentOffset.x / scrollView.frame.size.width;
+    guideCloseBtn.alpha = percent;
+    if (percent == 1) {
+        guideCloseBtn.userInteractionEnabled = YES;
+    }else{
+        guideCloseBtn.userInteractionEnabled = NO;
+    }
+    
+    int pageNo = scrollView.contentOffset.x / scrollView.frame.size.width;
+    pageControl.currentPage = pageNo;
+}
 
 
 #pragma mark - Public Methods
@@ -812,7 +918,12 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     
-    
+    if (bottomBtn == nil) {
+        bottomBtn = [[UIButton alloc] initWithFrame:CGRectMake((Main_Screen_Width - 70)/2, Main_Screen_Height - 38 - 70,70, 70)];
+        [bottomBtn setImage:[UIImage imageNamed:@"camera01"] forState:UIControlStateNormal];
+        [bottomBtn addTarget:self action:@selector(openMoreFunctionView) forControlEvents:UIControlEventTouchUpInside];
+        [self.view addSubview:bottomBtn];
+    }
     
 }
 
@@ -825,6 +936,8 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     
     /* WTArchitectView rendering is started once the view controllers view will appear */
     [self startWikitudeSDKRendering];
+    
+    
 }
 
 - (void)viewDidDisappear:(BOOL)animated {

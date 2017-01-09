@@ -36,14 +36,14 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
-    rightSearchItem = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"search"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] style:UIBarButtonItemStyleDone target:self action:@selector(showSearchView)];
-    rightSearchHighlightItem = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"searchHighlight"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] style:UIBarButtonItemStyleDone target:self action:@selector(showSearchView)];
-    self.navigationItem.rightBarButtonItem = rightSearchItem;
+//    rightSearchItem = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"search"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] style:UIBarButtonItemStyleDone target:self action:@selector(showSearchView)];
+//    rightSearchHighlightItem = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"searchHighlight"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] style:UIBarButtonItemStyleDone target:self action:@selector(showSearchView)];
+//    self.navigationItem.rightBarButtonItem = rightSearchItem;
     
     self.jz_navigationBarBackgroundAlpha = 1.f;
     self.jz_wantsNavigationBarVisible = YES;
     
-    [self initPopView];
+//    [self initPopView];
     
     UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
     titleLabel.font = BOLDSYSTEMFONT(17);
@@ -58,43 +58,89 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playVoiceEnd) name:@"playVoiceEnd" object:nil];
 }
 
-//初始化弹出视图
--(void)initPopView{
-    maskView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, Main_Screen_Width, 0)];
-    maskView.backgroundColor = RGBA(0, 0, 0, 0.5);
-    maskView.clipsToBounds = YES;
-    
-    popView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, Main_Screen_Height, 200)];
-    popView.backgroundColor = [UIColor whiteColor];
-    [maskView addSubview:popView];
-    
-}
+////初始化弹出视图
+//-(void)initPopView{
+//    maskView = [[UIView alloc] init];
+//    maskView.backgroundColor = RGBA(0, 0, 0, 0.5);
+//    
+//    popView = [[UIView alloc] init];
+//    popView.backgroundColor = [UIColor whiteColor];
+//    popView.clipsToBounds = YES;
+//    
+//    CGFloat btnWidth = 97;
+//    CGFloat btnHeight = 36;
+//    CGFloat space = (Main_Screen_Width - (97 * 3))/4;
+//    
+//    UIButton *btn1 = [[UIButton alloc] initWithFrame:CGRectMake(space, 20, btnWidth, btnHeight)];
+//    [btn1 setBackgroundImage:[UIImage imageNamed:@"type1"] forState:UIControlStateNormal];
+//    [btn1 setBackgroundImage:[UIImage imageNamed:@"type1H"] forState:UIControlStateHighlighted];
+//    [popView addSubview:btn1];
+//    
+//    UIButton *btn2 = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetMaxX(btn1.frame) + space, 20, btnWidth, btnHeight)];
+//    [btn2 setBackgroundImage:[UIImage imageNamed:@"type2"] forState:UIControlStateNormal];
+//    [btn2 setBackgroundImage:[UIImage imageNamed:@"type2H"] forState:UIControlStateHighlighted];
+//    [popView addSubview:btn2];
+//    
+//    UIButton *btn3 = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetMaxX(btn2.frame) + space, 20, btnWidth, btnHeight)];
+//    [btn3 setBackgroundImage:[UIImage imageNamed:@"type3"] forState:UIControlStateNormal];
+//    [btn3 setBackgroundImage:[UIImage imageNamed:@"type3H"] forState:UIControlStateHighlighted];
+//    [popView addSubview:btn3];
+//    
+//    UIButton *btn4 = [[UIButton alloc] initWithFrame:CGRectMake(space, CGRectGetMaxY(btn1.frame) + 20, btnWidth, btnHeight)];
+//    [btn4 setBackgroundImage:[UIImage imageNamed:@"type4"] forState:UIControlStateNormal];
+//    [btn4 setBackgroundImage:[UIImage imageNamed:@"type4H"] forState:UIControlStateHighlighted];
+//    [popView addSubview:btn4];
+//    
+//    UIButton *btn5 = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetMaxX(btn4.frame) + space, CGRectGetMinY(btn4.frame), btnWidth, btnHeight)];
+//    [btn5 setBackgroundImage:[UIImage imageNamed:@"type5"] forState:UIControlStateNormal];
+//    [btn5 setBackgroundImage:[UIImage imageNamed:@"type5H"] forState:UIControlStateHighlighted];
+//    [popView addSubview:btn5];
+//    
+//    UIButton *btn6 = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetMaxX(btn5.frame) + space, CGRectGetMinY(btn4.frame), btnWidth, btnHeight)];
+//    [btn6 setBackgroundImage:[UIImage imageNamed:@"type6"] forState:UIControlStateNormal];
+//    [btn6 setBackgroundImage:[UIImage imageNamed:@"type6H"] forState:UIControlStateHighlighted];
+//    [popView addSubview:btn6];
+//    
+//    UIButton *btn7 = [[UIButton alloc] initWithFrame:CGRectMake(space, CGRectGetMaxY(btn4.frame) + 20, btnWidth, btnHeight)];
+//    [btn7 setBackgroundImage:[UIImage imageNamed:@"type7"] forState:UIControlStateNormal];
+//    [btn7 setBackgroundImage:[UIImage imageNamed:@"type7H"] forState:UIControlStateHighlighted];
+//    [popView addSubview:btn7];
+//    
+//    UIButton *btn8 = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetMaxX(btn7.frame) + space, CGRectGetMinY(btn7.frame), btnWidth, btnHeight)];
+//    [btn8 setBackgroundImage:[UIImage imageNamed:@"type8"] forState:UIControlStateNormal];
+//    [btn8 setBackgroundImage:[UIImage imageNamed:@"type8H"] forState:UIControlStateHighlighted];
+//    [popView addSubview:btn8];
+//    
+//    
+//}
 
-//弹出搜索界面
--(void)showSearchView{
-    if (popFlag) {
-        popFlag = !popFlag;
-        self.navigationItem.rightBarButtonItem = rightSearchItem;
-        
-        
-        [UIView animateWithDuration:0.35 animations:^{
-            maskView.frame = CGRectMake(0, 0, Main_Screen_Width, 0);
-        } completion:^(BOOL finished){
-            [maskView removeFromSuperview];
-        }];
-        
-    }else{
-        popFlag = !popFlag;
-        self.navigationItem.rightBarButtonItem = rightSearchHighlightItem;
-        
-        
-        maskView.frame = CGRectMake(0, 0, Main_Screen_Width, 0);
-        [self.view addSubview:maskView];
-        [UIView animateWithDuration:0.35 animations:^{
-            maskView.frame = CGRectMake(0, 0, Main_Screen_Width, Main_Screen_Height);
-        } completion:nil];
-    }
-}
+////弹出搜索界面
+//-(void)showSearchView{
+//    if (popFlag) {//隐藏
+//        popFlag = !popFlag;
+//        self.navigationItem.rightBarButtonItem = rightSearchItem;
+//        
+//        [maskView removeFromSuperview];
+//        [UIView animateWithDuration:0.35 animations:^{
+//            popView.frame = CGRectMake(0, 0, Main_Screen_Width, 0);
+//        } completion:^(BOOL finished){
+//            [popView removeFromSuperview];
+//        }];
+//    }else{//显示
+//        popFlag = !popFlag;
+//        self.navigationItem.rightBarButtonItem = rightSearchHighlightItem;
+//        
+//        popView.frame = CGRectMake(0, 64, Main_Screen_Width, 0);
+//        maskView.frame = CGRectMake(0, 64, Main_Screen_Width, Main_Screen_Height-64);
+//        [self.view addSubview:maskView];
+//        [self.view addSubview:popView];
+//        [UIView animateWithDuration:0.35 animations:^{
+//            popView.frame = CGRectMake(0, 64, Main_Screen_Width, 200);
+//        } completion:^(BOOL finished){
+//            
+//        }];
+//    }
+//}
 
 -(void)playVoiceEnd{
     if (oldPlayBtn) {

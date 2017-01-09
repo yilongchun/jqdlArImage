@@ -57,6 +57,8 @@
     style.colorAngle = [UIColor colorWithRed:38./255 green:203./255. blue:216./255. alpha:1.0];
     //qq里面的线条图片
     UIImage *imgLine = [UIImage imageNamed:@"CodeScan.bundle/qrcode_scan_light_green"];
+//    UIImage *imgLine = [UIImage imageNamed:@"CodeScan.bundle/qrcode_scan_full_net"];
+    
     style.animationImage = imgLine;
     
     LBXScanViewController *vc = [LBXScanViewController new];

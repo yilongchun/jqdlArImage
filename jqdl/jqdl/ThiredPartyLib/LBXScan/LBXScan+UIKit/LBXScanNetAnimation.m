@@ -90,11 +90,12 @@
     CGRect frame = _animationRect;
     
     CGFloat hImg = self.image.size.height * _animationRect.size.width / self.image.size.width;
+    DLog(@"hImg:%f",hImg);
     
     frame.origin.y -= hImg;
     frame.size.height = hImg;
     self.frame = frame;
-    
+    DLog(@"frame.origin.y:%f",frame.origin.y);
     self.alpha = 0.0;
     
     __weak __typeof(self) weakSelf = self;
@@ -110,6 +111,9 @@
         
         weakSelf.frame = frame;
         
+        
+        DLog(@"hImg2:%f",hImg);
+        DLog(@"frame.origin.y2:%f",frame.origin.y);
     } completion:^(BOOL finished)
      {
          
@@ -117,8 +121,47 @@
      }];
 }
 
+- (void)stepAnimation4
+{
+    if (!isAnimationing) {
+        return;
+    }
+    
+    CGRect frame = _animationRect;
+    
+    frame.origin.y = _animationRect.size.height;
+    self.frame = frame;
+    self.alpha = 0.0;
+    __weak __typeof(self) weakSelf = self;
+    
+    [UIView animateWithDuration:1.5 animations:^{
+        weakSelf.alpha = 1.0;
+        CGRect frame = weakSelf.animationRect;
+        frame.origin.y = 0;
+        weakSelf.frame = frame;
+        
+    } completion:^(BOOL finished)
+     {
+         
+         [weakSelf performSelector:@selector(stepAnimation4) withObject:nil afterDelay:0.5];
+     }];
+}
 
 
+- (void)startAnimatingWithRect2:(CGRect)animationRect InView:(UIView *)parentView Image:(UIImage*)image
+{
+    self.image = image;
+    
+    self.animationRect = animationRect;
+    
+    [parentView addSubview:self];
+    
+    self.hidden = NO;
+    
+    isAnimationing = YES;
+    
+    [self stepAnimation4];
+}
 
 - (void)startAnimatingWithRect:(CGRect)animationRect InView:(UIView *)parentView Image:(UIImage*)image
 {

@@ -28,7 +28,7 @@
 //            self.xScanRetangleOffset = self.xScanRetangleOffset - 10;
 //        }
         
-        self.anmiationStyle = LBXScanViewAnimationStyle_LineMove;
+        self.anmiationStyle = LBXScanViewAnimationStyle_NetGrid;
         self.photoframeAngleStyle = LBXScanViewPhotoframeAngleStyle_Outer;
         self.colorAngle = [UIColor colorWithRed:0. green:167./255. blue:231./255. alpha:1.0];
         
