@@ -140,7 +140,7 @@
     UIScrollView *typeScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(CGRectGetMaxX(locationBtn.frame), CGRectGetMinY(locationBtn.frame)+64+3, Main_Screen_Width - CGRectGetMaxX(locationBtn.frame) - typeSpace, typeHeight)];
 //    typeScrollView.backgroundColor = [UIColor grayColor];
     typeScrollView.showsHorizontalScrollIndicator = NO;
-    [typeScrollView setContentSize:CGSizeMake(8 * (typeWidth + typeSpace) - typeSpace, typeHeight)];
+    [typeScrollView setContentSize:CGSizeMake(8 * (typeWidth + typeSpace), typeHeight)];
     
     CGFloat typeX = 12;
     for (int i = 0 ; i < 8; i++) {
