@@ -133,7 +133,33 @@
         [annotations addObject:annotation];
     }
     
+    //添加景点分类选择
+    CGFloat typeWidth = 76;
+    CGFloat typeHeight = 38;
+    CGFloat typeSpace = 12;
+    UIScrollView *typeScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(CGRectGetMaxX(locationBtn.frame), CGRectGetMinY(locationBtn.frame)+64+3, Main_Screen_Width - CGRectGetMaxX(locationBtn.frame) - typeSpace, typeHeight)];
+//    typeScrollView.backgroundColor = [UIColor grayColor];
+    typeScrollView.showsHorizontalScrollIndicator = NO;
+    [typeScrollView setContentSize:CGSizeMake(8 * (typeWidth + typeSpace) - typeSpace, typeHeight)];
     
+    CGFloat typeX = 12;
+    for (int i = 0 ; i < 8; i++) {
+        UIButton *type1Btn = [[UIButton alloc] initWithFrame:CGRectMake(typeX, 0, typeWidth, typeHeight)];
+        
+        NSString *name = [NSString stringWithFormat:@"type%d",i+1];
+        NSString *nameH = [NSString stringWithFormat:@"type%dH",i+1];
+        
+        [type1Btn setImage:[UIImage imageNamed:name] forState:UIControlStateNormal];
+        [type1Btn setImage:[UIImage imageNamed:nameH] forState:UIControlStateSelected];
+//        [type1Btn setImage:[UIImage imageNamed:@"type1H"] forState:UIControlStateHighlighted];
+        [type1Btn addTarget:self action:@selector(typeClick:) forControlEvents:UIControlEventTouchUpInside];
+        [typeScrollView addSubview:type1Btn];
+        typeX += typeWidth + typeSpace;
+    }
+    
+    
+    
+    [self.view addSubview:typeScrollView];
     
     //添加底部景点卡片
     MyView *view = [[MyView alloc] initWithFrame:CGRectMake(0, Main_Screen_Height - 15 - 108, Main_Screen_Width, 108)];
@@ -253,6 +279,15 @@
     //    //删除某个收藏点(收藏点成功后会得到favId)
     //    BOOL res = [_favManager deleteFavPoi:favId];
     
+}
+
+//景点分类按钮点击
+-(void)typeClick:(UIButton *)btn{
+    if (btn.selected) {
+        btn.selected = !btn.selected;
+    }else{
+        btn.selected = !btn.selected;
+    }
 }
 
 -(void)setZoomBtn{

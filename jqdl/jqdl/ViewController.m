@@ -38,7 +38,6 @@
 #import "NSObject+Blocks.h"
 #import "LBXScanNetAnimation.h"
 
-
 /* this is used to create random positions around you */
 #define WT_RANDOM(startValue, endValue) ((((float) (arc4random() % ((unsigned)RAND_MAX + 1)) / RAND_MAX) * (endValue - startValue)) + startValue)
 
@@ -62,7 +61,6 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     UIView *maskView;//灰色覆盖
     UIPageControl *pageControl;
     UIButton *guideCloseBtn;
-    
     
     UIButton *bottomBtn;
 }
@@ -318,7 +316,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
 //    if (appVersion == nil || ![appVersion isEqualToString:currentAppVersion]) {
 //        // 保存最新的版本号
 //        [userDefaults setValue:currentAppVersion forKey:@"appVersion"];
-        [self initGuideView];
+//        [self initGuideView];
 //
 //    }
 }
@@ -919,10 +917,44 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     [super viewDidAppear:animated];
     
     if (bottomBtn == nil) {
-        bottomBtn = [[UIButton alloc] initWithFrame:CGRectMake((Main_Screen_Width - 70)/2, Main_Screen_Height - 38 - 70,70, 70)];
+        bottomBtn = [[UIButton alloc] init];
+        [bottomBtn setFrame:CGRectMake((Main_Screen_Width - 70)/2, Main_Screen_Height - 38 - 70,70, 70)];
         [bottomBtn setImage:[UIImage imageNamed:@"camera01"] forState:UIControlStateNormal];
         [bottomBtn addTarget:self action:@selector(openMoreFunctionView) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:bottomBtn];
+        
+        
+        UIImageView *gifImageView = [[UIImageView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+        NSArray *gifArray = [NSArray arrayWithObjects:[UIImage imageNamed:@"1"],
+                             [UIImage imageNamed:@"2"],
+                             [UIImage imageNamed:@"3"],
+                             [UIImage imageNamed:@"4"],
+                             [UIImage imageNamed:@"5"],
+                             [UIImage imageNamed:@"20"],
+                             [UIImage imageNamed:@"21"],
+                             [UIImage imageNamed:@"22"],nil];
+        gifImageView.animationImages = gifArray; //动画图片数组
+        gifImageView.animationDuration = 5; //执行一次完整动画所需的时长
+        gifImageView.animationRepeatCount = 1;  //动画重复次数
+        [gifImageView startAnimating];
+        [self.view addSubview:gifImageView];
+        
+        
+        
+        
+//        WPWaveRippleView *waveRippleView = [[WPWaveRippleView alloc] initWithTintColor:[UIColor redColor] minRadius:20 waveCount:5 timeInterval:1 duration:4];
+//        [waveRippleView setFrame:CGRectMake((Main_Screen_Width - 70)/2, Main_Screen_Height - 38 - 70,70, 70)];
+//        [self.view addSubview:waveRippleView];
+//        [waveRippleView startAnimating];
+        
+        
+//        bottomBtn = [[AnimalBtn alloc] initWithFrame:CGRectMake((Main_Screen_Width - 70)/2, Main_Screen_Height - 38 - 70,70, 70)];
+//        [bottomBtn setImage:[UIImage imageNamed:@"camera01"] forState:UIControlStateNormal];
+//        [bottomBtn addTarget:self action:@selector(openMoreFunctionView) forControlEvents:UIControlEventTouchUpInside];
+//        [self.view addSubview:bottomBtn];
+        
+        
+        
     }
     
 }
@@ -1039,7 +1071,18 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
             if (!trackerFlag) {
                 trackerFlag = YES;
                 
-                [self showHintInView:self.view hint:@"识别成功"];
+//                [self showHintInView:self.view hint:@"识别成功"];
+                
+                UILabel *tipsLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, CGRectGetMinY(bottomBtn.frame) - 20 - 20, Main_Screen_Width, 20)];
+                tipsLabel.textAlignment = NSTextAlignmentCenter;
+                tipsLabel.font = SYSTEMFONT(12);
+                tipsLabel.textColor = [UIColor whiteColor];
+                tipsLabel.text = @"识别成功";
+                
+                tipsLabel.shadowColor = [UIColor blackColor];
+//                tipsLabel.shadowOffset =
+                [self.view addSubview:tipsLabel];
+                
                 
                 UIBarButtonItem *backItem=[[UIBarButtonItem alloc] init];
                 UIImage *backImage = [UIImage imageNamed:@"navi_back2"];
@@ -1047,6 +1090,8 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                 self.navigationItem.backBarButtonItem = backItem;
                 
                 [self performBlock:^{
+                    [tipsLabel removeFromSuperview];
+                    
                     TrackerResultViewController *vc = [[TrackerResultViewController alloc] init];
                     [self.navigationController pushViewController:vc animated:YES];
                     DLog(@"%@",parameters);
