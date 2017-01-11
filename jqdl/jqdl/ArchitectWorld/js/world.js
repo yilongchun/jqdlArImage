@@ -82,8 +82,17 @@ var World = {
 			World.markerList[i].distanceToUser = distanceToUser;
             var distanceToUserValue = (distanceToUser > 999) ? ((distanceToUser / 1000).toFixed(2) + " km") : (Math.round(distanceToUser) + " m");
             World.markerList[i].descriptionLabel.text = distanceToUserValue;
-//            AR.logger.debug("updateDistanceToUserValues " + World.markerList[i].descriptionLabel.text);
+            
+//            AR.logger.debug("updateDistanceToUserValues " + i + " :" + World.markerList[i].descriptionLabel.text + " " + distanceToUser);
 		}
+        
+//        setTimeout(function(){
+//                   AR.context.destroyAll();//销毁所有
+//                   PoiRadar.show();
+//                   }, 5 * 1000 );
+        
+        
+        
 	},
 
 	// updates status message shon in small "i"-button aligned bottom center
@@ -115,8 +124,7 @@ var World = {
 		} else if (World.locationUpdateCounter === 0) {
 			// update placemark distance information frequently, you max also update distances only every 10m with some more effort
 			World.updateDistanceToUserValues();
-		}
-
+		}        
 		// helper used to update placemark information every now and then (e.g. every 10 location upadtes fired)
 		World.locationUpdateCounter = (++World.locationUpdateCounter % World.updatePlacemarkDistancesEveryXLocationUpdates);
 	},

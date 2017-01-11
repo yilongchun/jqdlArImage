@@ -924,20 +924,15 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
         [self.view addSubview:bottomBtn];
         
         
-        UIImageView *gifImageView = [[UIImageView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-        NSArray *gifArray = [NSArray arrayWithObjects:[UIImage imageNamed:@"1"],
-                             [UIImage imageNamed:@"2"],
-                             [UIImage imageNamed:@"3"],
-                             [UIImage imageNamed:@"4"],
-                             [UIImage imageNamed:@"5"],
-                             [UIImage imageNamed:@"20"],
-                             [UIImage imageNamed:@"21"],
-                             [UIImage imageNamed:@"22"],nil];
-        gifImageView.animationImages = gifArray; //动画图片数组
-        gifImageView.animationDuration = 5; //执行一次完整动画所需的时长
-        gifImageView.animationRepeatCount = 1;  //动画重复次数
-        [gifImageView startAnimating];
-        [self.view addSubview:gifImageView];
+//        UIImageView *gifImageView = [[UIImageView alloc] initWithFrame:CGRectMake((Main_Screen_Width - 70)/2, CGRectGetMinY(bottomBtn.frame) - 90, 70, 70)];
+//        NSArray *gifArray = [NSArray arrayWithObjects:[UIImage imageNamed:@"loginBtnBg"],
+//                             [UIImage imageNamed:@"loginBtnBg2"],
+//                             [UIImage imageNamed:@"loginBtnBg3"],nil];
+//        gifImageView.animationImages = gifArray; //动画图片数组
+//        gifImageView.animationDuration = 1; //执行一次完整动画所需的时长
+//        gifImageView.animationRepeatCount = 0;  //动画重复次数
+//        [gifImageView startAnimating];
+//        [self.view addSubview:gifImageView];
         
         
         
