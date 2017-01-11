@@ -186,34 +186,34 @@ var World = {
         
 	},
     
-    calcuteLine: function calcuteLine(){
-        document.location = "architectsdk://button?action=showNavigationInfo";
-        
-        AR.logger.debug("计算线路 目的地位置 latitude:" + World.currentMarker.poiData.latitude + " , longitude:" + World.currentMarker.poiData.longitude)
-        AR.logger.debug("计算线路 起点位置 currentLat:"+World.currentLat + ",currentLng:"+World.currentLng);
-        
-        World.lineList = [];
-        
-        AR.logger.debug("添加路线开始 World.lineList.length:"+World.lineList.length);
-        
-        for(var i = 0;i < 50;i++){
-            
-            var singlePoi = {
-                
-                "latitude": parseFloat((World.currentMarker.poiData.latitude-World.currentLat) *i/50+World.currentLat),
-                "longitude": parseFloat((World.currentMarker.poiData.longitude-World.currentLng) *i/50+World.currentLng),
-                "altitude": parseFloat(0)
-                
-            };
-            World.lineList.push(new line(singlePoi));
-            
-        }
-        
-        AR.logger.debug("添加路线结束 World.lineList.length:"+World.lineList.length);
-        
-        
-        
-    },
+//    calcuteLine: function calcuteLine(){
+//        document.location = "architectsdk://button?action=showNavigationInfo";
+//        
+//        AR.logger.debug("计算线路 目的地位置 latitude:" + World.currentMarker.poiData.latitude + " , longitude:" + World.currentMarker.poiData.longitude)
+//        AR.logger.debug("计算线路 起点位置 currentLat:"+World.currentLat + ",currentLng:"+World.currentLng);
+//        
+//        World.lineList = [];
+//        
+//        AR.logger.debug("添加路线开始 World.lineList.length:"+World.lineList.length);
+//        
+//        for(var i = 0;i < 50;i++){
+//            
+//            var singlePoi = {
+//                
+//                "latitude": parseFloat((World.currentMarker.poiData.latitude-World.currentLat) *i/50+World.currentLat),
+//                "longitude": parseFloat((World.currentMarker.poiData.longitude-World.currentLng) *i/50+World.currentLng),
+//                "altitude": parseFloat(0)
+//                
+//            };
+//            World.lineList.push(new line(singlePoi));
+//            
+//        }
+//        
+//        AR.logger.debug("添加路线结束 World.lineList.length:"+World.lineList.length);
+//        
+//        
+//        
+//    },
 //
 //    onDetailImageSelected: function DetailImageSelectedFn(marker){
 //        
@@ -263,6 +263,11 @@ var World = {
 //                $(".paizhao").css('display','none');
             }
         }
+        
+        
+//        document.location = "architectsdk://changeNavModel?action=jingqu";
+//        document.location = "architectsdk://changeNavModel?action=jiejing";
+        
 	},
 
 	// returns distance in meters of placemark with maxdistance * 1.1
@@ -280,7 +285,7 @@ var World = {
 
     captureScreen: function captureScreenFn() {
         if (World.initialized) {
-            document.location = "architectsdk://button?action=captureScreen";
+//            document.location = "architectsdk://button?action=captureScreen";
         }
     },
 
