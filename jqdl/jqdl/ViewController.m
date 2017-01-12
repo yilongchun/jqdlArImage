@@ -1066,7 +1066,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                     UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
                         [self performBlock:^{
                             [self loadJqList];//重新加载ar数据
-                        } afterDelay:5];
+                        } afterDelay:0.5];
                     }];
                     [alert addAction:action1];
                     [self presentViewController:alert animated:YES completion:nil];
@@ -1076,7 +1076,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                     UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
                         [self performBlock:^{
                             [self loadJqList];//重新加载ar数据
-                        } afterDelay:5];
+                        } afterDelay:0.5];
                     }];
                     [alert addAction:action1];
                     [self presentViewController:alert animated:YES completion:nil];
