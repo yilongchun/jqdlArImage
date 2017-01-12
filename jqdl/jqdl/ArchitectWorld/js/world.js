@@ -42,7 +42,16 @@ var World = {
     
 	// called to inject new POI data
 	loadPoisFromJsonData: function loadPoisFromJsonDataFn(poiData) {
-
+        if (World.currentMarker) {
+            World.currentMarker.setDeselected(World.currentMarker);
+            World.isClickDetailImage = false;
+            World.currentMarker = null;
+        }
+        
+//        for(var i = 0;i < World.markerList.length;i++){
+//            World.markerList[i].markerObject.destroy();
+//            
+//        }
         AR.context.destroyAll();
 		// show radar & set click-listener
 		PoiRadar.show();

@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <MapKit/MapKit.h>
 
 @interface Util : NSObject
 
@@ -24,5 +25,7 @@
 
 //验证手机号
 +(BOOL) isValidateMobile:(NSString *)mobile;
+
++ (NSArray *)getInstalledMapAppWithEndLocation:(CLLocationCoordinate2D)endLocation;
 
 @end

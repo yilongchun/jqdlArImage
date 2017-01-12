@@ -201,9 +201,9 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
 //    [leftItem setTintColor:[UIColor whiteColor]];
 //    self.navigationItem.leftBarButtonItem = leftItem;
     
-    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"msg"] style:UIBarButtonItemStyleDone target:self action:nil];
-    [rightItem setTintColor:[UIColor whiteColor]];
-    self.navigationItem.rightBarButtonItem = rightItem;
+//    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"msg"] style:UIBarButtonItemStyleDone target:self action:nil];
+//    [rightItem setTintColor:[UIColor whiteColor]];
+//    self.navigationItem.rightBarButtonItem = rightItem;
     
     UIBarButtonItem *backItem=[[UIBarButtonItem alloc] init];
     UIImage *backImage = [UIImage imageNamed:@"navi_back2"];

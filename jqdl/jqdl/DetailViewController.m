@@ -11,9 +11,13 @@
 #import "JZNavigationExtension.h"
 #import "UILabel+SetLabelSpace.h"
 #import "Player.h"
+#import <MapKit/MapKit.h>
+#import "Util.h"
+#import "LCActionSheet.h"
 
-@interface DetailViewController (){
+@interface DetailViewController ()<LCActionSheetDelegate>{
     UIButton *jieshuoBtn;
+    NSArray *maps;
 }
 
 @end
@@ -108,6 +112,7 @@
     //导航按钮
     UIButton *daohangBtn = [[UIButton alloc] initWithFrame:CGRectMake(Main_Screen_Width - 25 - 38, CGRectGetMinY(addressValueLabel.frame), 38, 38)];
     [daohangBtn setImage:[UIImage imageNamed:@"daohang"] forState:UIControlStateNormal];
+    [daohangBtn addTarget:self action:@selector(daohang) forControlEvents:UIControlEventTouchUpInside];
     [_myScrollView addSubview:daohangBtn];
     
     //播放完成通知
@@ -124,6 +129,29 @@
         }
         
     }
+}
+
+-(void)daohang{
+    CLLocationCoordinate2D coords = CLLocationCoordinate2DMake(39.915352,116.397105);//纬度，经度
+    if (maps == nil) {
+        maps = [Util getInstalledMapAppWithEndLocation:coords];
+    }
+    LCActionSheet *actionSheet = [LCActionSheet sheetWithTitle:nil
+                                                      delegate:self
+                                             cancelButtonTitle:@"取消"
+                                             otherButtonTitles:@"使用AR实景(近距离步行)", nil];
+    
+    for (int i = 0; i < maps.count; i++) {
+        [actionSheet appendButtonTitles:[maps[i] objectForKey:@"title"], nil];
+    }
+    
+    actionSheet.buttonColor        = RGB(67,216,230);
+    actionSheet.buttonFont         = [UIFont systemFontOfSize:14.0f];
+    actionSheet.destructiveButtonIndexSet = [NSSet setWithObjects:@0, nil];
+    actionSheet.destructiveButtonColor    = RGB(178, 178, 178);
+    actionSheet.buttonHeight       = 52.0f;
+    actionSheet.darkOpacity        = 0.5f;
+    [actionSheet show];
 }
 
 -(void)playVoiceEnd{
@@ -174,14 +202,27 @@
     // Dispose of any resources that can be recreated.
 }
 
-/*
-#pragma mark - Navigation
+#pragma mark - LCActionSheet Delegate
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (void)actionSheet:(LCActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    NSLog(@"clickedButtonAtIndex: %d", (int)buttonIndex);
+    if (buttonIndex == 0) {//取消
+        
+    }else if (buttonIndex == 1){//AR
+        
+    }else if (buttonIndex == 2){//苹果
+        MKMapItem *currentLocation = [MKMapItem mapItemForCurrentLocation];
+        CLLocationCoordinate2D coords = CLLocationCoordinate2DMake(39.915352,116.397105);//纬度，经度
+        MKPlacemark *placemark = [[MKPlacemark alloc] initWithCoordinate:coords addressDictionary:nil];
+        MKMapItem *toLocation = [[MKMapItem alloc] initWithPlacemark:placemark];
+        toLocation.name = @"目的地名称";
+        [MKMapItem openMapsWithItems:@[currentLocation, toLocation]
+                       launchOptions:@{MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeDriving,MKLaunchOptionsShowsTrafficKey: [NSNumber numberWithBool:YES]}];
+    }else{
+        NSDictionary *dic = maps[buttonIndex-2];
+        NSString *urlString = dic[@"url"];
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlString]];
+    }
 }
-*/
 
 @end

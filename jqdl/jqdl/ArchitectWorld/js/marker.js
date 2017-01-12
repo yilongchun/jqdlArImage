@@ -259,7 +259,7 @@ Marker.prototype.setSelected = function(marker) {
 
     // enables the direction indicator drawable for the current marker
     marker.directionIndicatorDrawable.enabled = true;
-
+    
     marker.markerObject.drawables.radar = marker.radardrawablesSelected;
     
     marker.markerDrawable_idle.opacity = 0.0;
