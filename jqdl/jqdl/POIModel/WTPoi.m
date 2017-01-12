@@ -15,24 +15,24 @@
 @implementation WTPoi
 
 
-+ (WTPoi *)poiWithIdentifier:(NSString *)identifier location:(CLLocation *)location name:(NSString *)name detailedDescription:(NSString *)detailedDescription
-{
-    WTPoi *poi = nil;
-    
-    if ( identifier
-         &&
-         location
-         &&
-         name
-         &&
-         detailedDescription
-        )
-    {
-        poi = [[WTPoi alloc] initWithIdentifier:identifier location:location name:name detailedDescription:detailedDescription image:@"" voice:@""];
-    }
-    
-    return poi;
-}
+//+ (WTPoi *)poiWithIdentifier:(NSString *)identifier location:(CLLocation *)location name:(NSString *)name detailedDescription:(NSString *)detailedDescription
+//{
+//    WTPoi *poi = nil;
+//    
+//    if ( identifier
+//         &&
+//         location
+//         &&
+//         name
+//         &&
+//         detailedDescription
+//        )
+//    {
+//        poi = [[WTPoi alloc] initWithIdentifier:identifier location:location name:name detailedDescription:detailedDescription image:@"" voice:@""];
+//    }
+//    
+//    return poi;
+//}
 
 - (instancetype)initWithIdentifier:(NSString *)identifier location:(CLLocation *)location name:(NSString *)name detailedDescription:(NSString *)detailedDescription image:(NSString *)image voice:(NSString *)voice
 {
@@ -45,8 +45,7 @@
         _detailedDescription = detailedDescription;
         _image = image;
         _voice = voice;
-    }
-    
+    }    
     return self;
 }
 

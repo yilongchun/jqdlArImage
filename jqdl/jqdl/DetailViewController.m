@@ -132,6 +132,10 @@
 }
 
 -(void)daohang{
+    
+    
+    DLog(@"%f %f",_poi.location.coordinate.latitude,_poi.location.coordinate.longitude);
+    
     CLLocationCoordinate2D coords = CLLocationCoordinate2DMake(39.915352,116.397105);//纬度，经度
     if (maps == nil) {
         maps = [Util getInstalledMapAppWithEndLocation:coords];

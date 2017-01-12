@@ -123,37 +123,37 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     NSLog(@"获取定位失败");
 }
 
-- (void)generatePois:(NSUInteger)numberOfPois aroundLocation:(CLLocation *)referenceLocation
-{
-    WTPoiManager *poiManager = objc_getAssociatedObject(self, kWTAugmentedRealityViewController_AssociatedPoiManagerKey);
-    [poiManager removeAllPois];
-    
-    for (NSUInteger i = 0; i < numberOfPois; ++i) {
-        
-        NSString *poiName = [NSString stringWithFormat:@"POI #%lu", (unsigned long)i];
-        NSString *poiDescription = [NSString stringWithFormat:@"Probably one of the best POIs you have ever seen. This is the description of Poi #%lu", (unsigned long)i];
-        
-        CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake(referenceLocation.coordinate.latitude + WT_RANDOM(-0.3, 0.3), referenceLocation.coordinate.longitude + WT_RANDOM(-0.3, 0.3));
-        CLLocationDistance altitude = referenceLocation.verticalAccuracy > 0 ? referenceLocation.altitude + WT_RANDOM(0, 200) : -32768.f;
-        
-        CLLocation *location = [[CLLocation alloc] initWithCoordinate:locationCoordinate
-                                                             altitude:altitude
-                                                   horizontalAccuracy:referenceLocation.horizontalAccuracy
-                                                     verticalAccuracy:referenceLocation.verticalAccuracy
-                                                            timestamp:referenceLocation.timestamp];
-        
-        WTPoi *poi = [[WTPoi alloc] initWithIdentifier:[NSString stringWithFormat:@"%lu",(unsigned long)i]
-                                              location:location
-                                                  name:poiName
-                                   detailedDescription:poiDescription
-                                                 image:@""
-                                                voice:@""];
-        
-        
-        [poiManager addPoi:poi];
-    }
-    
-}
+//- (void)generatePois:(NSUInteger)numberOfPois aroundLocation:(CLLocation *)referenceLocation
+//{
+//    WTPoiManager *poiManager = objc_getAssociatedObject(self, kWTAugmentedRealityViewController_AssociatedPoiManagerKey);
+//    [poiManager removeAllPois];
+//    
+//    for (NSUInteger i = 0; i < numberOfPois; ++i) {
+//        
+//        NSString *poiName = [NSString stringWithFormat:@"POI #%lu", (unsigned long)i];
+//        NSString *poiDescription = [NSString stringWithFormat:@"Probably one of the best POIs you have ever seen. This is the description of Poi #%lu", (unsigned long)i];
+//        
+//        CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake(referenceLocation.coordinate.latitude + WT_RANDOM(-0.3, 0.3), referenceLocation.coordinate.longitude + WT_RANDOM(-0.3, 0.3));
+//        CLLocationDistance altitude = referenceLocation.verticalAccuracy > 0 ? referenceLocation.altitude + WT_RANDOM(0, 200) : -32768.f;
+//        
+//        CLLocation *location = [[CLLocation alloc] initWithCoordinate:locationCoordinate
+//                                                             altitude:altitude
+//                                                   horizontalAccuracy:referenceLocation.horizontalAccuracy
+//                                                     verticalAccuracy:referenceLocation.verticalAccuracy
+//                                                            timestamp:referenceLocation.timestamp];
+//        
+//        WTPoi *poi = [[WTPoi alloc] initWithIdentifier:[NSString stringWithFormat:@"%lu",(unsigned long)i]
+//                                              location:location
+//                                                  name:poiName
+//                                   detailedDescription:poiDescription
+//                                                 image:@""
+//                                                voice:@""];
+//        
+//        
+//        [poiManager addPoi:poi];
+//    }
+//    
+//}
 
 - (void)dealloc
 {
@@ -506,6 +506,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                                                detailedDescription:jingdianList.urlCode
                                                              image:[NSString stringWithFormat:@"%@%@",kHost,jingdianList.image]
                                                              voice:jingdianList.voice
+                                  
                                 ];
                     DLog(@"%@",poi.jsonRepresentation);
                     
@@ -1137,8 +1138,10 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     NSString *poiDescription = [poiDetails objectForKey:@"description"];
     NSString *poiImage = [poiDetails objectForKey:@"image"];
     NSString *poiVoice = [poiDetails objectForKey:@"voice"];
+    NSNumber *latitude = [poiDetails objectForKey:@"latitude"];
+    NSNumber *longitude = [poiDetails objectForKey:@"longitude"];
     
-    WTPoi *poi = [[WTPoi alloc] initWithIdentifier:poiIdentifier location:nil name:poiName detailedDescription:poiDescription image:poiImage voice:poiVoice];
+    WTPoi *poi = [[WTPoi alloc] initWithIdentifier:poiIdentifier location:[[CLLocation alloc] initWithLatitude:[latitude doubleValue] longitude:[longitude doubleValue]] name:poiName detailedDescription:poiDescription image:poiImage voice:poiVoice];
     
     if (poi)
     {
