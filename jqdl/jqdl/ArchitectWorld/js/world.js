@@ -29,7 +29,7 @@ var World = {
     
     jingquType:1,//1 街景默认 2 景区
     
-    lineList: [],
+//    lineList: [],
     
     currentLat:0,
     currentLng:0,
@@ -130,7 +130,7 @@ var World = {
     },
 
 	// sets/updates distances of all makers so they are available way faster than calling (time-consuming) distanceToUser() method all the time
-	updateDistanceToUserValues: function updateDistanceToUserValuesFn() {
+	updateDistanceToUserValues: function updateDistanceToUserValuesFn() {//更新距离
 		for (var i = 0; i < World.markerList.length; i++) {
             var distanceToUser = World.markerList[i].markerObject.locations[0].distanceToUser();
 			World.markerList[i].distanceToUser = distanceToUser;
@@ -162,7 +162,7 @@ var World = {
 //	},
 
 	// location updates, fired every time you call architectView.setLocation() in native environment
-	locationChanged: function locationChangedFn(lat, lon, alt, acc) {
+	locationChanged: function locationChangedFn(lat, lon, alt, acc) {//位置更改回调
         
 //        AR.logger.debug("lat:"+lat+",log:"+lon+",alt:"+alt+",acc:"+acc);
         World.currentLat = lat;
@@ -191,7 +191,7 @@ var World = {
 	},
 
 	// fired when user pressed maker in cam
-	onMarkerSelected: function onMarkerSelectedFn(marker) {
+	onMarkerSelected: function onMarkerSelectedFn(marker) {//点击marker
 //		World.currentMarker = marker;
 //
 //		// update panel values
@@ -307,7 +307,7 @@ var World = {
 //    },
 //
 	// screen was clicked but no geo-object was hit
-	onScreenClick: function onScreenClickFn() {
+	onScreenClick: function onScreenClickFn() {//点击屏幕
         if(World.isClickDetailImage){
             World.isClickDetailImage = false;
         }else{
