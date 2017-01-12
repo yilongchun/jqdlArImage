@@ -1038,6 +1038,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
 - (void)architectView:(WTArchitectView *)architectView invokedURL:(NSURL *)URL
 {
     NSDictionary *parameters = [URL URLParameter];
+    DLog(@"%@",parameters);
     if ( parameters )
     {
         if ( [[URL absoluteString] hasPrefix:@"architectsdk://button"] )
@@ -1055,27 +1056,36 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
             if ([action isEqualToString:@"showNavigationInfo"]) {
                 [self showNavigationInfoView];
             }
+            if ([action isEqualToString:@"reloadArData"]){
+                
+                NSString *jingquType = [parameters objectForKey:@"jingquType"];//1街景 2景区
+                
+                if ([jingquType isEqualToString:@"1"]) {//街景
+                    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"5s后切换到街景导览模式" message:@"检测到您已经进入街道周边范围" preferredStyle:UIAlertControllerStyleAlert];
+                    UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                        [self performBlock:^{
+                            [self loadJqList];//重新加载ar数据
+                        } afterDelay:5];
+                    }];
+                    [alert addAction:action1];
+                    [self presentViewController:alert animated:YES completion:nil];
+                }
+                if ([jingquType isEqualToString:@"2"]) {//景区
+                    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"5s后切换到景区导览模式" message:@"检测到您已经抵达景区周边范围" preferredStyle:UIAlertControllerStyleAlert];
+                    UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                        [self performBlock:^{
+                            [self loadJqList];//重新加载ar数据
+                        } afterDelay:5];
+                    }];
+                    [alert addAction:action1];
+                    [self presentViewController:alert animated:YES completion:nil];
+                }
+            }
         }
         else if ( [[URL absoluteString] hasPrefix:@"architectsdk://markerselected"])//点击查看详情
         {
             [self presentPoiDetails:parameters];
-        }
-        else if ( [[URL absoluteString] hasPrefix:@"architectsdk://changeNavModel"])//切换导航模式
-        {
-            NSString *action = [parameters objectForKey:@"action"];
-            if ( [action isEqualToString:@"jingqu"] ){//景区
-                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"5s后切换到景区导览模式" message:@"检测到您已经抵达景区周边范围" preferredStyle:UIAlertControllerStyleAlert];
-                UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:nil];
-                [alert addAction:action1];
-                [self presentViewController:alert animated:YES completion:nil];
-            }
-            if ([action isEqualToString:@"jiejing"]) {//街景
-                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"5s后切换到街景导览模式" message:@"检测到您已经进入街道周边范围" preferredStyle:UIAlertControllerStyleAlert];
-                UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:nil];
-                [alert addAction:action1];
-                [self presentViewController:alert animated:YES completion:nil];
-            }
-        }
+        }        
         else if ( [[URL absoluteString] hasPrefix:@"architectsdk://tracker"])//识别到结果 跳转识别结果界面
         {
             

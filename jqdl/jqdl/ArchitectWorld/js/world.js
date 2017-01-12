@@ -27,6 +27,8 @@ var World = {
 	// list of AR.GeoObjects that are currently shown in the scene / World
 	markerList: [],
     
+    jingquType:1,//1 街景默认 2 景区
+    
     lineList: [],
     
     currentLat:0,
@@ -41,7 +43,7 @@ var World = {
 	// called to inject new POI data
 	loadPoisFromJsonData: function loadPoisFromJsonDataFn(poiData) {
 
-//        AR.context.destroyAll();
+        AR.context.destroyAll();
 		// show radar & set click-listener
 		PoiRadar.show();
 //        PoiRadar.setMaxDistance(10000);
@@ -74,6 +76,49 @@ var World = {
 		World.updateDistanceToUserValues();
         World.initialized = true;
 	},
+    
+    loadPoisFromJsonDataTest: function loadPoisFromJsonDataTestFn(poiData) {
+        
+        AR.context.destroyAll();
+        // show radar & set click-listener
+        PoiRadar.show();
+        //        PoiRadar.setMaxDistance(10000);
+        //        AR.context.scene.cullingDistance = 10000;
+        $('#radarContainer').unbind('click');
+        $("#radarContainer").click(PoiRadar.clickedRadar);
+        
+        // empty list of visible markers
+        World.markerList = [];
+        
+        // start loading marker assets
+        World.markerDrawable_idle = new AR.ImageResource("assets/marker_idle2.png");
+        World.markerDrawable_selected = new AR.ImageResource("assets/marker_selected2.png");
+        World.markerDrawable_directionIndicator = new AR.ImageResource("assets/indi.png");
+        
+        // loop through POI-information and create an AR.GeoObject (=Marker) per POI
+        for (var currentPlaceNr = 0; currentPlaceNr < poiData.length; currentPlaceNr++) {
+            var singlePoi = {
+                "id": poiData[currentPlaceNr].id,
+                "latitude": parseFloat(poiData[currentPlaceNr].latitude),
+                "longitude": parseFloat(poiData[currentPlaceNr].longitude),
+                "altitude": parseFloat(currentPlaceNr*150),
+                "title": poiData[currentPlaceNr].name,
+                "description": poiData[currentPlaceNr].description,
+                "image":"",
+                "voice":""
+            };
+            AR.logger.debug(poiData[currentPlaceNr].name);
+            World.markerList.push(new Marker(singlePoi));
+            
+        }
+        
+        // updates distance information of all placemarks
+        World.updateDistanceToUserValues();
+        
+        World.initialized = true;
+        
+        //		World.updateStatusMessage(currentPlaceNr + ' places loaded');
+    },
 
 	// sets/updates distances of all makers so they are available way faster than calling (time-consuming) distanceToUser() method all the time
 	updateDistanceToUserValues: function updateDistanceToUserValuesFn() {
@@ -86,10 +131,7 @@ var World = {
 //            AR.logger.debug("updateDistanceToUserValues " + i + " :" + World.markerList[i].descriptionLabel.text + " " + distanceToUser);
 		}
         
-//        setTimeout(function(){
-//                   AR.context.destroyAll();//销毁所有
-//                   PoiRadar.show();
-//                   }, 5 * 1000 );
+
         
         
         
@@ -127,6 +169,16 @@ var World = {
 		}        
 		// helper used to update placemark information every now and then (e.g. every 10 location upadtes fired)
 		World.locationUpdateCounter = (++World.locationUpdateCounter % World.updatePlacemarkDistancesEveryXLocationUpdates);
+        
+        if(World.jingquType == 1){//如果是街景模式 切换为景区模式
+            World.jingquType = 2;
+            setTimeout(function(){
+                       if (World.initialized) {
+                            document.location = "architectsdk://button?action=reloadArData&jingquType="+World.jingquType;//重新获取数据
+                       }
+            }, 5 * 1000 );
+        }
+        
 	},
 
 	// fired when user pressed maker in cam
@@ -264,10 +316,6 @@ var World = {
             }
         }
         
-        
-//        document.location = "architectsdk://changeNavModel?action=jingqu";
-//        document.location = "architectsdk://changeNavModel?action=jiejing";
-        
 	},
 
 	// returns distance in meters of placemark with maxdistance * 1.1
@@ -289,27 +337,29 @@ var World = {
         }
     },
 
-//	// request POI data
-//	requestDataFromServer: function requestDataFromServerFn(lat, lon) {
-//		// set helper var to avoid requesting places while loading
-//		World.isRequestingData = true;
+	// request POI data
+	requestDataFromServerTest: function requestDataFromServerTestFn(lat, lon) {
+        
+		// set helper var to avoid requesting places while loading
+		World.isRequestingData = true;
 //		World.updateStatusMessage('Requesting places from web-service');
-//
-//		// server-url to JSON content provider
-//		var serverUrl = ServerInformation.POIDATA_SERVER + "?" + ServerInformation.POIDATA_SERVER_ARG_LAT + "=" + lat + "&" + ServerInformation.POIDATA_SERVER_ARG_LON + "=" + lon + "&" + ServerInformation.POIDATA_SERVER_ARG_NR_POIS + "=1";
-//
-//		var jqxhr = $.getJSON(serverUrl, function(data) {
-//			World.loadPoisFromJsonData(data);
-//		})
-//			.error(function(err) {
-//				World.updateStatusMessage("Invalid web-service response.", true);
-//				World.isRequestingData = false;
-//			})
-//			.complete(function() {
-//				World.isRequestingData = false;
-//			});
-//	},
-//
+
+		// server-url to JSON content provider
+		var serverUrl = ServerInformation.POIDATA_SERVER + "?" + ServerInformation.POIDATA_SERVER_ARG_LAT + "=" + lat + "&" + ServerInformation.POIDATA_SERVER_ARG_LON + "=" + lon + "&" + ServerInformation.POIDATA_SERVER_ARG_NR_POIS + "=10";
+ 
+		var jqxhr = $.getJSON(serverUrl, function(data) {
+         
+			World.loadPoisFromJsonDataTest(data);
+		})
+			.error(function(err) {
+				World.updateStatusMessage("Invalid web-service response.", true);
+				World.isRequestingData = false;
+			})
+			.complete(function() {
+				World.isRequestingData = false;
+			});
+	},
+
 	// helper to sort places by distance
 	sortByDistanceSorting: function(a, b) {
 		return a.distanceToUser - b.distanceToUser;
