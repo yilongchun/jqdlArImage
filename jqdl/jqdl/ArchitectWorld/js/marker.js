@@ -42,7 +42,7 @@ function Marker(poiData) {
         zOrder: 1,
         opacity: 1.0,
         offsetX:-3.3
-                                          });
+    });
     
     var _html="<div class='zdyDemo' style='height:600px;font-size:5em;border-radius:0.3em;background:#fff;position:relative'>";
     _html+="<img src='" + poiData.image + "' style='width:100%;height:600px;border-radius:0.3em'/>";

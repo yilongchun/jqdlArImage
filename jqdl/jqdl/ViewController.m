@@ -1065,8 +1065,9 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"5s后切换到街景导览模式" message:@"检测到您已经进入街道周边范围" preferredStyle:UIAlertControllerStyleAlert];
                     UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
                         [self performBlock:^{
+                            [self.navigationController popToRootViewControllerAnimated:YES];
                             [self loadJqList];//重新加载ar数据
-                        } afterDelay:0.5];
+                        } afterDelay:0.];
                     }];
                     [alert addAction:action1];
                     [self presentViewController:alert animated:YES completion:nil];
@@ -1075,8 +1076,9 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"5s后切换到景区导览模式" message:@"检测到您已经抵达景区周边范围" preferredStyle:UIAlertControllerStyleAlert];
                     UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
                         [self performBlock:^{
+                            [self.navigationController popToRootViewControllerAnimated:YES];
                             [self loadJqList];//重新加载ar数据
-                        } afterDelay:0.5];
+                        } afterDelay:0.];
                     }];
                     [alert addAction:action1];
                     [self presentViewController:alert animated:YES completion:nil];

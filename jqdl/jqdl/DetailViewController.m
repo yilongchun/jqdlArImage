@@ -36,6 +36,11 @@
         self.extendedLayoutIncludesOpaqueBars = YES;
     }
     
+    UIBarButtonItem *rightItem1 = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"shoucang"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] style:UIBarButtonItemStyleDone target:self action:@selector(shoucang)];
+    UIBarButtonItem *rightItem2 = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"share"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] style:UIBarButtonItemStyleDone target:self action:@selector(share)];
+    
+    self.navigationItem.rightBarButtonItems = @[rightItem2,rightItem1];
+    
     self.navigationController.navigationBar.translucent = YES;
     self.jz_navigationBarBackgroundHidden = YES;
     self.jz_navigationBarTintColor = [UIColor whiteColor];
@@ -45,6 +50,14 @@
     
     
     [self setContent];
+}
+
+-(void)shoucang{
+    
+}
+
+-(void)share{
+    
 }
 
 //设置内容

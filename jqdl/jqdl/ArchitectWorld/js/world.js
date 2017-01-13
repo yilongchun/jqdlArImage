@@ -118,7 +118,6 @@ var World = {
             };
             AR.logger.debug(poiData[currentPlaceNr].name);
             World.markerList.push(new Marker(singlePoi));
-            
         }
         
         // updates distance information of all placemarks
