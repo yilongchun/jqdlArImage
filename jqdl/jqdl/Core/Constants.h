@@ -34,10 +34,10 @@ typedef NS_ENUM(NSInteger, ResultCodeType){
 /**
  *  auth
  */
-//登录
-#define API_AUTH_LOGIN @"/login"
-//验证码登录
-#define API_AUTH_LOGIN_CODE @"/login/code"
+////登录
+//#define API_AUTH_LOGIN @"/login"
+////验证码登录
+//#define API_AUTH_LOGIN_CODE @"/login/code"
 //注册
 #define API_AUTH_REGISTER @"/register"
 //重置密码

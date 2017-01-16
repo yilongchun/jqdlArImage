@@ -181,9 +181,9 @@ var World = {
         if(World.jingquType == 1){//如果是街景模式 切换为景区模式
             World.jingquType = 2;
             setTimeout(function(){
-                       if (World.initialized) {
-                            document.location = "architectsdk://button?action=reloadArData&jingquType="+World.jingquType;//重新获取数据
-                       }
+               if (World.initialized) {
+                    document.location = "architectsdk://button?action=reloadArData&jingquType="+World.jingquType;//重新获取数据
+               }
             }, 5 * 1000 );
         }
         

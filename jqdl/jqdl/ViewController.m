@@ -1122,13 +1122,8 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                     
                     trackerFlag = NO;
                 } afterDelay:1.5];
-                                
             }
-            
-            
-            
         }
-        
     }
 }
 

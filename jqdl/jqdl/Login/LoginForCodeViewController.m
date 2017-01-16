@@ -123,9 +123,16 @@
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
     [parameters setObject:_account.text forKey:@"identity"];
-    [parameters setObject:_password.text forKey:@"code"];
+//    [parameters setObject:_password.text forKey:@"code"];
+    [parameters setObject:_password.text forKey:@"password"];
     
-    NSString *url = [NSString stringWithFormat:@"%@%@",kDlHost,API_AUTH_LOGIN_CODE];
+    
+    [parameters setObject:@"password" forKey:@"grant_type"];
+    [parameters setObject:@"4e17b8ae60040835e1cf9b93ecc60edf" forKey:@"client_id"];
+    [parameters setObject:@"secret.1" forKey:@"client_secret"];
+    [parameters setObject:[NSNumber numberWithBool:YES] forKey:@"use_code"];
+    
+    NSString *url = [NSString stringWithFormat:@"%@%@",kDlHost,@"/oauth2/token"];
     
     [manager POST:url parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
         [self hideHud];

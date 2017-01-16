@@ -3337,6 +3337,7 @@
 				TargetAttributes = {
 					44003CF81BFB24ED00CB747A = {
 						CreatedOnToolsVersion = 7.1;
+						DevelopmentTeam = XZ86565VQZ;
 					};
 					44003D111BFB24ED00CB747A = {
 						CreatedOnToolsVersion = 7.1;
@@ -3990,9 +3991,9 @@
 				OTHER_CFLAGS = "";
 				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_BUNDLE_IDENTIFIER = com.zoiapp.szg;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yczoi.qlxing;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "f9ae4000-289c-46b9-9da3-c9316ec8d8f0";
 			};
 			name = Debug;
 		};
@@ -4022,9 +4023,9 @@
 				OTHER_CFLAGS = "";
 				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_BUNDLE_IDENTIFIER = com.zoiapp.szg;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yczoi.qlxing;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "f9ae4000-289c-46b9-9da3-c9316ec8d8f0";
 			};
 			name = Release;
 		};
