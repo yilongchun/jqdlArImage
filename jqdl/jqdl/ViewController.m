@@ -21,12 +21,12 @@
 #import "DetailViewController.h"
 #import <Social/Social.h>
 
-#import "FeatureViewController.h"
-#import "ChooseJqViewController.h"
+//#import "FeatureViewController.h"
+//#import "ChooseJqViewController.h"
 #import "LBXScanViewController.h"
 #import "Data.h"
-#import "CategoryList.h"
-#import "Feature2ViewController.h"
+//#import "CategoryList.h"
+//#import "Feature2ViewController.h"
 
 #import "JZNavigationExtension.h"
 #import "BaiduMapViewController.h"
@@ -46,7 +46,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
 
 @interface ViewController () <WTArchitectViewDelegate, WTArchitectViewDebugDelegate, CLLocationManagerDelegate,UIScrollViewDelegate>{
     NSString *firsetParams;
-    ChooseJqViewController *jqvc;
+//    ChooseJqViewController *jqvc;
     CLLocation *myLocation;
     
     
