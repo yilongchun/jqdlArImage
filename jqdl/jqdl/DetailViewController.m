@@ -237,7 +237,7 @@
 //        CLLocationCoordinate2D coords = CLLocationCoordinate2DMake(39.915352,116.397105);//纬度，经度
         MKPlacemark *placemark = [[MKPlacemark alloc] initWithCoordinate:_poi.location.coordinate addressDictionary:nil];
         MKMapItem *toLocation = [[MKMapItem alloc] initWithPlacemark:placemark];
-        toLocation.name = _poi.name;
+        toLocation.name = [_poi.name stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         [MKMapItem openMapsWithItems:@[currentLocation, toLocation]
                        launchOptions:@{MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeDriving,MKLaunchOptionsShowsTrafficKey: [NSNumber numberWithBool:YES]}];
     }else{
