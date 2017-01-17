@@ -44,7 +44,7 @@
 static char *kWTAugmentedRealityViewController_AssociatedPoiManagerKey = "kWTARVCAMEWTP";
 static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "kWTARVCAMECLK";
 
-@interface ViewController () <WTArchitectViewDelegate, WTArchitectViewDebugDelegate, CLLocationManagerDelegate,UITableViewDataSource,UITableViewDelegate,UIScrollViewDelegate>{
+@interface ViewController () <WTArchitectViewDelegate, WTArchitectViewDebugDelegate, CLLocationManagerDelegate,UIScrollViewDelegate>{
     NSString *firsetParams;
     ChooseJqViewController *jqvc;
     CLLocation *myLocation;
@@ -63,6 +63,9 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     UIButton *guideCloseBtn;
     
     UIButton *bottomBtn;
+    
+    NSMutableDictionary *storeDic;
+    NSMutableArray *spotsArr;
 }
 
 /* Add a strong property to the main Wikitude SDK component, the WTArchitectView */
@@ -103,8 +106,8 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
         myLocation = (CLLocation *)firstLocation;
         [manager stopUpdatingLocation];
         
-        //加载数据
-        [self loadJqList];
+        //加载数据 景区
+        [self loadStore];
         
         manager.delegate = nil;
 //
@@ -282,9 +285,9 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     
     
     //选择景区
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(chooseJq:) name:@"chooseJq" object:nil];
-    //景点详情
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showJdDetail:) name:@"showJdDetail" object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(chooseJq:) name:@"chooseJq" object:nil];
+//    //景点详情
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showJdDetail:) name:@"showJdDetail" object:nil];
     //刷新左上角头像
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setLeftItem) name:@"setLeftItem" object:nil];
     
@@ -319,6 +322,8 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
 //        [self initGuideView];
 //
 //    }
+    
+//    [self loadStore];
 }
 
 //初始化引导页面
@@ -417,125 +422,326 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     [self presentViewController:alert animated:YES completion:nil];
 }
 
-//进入景区列表选择
--(void)chooseJq{
-    if (jqvc == nil) {
-        jqvc = [self.storyboard instantiateViewControllerWithIdentifier:@"ChooseJqViewController"];
-        jqvc.hidesBottomBarWhenPushed = YES;
-        
-    }
-    jqvc.categoryListId = categoryList.id;
-    [self.navigationController pushViewController:jqvc animated:YES];
-    
-}
+////进入景区列表选择
+//-(void)chooseJq{
+//    if (jqvc == nil) {
+//        jqvc = [self.storyboard instantiateViewControllerWithIdentifier:@"ChooseJqViewController"];
+//        jqvc.hidesBottomBarWhenPushed = YES;
+//        
+//    }
+//    jqvc.categoryListId = categoryList.id;
+//    [self.navigationController pushViewController:jqvc animated:YES];
+//    
+//}
 
-//选择景区完成
-- (void)chooseJq:(NSNotification *)text{
-    
-    
-    
-    if ([text.userInfo[@"obj"] isKindOfClass:[CategoryList class]]) {
-        categoryList = (CategoryList *)text.userInfo[@"obj"];
-        firsetParams = categoryList.urlCode;
-        NSNumber *flag = text.userInfo[@"SHOWFLAG"];
-        
-        
-        [self loadJingdian:categoryList.id showHud:[flag boolValue]];
-        
-    }
-}
 
-//加载景点列表
--(void)loadJingdian:(NSString *)ids showHud:(BOOL)flag{
-    if (flag) {
-        [self showHudInView:self.view hint:@"加载中"];
-    }
+//加载景区
+-(void)loadStore{
     
-    NSDictionary *parameters = @{@"parentId":ids};
-    [[Client defaultNetClient] POST:API_JINGDIAN_LIST param:parameters JSONModelClass:[Data class] success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        DLog(@"JSONModel: %@", responseObject);
-        Data *res = (Data *)responseObject;
-        if (res.resultcode == ResultCodeSuccess) {
-            
-//            if (jingdianDataSource==nil) {
-//                jingdianDataSource = [NSMutableArray new];
-//            }else{
-//                [jingdianDataSource removeAllObjects];
-//            }
-            
-            WTPoiManager *poiManager = objc_getAssociatedObject(self, kWTAugmentedRealityViewController_AssociatedPoiManagerKey);
-            [poiManager removeAllPois];
-            
-            NSError *error;
-            NSArray *arr = (NSArray*)res.result;
-            
-            
-            if (jingdianArray == nil) {
-                jingdianArray = [NSMutableArray array];
-            }
-            jingdianArray = [NSMutableArray arrayWithArray:arr];
-            
-            NSMutableArray *annotations = [NSMutableArray array];
-            for (int i = 0;i<arr.count;i++) {
-                NSDictionary *dic = arr[i];
-                error = nil;
-                CategoryList *jingdianList = [[CategoryList alloc] initWithDictionary:dic error:&error];
-                DLog(@"%@\t%@\t%f\t%f",jingdianList.id,jingdianList.name,[jingdianList.lon floatValue],[jingdianList.lat floatValue]);
-                if (error) {
-                    DLog(@"%@",error.userInfo);
-                    continue;
-                }
-                if ([jingdianList.lat floatValue] != 0 && [jingdianList.lon floatValue] != 0) {
-//                    [jingdianDataSource addObject:jingdianList];
-                    
-//                    CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake([jingdianList.lat floatValue], [jingdianList.lon floatValue]);
-                    
-                    
-                    CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake(myLocation.coordinate.latitude + WT_RANDOM(-0.1, 0.1), myLocation.coordinate.longitude + WT_RANDOM(-0.1, 0.1));
-                    
-                    
-                    CLLocation *location = [[CLLocation alloc] initWithCoordinate:locationCoordinate
-                                                                         altitude:0
-                                                               horizontalAccuracy:0
-                                                                 verticalAccuracy:0
-                                                                        timestamp:[NSDate date]];
-                    
-                    WTPoi *poi = [[WTPoi alloc] initWithIdentifier:jingdianList.id
-                                                          location:location
-                                                              name:jingdianList.name
-                                               detailedDescription:jingdianList.urlCode
-                                                             image:[NSString stringWithFormat:@"%@%@",kHost,jingdianList.image]
-                                                             voice:jingdianList.voice
-                                  
-                                ];
-                    DLog(@"%@",poi.jsonRepresentation);
-                    
-                    [poiManager addPoi:poi];
-                    
-                }
-            }
-            if ([annotations count] != 0) {
-                
-            }
-            
-            
-            NSString *poisInJsonData = [poiManager convertPoiModelToJson];
-            
-            [self.architectView callJavaScript:[NSString stringWithFormat:@"World.loadPoisFromJsonData(%@)", poisInJsonData]];
-            
-            [self hideHud];
-        }else {
-            DLog(@"%@",res.reason);
-            [self hideHud];
-            [self showHintInView:self.view hint:res.reason];
-        }
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        DLog(@"Error: %@", error);
+    [self showHudInView:self.view];
+    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+    
+    WTPoiManager *poiManager = objc_getAssociatedObject(self, kWTAugmentedRealityViewController_AssociatedPoiManagerKey);
+    [poiManager removeAllPois];
+    
+    NSString *url = [NSString stringWithFormat:@"%@%@",kDlHost,@"/stores"];
+    [manager GET:url parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
         [self hideHud];
-        [self showHintInView:self.view hint:@"获取失败，请重试!"];
-        return;
+        
+        
+        NSDictionary *dic= [NSDictionary dictionaryWithDictionary:responseObject];
+        NSArray *data = [dic objectForKey:@"data"];
+        
+        for (int i = 0 ; i < data.count; i++) {
+            NSString *storeId = [data[i] objectForKey:@"id"];
+            if ([storeId isEqualToString:@"f66c0fc1f74580c525365751a9ce21b6"]) {//神农架
+                storeDic = [[NSMutableDictionary alloc] initWithDictionary:data[i]];
+                
+                NSArray *imagesArr = [storeDic objectForKey:@"images"];
+                NSMutableArray *images = [NSMutableArray array];
+                NSString *image = @"";
+                
+                [imagesArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    [images addObject:[obj objectForKey:@"url"]];
+                }];
+                if (images.count > 0) {
+                    image = [images objectAtIndex:0];
+                }
+                
+                NSArray *audio_clips = [storeDic objectForKey:@"audio_clips"];
+                NSString *audio = @"";
+                if (audio_clips.count > 0) {
+                    audio = [[audio_clips objectAtIndex:0] objectForKey:@"url"];
+                }
+                
+                NSArray *coordinates = [storeDic objectForKey:@"coordinates"];
+                NSNumber *latitude;
+                NSNumber *longitude;
+                if (audio_clips.count > 1) {
+                    latitude = coordinates[0];
+                    longitude = coordinates[1];
+                }
+                
+                
+                
+                CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake(myLocation.coordinate.latitude + WT_RANDOM(-0.1, 0.1), myLocation.coordinate.longitude + WT_RANDOM(-0.1, 0.1));
+                
+//                CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake([latitude doubleValue], [longitude doubleValue]);
+                
+                
+                CLLocation *location = [[CLLocation alloc] initWithCoordinate:locationCoordinate
+                                                                     altitude:0
+                                                           horizontalAccuracy:0
+                                                             verticalAccuracy:0
+                                                                    timestamp:[NSDate date]];
+                
+                WTPoi *poi = [[WTPoi alloc] initWithIdentifier:[storeDic objectForKey:@"id"]
+                                                      location:location
+                                                          name:[storeDic objectForKey:@"name"]
+                                           detailedDescription:[storeDic objectForKey:@"description"]
+                                                         image:image
+                                                        images:[images componentsJoinedByString:@","]
+                                                         voice:audio
+                                                       address:[storeDic objectForKey:@"address"]
+                              
+                              ];
+                DLog(@"%@",poi.jsonRepresentation);
+                
+                [poiManager addPoi:poi];
+                
+                NSString *poisInJsonData = [poiManager convertPoiModelToJson];
+                
+                [self.architectView callJavaScript:[NSString stringWithFormat:@"World.loadPoisFromJsonData(%@)", poisInJsonData]];
+                
+                break;
+            }
+        }
+     
+        DLog(@"storeDic:%@",storeDic);
+        
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+        [self hideHud];
+        
+        NSData *data =[error.userInfo objectForKey:@"com.alamofire.serialization.response.error.data"];
+        if (data) {
+            NSString *result  =[[ NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            NSDictionary *dic= [NSJSONSerialization JSONObjectWithData:[result dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions error:nil];
+            NSString *message = [dic objectForKey:@"message"];
+            [self showHintInView:self.view hint:NSLocalizedString(message, nil)];
+            DLog(@"%@",result);
+        }else{
+            [self showHintInView:self.view hint:error.localizedDescription];
+        }
     }];
 }
+
+
+//加载景点列表
+-(void)loadSpots{
+    
+    [self showHudInView:self.view];
+    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+    
+    
+    WTPoiManager *poiManager = objc_getAssociatedObject(self, kWTAugmentedRealityViewController_AssociatedPoiManagerKey);
+    [poiManager removeAllPois];
+    
+    NSString *url = [NSString stringWithFormat:@"%@%@",kDlHost,@"/spots"];
+    [manager GET:url parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
+        [self hideHud];
+        
+        
+        NSDictionary *dic= [NSDictionary dictionaryWithDictionary:responseObject];
+        NSArray *data = [dic objectForKey:@"data"];
+        
+        for (int i = 0 ; i < data.count; i++) {
+            
+            
+            storeDic = [[NSMutableDictionary alloc] initWithDictionary:data[i]];
+            
+            NSArray *imagesArr = [storeDic objectForKey:@"images"];
+            NSMutableArray *images = [NSMutableArray array];
+            NSString *image = @"";
+            
+            [imagesArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                [images addObject:[obj objectForKey:@"url"]];
+            }];
+            if (images.count > 0) {
+                image = [images objectAtIndex:0];
+            }
+            
+            NSArray *audio_clips = [storeDic objectForKey:@"audio_clips"];
+            NSString *audio = @"";
+            if (audio_clips.count > 0) {
+                audio = [[audio_clips objectAtIndex:0] objectForKey:@"url"];
+            }
+            
+            NSArray *coordinates = [storeDic objectForKey:@"coordinates"];
+            NSNumber *latitude;
+            NSNumber *longitude;
+            if (audio_clips.count > 1) {
+                latitude = coordinates[0];
+                longitude = coordinates[1];
+            }
+            
+            
+            
+            CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake(myLocation.coordinate.latitude + WT_RANDOM(-0.1, 0.1), myLocation.coordinate.longitude + WT_RANDOM(-0.1, 0.1));
+            
+            //                CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake([latitude doubleValue], [longitude doubleValue]);
+            
+            
+            CLLocation *location = [[CLLocation alloc] initWithCoordinate:locationCoordinate
+                                                                 altitude:0
+                                                       horizontalAccuracy:0
+                                                         verticalAccuracy:0
+                                                                timestamp:[NSDate date]];
+            
+            WTPoi *poi = [[WTPoi alloc] initWithIdentifier:[storeDic objectForKey:@"id"]
+                                                  location:location
+                                                      name:[storeDic objectForKey:@"name"]
+                                       detailedDescription:[storeDic objectForKey:@"description"]
+                                                     image:image
+                                                    images:[images componentsJoinedByString:@","]
+                                                     voice:audio
+                                                   address:[storeDic objectForKey:@"address"]
+                          
+                          ];
+            DLog(@"%@",poi.jsonRepresentation);
+            
+            [poiManager addPoi:poi];
+            
+        }
+        
+        NSString *poisInJsonData = [poiManager convertPoiModelToJson];
+        
+        [self.architectView callJavaScript:[NSString stringWithFormat:@"World.loadPoisFromJsonData(%@)", poisInJsonData]];
+        
+        DLog(@"storeDic:%@",storeDic);
+        
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+        [self hideHud];
+        
+        NSData *data =[error.userInfo objectForKey:@"com.alamofire.serialization.response.error.data"];
+        if (data) {
+            NSString *result  =[[ NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            NSDictionary *dic= [NSJSONSerialization JSONObjectWithData:[result dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions error:nil];
+            NSString *message = [dic objectForKey:@"message"];
+            [self showHintInView:self.view hint:NSLocalizedString(message, nil)];
+            DLog(@"%@",result);
+        }else{
+            [self showHintInView:self.view hint:error.localizedDescription];
+        }
+    }];
+}
+
+////选择景区完成
+//- (void)chooseJq:(NSNotification *)text{
+//    
+//    
+//    
+//    if ([text.userInfo[@"obj"] isKindOfClass:[CategoryList class]]) {
+//        categoryList = (CategoryList *)text.userInfo[@"obj"];
+//        firsetParams = categoryList.urlCode;
+//        NSNumber *flag = text.userInfo[@"SHOWFLAG"];
+//        
+//        
+//        [self loadJingdian:categoryList.id showHud:[flag boolValue]];
+//        
+//    }
+//}
+//
+////加载景点列表
+//-(void)loadJingdian:(NSString *)ids showHud:(BOOL)flag{
+//    if (flag) {
+//        [self showHudInView:self.view hint:@"加载中"];
+//    }
+//    
+//    NSDictionary *parameters = @{@"parentId":ids};
+//    [[Client defaultNetClient] POST:API_JINGDIAN_LIST param:parameters JSONModelClass:[Data class] success:^(AFHTTPRequestOperation *operation, id responseObject) {
+//        DLog(@"JSONModel: %@", responseObject);
+//        Data *res = (Data *)responseObject;
+//        if (res.resultcode == ResultCodeSuccess) {
+//            
+////            if (jingdianDataSource==nil) {
+////                jingdianDataSource = [NSMutableArray new];
+////            }else{
+////                [jingdianDataSource removeAllObjects];
+////            }
+//            
+//            WTPoiManager *poiManager = objc_getAssociatedObject(self, kWTAugmentedRealityViewController_AssociatedPoiManagerKey);
+//            [poiManager removeAllPois];
+//            
+//            NSError *error;
+//            NSArray *arr = (NSArray*)res.result;
+//            
+//            
+//            if (jingdianArray == nil) {
+//                jingdianArray = [NSMutableArray array];
+//            }
+//            jingdianArray = [NSMutableArray arrayWithArray:arr];
+//            
+//            NSMutableArray *annotations = [NSMutableArray array];
+//            for (int i = 0;i<arr.count;i++) {
+//                NSDictionary *dic = arr[i];
+//                error = nil;
+//                CategoryList *jingdianList = [[CategoryList alloc] initWithDictionary:dic error:&error];
+//                DLog(@"%@\t%@\t%f\t%f",jingdianList.id,jingdianList.name,[jingdianList.lon floatValue],[jingdianList.lat floatValue]);
+//                if (error) {
+//                    DLog(@"%@",error.userInfo);
+//                    continue;
+//                }
+//                if ([jingdianList.lat floatValue] != 0 && [jingdianList.lon floatValue] != 0) {
+////                    [jingdianDataSource addObject:jingdianList];
+//                    
+////                    CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake([jingdianList.lat floatValue], [jingdianList.lon floatValue]);
+//                    
+//                    
+//                    CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake(myLocation.coordinate.latitude + WT_RANDOM(-0.1, 0.1), myLocation.coordinate.longitude + WT_RANDOM(-0.1, 0.1));
+//                    
+//                    
+//                    CLLocation *location = [[CLLocation alloc] initWithCoordinate:locationCoordinate
+//                                                                         altitude:0
+//                                                               horizontalAccuracy:0
+//                                                                 verticalAccuracy:0
+//                                                                        timestamp:[NSDate date]];
+//                    
+//                    WTPoi *poi = [[WTPoi alloc] initWithIdentifier:jingdianList.id
+//                                                          location:location
+//                                                              name:jingdianList.name
+//                                               detailedDescription:jingdianList.urlCode
+//                                                             image:[NSString stringWithFormat:@"%@%@",kHost,jingdianList.image]
+//                                                             voice:jingdianList.voice
+//                                  
+//                                ];
+//                    DLog(@"%@",poi.jsonRepresentation);
+//                    
+//                    [poiManager addPoi:poi];
+//                    
+//                }
+//            }
+//            if ([annotations count] != 0) {
+//                
+//            }
+//            
+//            
+//            NSString *poisInJsonData = [poiManager convertPoiModelToJson];
+//            
+//            [self.architectView callJavaScript:[NSString stringWithFormat:@"World.loadPoisFromJsonData(%@)", poisInJsonData]];
+//            
+//            [self hideHud];
+//        }else {
+//            DLog(@"%@",res.reason);
+//            [self hideHud];
+//            [self showHintInView:self.view hint:res.reason];
+//        }
+//    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+//        DLog(@"Error: %@", error);
+//        [self hideHud];
+//        [self showHintInView:self.view hint:@"获取失败，请重试!"];
+//        return;
+//    }];
+//}
 
 //跳转景点介绍
 - (void)showJdDetail:(NSNotification *)text{
@@ -564,40 +770,40 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
 }
 
 //加载景区列表 读取第一个默认加载
--(void)loadJqList{
-    [self showHudInView:self.view hint:@"加载中"];
-    
-    NSDictionary *parameters = @{@"type":@"1"};
-    [[Client defaultNetClient] POST:API_CATEGORY_LIST param:parameters JSONModelClass:[Data class] success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        //        DLog(@"JSONModel: %@", responseObject);
-        Data *res = (Data *)responseObject;
-        if (res.resultcode == ResultCodeSuccess) {
-            
-            NSError *error;
-            NSArray *arr = (NSArray*)res.result;
-            
-            if ([arr count] > 0) {
-                error = nil;
-                categoryList = [[CategoryList alloc] initWithDictionary:[arr objectAtIndex:0] error:&error];
-                NSDictionary *dict =[[NSDictionary alloc] initWithObjectsAndKeys:categoryList,@"obj",[NSNumber numberWithBool:NO],@"SHOWFLAG", nil];
-                NSNotification *notification =[NSNotification notificationWithName:@"chooseJq" object:nil userInfo:dict];
-                [[NSNotificationCenter defaultCenter] postNotification:notification];
-            }else{
-                [self hideHud];
-                [self showHintInView:self.view hint:@"暂无景区数据"];
-            }
-        }else {
-            DLog(@"%@",res.reason);
-            [self hideHud];
-            [self showHintInView:self.view hint:res.reason];
-        }
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        DLog(@"Error: %@", error);
-        [self hideHud];
-        [self showHintInView:self.view hint:@"获取失败!"];
-        return;
-    }];
-}
+//-(void)loadJqList{
+//    [self showHudInView:self.view hint:@"加载中"];
+//    
+//    NSDictionary *parameters = @{@"type":@"1"};
+//    [[Client defaultNetClient] POST:API_CATEGORY_LIST param:parameters JSONModelClass:[Data class] success:^(AFHTTPRequestOperation *operation, id responseObject) {
+//        //        DLog(@"JSONModel: %@", responseObject);
+//        Data *res = (Data *)responseObject;
+//        if (res.resultcode == ResultCodeSuccess) {
+//            
+//            NSError *error;
+//            NSArray *arr = (NSArray*)res.result;
+//            
+//            if ([arr count] > 0) {
+//                error = nil;
+//                categoryList = [[CategoryList alloc] initWithDictionary:[arr objectAtIndex:0] error:&error];
+//                NSDictionary *dict =[[NSDictionary alloc] initWithObjectsAndKeys:categoryList,@"obj",[NSNumber numberWithBool:NO],@"SHOWFLAG", nil];
+//                NSNotification *notification =[NSNotification notificationWithName:@"chooseJq" object:nil userInfo:dict];
+//                [[NSNotificationCenter defaultCenter] postNotification:notification];
+//            }else{
+//                [self hideHud];
+//                [self showHintInView:self.view hint:@"暂无景区数据"];
+//            }
+//        }else {
+//            DLog(@"%@",res.reason);
+//            [self hideHud];
+//            [self showHintInView:self.view hint:res.reason];
+//        }
+//    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+//        DLog(@"Error: %@", error);
+//        [self hideHud];
+//        [self showHintInView:self.view hint:@"获取失败!"];
+//        return;
+//    }];
+//}
 
 #pragma mark - UIScrollViewDelegate
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
@@ -633,22 +839,22 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
 
 -(void)showList{
     
-    if (jingdianTableView == nil) {
-        jingdianTableView = [[UITableView alloc] initWithFrame:CGRectMake(Main_Screen_Width, 0, Main_Screen_Width-80, Main_Screen_Height - 49 - 64) style:UITableViewStylePlain];
-        jingdianTableView.alpha = 0.95;
-        jingdianTableView.backgroundColor = [UIColor whiteColor];
-        jingdianTableView.delegate = self;
-        jingdianTableView.dataSource = self;
-        
-        UIView *v = [[UIView alloc] initWithFrame:CGRectZero];
-        [jingdianTableView setTableFooterView:v];
-    }
-    [self.view addSubview:jingdianTableView];
-    [UIView transitionWithView:jingdianTableView duration:0.3 options:0 animations:^{
-        jingdianTableView.frame = CGRectMake(80, 0, Main_Screen_Width-80, Main_Screen_Height- 49 -64);
-    } completion:^(BOOL finished) {
-        
-    }];
+//    if (jingdianTableView == nil) {
+//        jingdianTableView = [[UITableView alloc] initWithFrame:CGRectMake(Main_Screen_Width, 0, Main_Screen_Width-80, Main_Screen_Height - 49 - 64) style:UITableViewStylePlain];
+//        jingdianTableView.alpha = 0.95;
+//        jingdianTableView.backgroundColor = [UIColor whiteColor];
+//        jingdianTableView.delegate = self;
+//        jingdianTableView.dataSource = self;
+//        
+//        UIView *v = [[UIView alloc] initWithFrame:CGRectZero];
+//        [jingdianTableView setTableFooterView:v];
+//    }
+//    [self.view addSubview:jingdianTableView];
+//    [UIView transitionWithView:jingdianTableView duration:0.3 options:0 animations:^{
+//        jingdianTableView.frame = CGRectMake(80, 0, Main_Screen_Width-80, Main_Screen_Height- 49 -64);
+//    } completion:^(BOOL finished) {
+//        
+//    }];
     
     
 //    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(Main_Screen_Width, 64, Main_Screen_Width-80, Main_Screen_Height - 64 - 49)];
@@ -677,66 +883,66 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
 //}
 
 
-//显示导航数据
--(void)showNavigationInfoView{
-//    UIView *backgroundView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, Main_Screen_Width, Main_Screen_Height - 49)];
-//    [self.view addSubview:backgroundView];
-    
-    self.architectView.userInteractionEnabled = NO;
-    
-    if (navigationInfoView == nil) {
-        navigationInfoView = [[UIView alloc] initWithFrame:CGRectMake(0, -120, Main_Screen_Width, 120)];
-        
-        UIButton *closeBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
-        [closeBtn setImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
-        [closeBtn addTarget:self action:@selector(hideNavigationInfoView) forControlEvents:UIControlEventTouchUpInside];
-        [navigationInfoView addSubview:closeBtn];
-        
-        
-        UILabel *line = [[UILabel alloc] initWithFrame:CGRectMake(0, 40, Main_Screen_Width, 0.5)];
-        line.backgroundColor = RGB(229, 229, 229);
-        [navigationInfoView addSubview:line];
-        
-        UILabel *label1 = [[UILabel alloc] initWithFrame:CGRectMake(40, 0, Main_Screen_Width - 80, 40)];
-        label1.textAlignment = NSTextAlignmentCenter;
-        label1.text = @"2 分钟   0.1 公里   09:24 到达";
-        label1.font = [UIFont systemFontOfSize:15];
-        [navigationInfoView addSubview:label1];
-        
-        UILabel *label2 = [[UILabel alloc] initWithFrame:CGRectMake(0, 40, Main_Screen_Width, 40)];
-        label2.textAlignment = NSTextAlignmentCenter;
-        label2.font = [UIFont systemFontOfSize:25];
-        label2.text = @"136米";
-        [navigationInfoView addSubview:label2];
-        
-        UILabel *label3 = [[UILabel alloc] initWithFrame:CGRectMake(0, 80, Main_Screen_Width, 40)];
-        label3.textAlignment = NSTextAlignmentCenter;
-        label3.font = [UIFont systemFontOfSize:17];
-        label3.text = @"到达目的地";
-        [navigationInfoView addSubview:label3];
-        
-        navigationInfoView.backgroundColor = [UIColor whiteColor];
-    }
-    
-    
-//    navigationView.alpha = 0.95;
-    [self.view addSubview:navigationInfoView];
-    [UIView transitionWithView:navigationInfoView duration:0.3 options:0 animations:^{
-        navigationInfoView.frame = CGRectMake(0, 0, Main_Screen_Width, 120);
-    } completion:nil];
-}
+////显示导航数据
+//-(void)showNavigationInfoView{
+////    UIView *backgroundView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, Main_Screen_Width, Main_Screen_Height - 49)];
+////    [self.view addSubview:backgroundView];
+//    
+//    self.architectView.userInteractionEnabled = NO;
+//    
+//    if (navigationInfoView == nil) {
+//        navigationInfoView = [[UIView alloc] initWithFrame:CGRectMake(0, -120, Main_Screen_Width, 120)];
+//        
+//        UIButton *closeBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
+//        [closeBtn setImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
+//        [closeBtn addTarget:self action:@selector(hideNavigationInfoView) forControlEvents:UIControlEventTouchUpInside];
+//        [navigationInfoView addSubview:closeBtn];
+//        
+//        
+//        UILabel *line = [[UILabel alloc] initWithFrame:CGRectMake(0, 40, Main_Screen_Width, 0.5)];
+//        line.backgroundColor = RGB(229, 229, 229);
+//        [navigationInfoView addSubview:line];
+//        
+//        UILabel *label1 = [[UILabel alloc] initWithFrame:CGRectMake(40, 0, Main_Screen_Width - 80, 40)];
+//        label1.textAlignment = NSTextAlignmentCenter;
+//        label1.text = @"2 分钟   0.1 公里   09:24 到达";
+//        label1.font = [UIFont systemFontOfSize:15];
+//        [navigationInfoView addSubview:label1];
+//        
+//        UILabel *label2 = [[UILabel alloc] initWithFrame:CGRectMake(0, 40, Main_Screen_Width, 40)];
+//        label2.textAlignment = NSTextAlignmentCenter;
+//        label2.font = [UIFont systemFontOfSize:25];
+//        label2.text = @"136米";
+//        [navigationInfoView addSubview:label2];
+//        
+//        UILabel *label3 = [[UILabel alloc] initWithFrame:CGRectMake(0, 80, Main_Screen_Width, 40)];
+//        label3.textAlignment = NSTextAlignmentCenter;
+//        label3.font = [UIFont systemFontOfSize:17];
+//        label3.text = @"到达目的地";
+//        [navigationInfoView addSubview:label3];
+//        
+//        navigationInfoView.backgroundColor = [UIColor whiteColor];
+//    }
+//    
+//    
+////    navigationView.alpha = 0.95;
+//    [self.view addSubview:navigationInfoView];
+//    [UIView transitionWithView:navigationInfoView duration:0.3 options:0 animations:^{
+//        navigationInfoView.frame = CGRectMake(0, 0, Main_Screen_Width, 120);
+//    } completion:nil];
+//}
 
--(void)hideNavigationInfoView{
-    if (navigationInfoView) {
-        [UIView transitionWithView:navigationInfoView duration:0.3 options:0 animations:^{
-            navigationInfoView.frame = CGRectMake(0, -120, Main_Screen_Width, 120);
-        } completion:^(BOOL finished) {
-            self.architectView.userInteractionEnabled = YES;
-            [navigationInfoView removeFromSuperview];
-        }];
-
-    }
-}
+//-(void)hideNavigationInfoView{
+//    if (navigationInfoView) {
+//        [UIView transitionWithView:navigationInfoView duration:0.3 options:0 animations:^{
+//            navigationInfoView.frame = CGRectMake(0, -120, Main_Screen_Width, 120);
+//        } completion:^(BOOL finished) {
+//            self.architectView.userInteractionEnabled = YES;
+//            [navigationInfoView removeFromSuperview];
+//        }];
+//
+//    }
+//}
 
 //进入地图模式
 -(void)toMap{
@@ -788,63 +994,63 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
 
 
 
-#pragma mark - UITableView Delegate
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
-    return 1;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    if (jingdianArray) {
-        return jingdianArray.count;
-    }
-    return 0;
-}
-
--(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 50;
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    static NSString *CellIdentifier = @"cell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if(!cell)
-    {
-        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-    }
-    
-    NSDictionary *dic = jingdianArray[indexPath.row];
-    NSError *error = nil;
-    CategoryList *jingdianList = [[CategoryList alloc] initWithDictionary:dic error:&error];
-    cell.textLabel.text = jingdianList.name;
-    
-    
-    return cell;
-}
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    [UIView transitionWithView:tableView duration:0.3 options:0 animations:^{
-        tableView.frame = CGRectMake(Main_Screen_Width, 0, Main_Screen_Width-80, Main_Screen_Height - 64 - 49);
-    } completion:^(BOOL finished) {
-        [tableView removeFromSuperview];
-    }];
-}
-
--(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath{
-    if ([tableView respondsToSelector:@selector(setSeparatorInset:)]) {
-        [tableView setSeparatorInset:UIEdgeInsetsZero];
-    }
-    if ([tableView respondsToSelector:@selector(setLayoutMargins:)]) {
-        [tableView setLayoutMargins:UIEdgeInsetsZero];
-    }
-    if ([cell respondsToSelector:@selector(setSeparatorInset:)]) {
-        [cell setSeparatorInset:UIEdgeInsetsZero];
-    }
-    if ([cell respondsToSelector:@selector(setLayoutMargins:)]) {
-        [cell setLayoutMargins:UIEdgeInsetsZero];
-    }
-}
+//#pragma mark - UITableView Delegate
+//- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+//    return 1;
+//}
+//
+//- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+//    if (jingdianArray) {
+//        return jingdianArray.count;
+//    }
+//    return 0;
+//}
+//
+//-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+//    return 50;
+//}
+//
+//- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+//    static NSString *CellIdentifier = @"cell";
+//    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+//    if(!cell)
+//    {
+//        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+//    }
+//    
+//    NSDictionary *dic = jingdianArray[indexPath.row];
+//    NSError *error = nil;
+//    CategoryList *jingdianList = [[CategoryList alloc] initWithDictionary:dic error:&error];
+//    cell.textLabel.text = jingdianList.name;
+//    
+//    
+//    return cell;
+//}
+//
+//- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+//    [UIView transitionWithView:tableView duration:0.3 options:0 animations:^{
+//        tableView.frame = CGRectMake(Main_Screen_Width, 0, Main_Screen_Width-80, Main_Screen_Height - 64 - 49);
+//    } completion:^(BOOL finished) {
+//        [tableView removeFromSuperview];
+//    }];
+//}
+//
+//-(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath{
+//    if ([tableView respondsToSelector:@selector(setSeparatorInset:)]) {
+//        [tableView setSeparatorInset:UIEdgeInsetsZero];
+//    }
+//    if ([tableView respondsToSelector:@selector(setLayoutMargins:)]) {
+//        [tableView setLayoutMargins:UIEdgeInsetsZero];
+//    }
+//    if ([cell respondsToSelector:@selector(setSeparatorInset:)]) {
+//        [cell setSeparatorInset:UIEdgeInsetsZero];
+//    }
+//    if ([cell respondsToSelector:@selector(setLayoutMargins:)]) {
+//        [cell setLayoutMargins:UIEdgeInsetsZero];
+//    }
+//}
 
 #pragma mark - Delegation
 #pragma mark WTArchitectView
@@ -1029,10 +1235,10 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
 #pragma mark WTArchitectViewDelegate
 - (void)architectView:(WTArchitectView *)architectView didFinishLoadArchitectWorldNavigation:(WTNavigation *)navigation {
     /* Architect World did finish loading */
+    DLog(@"Architect World did finish loading");
 }
 
 - (void)architectView:(WTArchitectView *)architectView didFailToLoadArchitectWorldNavigation:(WTNavigation *)navigation withError:(NSError *)error {
-    
     NSLog(@"Architect World from URL '%@' could not be loaded. Reason: %@", navigation.originalURL, [error localizedDescription]);
 }
 
@@ -1055,7 +1261,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                 [self toMap];
             }
             if ([action isEqualToString:@"showNavigationInfo"]) {
-                [self showNavigationInfoView];
+//                [self showNavigationInfoView];
             }
             if ([action isEqualToString:@"reloadArData"]){
                 
@@ -1066,7 +1272,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                     UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
                         [self performBlock:^{
                             [self.navigationController popToRootViewControllerAnimated:YES];
-                            [self loadJqList];//重新加载ar数据
+                            [self loadStore];//重新加载ar数据
                         } afterDelay:0.];
                     }];
                     [alert addAction:action1];
@@ -1077,7 +1283,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                     UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
                         [self performBlock:^{
                             [self.navigationController popToRootViewControllerAnimated:YES];
-                            [self loadJqList];//重新加载ar数据
+                            [self loadSpots];//重新加载ar数据
                         } afterDelay:0.];
                     }];
                     [alert addAction:action1];
@@ -1134,11 +1340,13 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     NSString *poiName = [poiDetails objectForKey:@"title"];
     NSString *poiDescription = [poiDetails objectForKey:@"description"];
     NSString *poiImage = [poiDetails objectForKey:@"image"];
+    NSString *poiImages = [poiDetails objectForKey:@"images"];
     NSString *poiVoice = [poiDetails objectForKey:@"voice"];
+    NSString *poiAddress = [poiDetails objectForKey:@"address"];
     NSNumber *latitude = [poiDetails objectForKey:@"latitude"];
     NSNumber *longitude = [poiDetails objectForKey:@"longitude"];
     
-    WTPoi *poi = [[WTPoi alloc] initWithIdentifier:poiIdentifier location:[[CLLocation alloc] initWithLatitude:[latitude doubleValue] longitude:[longitude doubleValue]] name:poiName detailedDescription:poiDescription image:poiImage voice:poiVoice];
+    WTPoi *poi = [[WTPoi alloc] initWithIdentifier:poiIdentifier location:[[CLLocation alloc] initWithLatitude:[latitude doubleValue] longitude:[longitude doubleValue]] name:poiName detailedDescription:poiDescription image:poiImage images:poiImages voice:poiVoice address:poiAddress];
     
     if (poi)
     {

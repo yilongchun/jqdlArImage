@@ -63,8 +63,13 @@
 //设置内容
 -(void)setContent{
     //顶部广告
-    NSMutableArray *arr = [NSMutableArray arrayWithObjects: _poi.image, nil];
-    NSMutableArray *strArr = [NSMutableArray arrayWithObjects:@"1", nil];
+    NSMutableArray *arr = [NSMutableArray array];
+    NSMutableArray *strArr = [NSMutableArray array];
+    NSArray *images = [_poi.images componentsSeparatedByString:@","];
+    for (int i = 0 ; i < images.count; i++) {
+        [arr addObject:[images objectAtIndex:i]];
+        [strArr addObject:@"1"];
+    }
     
     BMAdScrollView *adView = [[BMAdScrollView alloc] initWithFrame:CGRectMake(0, 0, Main_Screen_Width, 250) images:arr titles:strArr];
     [_myScrollView addSubview:adView];
@@ -88,7 +93,7 @@
     contentLabel.numberOfLines = 0;
     contentLabel.font = [UIFont systemFontOfSize:14];
     contentLabel.textColor = RGB(135, 135, 135);
-    contentLabel.text = @"武汉东湖海洋世界坐落在著名的国家风景区武汉东湖，展示千余种万余尾海洋珍惜鱼类。整个展馆由八个展区组成－热带鱼林馆、海底隧道、海洋生物馆、长江鱼馆、海洋剧场、企鹅馆、海底隧道...";
+    contentLabel.text = [_poi.detailedDescription stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     [contentLabel sizeToFit];
     [_myScrollView addSubview:contentLabel];
     
@@ -112,7 +117,7 @@
     UILabel *addressValueLabel = [[UILabel alloc] initWithFrame:CGRectMake(25, CGRectGetMaxY(addressLabel.frame) + 8, 0, 0)];
     addressValueLabel.font = SYSTEMFONT(14);
     addressValueLabel.textColor = RGB(135, 135, 135);
-    addressValueLabel.text = @"武汉市东湖海洋世界风景区";
+    addressValueLabel.text = [_poi.address stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     [addressValueLabel sizeToFit];
     [_myScrollView addSubview:addressValueLabel];
     //距离
@@ -179,7 +184,7 @@
 -(void)playVoice{
     if ([[Player sharedManager] isPlaying]) {
         NSString *playingUrlStr = [[[Player sharedManager] url] absoluteString];
-        NSString *path = [NSString stringWithFormat:@"%@%@",kHost,_poi.voice];
+        NSString *path = [NSString stringWithFormat:@"%@",_poi.voice];
         if ([playingUrlStr isEqualToString:path]) {//当前播放的就是该景点的语音 停止播放
             [jieshuoBtn setImage:[UIImage imageNamed:@"ypjs"] forState:UIControlStateNormal];
             [[Player sharedManager] stop];
@@ -196,7 +201,7 @@
         DLog(@"播放");
         [[Player sharedManager] stop];
         [jieshuoBtn setImage:[UIImage imageNamed:@"ztbf"] forState:UIControlStateNormal];
-        NSString *path = [NSString stringWithFormat:@"%@%@",kHost,_poi.voice];
+        NSString *path = [NSString stringWithFormat:@"%@",_poi.voice];
         DLog(@"%@",path);
         NSURL *url=[NSURL URLWithString:path];
         [[Player sharedManager] setUrl:url];

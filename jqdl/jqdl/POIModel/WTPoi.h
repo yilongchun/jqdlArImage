@@ -19,11 +19,13 @@
 @property (nonatomic, retain) NSString                      *name;
 @property (nonatomic, retain) NSString                      *detailedDescription;
 @property (nonatomic, retain) NSString                      *image;
+@property (nonatomic, retain) NSString                      *images;
 @property (nonatomic, retain) NSString                      *voice;
+@property (nonatomic, retain) NSString                      *address;
 
 //+ (WTPoi *)poiWithIdentifier:(NSString *)identifier location:(CLLocation *)location name:(NSString *)name detailedDescription:(NSString *)detailedDescription;
 
-- (instancetype)initWithIdentifier:(NSString *)identifier location:(CLLocation *)location name:(NSString *)name detailedDescription:(NSString *)detailedDescription image:(NSString *)image voice:(NSString *)voice;
+- (instancetype)initWithIdentifier:(NSString *)identifier location:(CLLocation *)location name:(NSString *)name detailedDescription:(NSString *)detailedDescription image:(NSString *)image images:(NSString *)images voice:(NSString *)voice address:(NSString *)address;
 
 
 - (NSDictionary*)jsonRepresentation;

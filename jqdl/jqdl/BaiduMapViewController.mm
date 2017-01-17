@@ -200,9 +200,9 @@
         desLabel.font = SYSTEMFONT(12);
         desLabel.textColor = RGB(151, 151, 151);
         desLabel.numberOfLines = 0;
-        desLabel.text = @"在海底隧道馆，可以滴水不沾的穿越海洋了!享受海底漫步的乐趣，不仅可…";
+        desLabel.text = poi.detailedDescription;
 //        desLabel.backgroundColor = [UIColor grayColor];
-        [UILabel setLabelSpace:desLabel withValue:@"在海底隧道馆，可以滴水不沾的穿越海洋了!享受海底漫步的乐趣，不仅可…" withFont:desLabel.font];
+        [UILabel setLabelSpace:desLabel withValue:poi.detailedDescription withFont:desLabel.font];
         [v addSubview:desLabel];
         
         
@@ -327,7 +327,7 @@
     
     if ([[Player sharedManager] isPlaying]) {//当前正在播放
         NSString *playingUrlStr = [[[Player sharedManager] url] absoluteString];
-        NSString *path = [NSString stringWithFormat:@"%@%@",kHost,voice];
+        NSString *path = [NSString stringWithFormat:@"%@%@",@"",voice];
         if ([playingUrlStr isEqualToString:path]) {//当前播放的就是该景点的语音 停止播放
             [[Player sharedManager] stop];//先停止播放
 //            [btn setTitle:@"播放" forState:UIControlStateNormal];
@@ -348,7 +348,7 @@
         
         [[Player sharedManager] stop];
         
-        NSString *path = [NSString stringWithFormat:@"%@%@",kHost,voice];
+        NSString *path = [NSString stringWithFormat:@"%@%@",@"",voice];
         [[Player sharedManager] setUrl:[NSURL URLWithString:path]];
         [[Player sharedManager] play];
 //        [btn setTitle:@"暂停" forState:UIControlStateNormal];

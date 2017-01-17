@@ -47,7 +47,7 @@ function Marker(poiData) {
     var _html="<div class='zdyDemo' style='height:600px;font-size:5em;border-radius:0.3em;background:#fff;position:relative'>";
     _html+="<img src='" + poiData.image + "' style='width:100%;height:600px;border-radius:0.3em'/>";
     _html+="<span style='position:absolute;height:1.5em;bottom:0px;background:rgba(0,0,0,0.6);z-index:100;display:block;width:100%;color:#fff;line-height:1.5em;padding-left:0.4em;font-size:0.6em;border-radius:0 0 0.5em 0.5em;'>"+poiData.title+"</span>";
-    
+    AR.logger.debug(poiData.image + "," + poiData.title);
     this.htmlDrawable = new AR.HtmlDrawable({html:_html}, 9,
         {
             offsetY:-6.2,
@@ -62,7 +62,7 @@ function Marker(poiData) {
                 AR.logger.debug(World.currentMarker.poiData.id + " getOnHtmlClickTrigger");
                                             
                 var currentMarker = World.currentMarker;
-                var architectSdkUrl = "architectsdk://markerselected?id=" + encodeURIComponent(currentMarker.poiData.id) + "&title=" + escape(encodeURIComponent(currentMarker.poiData.title)) + "&description=" + encodeURIComponent(currentMarker.poiData.description) + "&image=" + encodeURIComponent(currentMarker.poiData.image) + "&voice=" + encodeURIComponent(currentMarker.poiData.voice) + "&latitude=" + encodeURIComponent(currentMarker.poiData.latitude)+ "&longitude=" + encodeURIComponent(currentMarker.poiData.longitude);
+                var architectSdkUrl = "architectsdk://markerselected?id=" + encodeURIComponent(currentMarker.poiData.id) + "&title=" + escape(encodeURIComponent(currentMarker.poiData.title)) + "&description=" + escape(encodeURIComponent(currentMarker.poiData.description)) + "&image=" + encodeURIComponent(currentMarker.poiData.image) + "&images=" + encodeURIComponent(currentMarker.poiData.images) + "&voice=" + encodeURIComponent(currentMarker.poiData.voice) + "&address=" + escape(encodeURIComponent(currentMarker.poiData.address)) + "&latitude=" + encodeURIComponent(currentMarker.poiData.latitude)+ "&longitude=" + encodeURIComponent(currentMarker.poiData.longitude);
                 /*
                  The urlListener of the native project intercepts this call and parses the arguments.
                  This is the only way to pass information from JavaSCript to your native code.

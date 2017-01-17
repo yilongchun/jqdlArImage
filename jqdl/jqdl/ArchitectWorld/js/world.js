@@ -78,55 +78,58 @@ var World = {
 				"title": poiData[currentPlaceNr].name,
 				"description": poiData[currentPlaceNr].description,
                 "image":poiData[currentPlaceNr].image,
-                "voice":poiData[currentPlaceNr].voice
+                "images":poiData[currentPlaceNr].images,
+                "voice":poiData[currentPlaceNr].voice,
+                "address":poiData[currentPlaceNr].address
 			};
+            AR.logger.debug("currentPlaceNr:" + currentPlaceNr + "," + poiData[currentPlaceNr].name);
 			World.markerList.push(new Marker(singlePoi));
 		}
 		World.updateDistanceToUserValues();
         World.initialized = true;
 	},
     
-    loadPoisFromJsonDataTest: function loadPoisFromJsonDataTestFn(poiData) {
-        
-        AR.context.destroyAll();
-        // show radar & set click-listener
-        PoiRadar.show();
-        //        PoiRadar.setMaxDistance(10000);
-        //        AR.context.scene.cullingDistance = 10000;
-        $('#radarContainer').unbind('click');
-        $("#radarContainer").click(PoiRadar.clickedRadar);
-        
-        // empty list of visible markers
-        World.markerList = [];
-        
-        // start loading marker assets
-        World.markerDrawable_idle = new AR.ImageResource("assets/marker_idle2.png");
-        World.markerDrawable_selected = new AR.ImageResource("assets/marker_selected2.png");
-        World.markerDrawable_directionIndicator = new AR.ImageResource("assets/indi.png");
-        
-        // loop through POI-information and create an AR.GeoObject (=Marker) per POI
-        for (var currentPlaceNr = 0; currentPlaceNr < poiData.length; currentPlaceNr++) {
-            var singlePoi = {
-                "id": poiData[currentPlaceNr].id,
-                "latitude": parseFloat(poiData[currentPlaceNr].latitude),
-                "longitude": parseFloat(poiData[currentPlaceNr].longitude),
-                "altitude": parseFloat(currentPlaceNr*150),
-                "title": poiData[currentPlaceNr].name,
-                "description": poiData[currentPlaceNr].description,
-                "image":"",
-                "voice":""
-            };
-            AR.logger.debug(poiData[currentPlaceNr].name);
-            World.markerList.push(new Marker(singlePoi));
-        }
-        
-        // updates distance information of all placemarks
-        World.updateDistanceToUserValues();
-        
-        World.initialized = true;
-        
-        //		World.updateStatusMessage(currentPlaceNr + ' places loaded');
-    },
+//    loadPoisFromJsonDataTest: function loadPoisFromJsonDataTestFn(poiData) {
+//        
+//        AR.context.destroyAll();
+//        // show radar & set click-listener
+//        PoiRadar.show();
+//        //        PoiRadar.setMaxDistance(10000);
+//        //        AR.context.scene.cullingDistance = 10000;
+//        $('#radarContainer').unbind('click');
+//        $("#radarContainer").click(PoiRadar.clickedRadar);
+//        
+//        // empty list of visible markers
+//        World.markerList = [];
+//        
+//        // start loading marker assets
+//        World.markerDrawable_idle = new AR.ImageResource("assets/marker_idle2.png");
+//        World.markerDrawable_selected = new AR.ImageResource("assets/marker_selected2.png");
+//        World.markerDrawable_directionIndicator = new AR.ImageResource("assets/indi.png");
+//        
+//        // loop through POI-information and create an AR.GeoObject (=Marker) per POI
+//        for (var currentPlaceNr = 0; currentPlaceNr < poiData.length; currentPlaceNr++) {
+//            var singlePoi = {
+//                "id": poiData[currentPlaceNr].id,
+//                "latitude": parseFloat(poiData[currentPlaceNr].latitude),
+//                "longitude": parseFloat(poiData[currentPlaceNr].longitude),
+//                "altitude": parseFloat(currentPlaceNr*150),
+//                "title": poiData[currentPlaceNr].name,
+//                "description": poiData[currentPlaceNr].description,
+//                "image":"",
+//                "voice":""
+//            };
+//            AR.logger.debug("currentPlaceNr:" + currentPlaceNr + "," + poiData[currentPlaceNr].name);
+//            World.markerList.push(new Marker(singlePoi));
+//        }
+//        
+//        // updates distance information of all placemarks
+//        World.updateDistanceToUserValues();
+//        
+//        World.initialized = true;
+//        
+//        //		World.updateStatusMessage(currentPlaceNr + ' places loaded');
+//    },
 
 	// sets/updates distances of all makers so they are available way faster than calling (time-consuming) distanceToUser() method all the time
 	updateDistanceToUserValues: function updateDistanceToUserValuesFn() {//更新距离
@@ -184,7 +187,7 @@ var World = {
                if (World.initialized) {
                     document.location = "architectsdk://button?action=reloadArData&jingquType="+World.jingquType;//重新获取数据
                }
-            }, 5 * 1000 );
+            }, 10 * 1000 );
         }
         
 	},
@@ -224,6 +227,7 @@ var World = {
         marker.setSelected(marker);
         World.currentMarker = marker;
         
+        AR.logger.debug("onMarkerSelected:" + marker.poiData.image)
         AR.logger.debug("目的地位置 latitude:" + marker.poiData.latitude + " , longitude:" + marker.poiData.longitude)
         AR.logger.debug("起点位置 currentLat:"+World.currentLat + ",currentLng:"+World.currentLng);
         //点击景点 显示路线按钮

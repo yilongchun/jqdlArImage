@@ -52,6 +52,8 @@
     titleLabel.text = @"景区热点";
     self.navigationItem.titleView = titleLabel;
     
+    self.mytableview.tableFooterView = [[UIView alloc] init];
+    
     [self.mytableview reloadData];
     
     //播放完成通知
@@ -161,7 +163,7 @@
     
     if ([[Player sharedManager] isPlaying]) {//当前正在播放
         NSString *playingUrlStr = [[[Player sharedManager] url] absoluteString];
-        NSString *path = [NSString stringWithFormat:@"%@%@",kHost,voice];
+        NSString *path = [NSString stringWithFormat:@"%@%@",@"",voice];
         if ([playingUrlStr isEqualToString:path]) {//当前播放的就是该景点的语音 停止播放
             [[Player sharedManager] stop];//先停止播放
             //            btn.titleLabel.text = @"解说";
@@ -193,7 +195,7 @@
         
         [[Player sharedManager] stop];
         
-        NSString *path = [NSString stringWithFormat:@"%@%@",kHost,voice];
+        NSString *path = [NSString stringWithFormat:@"%@%@",@"",voice];
         [[Player sharedManager] setUrl:[NSURL URLWithString:path]];
         [[Player sharedManager] play];
         //        btn.titleLabel.text = @"暂停";
@@ -263,7 +265,7 @@
     DLog(@"%@",poi.image);
     [cell.myImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@",poi.image]]];
     cell.name.text = poi.name;
-    cell.desLabel.text = @"世界上最多样生态系统的森林，穿行其中绝对是一场极富挑战性的奇幻冒险; 世界上最多样生态系统的森林，穿行其...";
+    cell.desLabel.text = poi.detailedDescription;
     cell.playBtn.tag = indexPath.row;
     [cell.playBtn addTarget:self action:@selector(playVoice:) forControlEvents:UIControlEventTouchUpInside];
     
