@@ -74,11 +74,13 @@
     
     self.view.backgroundColor = [UIColor whiteColor];
     
+    
+    
     UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
     titleLabel.font = BOLDSYSTEMFONT(17);
     titleLabel.textColor = [UIColor blackColor];
     titleLabel.textAlignment = NSTextAlignmentCenter;
-    titleLabel.text = @"东湖海洋世界风景区";
+    titleLabel.text = _name;
     self.navigationItem.titleView = titleLabel;
     
     self.jz_navigationBarBackgroundAlpha = 1.f;

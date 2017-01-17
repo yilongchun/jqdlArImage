@@ -66,6 +66,8 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     
     NSMutableDictionary *storeDic;
     NSMutableArray *spotsArr;
+    
+    UILabel *titleLabel;
 }
 
 /* Add a strong property to the main Wikitude SDK component, the WTArchitectView */
@@ -186,11 +188,11 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     
     
     
-    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
+    titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
     titleLabel.font = BOLDSYSTEMFONT(17);
     titleLabel.textColor = [UIColor whiteColor];
     titleLabel.textAlignment = NSTextAlignmentCenter;
-    titleLabel.text = @"东湖海洋世界风景区";
+    titleLabel.text = @"";
     self.navigationItem.titleView = titleLabel;
     
 //    self.title = @"东湖海洋世界风景区";
@@ -456,6 +458,8 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
             NSString *storeId = [data[i] objectForKey:@"id"];
             if ([storeId isEqualToString:@"f66c0fc1f74580c525365751a9ce21b6"]) {//神农架
                 storeDic = [[NSMutableDictionary alloc] initWithDictionary:data[i]];
+                
+                titleLabel.text = [storeDic objectForKey:@"name"];
                 
                 NSArray *imagesArr = [storeDic objectForKey:@"images"];
                 NSMutableArray *images = [NSMutableArray array];
@@ -952,6 +956,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     self.navigationItem.backBarButtonItem = backItem;
     
     BaiduMapViewController *vc = [BaiduMapViewController new];
+    vc.name = titleLabel.text;
     
     WTPoiManager *poiManager = objc_getAssociatedObject(self, kWTAugmentedRealityViewController_AssociatedPoiManagerKey);
     

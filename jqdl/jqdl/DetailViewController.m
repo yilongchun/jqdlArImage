@@ -121,12 +121,12 @@
     [addressValueLabel sizeToFit];
     [_myScrollView addSubview:addressValueLabel];
     //距离
-    UILabel *distanceLabel = [[UILabel alloc] initWithFrame:CGRectMake(25, CGRectGetMaxY(addressValueLabel.frame) + 3, 0, 0)];
-    distanceLabel.font = SYSTEMFONT(11);
-    distanceLabel.textColor = RGB(189, 189, 189);
-    distanceLabel.text = @"距离1.2km";
-    [distanceLabel sizeToFit];
-    [_myScrollView addSubview:distanceLabel];
+//    UILabel *distanceLabel = [[UILabel alloc] initWithFrame:CGRectMake(25, CGRectGetMaxY(addressValueLabel.frame) + 3, 0, 0)];
+//    distanceLabel.font = SYSTEMFONT(11);
+//    distanceLabel.textColor = RGB(189, 189, 189);
+//    distanceLabel.text = @"距离1.2km";
+//    [distanceLabel sizeToFit];
+//    [_myScrollView addSubview:distanceLabel];
     //导航按钮
     UIButton *daohangBtn = [[UIButton alloc] initWithFrame:CGRectMake(Main_Screen_Width - 25 - 38, CGRectGetMinY(addressValueLabel.frame), 38, 38)];
     [daohangBtn setImage:[UIImage imageNamed:@"daohang"] forState:UIControlStateNormal];
@@ -154,9 +154,9 @@
     
     DLog(@"%f %f",_poi.location.coordinate.latitude,_poi.location.coordinate.longitude);
     
-    CLLocationCoordinate2D coords = CLLocationCoordinate2DMake(39.915352,116.397105);//纬度，经度
+//    CLLocationCoordinate2D coords = CLLocationCoordinate2DMake(_poi.location.coordinate,116.397105);//纬度，经度
     if (maps == nil) {
-        maps = [Util getInstalledMapAppWithEndLocation:coords];
+        maps = [Util getInstalledMapAppWithEndLocation:_poi.location.coordinate];
     }
     LCActionSheet *actionSheet = [LCActionSheet sheetWithTitle:nil
                                                       delegate:self
@@ -234,10 +234,10 @@
         
     }else if (buttonIndex == 2){//苹果
         MKMapItem *currentLocation = [MKMapItem mapItemForCurrentLocation];
-        CLLocationCoordinate2D coords = CLLocationCoordinate2DMake(39.915352,116.397105);//纬度，经度
-        MKPlacemark *placemark = [[MKPlacemark alloc] initWithCoordinate:coords addressDictionary:nil];
+//        CLLocationCoordinate2D coords = CLLocationCoordinate2DMake(39.915352,116.397105);//纬度，经度
+        MKPlacemark *placemark = [[MKPlacemark alloc] initWithCoordinate:_poi.location.coordinate addressDictionary:nil];
         MKMapItem *toLocation = [[MKMapItem alloc] initWithPlacemark:placemark];
-        toLocation.name = @"目的地名称";
+        toLocation.name = _poi.name;
         [MKMapItem openMapsWithItems:@[currentLocation, toLocation]
                        launchOptions:@{MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeDriving,MKLaunchOptionsShowsTrafficKey: [NSNumber numberWithBool:YES]}];
     }else{

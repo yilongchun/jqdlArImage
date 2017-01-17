@@ -8,8 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
-@interface BaiduMapViewController : UIViewController
+@interface BaiduMapViewController : UIViewController{
+    
+}
 
 @property(strong,nonatomic) NSArray *jingdianArray;
+@property(strong,nonatomic) NSString *name;
 
 @end
