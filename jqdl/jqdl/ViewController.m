@@ -108,8 +108,8 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
         myLocation = (CLLocation *)firstLocation;
         [manager stopUpdatingLocation];
         
-        //加载数据 景区
-        [self loadStore];
+//        //加载数据 景区
+//        [self loadStore];
         
         manager.delegate = nil;
 //
@@ -325,7 +325,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
 //
 //    }
     
-//    [self loadStore];
+    [self loadStore];
 }
 
 //初始化引导页面
@@ -481,16 +481,16 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                 NSArray *coordinates = [storeDic objectForKey:@"coordinates"];
                 NSNumber *latitude;
                 NSNumber *longitude;
-                if (audio_clips.count > 1) {
+                if (coordinates.count > 1) {
                     latitude = coordinates[0];
                     longitude = coordinates[1];
                 }
                 
                 
                 
-                CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake(myLocation.coordinate.latitude + WT_RANDOM(-0.1, 0.1), myLocation.coordinate.longitude + WT_RANDOM(-0.1, 0.1));
+//                CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake(myLocation.coordinate.latitude + WT_RANDOM(-0.1, 0.1), myLocation.coordinate.longitude + WT_RANDOM(-0.1, 0.1));
                 
-//                CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake([latitude doubleValue], [longitude doubleValue]);
+                CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake([longitude doubleValue], [latitude doubleValue]);
                 
                 
                 CLLocation *location = [[CLLocation alloc] initWithCoordinate:locationCoordinate
@@ -583,16 +583,16 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
             NSArray *coordinates = [storeDic objectForKey:@"coordinates"];
             NSNumber *latitude;
             NSNumber *longitude;
-            if (audio_clips.count > 1) {
+            if (coordinates.count > 1) {
                 latitude = coordinates[0];
                 longitude = coordinates[1];
             }
             
             
             
-            CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake(myLocation.coordinate.latitude + WT_RANDOM(-0.1, 0.1), myLocation.coordinate.longitude + WT_RANDOM(-0.1, 0.1));
+//            CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake(myLocation.coordinate.latitude + WT_RANDOM(-0.1, 0.1), myLocation.coordinate.longitude + WT_RANDOM(-0.1, 0.1));
             
-            //                CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake([latitude doubleValue], [longitude doubleValue]);
+            CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake([longitude doubleValue], [latitude doubleValue]);
             
             
             CLLocation *location = [[CLLocation alloc] initWithCoordinate:locationCoordinate

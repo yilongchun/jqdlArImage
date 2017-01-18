@@ -245,6 +245,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playVoiceEnd) name:@"playVoiceEnd" object:nil];
     
     
+    [self mapViewFit];
     
     //    //计算距离
     //    BMKMapPoint point1 = BMKMapPointForCoordinate(CLLocationCoordinate2DMake(39.915,116.404));
@@ -282,6 +283,48 @@
     //    BOOL res = [_favManager deleteFavPoi:favId];
     
 }
+
+
+-(void)mapViewFit{
+    
+    
+    if (annotations.count < 1) {
+        return;
+    }
+    
+    MyPointAnnotation* annotation = annotations[0];
+    
+    BMKMapPoint pt = BMKMapPointForCoordinate(annotation.coordinate);
+    
+    
+    
+    double ltX = pt.x;
+    double rbX = pt.x;
+    double ltY = pt.y;
+    double rbY = pt.y;
+    
+    for (int i = 0 ; i < annotations.count; i++) {
+        MyPointAnnotation* annotation = annotations[i];
+        BMKMapPoint p = BMKMapPointForCoordinate(annotation.coordinate);
+        
+        if (p.x < ltX) {
+            ltX = p.x;
+        }
+        if (p.x > rbX) {
+            rbX = p.x;
+        }
+        if (p.y > ltY) {
+            ltY = p.y;
+        }
+        if (p.y < rbY) {
+            rbY = p.y;
+        }
+    }
+    BMKMapRect rect = BMKMapRectMake(ltX, ltY, rbX - ltX, rbY - ltY);
+    _mapView.visibleMapRect = rect;
+    _mapView.zoomLevel = _mapView.zoomLevel - 0.3;
+}
+
 
 //景点分类按钮点击
 -(void)typeClick:(UIButton *)btn{
@@ -397,10 +440,10 @@
 -(void)viewDidAppear:(BOOL)animated{
     
     [super viewDidAppear:animated];
-    if (!locationFlag2) {
-        locationFlag2 = !locationFlag2;
-        [self location];//定位
-    }
+//    if (!locationFlag2) {
+//        locationFlag2 = !locationFlag2;
+//        [self location];//定位
+//    }
 }
 
 -(void)viewDidDisappear:(BOOL)animated{

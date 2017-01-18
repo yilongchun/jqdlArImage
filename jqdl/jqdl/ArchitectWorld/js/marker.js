@@ -220,6 +220,9 @@ Marker.prototype.getOnClickTrigger = function(marker) {
 
 Marker.prototype.setSelected = function(marker) {
     AR.logger.debug(marker.poiData.id + " setSelected");
+    
+    marker.markerObject.renderingOrder = 999;
+//    marker.htmlDrawable.zOrder = 999;
     marker.isSelected = true;
 
 //    if (marker.animationGroup_selected === null) {
@@ -272,12 +275,16 @@ Marker.prototype.setSelected = function(marker) {
     marker.titleLabel.style.textColor = "#666666";
     marker.descriptionLabel.style.textColor = "#666666";
     
+    
+    
 //    // starts the selected-state animation
 //    marker.animationGroup_selected.start();
 };
 
 Marker.prototype.setDeselected = function(marker) {
 
+    marker.markerObject.renderingOrder = 0;
+//    marker.htmlDrawable.zOrder = 0;
     marker.isSelected = false;
 
     marker.markerObject.drawables.radar = marker.radardrawables;

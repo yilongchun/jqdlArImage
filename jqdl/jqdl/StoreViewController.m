@@ -1,12 +1,12 @@
 //
-//  DetailViewController.m
-//  WikitudeTest
+//  StoreViewController.m
+//  jqdl
 //
-//  Created by Stephen Chin on 16/9/23.
-//  Copyright © 2016年 Stephen Chin. All rights reserved.
+//  Created by Stephen Chin on 17/1/18.
+//  Copyright © 2017年 Stephen Chin. All rights reserved.
 //
 
-#import "DetailViewController.h"
+#import "StoreViewController.h"
 #import "BMAdScrollView.h"
 #import "JZNavigationExtension.h"
 #import "UILabel+SetLabelSpace.h"
@@ -15,20 +15,18 @@
 #import "Util.h"
 #import "LCActionSheet.h"
 
-@interface DetailViewController ()<LCActionSheetDelegate>{
+@interface StoreViewController ()<LCActionSheetDelegate>{
     UIButton *jieshuoBtn;
     NSArray *maps;
 }
 
 @end
 
-@implementation DetailViewController
+@implementation StoreViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    
-
     
     if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_6_1) {
         //        self.edgesForExtendedLayout = UIRectEdgeNone;
@@ -45,7 +43,7 @@
     self.jz_navigationBarBackgroundHidden = YES;
     self.jz_navigationBarTintColor = [UIColor whiteColor];
     self.jz_navigationBarBackgroundAlpha = 0.f;
-        
+    
     [self setContent];
 }
 
@@ -118,12 +116,12 @@
     [addressValueLabel sizeToFit];
     [_myScrollView addSubview:addressValueLabel];
     //距离
-//    UILabel *distanceLabel = [[UILabel alloc] initWithFrame:CGRectMake(25, CGRectGetMaxY(addressValueLabel.frame) + 3, 0, 0)];
-//    distanceLabel.font = SYSTEMFONT(11);
-//    distanceLabel.textColor = RGB(189, 189, 189);
-//    distanceLabel.text = @"距离1.2km";
-//    [distanceLabel sizeToFit];
-//    [_myScrollView addSubview:distanceLabel];
+    //    UILabel *distanceLabel = [[UILabel alloc] initWithFrame:CGRectMake(25, CGRectGetMaxY(addressValueLabel.frame) + 3, 0, 0)];
+    //    distanceLabel.font = SYSTEMFONT(11);
+    //    distanceLabel.textColor = RGB(189, 189, 189);
+    //    distanceLabel.text = @"距离1.2km";
+    //    [distanceLabel sizeToFit];
+    //    [_myScrollView addSubview:distanceLabel];
     //导航按钮
     UIButton *daohangBtn = [[UIButton alloc] initWithFrame:CGRectMake(Main_Screen_Width - 25 - 38, CGRectGetMinY(addressValueLabel.frame), 38, 38)];
     [daohangBtn setImage:[UIImage imageNamed:@"daohang"] forState:UIControlStateNormal];
@@ -151,7 +149,7 @@
     
     DLog(@"%f %f",_poi.location.coordinate.latitude,_poi.location.coordinate.longitude);
     
-//    CLLocationCoordinate2D coords = CLLocationCoordinate2DMake(_poi.location.coordinate,116.397105);//纬度，经度
+    //    CLLocationCoordinate2D coords = CLLocationCoordinate2DMake(_poi.location.coordinate,116.397105);//纬度，经度
     if (maps == nil) {
         maps = [Util getInstalledMapAppWithEndLocation:_poi.location.coordinate];
     }
@@ -186,7 +184,7 @@
             [jieshuoBtn setImage:[UIImage imageNamed:@"ypjs"] forState:UIControlStateNormal];
             [[Player sharedManager] stop];
             DLog(@"停止播放");
-        }else{//不是该景点的 重新播放            
+        }else{//不是该景点的 重新播放
             [[Player sharedManager] stop];
             [jieshuoBtn setImage:[UIImage imageNamed:@"ztbf"] forState:UIControlStateNormal];
             NSURL *url=[NSURL URLWithString:path];
@@ -231,7 +229,7 @@
         
     }else if (buttonIndex == 2){//苹果
         MKMapItem *currentLocation = [MKMapItem mapItemForCurrentLocation];
-//        CLLocationCoordinate2D coords = CLLocationCoordinate2DMake(39.915352,116.397105);//纬度，经度
+        //        CLLocationCoordinate2D coords = CLLocationCoordinate2DMake(39.915352,116.397105);//纬度，经度
         MKPlacemark *placemark = [[MKPlacemark alloc] initWithCoordinate:_poi.location.coordinate addressDictionary:nil];
         MKMapItem *toLocation = [[MKMapItem alloc] initWithPlacemark:placemark];
         toLocation.name = [_poi.name stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
@@ -243,5 +241,4 @@
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlString]];
     }
 }
-
 @end

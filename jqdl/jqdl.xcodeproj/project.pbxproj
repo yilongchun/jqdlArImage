@@ -374,6 +374,8 @@
 		44117AC31C11789B0071E1C0 /* ChooseJqViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44117AC01C11789B0071E1C0 /* ChooseJqViewController.m */; };
 		44117AC61C1184CF0071E1C0 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 44117AC51C1184CF0071E1C0 /* libxml2.tbd */; };
 		44166BFD1CC0EB36005628F5 /* UITextView+PlaceHolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 44166BFC1CC0EB36005628F5 /* UITextView+PlaceHolder.m */; };
+		44217BB51E2EF94B008699C1 /* StoreViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44217BB31E2EF94B008699C1 /* StoreViewController.m */; };
+		44217BB61E2EF94B008699C1 /* StoreViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44217BB41E2EF94B008699C1 /* StoreViewController.xib */; };
 		4424D63A1E27254800245B43 /* LCActionSheet.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4424D6331E27254800245B43 /* LCActionSheet.bundle */; };
 		4424D63B1E27254800245B43 /* LCActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 4424D6351E27254800245B43 /* LCActionSheet.m */; };
 		4424D63C1E27254800245B43 /* LCActionSheetCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4424D6371E27254800245B43 /* LCActionSheetCell.m */; };
@@ -1243,6 +1245,9 @@
 		44117AC51C1184CF0071E1C0 /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
 		44166BFB1CC0EB36005628F5 /* UITextView+PlaceHolder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITextView+PlaceHolder.h"; sourceTree = "<group>"; };
 		44166BFC1CC0EB36005628F5 /* UITextView+PlaceHolder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITextView+PlaceHolder.m"; sourceTree = "<group>"; };
+		44217BB21E2EF94B008699C1 /* StoreViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StoreViewController.h; sourceTree = "<group>"; };
+		44217BB31E2EF94B008699C1 /* StoreViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StoreViewController.m; sourceTree = "<group>"; };
+		44217BB41E2EF94B008699C1 /* StoreViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = StoreViewController.xib; sourceTree = "<group>"; };
 		4424D6331E27254800245B43 /* LCActionSheet.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = LCActionSheet.bundle; sourceTree = "<group>"; };
 		4424D6341E27254800245B43 /* LCActionSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LCActionSheet.h; sourceTree = "<group>"; };
 		4424D6351E27254800245B43 /* LCActionSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LCActionSheet.m; sourceTree = "<group>"; };
@@ -1512,6 +1517,9 @@
 				44003D001BFB24ED00CB747A /* AppDelegate.m */,
 				442ED7C51DB9A72E0058DD4C /* ViewController.h */,
 				442ED7BF1DB9A72E0058DD4C /* ViewController.m */,
+				44217BB21E2EF94B008699C1 /* StoreViewController.h */,
+				44217BB31E2EF94B008699C1 /* StoreViewController.m */,
+				44217BB41E2EF94B008699C1 /* StoreViewController.xib */,
 				442ED7D31DB9A78F0058DD4C /* DetailViewController.h */,
 				442ED7D41DB9A78F0058DD4C /* DetailViewController.m */,
 				442ED7D51DB9A78F0058DD4C /* DetailViewController.xib */,
@@ -3374,6 +3382,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				44217BB61E2EF94B008699C1 /* StoreViewController.xib in Resources */,
 				440E7ED61E1B367C00B5277E /* LoginViewController.xib in Resources */,
 				44988C1B1C04575400D5C59C /* btnCheck@2x.png in Resources */,
 				440E7ED81E1B367C00B5277E /* RegisterViewController.xib in Resources */,
@@ -3689,6 +3698,7 @@
 				440E7F4D1E1B36D600B5277E /* NSString+RemoveEmoji.m in Sources */,
 				44166BFD1CC0EB36005628F5 /* UITextView+PlaceHolder.m in Sources */,
 				441179931C11763E0071E1C0 /* JSONModel+networking.m in Sources */,
+				44217BB51E2EF94B008699C1 /* StoreViewController.m in Sources */,
 				441179FE1C11763E0071E1C0 /* ZXDataMatrixDefaultPlacement.m in Sources */,
 				44988C1D1C04575400D5C59C /* MBProgressHUD.m in Sources */,
 				4424D6611E2726A500245B43 /* ViewController+MASAdditions.m in Sources */,
