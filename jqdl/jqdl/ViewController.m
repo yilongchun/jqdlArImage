@@ -33,6 +33,7 @@
 
 #import "MoreFunctionViewController.h"
 #import "DetailViewController.h"
+#import "StoreViewController.h"
 #import "LoginViewController.h"
 #import "TrackerResultViewController.h"
 #import "NSObject+Blocks.h"
@@ -71,7 +72,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     
     UILabel *titleLabel;
     
-    
+    NSString *jingquType;
     BOOL noticeFlag;
 }
 
@@ -194,8 +195,13 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
         
         if (!noticeFlag && immediateBeacon.accuracy < 1) {
             noticeFlag = YES;
-            TrackerResultViewController *vc = [[TrackerResultViewController alloc] init];
-            [self.navigationController pushViewController:vc animated:YES];
+            
+            
+            [self performBlock:^{
+                TrackerResultViewController *vc = [[TrackerResultViewController alloc] init];
+                [self.navigationController pushViewController:vc animated:YES];
+            } afterDelay:1.5];
+            
         }
     }
 //    self.beaconArr = beacons;
@@ -296,7 +302,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     self.jz_navigationBarBackgroundAlpha = 0.f;
     
     
-    
+    jingquType = @"1";
     
     titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
     titleLabel.font = BOLDSYSTEMFONT(17);
@@ -1408,7 +1414,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
             }
             if ([action isEqualToString:@"reloadArData"]){
                 
-                NSString *jingquType = [parameters objectForKey:@"jingquType"];//1街景 2景区
+                jingquType = [parameters objectForKey:@"jingquType"];//1街景 2景区
                 
                 if ([jingquType isEqualToString:@"1"]) {//街景
                     UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"5s后切换到街景导览模式" message:@"检测到您已经进入街道周边范围" preferredStyle:UIAlertControllerStyleAlert];
@@ -1510,9 +1516,18 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
         UIImage *backImage = [UIImage imageNamed:@"navi_back"];
         [backItem setBackButtonBackgroundImage:[backImage resizableImageWithCapInsets:UIEdgeInsetsMake(0, backImage.size.width, 0, 0)] forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];//更改背景图片
         self.navigationItem.backBarButtonItem = backItem;
-        DetailViewController *vc = [[DetailViewController alloc] init];
-        vc.poi = poi;
-        [self.navigationController pushViewController:vc animated:YES];
+        
+        if([jingquType isEqualToString:@"1"]){
+            StoreViewController *vc = [[StoreViewController alloc] init];
+            vc.poi = poi;
+            [self.navigationController pushViewController:vc animated:YES];
+        }
+        if ([jingquType isEqualToString:@"2"]) {
+            DetailViewController *vc = [[DetailViewController alloc] init];
+            vc.poi = poi;
+            [self.navigationController pushViewController:vc animated:YES];
+        }
+        
         
     }
     

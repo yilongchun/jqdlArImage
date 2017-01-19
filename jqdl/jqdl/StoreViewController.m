@@ -97,8 +97,21 @@
     labelFrame.size.height = height;
     [contentLabel setFrame:labelFrame];
     [UILabel setLabelSpace:contentLabel withValue:contentLabel.text withFont:contentLabel.font];
+    
+    //景区等级
+    UILabel *ratingLabel = [[UILabel alloc] initWithFrame:CGRectMake(25, CGRectGetMaxY(contentLabel.frame) + 16, 0, 0)];
+    ratingLabel.font = SYSTEMFONT(14);
+    ratingLabel.textColor = RGB(51, 51, 51);
+    ratingLabel.text = @"景区等级";
+    [ratingLabel sizeToFit];
+    [_myScrollView addSubview:ratingLabel];
+    
+    UIImageView *ratingImageView = [[UIImageView alloc] initWithFrame:CGRectMake(25, CGRectGetMaxY(ratingLabel.frame) + 9, 54, 18)];
+    ratingImageView.image = [UIImage imageNamed:@"4a"];
+    [_myScrollView addSubview:ratingImageView];
+    
     //线
-    UILabel *line = [[UILabel alloc] initWithFrame:CGRectMake(25, CGRectGetMaxY(contentLabel.frame) + 16, Main_Screen_Width - 50, 1)];
+    UILabel *line = [[UILabel alloc] initWithFrame:CGRectMake(25, CGRectGetMaxY(ratingImageView.frame) + 16, Main_Screen_Width - 50, 1)];
     line.backgroundColor = RGB(245, 245, 245);
     [_myScrollView addSubview:line];
     //地址标签
