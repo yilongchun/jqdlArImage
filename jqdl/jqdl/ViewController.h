@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 
 //#import "CategoryList.h"
-
+#import<CoreLocation/CoreLocation.h>
 
 @interface ViewController : UIViewController{
 //    NSMutableArray *jingdianDataSource;
@@ -18,7 +18,9 @@
     
 }
 
-
+//@property (nonatomic, strong) NSArray *beaconArr;//存放扫描到的iBeacon
+@property (strong, nonatomic) CLBeaconRegion *beacon1;//被扫描的iBeacon
+@property (strong, nonatomic) CLLocationManager * locationmanager;
 
 
 @end

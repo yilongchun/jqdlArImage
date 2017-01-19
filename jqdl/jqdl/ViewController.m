@@ -41,6 +41,8 @@
 /* this is used to create random positions around you */
 #define WT_RANDOM(startValue, endValue) ((((float) (arc4random() % ((unsigned)RAND_MAX + 1)) / RAND_MAX) * (endValue - startValue)) + startValue)
 
+#define BEACONUUID @"FDA50693-A4E2-4FB1-AFCF-C6EB07647825"//iBeacon
+
 static char *kWTAugmentedRealityViewController_AssociatedPoiManagerKey = "kWTARVCAMEWTP";
 static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "kWTARVCAMECLK";
 
@@ -68,6 +70,9 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     NSMutableArray *spotsArr;
     
     UILabel *titleLabel;
+    
+    
+    BOOL noticeFlag;
 }
 
 /* Add a strong property to the main Wikitude SDK component, the WTArchitectView */
@@ -85,33 +90,138 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     WTPoiManager *poiManager = [[WTPoiManager alloc] init];
     objc_setAssociatedObject(self, kWTAugmentedRealityViewController_AssociatedPoiManagerKey, poiManager, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
-    CLLocationManager *locationManager = [[CLLocationManager alloc] init];
-    objc_setAssociatedObject(self, kWTAugmentedRealityViewController_AssociatedLocationManagerKey, locationManager, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    locationManager.delegate = self;
-    [locationManager requestWhenInUseAuthorization];
+    self.locationmanager = [[CLLocationManager alloc] init];
+    objc_setAssociatedObject(self, kWTAugmentedRealityViewController_AssociatedLocationManagerKey, self.locationmanager, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    self.locationmanager.delegate = self;
+    
+    
+//    self.beaconArr = [[NSArray alloc] init];
+    
+    
+//    self.beacon1 = [[CLBeaconRegion alloc] initWithProximityUUID:[[NSUUID alloc] initWithUUIDString:BEACONUUID] major:10 minor:3 identifier:@"media2"];
+        self.beacon1 = [[CLBeaconRegion alloc] initWithProximityUUID:[[NSUUID alloc] initWithUUIDString:BEACONUUID] identifier:@"media"];//初始化监测的iBeacon信息
+    
+    [self.locationmanager requestAlwaysAuthorization];
     if ([CLLocationManager locationServicesEnabled]) { // 判断是否打开了位置服务
-        [locationManager startUpdatingLocation];
+        [self.locationmanager startUpdatingLocation];
     }
 
 }
 
 #pragma mark - Delegation
 #pragma mark CLLocationManager
+
+- (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status{
+    
+    if (status == kCLAuthorizationStatusAuthorizedAlways) {
+        noticeFlag = NO;
+        [self.locationmanager startMonitoringForRegion:self.beacon1];//开始MonitoringiBeacon+
+        [self.locationmanager startRangingBeaconsInRegion:self.beacon1];//开始RegionBeacons
+        
+    }
+    
+}
+
+//发现设备进入iBeacon监测范围
+
+-(void)locationManager:(CLLocationManager *)manager didEnterRegion:(CLRegion *)region{
+    noticeFlag = NO;
+    [self.locationmanager startRangingBeaconsInRegion:self.beacon1];//开始RegionBeacons
+    
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"进入iBeacon区域" message:@"" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *action = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleDefault handler:nil];
+    [alert addAction:action];
+    [self presentViewController:alert animated:YES completion:nil];
+    
+}
+
+//发现设备离开iBeacon监测范围
+- (void)locationManager:(CLLocationManager *)manager didExitRegion:(CLRegion *)region {
+    noticeFlag = YES;
+    [self.locationmanager stopRangingBeaconsInRegion:self.beacon1];
+    
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"离开iBeacon区域" message:@"" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *action = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleDefault handler:nil];
+    [alert addAction:action];
+    [self presentViewController:alert animated:YES completion:nil];
+//    if ([region isKindOfClass:[CLBeaconRegion class]]) {
+//        UILocalNotification *notification = [[UILocalNotification alloc] init];
+//        notification.alertBody = @"Are you forgetting something?";
+//        notification.soundName = @"Default";
+//        [[UIApplication sharedApplication] presentLocalNotificationNow:notification];
+//    }
+}
+
+//找的iBeacon后扫描它的信息
+
+- (void)locationManager:(CLLocationManager *)manager didRangeBeacons:(NSArray *)beacons inRegion:(CLBeaconRegion *)region{
+    
+    //如果存在不是我们要监测的iBeacon那就停止扫描他
+    
+    if (![[region.proximityUUID UUIDString] isEqualToString:BEACONUUID]){
+        
+        [self.locationmanager stopMonitoringForRegion:region];
+        
+        [self.locationmanager stopRangingBeaconsInRegion:region];
+        
+    }
+    
+    NSMutableArray *beaconsArray = [NSMutableArray arrayWithArray:beacons];
+    //过滤没有信号的iBeacon
+    for (int i = 0;i < beaconsArray.count;i++) {
+        CLBeacon* beacon = beaconsArray[i];
+        NSLog(@"UUID:%@ major:%d minor:%d rssi:%ld proximity:%ld accuracy:%f",[beacon.proximityUUID UUIDString],[beacon.major intValue],[beacon.minor intValue],beacon.rssi,beacon.proximity,beacon.accuracy);
+        if (beacon.accuracy < 0 ) {
+            [beaconsArray removeObjectAtIndex:i];
+            i--;
+        }
+    }
+    //最近的iBeacon
+    CLBeacon *immediateBeacon;
+    if (beaconsArray.count > 0) {
+        immediateBeacon = beaconsArray[0];
+    }
+    //查找最近的iBeacon
+    for (CLBeacon* beacon in beaconsArray) {
+        if (beacon.accuracy > 0 && beacon.accuracy < immediateBeacon.accuracy) {
+            immediateBeacon = beacon;
+        }
+    }
+    if (immediateBeacon) {
+//        [self showHintInView:self.view hint:[NSString stringWithFormat:@"%f",immediateBeacon.accuracy]];
+        
+        NSLog(@"最近的 UUID:%@ major:%d minor:%d rssi:%ld proximity:%ld accuracy:%f",[immediateBeacon.proximityUUID UUIDString],[immediateBeacon.major intValue],[immediateBeacon.minor intValue],immediateBeacon.rssi,immediateBeacon.proximity,immediateBeacon.accuracy);//信号
+        
+        if (!noticeFlag && immediateBeacon.accuracy < 1) {
+            noticeFlag = YES;
+            TrackerResultViewController *vc = [[TrackerResultViewController alloc] init];
+            [self.navigationController pushViewController:vc animated:YES];
+        }
+    }
+//    self.beaconArr = beacons;
+}
+
+-(void)locationManager:(CLLocationManager *)manager monitoringDidFailForRegion:(CLRegion *)region withError:(NSError *)error{
+    NSLog(@"Failed monitoring region: %@",error);
+}
+
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
 {
     id firstLocation = [locations firstObject];
+    myLocation = (CLLocation *)firstLocation;
+//    DLog(@"didUpdateLocations");
     if ( firstLocation )
     {
         
         
         
         myLocation = (CLLocation *)firstLocation;
-        [manager stopUpdatingLocation];
+//        [manager stopUpdatingLocation];
         
 //        //加载数据 景区
 //        [self loadStore];
         
-        manager.delegate = nil;
+//        manager.delegate = nil;
 //
 //        [self generatePois:1 aroundLocation:location];
 //        
@@ -324,6 +434,34 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
 //        [self initGuideView];
 //
 //    }
+    
+    
+//    NSDictionary *peripheralData = nil;
+//    CLBeaconRegion *region = [[CLBeaconRegion alloc] initWithProximityUUID:[[NSUUID alloc] initWithUUIDString:BEACONUUID] major:10 minor:7 identifier:@"media2"];
+//    peripheralData = [region peripheralDataWithMeasuredPower:power];                // The region's peripheral data contains the CoreBluetooth-specific data we need to advertise.
+//    if(peripheralData)        {
+//        //开始广播
+//        [peripheralManager startAdvertising:peripheralData];
+//    }
+    
+    
+    
+//    self.locationManager = [[CLLocationManager alloc] init];
+//    self.locationManager.delegate = self;
+//    //接收端的uuid数组需要包含广播端的uuid
+//    for (NSUUID *uuid in [APLDefaults sharedDefaults].supportedProximityUUIDs)    {
+//        CLBeaconRegion *region = [[CLBeaconRegion alloc] initWithProximityUUID:uuid identifier:[uuid UUIDString]];
+//        self.rangedRegions[region] = [NSArray array];
+//    }
+//    for (CLBeaconRegion *region in self.rangedRegions)    {
+//        [self.locationManager startRangingBeaconsInRegion:region];
+//    }
+    
+    
+    
+    
+    
+    
     
     [self loadStore];
 }
