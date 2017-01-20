@@ -103,8 +103,10 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
         self.beacon1 = [[CLBeaconRegion alloc] initWithProximityUUID:[[NSUUID alloc] initWithUUIDString:BEACONUUID] identifier:@"media"];//初始化监测的iBeacon信息
     
     [self.locationmanager requestAlwaysAuthorization];
+//    [self.locationmanager requestWhenInUseAuthorization];
     if ([CLLocationManager locationServicesEnabled]) { // 判断是否打开了位置服务
         [self.locationmanager startUpdatingLocation];
+        [self loadStore];
     }
 
 }
@@ -117,14 +119,12 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     if (status == kCLAuthorizationStatusAuthorizedAlways) {
         noticeFlag = NO;
         [self.locationmanager startMonitoringForRegion:self.beacon1];//开始MonitoringiBeacon+
-        [self.locationmanager startRangingBeaconsInRegion:self.beacon1];//开始RegionBeacons
+//        [self.locationmanager startRangingBeaconsInRegion:self.beacon1];//开始RegionBeacons
         
     }
-    
 }
 
 //发现设备进入iBeacon监测范围
-
 -(void)locationManager:(CLLocationManager *)manager didEnterRegion:(CLRegion *)region{
     noticeFlag = NO;
     [self.locationmanager startRangingBeaconsInRegion:self.beacon1];//开始RegionBeacons
@@ -469,7 +469,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     
     
     
-    [self loadStore];
+    
 }
 
 //初始化引导页面

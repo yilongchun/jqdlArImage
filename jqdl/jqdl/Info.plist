@@ -32,7 +32,7 @@
 		<true/>
 	</dict>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Access to your current location information (GPS) is needed to find the nearest points of interest around your current position.</string>
+	<string>允许氢旅行使用你的位置</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
 	<key>UIRequiredDeviceCapabilities</key>

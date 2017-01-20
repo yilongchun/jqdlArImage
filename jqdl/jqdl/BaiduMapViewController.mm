@@ -120,6 +120,8 @@
 //                                                                      icon:[UIImage imageNamed:@"smap"]];
 //    [_mapView addOverlay:ground];
     
+    
+    
     annotations = [NSMutableArray array];
     //添加景点标注
     for (int i = 0; i < _jingdianArray.count; i++) {
@@ -252,15 +254,16 @@
     //    BMKMapPoint point2 = BMKMapPointForCoordinate(CLLocationCoordinate2DMake(38.915,115.404));
     //    CLLocationDistance distance = BMKMetersBetweenMapPoints(point1,point2);
     
-    //    //其他坐标系转为百度坐标系
-    //    CLLocationCoordinate2D coor = CLLocationCoordinate2DMake(39.90868, 116.3956);//原始坐标
-    //    //转换 google地图、soso地图、aliyun地图、mapabc地图和amap地图所用坐标至百度坐标
-    //    NSDictionary* testdic = BMKConvertBaiduCoorFrom(coor,BMK_COORDTYPE_GPS);
-    //    //转换GPS坐标至百度坐标(加密后的坐标)
-    //    testdic = BMKConvertBaiduCoorFrom(coor,BMK_COORDTYPE_GPS);
-    //    NSLog(@"x=%@,y=%@",[testdic objectForKey:@"x"],[testdic objectForKey:@"y"]);
-    //    //解密加密后的坐标字典
-    //    CLLocationCoordinate2D baiduCoor = BMKCoorDictionaryDecode(testdic);//转换后的百度坐标
+//        //其他坐标系转为百度坐标系
+//        CLLocationCoordinate2D coor = CLLocationCoordinate2DMake(30.76888888888889, 111.26);//原始坐标
+//        //转换 google地图、soso地图、aliyun地图、mapabc地图和amap地图所用坐标至百度坐标
+//        NSDictionary* testdic = BMKConvertBaiduCoorFrom(coor,BMK_COORDTYPE_GPS);
+//        //转换GPS坐标至百度坐标(加密后的坐标)
+//        testdic = BMKConvertBaiduCoorFrom(coor,BMK_COORDTYPE_GPS);
+//        NSLog(@"x=%@,y=%@",[testdic objectForKey:@"x"],[testdic objectForKey:@"y"]);
+//        //解密加密后的坐标字典
+//        CLLocationCoordinate2D baiduCoor = BMKCoorDictionaryDecode(testdic);//转换后的百度坐标
+//        NSLog(@"转换后:x=%f,y=%f",baiduCoor.latitude,baiduCoor.longitude);
     
     //    //1.初始化收藏夹管理类：
     //    BMKFavPoiManager *_favManager = [[BMKFavPoiManager alloc] init];//初始化收藏夹管理类
