@@ -2,6 +2,7 @@ var kMarker_AnimationDuration_ChangeDrawable = 500;
 var kMarker_AnimationDuration_Resize = 1000;
 
 function Marker(poiData) {
+    
 
     this.poiData = poiData;
     this.isSelected = false;
@@ -37,12 +38,25 @@ function Marker(poiData) {
         onClick: null
     });
     
-    //添加左侧图标
-    this.leftImage = new AR.ImageDrawable(new AR.ImageResource("assets/marker_type1.png"), 2.1, {
-        zOrder: 1,
-        opacity: 1.0,
-        offsetX:-3.3
-    });
+    
+    if(poiData.id == "317bd48cce2eb96a07eced68eded5b19"){
+        //添加左侧图标
+        this.leftImage = new AR.ImageDrawable(new AR.ImageResource("assets/marker_type2.png"), 2.1, {
+                                              zOrder: 1,
+                                              opacity: 1.0,
+                                              offsetX:-3.3
+                                              });
+    }else{
+        //添加左侧图标
+        this.leftImage = new AR.ImageDrawable(new AR.ImageResource("assets/marker_type1.png"), 2.1, {
+                                              zOrder: 1,
+                                              opacity: 1.0,
+                                              offsetX:-3.3
+                                              });
+    }
+    
+    
+    
     
     var _html="<div class='zdyDemo' style='height:600px;font-size:5em;border-radius:0.3em;background:#fff;position:relative'>";
     _html+="<img src='" + poiData.image + "' style='width:100%;height:600px;border-radius:0.3em'/>";
@@ -111,7 +125,7 @@ function Marker(poiData) {
         enabled: false,
         verticalAnchor: AR.CONST.VERTICAL_ANCHOR.TOP
     });
-
+    
     this.radarCircle = new AR.Circle(0.03, {
         horizontalAnchor: AR.CONST.HORIZONTAL_ANCHOR.CENTER,
         opacity: 0.8,
@@ -274,8 +288,6 @@ Marker.prototype.setSelected = function(marker) {
 
     marker.titleLabel.style.textColor = "#666666";
     marker.descriptionLabel.style.textColor = "#666666";
-    
-    
     
 //    // starts the selected-state animation
 //    marker.animationGroup_selected.start();

@@ -194,6 +194,15 @@ var World = {
 
 	// fired when user pressed maker in cam
 	onMarkerSelected: function onMarkerSelectedFn(marker) {//点击marker
+        
+        
+        
+        
+        
+        
+        
+        
+        
 //		World.currentMarker = marker;
 //
 //		// update panel values
@@ -247,6 +256,17 @@ var World = {
 //        }
 //        
 //        AR.logger.debug("添加路线结束 World.lineList.length:"+World.lineList.length);
+        
+        
+        //设置其他marker禁用
+//        for(var i = 0;i < World.markerList.length;i++){
+//            var tempMarker = World.markerList[i];
+//            if(tempMarker.id != marker.id){
+//                tempMarker.markerObject.enabled = false;
+//            }
+//        }
+        
+        
         
 	},
     
@@ -325,6 +345,13 @@ var World = {
 //                AR.logger.debug("删除路线结束 World.lineList.length:"+World.lineList.length);
 //                
 //                $(".paizhao").css('display','none');
+                
+                
+                //设置其他marker禁用
+//                for(var i = 0;i < World.markerList.length;i++){
+//                    var tempMarker = World.markerList[i];
+//                    tempMarker.markerObject.enabled = true;
+//                }
             }
         }
         
