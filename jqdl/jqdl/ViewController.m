@@ -129,10 +129,12 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     noticeFlag = NO;
     [self.locationmanager startRangingBeaconsInRegion:self.beacon1];//开始RegionBeacons
     
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"进入iBeacon区域" message:@"" preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction *action = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleDefault handler:nil];
-    [alert addAction:action];
-    [self presentViewController:alert animated:YES completion:nil];
+    [self showHintInView:self.view hint:@"你已进入iBeacon区域"];
+    
+//    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"进入iBeacon区域" message:@"" preferredStyle:UIAlertControllerStyleAlert];
+//    UIAlertAction *action = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleDefault handler:nil];
+//    [alert addAction:action];
+//    [self presentViewController:alert animated:YES completion:nil];
     
 }
 
@@ -141,10 +143,12 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     noticeFlag = YES;
     [self.locationmanager stopRangingBeaconsInRegion:self.beacon1];
     
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"离开iBeacon区域" message:@"" preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction *action = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleDefault handler:nil];
-    [alert addAction:action];
-    [self presentViewController:alert animated:YES completion:nil];
+    [self showHintInView:self.view hint:@"你已离开iBeacon区域"];
+    
+//    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"离开iBeacon区域" message:@"" preferredStyle:UIAlertControllerStyleAlert];
+//    UIAlertAction *action = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleDefault handler:nil];
+//    [alert addAction:action];
+//    [self presentViewController:alert animated:YES completion:nil];
 //    if ([region isKindOfClass:[CLBeaconRegion class]]) {
 //        UILocalNotification *notification = [[UILocalNotification alloc] init];
 //        notification.alertBody = @"Are you forgetting something?";

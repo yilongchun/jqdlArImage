@@ -39,21 +39,21 @@ function Marker(poiData) {
     });
     
     
-    if(poiData.id == "317bd48cce2eb96a07eced68eded5b19"){
-        //添加左侧图标
-        this.leftImage = new AR.ImageDrawable(new AR.ImageResource("assets/marker_type2.png"), 2.1, {
-                                              zOrder: 1,
-                                              opacity: 1.0,
-                                              offsetX:-3.3
-                                              });
-    }else{
+//    if(poiData.id == "317bd48cce2eb96a07eced68eded5b19"){
+//        //添加左侧图标
+//        this.leftImage = new AR.ImageDrawable(new AR.ImageResource("assets/marker_type2.png"), 2.1, {
+//                                              zOrder: 1,
+//                                              opacity: 1.0,
+//                                              offsetX:-3.3
+//                                              });
+//    }else{
         //添加左侧图标
         this.leftImage = new AR.ImageDrawable(new AR.ImageResource("assets/marker_type1.png"), 2.1, {
                                               zOrder: 1,
                                               opacity: 1.0,
                                               offsetX:-3.3
                                               });
-    }
+//    }
     
     
     

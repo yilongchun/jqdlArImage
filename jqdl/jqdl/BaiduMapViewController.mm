@@ -112,14 +112,21 @@
     [self setZoomBtn];
 
     //添加手绘地图
-//    CLLocationCoordinate2D coors;
-//    coors.latitude = 30.738861;
-//    coors.longitude = 111.327933;
-//    BMKGroundOverlay* ground = [BMKGroundOverlay groundOverlayWithPosition:coors
-//                                                                 zoomLevel:18 anchor:CGPointMake(0.0f,0.0f)
-//                                                                      icon:[UIImage imageNamed:@"smap"]];
-//    [_mapView addOverlay:ground];
     
+//    BMKCoordinateBounds bounds;
+     // 左边的上大 下小   右边的左小 右大
+//    bounds.northEast = CLLocationCoordinate2DMake(30.772352, 111.275587);
+//    bounds.southWest = CLLocationCoordinate2DMake(30.770019, 111.270812);
+//    BMKGroundOverlay* ground = [BMKGroundOverlay groundOverlayWithBounds:bounds icon:[UIImage imageNamed:@"map"]];
+    
+                                   
+    CLLocationCoordinate2D coors = CLLocationCoordinate2DMake(30.771156, 111.270301);
+    BMKGroundOverlay* ground = [BMKGroundOverlay groundOverlayWithPosition:coors
+                                                                 zoomLevel:20.9 anchor:CGPointMake(0.0f,0.0f)
+                                                                      icon:[UIImage imageNamed:@"map"]];
+//    ground.alpha = 0.5;
+    [_mapView addOverlay:ground];
+    [_mapView setZoomLevel:20.9];
     
     
     annotations = [NSMutableArray array];
