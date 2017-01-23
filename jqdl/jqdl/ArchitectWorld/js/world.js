@@ -181,14 +181,14 @@ var World = {
 		// helper used to update placemark information every now and then (e.g. every 10 location upadtes fired)
 		World.locationUpdateCounter = (++World.locationUpdateCounter % World.updatePlacemarkDistancesEveryXLocationUpdates);
         
-        if(World.jingquType == 1){//如果是街景模式 切换为景区模式
-            World.jingquType = 2;
-            setTimeout(function(){
-               if (World.initialized) {
-                    document.location = "architectsdk://button?action=reloadArData&jingquType="+World.jingquType;//重新获取数据
-               }
-            }, 10 * 1000 );
-        }
+//        if(World.jingquType == 1){//如果是街景模式 切换为景区模式
+//            World.jingquType = 2;
+//            setTimeout(function(){
+//               if (World.initialized) {
+//                    document.location = "architectsdk://button?action=reloadArData&jingquType="+World.jingquType;//重新获取数据
+//               }
+//            }, 10 * 1000 );
+//        }
         
 	},
 

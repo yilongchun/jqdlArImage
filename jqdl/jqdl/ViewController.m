@@ -119,7 +119,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     if (status == kCLAuthorizationStatusAuthorizedAlways) {
         noticeFlag = NO;
         [self.locationmanager startMonitoringForRegion:self.beacon1];//开始MonitoringiBeacon+
-//        [self.locationmanager startRangingBeaconsInRegion:self.beacon1];//开始RegionBeacons
+        [self.locationmanager startRangingBeaconsInRegion:self.beacon1];//开始RegionBeacons
         
     }
 }
@@ -171,43 +171,91 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
         
     }
     
-    NSMutableArray *beaconsArray = [NSMutableArray arrayWithArray:beacons];
-    //过滤没有信号的iBeacon
-    for (int i = 0;i < beaconsArray.count;i++) {
-        CLBeacon* beacon = beaconsArray[i];
+    
+    
+    for (int i = 0;i < beacons.count;i++) {
+        CLBeacon* beacon = beacons[i];
         NSLog(@"UUID:%@ major:%d minor:%d rssi:%ld proximity:%ld accuracy:%f",[beacon.proximityUUID UUIDString],[beacon.major intValue],[beacon.minor intValue],beacon.rssi,beacon.proximity,beacon.accuracy);
-        if (beacon.accuracy < 0 ) {
-            [beaconsArray removeObjectAtIndex:i];
-            i--;
+        if (beacon.accuracy > 0 ) {
+            if ([beacon.major intValue] == 10) {
+                if ([beacon.minor intValue] == 3) {//3模拟景区
+                    if (beacon.accuracy < 0.5) {//进入景区
+                        if ([jingquType isEqualToString:@"1"]) {
+                            jingquType = @"2";
+                            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"即将切换到景区导览模式" message:@"检测到您已经抵达景区周边范围" preferredStyle:UIAlertControllerStyleAlert];
+                            UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                                [self performBlock:^{
+                                    [self.navigationController popToRootViewControllerAnimated:YES];
+                                    [self loadSpots];//重新加载ar数据
+                                } afterDelay:0.];
+                            }];
+                            [alert addAction:action1];
+                            [self presentViewController:alert animated:YES completion:nil];
+                        }
+                    }else{//离开景区
+                        
+                        if ([jingquType isEqualToString:@"2"]) {
+                            jingquType = @"1";
+                            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"即将切换到街景导览模式" message:@"检测到您已经进入街道周边范围" preferredStyle:UIAlertControllerStyleAlert];
+                            UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                                [self performBlock:^{
+                                    [self.navigationController popToRootViewControllerAnimated:YES];
+                                    [self loadStore];//重新加载ar数据
+                                } afterDelay:0.];
+                            }];
+                            [alert addAction:action1];
+                            [self presentViewController:alert animated:YES completion:nil];
+                        }
+                        
+                        
+                    }
+                }
+                if ([beacon.minor intValue] == 4) {//4模拟景点
+                    if (beacon.accuracy < 0.5) {//靠近景点
+                        if (!trackerFlag) {
+                            trackerFlag = YES;
+                            TrackerResultViewController *vc = [[TrackerResultViewController alloc] init];
+                            [self.navigationController pushViewController:vc animated:YES];
+                        }
+                    }else{
+                        trackerFlag = NO;
+                    }
+                }
+            }
         }
     }
-    //最近的iBeacon
-    CLBeacon *immediateBeacon;
-    if (beaconsArray.count > 0) {
-        immediateBeacon = beaconsArray[0];
-    }
-    //查找最近的iBeacon
-    for (CLBeacon* beacon in beaconsArray) {
-        if (beacon.accuracy > 0 && beacon.accuracy < immediateBeacon.accuracy) {
-            immediateBeacon = beacon;
-        }
-    }
-    if (immediateBeacon) {
-//        [self showHintInView:self.view hint:[NSString stringWithFormat:@"%f",immediateBeacon.accuracy]];
-        
-        NSLog(@"最近的 UUID:%@ major:%d minor:%d rssi:%ld proximity:%ld accuracy:%f",[immediateBeacon.proximityUUID UUIDString],[immediateBeacon.major intValue],[immediateBeacon.minor intValue],immediateBeacon.rssi,immediateBeacon.proximity,immediateBeacon.accuracy);//信号
-        
-        if (!noticeFlag && immediateBeacon.accuracy < 1) {
-            noticeFlag = YES;
-            
-            
-            [self performBlock:^{
-                TrackerResultViewController *vc = [[TrackerResultViewController alloc] init];
-                [self.navigationController pushViewController:vc animated:YES];
-            } afterDelay:1.5];
-            
-        }
-    }
+    
+    
+    
+    
+    
+//    //最近的iBeacon
+//    CLBeacon *immediateBeacon;
+//    if (beaconsArray.count > 0) {
+//        immediateBeacon = beaconsArray[0];
+//    }
+//    //查找最近的iBeacon
+//    for (CLBeacon* beacon in beaconsArray) {
+//        if (beacon.accuracy > 0 && beacon.accuracy < immediateBeacon.accuracy) {
+//            immediateBeacon = beacon;
+//        }
+//    }
+//    if (immediateBeacon) {
+////        [self showHintInView:self.view hint:[NSString stringWithFormat:@"%f",immediateBeacon.accuracy]];
+//        
+//        NSLog(@"最近的 UUID:%@ major:%d minor:%d rssi:%ld proximity:%ld accuracy:%f",[immediateBeacon.proximityUUID UUIDString],[immediateBeacon.major intValue],[immediateBeacon.minor intValue],immediateBeacon.rssi,immediateBeacon.proximity,immediateBeacon.accuracy);//信号
+//        
+//        if (!noticeFlag && immediateBeacon.accuracy < 1) {
+//            noticeFlag = YES;
+//            
+//            
+//            [self performBlock:^{
+//                TrackerResultViewController *vc = [[TrackerResultViewController alloc] init];
+//                [self.navigationController pushViewController:vc animated:YES];
+//            } afterDelay:1.5];
+//            
+//        }
+//    }
 //    self.beaconArr = beacons;
 }
 
@@ -1421,7 +1469,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                 jingquType = [parameters objectForKey:@"jingquType"];//1街景 2景区
                 
                 if ([jingquType isEqualToString:@"1"]) {//街景
-                    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"5s后切换到街景导览模式" message:@"检测到您已经进入街道周边范围" preferredStyle:UIAlertControllerStyleAlert];
+                    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"即将切换到街景导览模式" message:@"检测到您已经进入街道周边范围" preferredStyle:UIAlertControllerStyleAlert];
                     UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
                         [self performBlock:^{
                             [self.navigationController popToRootViewControllerAnimated:YES];
@@ -1432,7 +1480,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                     [self presentViewController:alert animated:YES completion:nil];
                 }
                 if ([jingquType isEqualToString:@"2"]) {//景区
-                    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"5s后切换到景区导览模式" message:@"检测到您已经抵达景区周边范围" preferredStyle:UIAlertControllerStyleAlert];
+                    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"即将切换到景区导览模式" message:@"检测到您已经抵达景区周边范围" preferredStyle:UIAlertControllerStyleAlert];
                     UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
                         [self performBlock:^{
                             [self.navigationController popToRootViewControllerAnimated:YES];
