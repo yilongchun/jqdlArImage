@@ -42,6 +42,7 @@
 /* this is used to create random positions around you */
 #define WT_RANDOM(startValue, endValue) ((((float) (arc4random() % ((unsigned)RAND_MAX + 1)) / RAND_MAX) * (endValue - startValue)) + startValue)
 
+static const CGFloat kDefaultPlaySoundInterval = 3.0;
 #define BEACONUUID @"FDA50693-A4E2-4FB1-AFCF-C6EB07647825"//iBeacon
 
 static char *kWTAugmentedRealityViewController_AssociatedPoiManagerKey = "kWTARVCAMEWTP";
@@ -74,7 +75,12 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     
     NSString *jingquType;
     BOOL noticeFlag;
+    
+    NSString *last_minor_number;
+    
 }
+
+@property (strong, nonatomic) NSDate *lastPlaySoundDate;
 
 /* Add a strong property to the main Wikitude SDK component, the WTArchitectView */
 @property (nonatomic, strong) WTArchitectView               *architectView;
@@ -178,8 +184,9 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
         NSLog(@"UUID:%@ major:%d minor:%d rssi:%ld proximity:%ld accuracy:%f",[beacon.proximityUUID UUIDString],[beacon.major intValue],[beacon.minor intValue],beacon.rssi,beacon.proximity,beacon.accuracy);
         if (beacon.accuracy > 0 ) {
             if ([beacon.major intValue] == 10) {
-                if ([beacon.minor intValue] == 3) {//3模拟景区
-                    if (beacon.accuracy < 0.5) {//进入景区
+                if ([beacon.minor intValue] == 1) {//1模拟景区
+                    
+                    if (beacon.accuracy < 10) {//进入景区
                         if ([jingquType isEqualToString:@"1"]) {
                             jingquType = @"2";
                             UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"即将切换到景区导览模式" message:@"检测到您已经抵达景区周边范围" preferredStyle:UIAlertControllerStyleAlert];
@@ -210,17 +217,116 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                         
                     }
                 }
-                if ([beacon.minor intValue] == 4) {//4模拟景点
-                    if (beacon.accuracy < 0.5) {//靠近景点
-                        if (!trackerFlag) {
-                            trackerFlag = YES;
-                            TrackerResultViewController *vc = [[TrackerResultViewController alloc] init];
-                            [self.navigationController pushViewController:vc animated:YES];
+                
+                
+                
+                
+                if (spotsArr) {
+                    for (int j = 0;j < spotsArr.count;j++) {
+                        
+                        NSDictionary *spot = spotsArr[j];
+                        NSDictionary *ibeacon = [spot objectForKey:@"ibeacon"];
+                        if (ibeacon) {
+                            NSString *uuid = [ibeacon objectForKey:@"uuid"];
+                            NSString *major_number = [ibeacon objectForKey:@"major_number"];
+                            NSString *minor_number = [ibeacon objectForKey:@"minor_number"];
+                            NSNumber *effective_radius = [ibeacon objectForKey:@"effective_radius"];
+                            
+                            if ([[beacon.proximityUUID UUIDString] isEqualToString:uuid] &&
+                                [beacon.major intValue] == [major_number intValue] &&
+                                [beacon.minor intValue] == [minor_number intValue] &&
+                                beacon.accuracy*100 < [effective_radius intValue] &&
+                                ![minor_number isEqualToString:last_minor_number]) {
+                                
+                                NSTimeInterval timeInterval = [[NSDate date]
+                                                               timeIntervalSinceDate:self.lastPlaySoundDate];
+                                if (timeInterval < kDefaultPlaySoundInterval) {
+                                    //如果距离上次响铃和震动时间太短, 则跳过响铃
+                                    NSLog(@"skip ringing & vibration %@, %@", [NSDate date], self.lastPlaySoundDate);
+                                    return;
+                                }
+                                
+                                //保存最后一次响铃时间
+                                self.lastPlaySoundDate = [NSDate date];
+                                
+                                DLog(@"%@ %@ %@ %d last_minor_number:%@",uuid,major_number,minor_number,[effective_radius intValue],last_minor_number);
+                                last_minor_number = minor_number;
+                            
+                                NSArray *imagesArr = [spot objectForKey:@"images"];
+                                NSMutableArray *images = [NSMutableArray array];
+                                NSString *image = @"";
+                                
+                                [imagesArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                                    [images addObject:[obj objectForKey:@"url"]];
+                                }];
+                                if (images.count > 0) {
+                                    image = [images objectAtIndex:0];
+                                }
+                                
+                                NSArray *audio_clips = [spot objectForKey:@"audio_clips"];
+                                NSString *audio = @"";
+                                if (audio_clips.count > 0) {
+                                    audio = [[audio_clips objectAtIndex:0] objectForKey:@"url"];
+                                }
+                                
+                                NSArray *coordinates = [spot objectForKey:@"coordinates"];
+                                NSNumber *latitude;
+                                NSNumber *longitude;
+                                if (coordinates.count > 1) {
+                                    latitude = coordinates[0];
+                                    longitude = coordinates[1];
+                                }
+                                
+                                
+                                
+                                //            CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake(myLocation.coordinate.latitude + WT_RANDOM(-0.1, 0.1), myLocation.coordinate.longitude + WT_RANDOM(-0.1, 0.1));
+                                
+                                CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake([longitude doubleValue], [latitude doubleValue]);
+                                
+                                
+                                CLLocation *location = [[CLLocation alloc] initWithCoordinate:locationCoordinate
+                                                                                     altitude:0
+                                                                           horizontalAccuracy:0
+                                                                             verticalAccuracy:0
+                                                                                    timestamp:[NSDate date]];
+                                
+                                WTPoi *poi = [[WTPoi alloc] initWithIdentifier:[spot objectForKey:@"id"]
+                                                                      location:location
+                                                                          name:[spot objectForKey:@"name"]
+                                                           detailedDescription:[spot objectForKey:@"description"]
+                                                                         image:image
+                                                                        images:[images componentsJoinedByString:@","]
+                                                                         voice:audio
+                                                                       address:[spot objectForKey:@"address"]
+                                              
+                                              ];
+                                DLog(@"%@",poi.jsonRepresentation);
+                                
+                                DetailViewController *vc = [[DetailViewController alloc] init];
+                                vc.poi = poi;
+                                [self.navigationController pushViewController:vc animated:YES];
+                                
+                                
+                                
+                                
+                            }
                         }
-                    }else{
-                        trackerFlag = NO;
+                        
                     }
                 }
+                
+                
+//                if ([beacon.minor intValue] == 4) {//4模拟景点
+//                    if (beacon.accuracy < 0.5) {//靠近景点
+//                        if (!trackerFlag) {
+//                            trackerFlag = YES;
+//                            TrackerResultViewController *vc = [[TrackerResultViewController alloc] init];
+//                            [self.navigationController pushViewController:vc animated:YES];
+//                        }
+//                    }else{
+//                        trackerFlag = NO;
+//                    }
+//                }
             }
         }
     }
@@ -355,6 +461,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     
     
     jingquType = @"1";
+    last_minor_number = @"-1";
     
     titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
     titleLabel.font = BOLDSYSTEMFONT(17);
@@ -652,7 +759,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
         
         for (int i = 0 ; i < data.count; i++) {
             NSString *storeId = [data[i] objectForKey:@"id"];
-            if ([storeId isEqualToString:@"f66c0fc1f74580c525365751a9ce21b6"]) {//神农架
+            if ([storeId isEqualToString:STORE_ID]) {//神农架
                 storeDic = [[NSMutableDictionary alloc] initWithDictionary:data[i]];
                 
                 titleLabel.text = [storeDic objectForKey:@"name"];
@@ -716,9 +823,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                 break;
             }
         }
-     
         DLog(@"storeDic:%@",storeDic);
-        
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
         [self hideHud];
         
@@ -753,6 +858,8 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
         
         NSDictionary *dic= [NSDictionary dictionaryWithDictionary:responseObject];
         NSArray *data = [dic objectForKey:@"data"];
+        
+        spotsArr = [NSMutableArray arrayWithArray:data];
         
         for (int i = 0 ; i < data.count; i++) {
             

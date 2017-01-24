@@ -27,6 +27,8 @@ typedef NS_ENUM(NSInteger, ResultCodeType){
 #define kHost @"http://g.ticket168.com/"
 
 
+//三游洞
+#define STORE_ID @"f66c0fc1f74580c525365751a9ce21b6"
 
 /***************** API ***************/
 
