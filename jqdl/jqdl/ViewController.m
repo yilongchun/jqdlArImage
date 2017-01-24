@@ -302,6 +302,11 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                                               ];
                                 DLog(@"%@",poi.jsonRepresentation);
                                 
+                                UIBarButtonItem *backItem=[[UIBarButtonItem alloc] init];
+                                UIImage *backImage = [UIImage imageNamed:@"navi_back"];
+                                [backItem setBackButtonBackgroundImage:[backImage resizableImageWithCapInsets:UIEdgeInsetsMake(0, backImage.size.width, 0, 0)] forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];//更改背景图片
+                                self.navigationItem.backBarButtonItem = backItem;
+                                
                                 DetailViewController *vc = [[DetailViewController alloc] init];
                                 vc.poi = poi;
                                 [self.navigationController pushViewController:vc animated:YES];

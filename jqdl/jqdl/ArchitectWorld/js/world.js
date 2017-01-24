@@ -42,6 +42,9 @@ var World = {
     
 	// called to inject new POI data
 	loadPoisFromJsonData: function loadPoisFromJsonDataFn(poiData) {
+        
+        World.locationUpdateCounter = 0;
+        
         if (World.currentMarker) {
             World.currentMarker.setDeselected(World.currentMarker);
             World.isClickDetailImage = false;
@@ -139,7 +142,8 @@ var World = {
             var distanceToUserValue = (distanceToUser > 999) ? ((distanceToUser / 1000).toFixed(2) + " km") : (Math.round(distanceToUser) + " m");
             World.markerList[i].descriptionLabel.text = distanceToUserValue;
             
-//            AR.logger.debug("updateDistanceToUserValues " + i + " :" + World.markerList[i].descriptionLabel.text + " " + distanceToUser);
+            
+            AR.logger.debug("updateDistanceToUserValues " + i + "," + World.markerList[i].titleLabel.text + "," + World.markerList[i].descriptionLabel.text + "," + distanceToUser + "," + distanceToUserValue);
 		}
         
 
@@ -169,7 +173,7 @@ var World = {
 //        AR.logger.debug("lat:"+lat+",log:"+lon+",alt:"+alt+",acc:"+acc);
         World.currentLat = lat;
         World.currentLng = lon;
-//        AR.logger.debug("currentLat:"+World.currentLat + ",currentLng:"+World.currentLng);
+        AR.logger.debug("locationChanged currentLat:"+World.currentLat + ",currentLng:"+World.currentLng);
 		// request data if not already present
 		if (!World.initiallyLoadedData) {
 			//World.requestDataFromServer(lat, lon);

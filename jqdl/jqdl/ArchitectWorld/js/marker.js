@@ -61,7 +61,7 @@ function Marker(poiData) {
     var _html="<div class='zdyDemo' style='height:600px;font-size:5em;border-radius:0.3em;background:#fff;position:relative'>";
     _html+="<img src='" + poiData.image + "' style='width:100%;height:600px;border-radius:0.3em'/>";
     _html+="<span style='position:absolute;height:1.5em;bottom:0px;background:rgba(0,0,0,0.6);z-index:100;display:block;width:100%;color:#fff;line-height:1.5em;padding-left:0.4em;font-size:0.6em;border-radius:0 0 0.5em 0.5em;'>"+poiData.title+"</span>";
-    AR.logger.debug(poiData.image + "," + poiData.title);
+//    AR.logger.debug(poiData.image + "," + poiData.title);
     this.htmlDrawable = new AR.HtmlDrawable({html:_html}, 9,
         {
             offsetY:-6.2,
@@ -103,9 +103,9 @@ function Marker(poiData) {
     });
     
     
-    var currentUserLocation = new AR.GeoLocation(World.currentLat, World.currentLng);
-    var dist = markerLocation.distanceTo(currentUserLocation);
-    var distanceToUserValue = (dist > 999) ? ((dist / 1000).toFixed(2) + " km") : (Math.round(dist) + " m");
+//    var currentUserLocation = new AR.GeoLocation(World.currentLat, World.currentLng);
+//    var dist = markerLocation.distanceTo(currentUserLocation);
+//    var distanceToUserValue = (dist > 999) ? ((dist / 1000).toFixed(2) + " km") : (Math.round(dist) + " m");
     
     // create an AR.Label for the marker's description
     this.descriptionLabel = new AR.Label("", 0.8, {
