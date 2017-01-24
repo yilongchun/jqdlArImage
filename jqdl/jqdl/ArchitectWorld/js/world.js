@@ -77,7 +77,7 @@ var World = {
 				"id": poiData[currentPlaceNr].id,
 				"latitude": parseFloat(poiData[currentPlaceNr].latitude),
 				"longitude": parseFloat(poiData[currentPlaceNr].longitude),
-				"altitude": parseFloat((currentPlaceNr%10)* 400),
+				"altitude": parseFloat((currentPlaceNr%20)* 400),
 				"title": poiData[currentPlaceNr].name,
 				"description": poiData[currentPlaceNr].description,
                 "image":poiData[currentPlaceNr].image,

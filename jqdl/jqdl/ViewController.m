@@ -186,7 +186,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
             if ([beacon.major intValue] == 10) {
                 if ([beacon.minor intValue] == 1) {//1模拟景区
                     
-                    if (beacon.accuracy < 10) {//进入景区
+                    if (beacon.accuracy < 20) {//进入景区
                         if ([jingquType isEqualToString:@"1"]) {
                             jingquType = @"2";
                             UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"即将切换到景区导览模式" message:@"检测到您已经抵达景区周边范围" preferredStyle:UIAlertControllerStyleAlert];
@@ -238,6 +238,11 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                                 beacon.accuracy*100 < [effective_radius intValue] &&
                                 ![minor_number isEqualToString:last_minor_number]) {
                                 
+                                NSNumber *is_public = [spot objectForKey:@"is_public"];
+                                if (![is_public boolValue]) {
+                                    continue;
+                                }
+                                
                                 NSTimeInterval timeInterval = [[NSDate date]
                                                                timeIntervalSinceDate:self.lastPlaySoundDate];
                                 if (timeInterval < kDefaultPlaySoundInterval) {
@@ -245,6 +250,8 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                                     NSLog(@"skip ringing & vibration %@, %@", [NSDate date], self.lastPlaySoundDate);
                                     return;
                                 }
+                                
+                                
                                 
                                 //保存最后一次响铃时间
                                 self.lastPlaySoundDate = [NSDate date];
@@ -870,6 +877,12 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
             
             
             storeDic = [[NSMutableDictionary alloc] initWithDictionary:data[i]];
+            
+            NSNumber *is_public = [storeDic objectForKey:@"is_public"];
+            if (![is_public boolValue]) {
+                continue;
+            }
+            
             
             NSArray *imagesArr = [storeDic objectForKey:@"images"];
             NSMutableArray *images = [NSMutableArray array];
