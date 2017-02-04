@@ -40,18 +40,18 @@
 //    [_pwdLogin setTextColor:DEFAULT_COLOR];
 //    ViewBorderRadius(_loginBtn, 5, 1.0, DEFAULT_COLOR);
     
-    [_account setValue:RGBA(255, 255, 255, 0.5) forKeyPath:@"_placeholderLabel.textColor"];
-    [_password setValue:RGBA(255, 255, 255, 0.5) forKeyPath:@"_placeholderLabel.textColor"];
+    [_account setValue:RGBA(189, 189, 189, 1) forKeyPath:@"_placeholderLabel.textColor"];
+    [_password setValue:RGBA(189, 189, 189, 1) forKeyPath:@"_placeholderLabel.textColor"];
     
     
-    [_loginBtn setBackgroundImage:[[UIImage imageNamed:@"loginBtnBg"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 20, 5, 20) resizingMode:UIImageResizingModeStretch] forState:UIControlStateNormal];
-    [_loginBtn setBackgroundImage:[[UIImage imageNamed:@"loginBtnBg2"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 20, 5, 20) resizingMode:UIImageResizingModeStretch] forState:UIControlStateHighlighted];
+    [_loginBtn setBackgroundImage:[[UIImage imageNamed:@"loginBtnDisabled"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 20, 5, 20) resizingMode:UIImageResizingModeStretch] forState:UIControlStateDisabled];
+    [_loginBtn setBackgroundImage:[[UIImage imageNamed:@"loginBtnHighLight"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 20, 5, 20) resizingMode:UIImageResizingModeStretch] forState:UIControlStateNormal];
     
     getCodeBtn = [[UIButton alloc] initWithFrame:CGRectMake(5, 0, 100, 40)];
     [getCodeBtn setTitle:@"获取验证码" forState:UIControlStateNormal];
-    [getCodeBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [getCodeBtn setTitleColor:RGBA(255, 255, 255, 0.5) forState:UIControlStateHighlighted];
-    [getCodeBtn setTitleColor:RGBA(255, 255, 255, 0.5) forState:UIControlStateDisabled];
+    [getCodeBtn setTitleColor:RGBA(67 ,216 ,230, 1) forState:UIControlStateNormal];
+    [getCodeBtn setTitleColor:RGBA(204, 204, 204, 1) forState:UIControlStateHighlighted];
+//    [getCodeBtn setTitleColor:RGBA(255, 255, 255, 0.5) forState:UIControlStateDisabled];
 //    [getCodeBtn setTitleColor:RGB(5,198,232) forState:UIControlStateHighlighted];
     getCodeBtn.titleLabel.font = [UIFont systemFontOfSize:14];
     [getCodeBtn addTarget:self action:@selector(getCode) forControlEvents:UIControlEventTouchUpInside];
@@ -61,8 +61,8 @@
 //    ViewBorderRadius(getCodeBtn, 0, 1, RGBA(255, 255, 255, 0.5));
     
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 10, 1, 20)];
-    label.backgroundColor = RGBA(255, 255, 255, 0.5);
-    ViewBorderRadius(label, 1, 1, RGBA(255, 255, 255, 0.5));
+    label.backgroundColor = RGBA(204, 204, 204, 1);
+    ViewBorderRadius(label, 1, 1, RGBA(204, 204, 204, 1));
     [rightView addSubview:label];
     
     self.account.rightViewMode = UITextFieldViewModeAlways;
@@ -70,10 +70,10 @@
     
     
     
-    NSMutableAttributedString *content = [[NSMutableAttributedString alloc]initWithString:_forgetPassword.text];
-    NSRange contentRange = {0,[content length]};
-    [content addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInteger:NSUnderlineStyleSingle] range:contentRange];
-    _forgetPassword.attributedText = content;
+//    NSMutableAttributedString *content = [[NSMutableAttributedString alloc]initWithString:_forgetPassword.text];
+//    NSRange contentRange = {0,[content length]};
+//    [content addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInteger:NSUnderlineStyleSingle] range:contentRange];
+//    _forgetPassword.attributedText = content;
     
     
     
@@ -81,18 +81,32 @@
     
     UITapGestureRecognizer *tap1 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(findPassword)];
     [_forgetPassword addGestureRecognizer:tap1];
-    UITapGestureRecognizer *tap2 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToRegisger)];
+    UITapGestureRecognizer *tap2 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(loginForMsg)];
     [_toRegister addGestureRecognizer:tap2];
     UITapGestureRecognizer *tap3 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(loginForMsg)];
     [_pwdLogin addGestureRecognizer:tap3];
     
-    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithTitle:@"密码登录" style:UIBarButtonItemStyleDone target:self action:@selector(loginForMsg)];
-    [rightItem setTintColor:[UIColor whiteColor]];
-    self.navigationItem.rightBarButtonItem = rightItem;
+//    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithTitle:@"密码登录" style:UIBarButtonItemStyleDone target:self action:@selector(loginForMsg)];
+//    [rightItem setTintColor:[UIColor whiteColor]];
+//    self.navigationItem.rightBarButtonItem = rightItem;
     
     UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"backWhite"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] style:UIBarButtonItemStyleDone target:self action:@selector(dissMissView)];
     
     self.navigationItem.leftBarButtonItem = leftItem;
+    
+    
+    
+    UIButton *registerBtn = [UIButton buttonWithType:UIButtonTypeSystem];
+    
+    [registerBtn setFrame:CGRectMake(15, Main_Screen_Height - 50 - 41, Main_Screen_Width - 30, 41)];
+    [registerBtn setBackgroundImage:[[UIImage imageNamed:@"registerBtn"] resizableImageWithCapInsets:UIEdgeInsetsMake(40, 20.5, 40, 20.5) resizingMode:UIImageResizingModeStretch] forState:UIControlStateNormal];
+    //    registerBtn.titleLabel.font = SYSTEMFONT(15);
+    //    registerBtn.backgroundColor = RGB(239, 246, 247);
+    //    ViewBorderRadius(registerBtn, 20.5, 1, RGB(66, 216, 230));
+    [registerBtn setTitle:@"立即注册" forState:UIControlStateNormal];
+    [registerBtn setTitleColor:RGB(66, 216, 230) forState:UIControlStateNormal];
+    [registerBtn addTarget:self action:@selector(goToRegisger) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:registerBtn];
 }
 
 -(void)dissMissView{
@@ -208,6 +222,10 @@
     if (forgetPwdVc == nil) {
         forgetPwdVc = [[ForgetPwdViewController alloc] init];
     }
+    UIBarButtonItem *backItem=[[UIBarButtonItem alloc] init];
+    UIImage *backImage = [UIImage imageNamed:@"navi_back2"];
+    [backItem setBackButtonBackgroundImage:[backImage resizableImageWithCapInsets:UIEdgeInsetsMake(0, backImage.size.width, 0, 0)] forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];//更改背景图片
+    self.navigationItem.backBarButtonItem = backItem;
     [self.navigationController pushViewController:forgetPwdVc animated:YES];
 }
 
@@ -216,6 +234,10 @@
     if (regVc == nil) {
         regVc = [[RegisterViewController alloc] init];
     }
+    UIBarButtonItem *backItem=[[UIBarButtonItem alloc] init];
+    UIImage *backImage = [UIImage imageNamed:@"navi_back2"];
+    [backItem setBackButtonBackgroundImage:[backImage resizableImageWithCapInsets:UIEdgeInsetsMake(0, backImage.size.width, 0, 0)] forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];//更改背景图片
+    self.navigationItem.backBarButtonItem = backItem;
     [self.navigationController pushViewController:regVc animated:YES];
 }
 

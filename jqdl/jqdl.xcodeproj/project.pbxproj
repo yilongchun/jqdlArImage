@@ -417,6 +417,8 @@
 		4434AEC11E1CAA490014BE2D /* UIImage+Color.m in Sources */ = {isa = PBXBuildFile; fileRef = 4434AEC01E1CAA490014BE2D /* UIImage+Color.m */; };
 		443DA7CB1E08C1130014C9B8 /* MoreFunctionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 443DA7C91E08C1130014C9B8 /* MoreFunctionViewController.m */; };
 		443DA7CC1E08C1130014C9B8 /* MoreFunctionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 443DA7CA1E08C1130014C9B8 /* MoreFunctionViewController.xib */; };
+		4444EFA41E456C7200E72B41 /* UserCenterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4444EFA21E456C7200E72B41 /* UserCenterViewController.m */; };
+		4444EFA51E456C7200E72B41 /* UserCenterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4444EFA31E456C7200E72B41 /* UserCenterViewController.xib */; };
 		444D77C11E037A180040F0A7 /* _JZNavigationInteractiveTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 444D77B41E037A180040F0A7 /* _JZNavigationInteractiveTransition.m */; };
 		444D77C21E037A180040F0A7 /* _JZValue.m in Sources */ = {isa = PBXBuildFile; fileRef = 444D77B61E037A180040F0A7 /* _JZValue.m */; };
 		444D77C31E037A180040F0A7 /* NSNumber+JZExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 444D77B81E037A180040F0A7 /* NSNumber+JZExtension.m */; };
@@ -1319,6 +1321,9 @@
 		443DA7C81E08C1130014C9B8 /* MoreFunctionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MoreFunctionViewController.h; sourceTree = "<group>"; };
 		443DA7C91E08C1130014C9B8 /* MoreFunctionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MoreFunctionViewController.m; sourceTree = "<group>"; };
 		443DA7CA1E08C1130014C9B8 /* MoreFunctionViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MoreFunctionViewController.xib; sourceTree = "<group>"; };
+		4444EFA11E456C7200E72B41 /* UserCenterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserCenterViewController.h; sourceTree = "<group>"; };
+		4444EFA21E456C7200E72B41 /* UserCenterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserCenterViewController.m; sourceTree = "<group>"; };
+		4444EFA31E456C7200E72B41 /* UserCenterViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserCenterViewController.xib; sourceTree = "<group>"; };
 		444D77B01E037A180040F0A7 /* JZNavigationExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JZNavigationExtension.h; sourceTree = "<group>"; };
 		444D77B21E037A180040F0A7 /* _JZ-objc-internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "_JZ-objc-internal.h"; sourceTree = "<group>"; };
 		444D77B31E037A180040F0A7 /* _JZNavigationInteractiveTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _JZNavigationInteractiveTransition.h; sourceTree = "<group>"; };
@@ -1547,6 +1552,7 @@
 				44003D051BFB24ED00CB747A /* Main.storyboard */,
 				44003D081BFB24ED00CB747A /* Assets.xcassets */,
 				44003D0D1BFB24ED00CB747A /* Info.plist */,
+				4444EFA01E456C5600E72B41 /* User */,
 				440E7EC41E1B367C00B5277E /* Login */,
 				44EE4BF71C053F7A00031251 /* Utils */,
 				44117A931C1176610071E1C0 /* Core */,
@@ -3060,6 +3066,16 @@
 			path = Categories;
 			sourceTree = "<group>";
 		};
+		4444EFA01E456C5600E72B41 /* User */ = {
+			isa = PBXGroup;
+			children = (
+				4444EFA11E456C7200E72B41 /* UserCenterViewController.h */,
+				4444EFA21E456C7200E72B41 /* UserCenterViewController.m */,
+				4444EFA31E456C7200E72B41 /* UserCenterViewController.xib */,
+			);
+			path = User;
+			sourceTree = "<group>";
+		};
 		444D77AF1E037A180040F0A7 /* JZNavigationExtension */ = {
 			isa = PBXGroup;
 			children = (
@@ -3388,6 +3404,7 @@
 				440E7ED81E1B367C00B5277E /* RegisterViewController.xib in Resources */,
 				442ED7D91DB9A7D10058DD4C /* ArchitectWorld in Resources */,
 				440E7ED21E1B367C00B5277E /* ForgetPwdViewController.xib in Resources */,
+				4444EFA51E456C7200E72B41 /* UserCenterViewController.xib in Resources */,
 				444D77CD1E038B140040F0A7 /* mapapi.bundle in Resources */,
 				44F6146C1E1F92BB00482D23 /* FeatureListViewController.xib in Resources */,
 				444D77D71E038D600040F0A7 /* BaiduMapViewController.xib in Resources */,
@@ -3518,6 +3535,7 @@
 				445C4A781E1DECF800A5B375 /* TrackerResultViewController.m in Sources */,
 				441179C61C11763E0071E1C0 /* ZXURIParsedResult.m in Sources */,
 				44117A0F1C11763E0071E1C0 /* ZXAbstractExpandedDecoder.m in Sources */,
+				4444EFA41E456C7200E72B41 /* UserCenterViewController.m in Sources */,
 				44117A811C11763E0071E1C0 /* MJRefreshComponent.m in Sources */,
 				44117A721C11763E0071E1C0 /* ZXQRCodeMaskUtil.m in Sources */,
 				44117A891C11763E0071E1C0 /* MJRefreshBackStateFooter.m in Sources */,

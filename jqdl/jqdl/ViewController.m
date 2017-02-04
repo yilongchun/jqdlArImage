@@ -38,6 +38,7 @@
 #import "TrackerResultViewController.h"
 #import "NSObject+Blocks.h"
 #import "LBXScanNetAnimation.h"
+#import "UserCenterViewController.h"
 
 /* this is used to create random positions around you */
 #define WT_RANDOM(startValue, endValue) ((((float) (arc4random() % ((unsigned)RAND_MAX + 1)) / RAND_MAX) * (endValue - startValue)) + startValue)
@@ -181,7 +182,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     
     for (int i = 0;i < beacons.count;i++) {
         CLBeacon* beacon = beacons[i];
-        NSLog(@"UUID:%@ major:%d minor:%d rssi:%ld proximity:%ld accuracy:%f",[beacon.proximityUUID UUIDString],[beacon.major intValue],[beacon.minor intValue],beacon.rssi,beacon.proximity,beacon.accuracy);
+//        NSLog(@"UUID:%@ major:%d minor:%d rssi:%ld proximity:%ld accuracy:%f",[beacon.proximityUUID UUIDString],[beacon.major intValue],[beacon.minor intValue],beacon.rssi,beacon.proximity,beacon.accuracy);
         if (beacon.accuracy > 0 ) {
             if ([beacon.major intValue] == 10) {
                 if ([beacon.minor intValue] == 1) {//1模拟景区
@@ -713,6 +714,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
         imageView.image = [UIImage imageNamed:@"timg.jpeg"];
         imageView.userInteractionEnabled = YES;
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(loginOut)];
+//        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toUserCenter)];
         [imageView addGestureRecognizer:tap];
     }else{
         imageView.userInteractionEnabled = YES;
@@ -737,6 +739,13 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     [alert addAction:action1];
     [alert addAction:action2];
     [self presentViewController:alert animated:YES completion:nil];
+}
+
+//个人中心
+-(void)toUserCenter{
+    UserCenterViewController *vc = [UserCenterViewController new];
+    UINavigationController *nc = [[UINavigationController alloc] initWithRootViewController:vc];
+    [self presentViewController:nc animated:YES completion:nil];
 }
 
 ////进入景区列表选择

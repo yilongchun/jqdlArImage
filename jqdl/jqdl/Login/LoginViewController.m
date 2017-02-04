@@ -37,11 +37,11 @@
     self.jz_navigationBarBackgroundAlpha = 0;
     self.navigationController.navigationBar.barStyle = UIBarStyleBlack;//状态栏白色
     
-    [_account setValue:RGBA(255, 255, 255, 0.5) forKeyPath:@"_placeholderLabel.textColor"];
-    [_password setValue:RGBA(255, 255, 255, 0.5) forKeyPath:@"_placeholderLabel.textColor"];
+    [_account setValue:RGBA(189, 189, 189, 1) forKeyPath:@"_placeholderLabel.textColor"];
+    [_password setValue:RGBA(189, 189, 189, 1) forKeyPath:@"_placeholderLabel.textColor"];
     
-    [_loginBtn setBackgroundImage:[[UIImage imageNamed:@"loginBtnBg"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 20, 5, 20) resizingMode:UIImageResizingModeStretch] forState:UIControlStateNormal];
-    [_loginBtn setBackgroundImage:[[UIImage imageNamed:@"loginBtnBg2"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 20, 5, 20) resizingMode:UIImageResizingModeStretch] forState:UIControlStateHighlighted];
+    [_loginBtn setBackgroundImage:[[UIImage imageNamed:@"loginBtnDisabled"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 20, 5, 20) resizingMode:UIImageResizingModeStretch] forState:UIControlStateDisabled];
+    [_loginBtn setBackgroundImage:[[UIImage imageNamed:@"loginBtnHighLight"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 20, 5, 20) resizingMode:UIImageResizingModeStretch] forState:UIControlStateNormal];
     
     UIButton *showPwd = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 25, 25)];
     [showPwd setImage:[UIImage imageNamed:@"showPwd"] forState:UIControlStateNormal];
@@ -66,23 +66,35 @@
   
     UITapGestureRecognizer *tap1 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(findPassword)];
     [_forgetPassword addGestureRecognizer:tap1];
-    UITapGestureRecognizer *tap2 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToRegisger)];
+    UITapGestureRecognizer *tap2 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(loginForMsg)];
     [_toRegister addGestureRecognizer:tap2];
     UITapGestureRecognizer *tap3 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(loginForMsg)];
     [_msgLogin addGestureRecognizer:tap3];
     
-    NSMutableAttributedString *content = [[NSMutableAttributedString alloc]initWithString:_forgetPassword.text];
-    NSRange contentRange = {0,[content length]};
-    [content addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInteger:NSUnderlineStyleSingle] range:contentRange];
-    _forgetPassword.attributedText = content;
+//    NSMutableAttributedString *content = [[NSMutableAttributedString alloc]initWithString:_forgetPassword.text];
+//    NSRange contentRange = {0,[content length]};
+//    [content addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInteger:NSUnderlineStyleSingle] range:contentRange];
+//    _forgetPassword.attributedText = content;
     
-    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithTitle:@"验证码登录" style:UIBarButtonItemStyleDone target:self action:@selector(loginForMsg)];
-    [rightItem setTintColor:[UIColor whiteColor]];
-    self.navigationItem.rightBarButtonItem = rightItem;
+//    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithTitle:@"验证码登录" style:UIBarButtonItemStyleDone target:self action:@selector(loginForMsg)];
+//    [rightItem setTintColor:[UIColor whiteColor]];
+//    self.navigationItem.rightBarButtonItem = rightItem;
     
     UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"navi_back"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] style:UIBarButtonItemStyleDone target:self action:@selector(dissMissView)];
     
     self.navigationItem.leftBarButtonItem = leftItem;
+    
+    UIButton *registerBtn = [UIButton buttonWithType:UIButtonTypeSystem];
+    
+    [registerBtn setFrame:CGRectMake(15, Main_Screen_Height - 50 - 41, Main_Screen_Width - 30, 41)];
+    [registerBtn setBackgroundImage:[[UIImage imageNamed:@"registerBtn"] resizableImageWithCapInsets:UIEdgeInsetsMake(40, 20.5, 40, 20.5) resizingMode:UIImageResizingModeStretch] forState:UIControlStateNormal];
+//    registerBtn.titleLabel.font = SYSTEMFONT(15);
+//    registerBtn.backgroundColor = RGB(239, 246, 247);
+//    ViewBorderRadius(registerBtn, 20.5, 1, RGB(66, 216, 230));
+    [registerBtn setTitle:@"立即注册" forState:UIControlStateNormal];
+    [registerBtn setTitleColor:RGB(66, 216, 230) forState:UIControlStateNormal];
+    [registerBtn addTarget:self action:@selector(goToRegisger) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:registerBtn];
 
 //    UIBarButtonItem *returnButtonItem = [[UIBarButtonItem alloc] init];
 //    returnButtonItem.title = @"返回";
@@ -113,7 +125,53 @@
 //        _password.text = @"123456";
 //    }
     
+//    UIView *topView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, Main_Screen_Width, CGRectGetMinY(_account.frame) - 30)];
     
+    
+    
+    
+//    CAGradientLayer *gradientLayer = [CAGradientLayer layer];
+//    gradientLayer.colors = @[(__bridge id)RGB(37, 202, 220).CGColor, (__bridge id)RGB(77, 220, 232).CGColor];
+//    gradientLayer.startPoint = CGPointMake(0, 1);
+//    gradientLayer.endPoint = CGPointMake(0, 0);
+    
+    
+//    UIImageView *imageview = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"loginBg"]];
+//    [imageview setFrame:CGRectMake(0, 0, Main_Screen_Width, 227)];
+//    [self.view addSubview:imageview];
+//    [imageview setFrame:CGRectMake(0, CGRectGetHeight(topView.frame) - CGRectGetHeight(imageview.frame), CGRectGetWidth(topView.frame), CGRectGetHeight(imageview.frame))];
+    
+    
+//    gradientLayer.frame = CGRectMake(0, 0, CGRectGetWidth(topView.frame), CGRectGetHeight(topView.frame) - CGRectGetHeight(imageview.frame));
+//    [topView.layer addSublayer:gradientLayer];
+    
+    
+    
+//    [topView addSubview:imageview];
+//
+//    CAGradientLayer *gradientLayer2 = [CAGradientLayer layer];
+//    gradientLayer2.colors = @[(__bridge id)RGB(16, 208, 205).CGColor, (__bridge id)RGB(103, 229, 240).CGColor];
+//    gradientLayer2.startPoint = CGPointMake(1, 0);
+//    gradientLayer2.endPoint = CGPointMake(0, 1);
+//    gradientLayer2.frame = CGRectMake(CGRectGetWidth(topView.frame)/2, 0, CGRectGetWidth(topView.frame)/2, CGRectGetHeight(topView.frame)/2);
+//    [topView.layer addSublayer:gradientLayer2];
+//    
+//    CAGradientLayer *gradientLayer3 = [CAGradientLayer layer];
+//    gradientLayer3.colors = @[(__bridge id)RGB(16, 208, 205).CGColor, (__bridge id)RGB(103, 229, 240).CGColor];
+//    gradientLayer3.startPoint = CGPointMake(0, 1);
+//    gradientLayer3.endPoint = CGPointMake(1, 0);
+//    gradientLayer3.frame = CGRectMake(0, CGRectGetHeight(topView.frame)/2, CGRectGetWidth(topView.frame)/2, CGRectGetHeight(topView.frame)/2);
+//    [topView.layer addSublayer:gradientLayer3];
+//
+//    CAGradientLayer *gradientLayer4 = [CAGradientLayer layer];
+//    gradientLayer4.colors = @[(__bridge id)RGB(16, 208, 205).CGColor, (__bridge id)RGB(103, 229, 240).CGColor];
+//    gradientLayer4.startPoint = CGPointMake(1, 1);
+//    gradientLayer4.endPoint = CGPointMake(0, 0);
+//    gradientLayer4.frame = CGRectMake(CGRectGetWidth(topView.frame)/2, CGRectGetHeight(topView.frame)/2, CGRectGetWidth(topView.frame)/2, CGRectGetHeight(topView.frame)/2);
+//    [topView.layer addSublayer:gradientLayer4];
+    
+    
+//    [self.view addSubview:topView];
 }
 
 -(void)dissMissView{
@@ -234,6 +292,10 @@
     if (forgetPwdVc == nil) {
         forgetPwdVc = [[ForgetPwdViewController alloc] init];
     }
+    UIBarButtonItem *backItem=[[UIBarButtonItem alloc] init];
+    UIImage *backImage = [UIImage imageNamed:@"navi_back2"];
+    [backItem setBackButtonBackgroundImage:[backImage resizableImageWithCapInsets:UIEdgeInsetsMake(0, backImage.size.width, 0, 0)] forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];//更改背景图片
+    self.navigationItem.backBarButtonItem = backItem;
     [self.navigationController pushViewController:forgetPwdVc animated:YES];
 }
 
@@ -242,6 +304,10 @@
     if (regVc == nil) {
         regVc = [[RegisterViewController alloc] init];
     }
+    UIBarButtonItem *backItem=[[UIBarButtonItem alloc] init];
+    UIImage *backImage = [UIImage imageNamed:@"navi_back2"];
+    [backItem setBackButtonBackgroundImage:[backImage resizableImageWithCapInsets:UIEdgeInsetsMake(0, backImage.size.width, 0, 0)] forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];//更改背景图片
+    self.navigationItem.backBarButtonItem = backItem;
     [self.navigationController pushViewController:regVc animated:YES];
 }
 
@@ -251,6 +317,10 @@
         msgVc = [[LoginForCodeViewController alloc] init];
 //        msgVc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
     }
+    UIBarButtonItem *backItem=[[UIBarButtonItem alloc] init];
+    UIImage *backImage = [UIImage imageNamed:@"navi_back"];
+    [backItem setBackButtonBackgroundImage:[backImage resizableImageWithCapInsets:UIEdgeInsetsMake(0, backImage.size.width, 0, 0)] forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];//更改背景图片
+    self.navigationItem.backBarButtonItem = backItem;
     [self.navigationController pushViewController:msgVc animated:YES];
 //    UINavigationController *nc = [[UINavigationController alloc] initWithRootViewController:msgVc];
 //    [self presentViewController:nc animated:YES completion:nil];

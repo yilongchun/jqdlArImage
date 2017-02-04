@@ -24,32 +24,34 @@
     // Do any additional setup after loading the view from its nib.
     
     self.title = @"手机号快速注册";
-    self.navigationController.navigationBar.titleTextAttributes = [NSDictionary dictionaryWithObjectsAndKeys:[UIColor whiteColor],NSForegroundColorAttributeName, nil];
-    self.jz_navigationBarBackgroundAlpha = 0;
-    self.navigationController.navigationBar.barStyle = UIBarStyleBlack;//状态栏白色
+    self.navigationController.navigationBar.titleTextAttributes = [NSDictionary dictionaryWithObjectsAndKeys:[UIColor blackColor],NSForegroundColorAttributeName, nil];
+    self.jz_navigationBarBackgroundAlpha = 1;
+    self.navigationController.navigationBar.barStyle = UIBarStyleDefault;
+    
+    self.view.backgroundColor = RGB(250, 250, 250);
 
     
-    [_account setValue:RGBA(255, 255, 255, 0.5) forKeyPath:@"_placeholderLabel.textColor"];
-    [_password setValue:RGBA(255, 255, 255, 0.5) forKeyPath:@"_placeholderLabel.textColor"];
-    [_code setValue:RGBA(255, 255, 255, 0.5) forKeyPath:@"_placeholderLabel.textColor"];
-    [_nickname setValue:RGBA(255, 255, 255, 0.5) forKeyPath:@"_placeholderLabel.textColor"];
+    [_account setValue:RGBA(204, 204, 204, 1) forKeyPath:@"_placeholderLabel.textColor"];
+    [_password setValue:RGBA(204, 204, 204, 1) forKeyPath:@"_placeholderLabel.textColor"];
+    [_code setValue:RGBA(204, 204, 204, 1) forKeyPath:@"_placeholderLabel.textColor"];
+    [_nickname setValue:RGBA(204, 204, 204, 1) forKeyPath:@"_placeholderLabel.textColor"];
     
-    [_regBtn setBackgroundImage:[[UIImage imageNamed:@"loginBtnBg3"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 20, 5, 20) resizingMode:UIImageResizingModeStretch] forState:UIControlStateNormal];
-    [_regBtn setBackgroundImage:[[UIImage imageNamed:@"loginBtnBg2"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 20, 5, 20) resizingMode:UIImageResizingModeStretch] forState:UIControlStateHighlighted];
+    [_regBtn setBackgroundImage:[[UIImage imageNamed:@"loginBtnDisabled"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 20, 5, 20) resizingMode:UIImageResizingModeStretch] forState:UIControlStateDisabled];
+    [_regBtn setBackgroundImage:[[UIImage imageNamed:@"loginBtnHighLight"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 20, 5, 20) resizingMode:UIImageResizingModeStretch] forState:UIControlStateNormal];
     [_regBtn addTarget:self action:@selector(reg) forControlEvents:UIControlEventTouchUpInside];
 
     getCodeBtn = [[UIButton alloc] initWithFrame:CGRectMake(5, 0, 100, 40)];
     [getCodeBtn setTitle:@"获取验证码" forState:UIControlStateNormal];
-    [getCodeBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [getCodeBtn setTitleColor:RGBA(255, 255, 255, 0.5) forState:UIControlStateHighlighted];
-    [getCodeBtn setTitleColor:RGBA(255, 255, 255, 0.5) forState:UIControlStateDisabled];
+    [getCodeBtn setTitleColor:RGBA(67 ,216 ,230, 1) forState:UIControlStateNormal];
+    [getCodeBtn setTitleColor:RGBA(204, 204, 204, 1) forState:UIControlStateHighlighted];
+//    [getCodeBtn setTitleColor:RGBA(255, 255, 255, 0.5) forState:UIControlStateDisabled];
     getCodeBtn.titleLabel.font = [UIFont systemFontOfSize:14];
     [getCodeBtn addTarget:self action:@selector(getCode) forControlEvents:UIControlEventTouchUpInside];
     UIView *rightView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 105, 40)];
     [rightView addSubview:getCodeBtn];
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 10, 1, 20)];
-    label.backgroundColor = RGBA(255, 255, 255, 0.5);
-    ViewBorderRadius(label, 1, 1, RGBA(255, 255, 255, 0.5));
+    label.backgroundColor = RGBA(204, 204, 204, 1);
+    ViewBorderRadius(label, 1, 1, RGBA(204, 204, 204, 1));
     [rightView addSubview:label];
     self.account.rightViewMode = UITextFieldViewModeAlways;
     self.account.rightView = rightView;
@@ -80,6 +82,13 @@
 //    self.navigationController.navigationBar.translucent = YES;
 //    [self.navigationController.navigationBar setShadowImage:[Util imageWithColor:[UIColor clearColor] size:CGSizeMake(320, 3)]];
 //    [self.navigationController.navigationBar setBackgroundImage:[Util imageWithColor:RGBA(252, 228, 75,0.0)] forBarMetrics:UIBarMetricsDefault];
+    
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
+}
+
+-(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
 }
 
 //注册
@@ -270,6 +279,8 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+
 
 #pragma mark - 倒计时
 -(void)startTime{
