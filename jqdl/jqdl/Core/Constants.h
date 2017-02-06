@@ -24,7 +24,7 @@ typedef NS_ENUM(NSInteger, ResultCodeType){
 
 #define kBaiduAK @"y63FqvA3ResevIFcSQMbTmOIFdLIXP5D"
 
-#define kHost @"http://g.ticket168.com/"
+//#define kHost @"http://g.ticket168.com/"
 
 
 //三游洞
@@ -33,6 +33,21 @@ typedef NS_ENUM(NSInteger, ResultCodeType){
 /***************** API ***************/
 
 #define kDlHost @"https://api.qlxing.com/v2"
+
+//获取七牛上传token
+#define API_QINIU_UPTOKEN @"/third_party/qiniu/uptoken"
+//七牛上传文件
+#define API_QINIU_UPLOAD @"http://upload.qiniu.com/"
+
+
+/**
+ *  用户相关
+ */
+//当前用户详情
+#define API_PRIVATE_USERS_ME @"/private/users/me"
+//修改用户信息
+#define API_PRIVATE_USERS_PROFILE @"/private/users/profile"
+
 /**
  *  auth
  */

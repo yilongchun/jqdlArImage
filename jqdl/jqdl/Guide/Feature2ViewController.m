@@ -52,11 +52,11 @@
     [_mywebview.scrollView.mj_header beginRefreshing];
     
     
-    DLog(@"%@%@%@",kHost,API_VIEW,self.url);
+//    DLog(@"%@%@%@",kHost,API_VIEW,self.url);
 }
 
 -(void)loadData{
-    [self.mywebview loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@",kHost,API_VIEW,self.url]]]];
+//    [self.mywebview loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@",kHost,API_VIEW,self.url]]]];
     [_mywebview.scrollView.mj_header endRefreshing];
 }
 

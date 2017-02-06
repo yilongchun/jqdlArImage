@@ -28,4 +28,5 @@
 
 + (NSArray *)getInstalledMapAppWithEndLocation:(CLLocationCoordinate2D)endLocation;
 
++ (NSString *)uuidString;
 @end

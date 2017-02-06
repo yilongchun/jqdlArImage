@@ -138,7 +138,7 @@
     //控制播放按钮
     if ([[Player sharedManager] isPlaying]) {
         NSString *playingUrlStr = [[[Player sharedManager] url] absoluteString];
-        NSString *path = [NSString stringWithFormat:@"%@%@",kHost,_poi.voice];
+        NSString *path = [NSString stringWithFormat:@"%@",_poi.voice];
         if ([playingUrlStr isEqualToString:path]) {//当前播放的就是该景点的语音 停止播放
             [jieshuoBtn setImage:[UIImage imageNamed:@"ztbf"] forState:UIControlStateNormal];
         }else{//不是该景点的 重新播放

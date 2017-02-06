@@ -216,8 +216,10 @@
             NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
             [ud removeObjectForKey:LOGINED_USER];
             [ud removeObjectForKey:USER_INFO];
-//            [[NSNotificationCenter defaultCenter] postNotificationName:KNOTIFICATION_LOGINSTATECHANGE object:@NO];
-//            [[NSNotificationCenter defaultCenter] postNotificationName:KNOTIFICATION_LOGINED_REFRESH_USERCENTER object:nil];
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"setLeftItem" object:nil];
+            
+            [self dismissViewControllerAnimated:YES completion:nil];
             
         }];
         [alert addAction:action1];

@@ -13,7 +13,8 @@
 + (NSString *)baseUrl
 {
     //返回你的baseUrl
-    return kHost;
+    return @"";
+//    return kHost;
 }
 
 - (id)initWithBaseURL:(NSURL *)url

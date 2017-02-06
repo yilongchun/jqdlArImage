@@ -85,7 +85,7 @@
 }
 
 -(void)loadData{
-    [self.mywebview loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",kHost,API_GONGLUE]]]];
+//    [self.mywebview loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",kHost,API_GONGLUE]]]];
     [_mywebview.scrollView.mj_header endRefreshing];
 }
 

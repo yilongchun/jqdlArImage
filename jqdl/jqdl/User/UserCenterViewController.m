@@ -10,6 +10,7 @@
 #import "UIViewController+JZExtension.h"
 #import "UIImageView+AFNetworking.h"
 #import "SettingViewController.h"
+#import "UserInfoViewController.h"
 
 @interface UserCenterViewController ()
 
@@ -61,6 +62,9 @@
     
     [headBackImageView setImage:[UIImage imageNamed:@"timg.jpeg"]];
     [headImageView setImage:[UIImage imageNamed:@"timg.jpeg"]];
+    headImageView.userInteractionEnabled = YES;
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toUserInfo)];
+    [headImageView addGestureRecognizer:tap];
     
     self.mytableview.tableHeaderView = tableHeaderView;
     [self.mytableview reloadData];
@@ -72,6 +76,14 @@
     tipsLabel.textAlignment = NSTextAlignmentCenter;
     [self.view addSubview:tipsLabel];
     
+}
+
+//个人信息
+-(void)toUserInfo{
+    UserInfoViewController *vc = [[UserInfoViewController alloc] init];
+    vc.title = @"个人信息";
+    UINavigationController *nc = [[UINavigationController alloc] initWithRootViewController:vc];
+    [self presentViewController:nc animated:YES completion:nil];
 }
 
 -(void)dissMissView{

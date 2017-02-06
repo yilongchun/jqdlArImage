@@ -143,7 +143,7 @@
     [parameters setObject:_nickname.text forKey:@"username"];
     
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
-    NSString *url = [NSString stringWithFormat:@"%@%@",kHost,API_AUTH_REGISTER];
+    NSString *url = [NSString stringWithFormat:@"%@%@",kDlHost,API_AUTH_REGISTER];
     [manager POST:url parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
         [self hideHud];
         DLog(@"%@",responseObject);

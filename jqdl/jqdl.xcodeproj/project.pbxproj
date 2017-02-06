@@ -422,6 +422,21 @@
 		4437FED71E48212F00B8A084 /* NoticeSettingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4437FED01E48212F00B8A084 /* NoticeSettingViewController.xib */; };
 		4437FED81E48212F00B8A084 /* SettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4437FED21E48212F00B8A084 /* SettingViewController.m */; };
 		4437FED91E48212F00B8A084 /* SettingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4437FED31E48212F00B8A084 /* SettingViewController.xib */; };
+		4437FEE11E48535A00B8A084 /* UserInfoTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4437FEDC1E48535A00B8A084 /* UserInfoTableViewCell.m */; };
+		4437FEE21E48535A00B8A084 /* UserInfoTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4437FEDD1E48535A00B8A084 /* UserInfoTableViewCell.xib */; };
+		4437FEE31E48535A00B8A084 /* UserInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4437FEDF1E48535A00B8A084 /* UserInfoViewController.m */; };
+		4437FEE41E48535A00B8A084 /* UserInfoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4437FEE01E48535A00B8A084 /* UserInfoViewController.xib */; };
+		4437FEF21E48542500B8A084 /* BWStatusBarOverlay.m in Sources */ = {isa = PBXBuildFile; fileRef = 4437FEE71E48542500B8A084 /* BWStatusBarOverlay.m */; };
+		4437FEF31E48542500B8A084 /* status-bar-pattern-black.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4437FEE81E48542500B8A084 /* status-bar-pattern-black.jpg */; };
+		4437FEF41E48542500B8A084 /* status-bar-pattern-black.png in Resources */ = {isa = PBXBuildFile; fileRef = 4437FEE91E48542500B8A084 /* status-bar-pattern-black.png */; };
+		4437FEF51E48542500B8A084 /* status-bar-pattern-black@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4437FEEA1E48542500B8A084 /* status-bar-pattern-black@2x.jpg */; };
+		4437FEF61E48542500B8A084 /* status-bar-pattern-black@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4437FEEB1E48542500B8A084 /* status-bar-pattern-black@2x.png */; };
+		4437FEF71E48542500B8A084 /* status-bar-pattern-black@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4437FEEC1E48542500B8A084 /* status-bar-pattern-black@3x.png */; };
+		4437FEF81E48542500B8A084 /* status-bar-pattern-default.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4437FEED1E48542500B8A084 /* status-bar-pattern-default.jpg */; };
+		4437FEF91E48542500B8A084 /* status-bar-pattern-default@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4437FEEE1E48542500B8A084 /* status-bar-pattern-default@2x.jpg */; };
+		4437FEFA1E48542500B8A084 /* status-bar-progress.png in Resources */ = {isa = PBXBuildFile; fileRef = 4437FEEF1E48542500B8A084 /* status-bar-progress.png */; };
+		4437FEFB1E48542500B8A084 /* status-bar-progress@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4437FEF01E48542500B8A084 /* status-bar-progress@2x.png */; };
+		4437FEFC1E48542500B8A084 /* status-bar-progress@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4437FEF11E48542500B8A084 /* status-bar-progress@3x.png */; };
 		443DA7CB1E08C1130014C9B8 /* MoreFunctionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 443DA7C91E08C1130014C9B8 /* MoreFunctionViewController.m */; };
 		443DA7CC1E08C1130014C9B8 /* MoreFunctionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 443DA7CA1E08C1130014C9B8 /* MoreFunctionViewController.xib */; };
 		4444EFA41E456C7200E72B41 /* UserCenterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4444EFA21E456C7200E72B41 /* UserCenterViewController.m */; };
@@ -1335,6 +1350,24 @@
 		4437FED11E48212F00B8A084 /* SettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingViewController.h; sourceTree = "<group>"; };
 		4437FED21E48212F00B8A084 /* SettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingViewController.m; sourceTree = "<group>"; };
 		4437FED31E48212F00B8A084 /* SettingViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingViewController.xib; sourceTree = "<group>"; };
+		4437FEDB1E48535A00B8A084 /* UserInfoTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserInfoTableViewCell.h; sourceTree = "<group>"; };
+		4437FEDC1E48535A00B8A084 /* UserInfoTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserInfoTableViewCell.m; sourceTree = "<group>"; };
+		4437FEDD1E48535A00B8A084 /* UserInfoTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserInfoTableViewCell.xib; sourceTree = "<group>"; };
+		4437FEDE1E48535A00B8A084 /* UserInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserInfoViewController.h; sourceTree = "<group>"; };
+		4437FEDF1E48535A00B8A084 /* UserInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserInfoViewController.m; sourceTree = "<group>"; };
+		4437FEE01E48535A00B8A084 /* UserInfoViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserInfoViewController.xib; sourceTree = "<group>"; };
+		4437FEE61E48542500B8A084 /* BWStatusBarOverlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BWStatusBarOverlay.h; sourceTree = "<group>"; };
+		4437FEE71E48542500B8A084 /* BWStatusBarOverlay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BWStatusBarOverlay.m; sourceTree = "<group>"; };
+		4437FEE81E48542500B8A084 /* status-bar-pattern-black.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "status-bar-pattern-black.jpg"; sourceTree = "<group>"; };
+		4437FEE91E48542500B8A084 /* status-bar-pattern-black.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "status-bar-pattern-black.png"; sourceTree = "<group>"; };
+		4437FEEA1E48542500B8A084 /* status-bar-pattern-black@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "status-bar-pattern-black@2x.jpg"; sourceTree = "<group>"; };
+		4437FEEB1E48542500B8A084 /* status-bar-pattern-black@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "status-bar-pattern-black@2x.png"; sourceTree = "<group>"; };
+		4437FEEC1E48542500B8A084 /* status-bar-pattern-black@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "status-bar-pattern-black@3x.png"; sourceTree = "<group>"; };
+		4437FEED1E48542500B8A084 /* status-bar-pattern-default.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "status-bar-pattern-default.jpg"; sourceTree = "<group>"; };
+		4437FEEE1E48542500B8A084 /* status-bar-pattern-default@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "status-bar-pattern-default@2x.jpg"; sourceTree = "<group>"; };
+		4437FEEF1E48542500B8A084 /* status-bar-progress.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "status-bar-progress.png"; sourceTree = "<group>"; };
+		4437FEF01E48542500B8A084 /* status-bar-progress@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "status-bar-progress@2x.png"; sourceTree = "<group>"; };
+		4437FEF11E48542500B8A084 /* status-bar-progress@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "status-bar-progress@3x.png"; sourceTree = "<group>"; };
 		443DA7C81E08C1130014C9B8 /* MoreFunctionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MoreFunctionViewController.h; sourceTree = "<group>"; };
 		443DA7C91E08C1130014C9B8 /* MoreFunctionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MoreFunctionViewController.m; sourceTree = "<group>"; };
 		443DA7CA1E08C1130014C9B8 /* MoreFunctionViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MoreFunctionViewController.xib; sourceTree = "<group>"; };
@@ -3116,12 +3149,45 @@
 			path = NoticeSetting;
 			sourceTree = "<group>";
 		};
+		4437FEDA1E48535A00B8A084 /* UserInfo */ = {
+			isa = PBXGroup;
+			children = (
+				4437FEDB1E48535A00B8A084 /* UserInfoTableViewCell.h */,
+				4437FEDC1E48535A00B8A084 /* UserInfoTableViewCell.m */,
+				4437FEDD1E48535A00B8A084 /* UserInfoTableViewCell.xib */,
+				4437FEDE1E48535A00B8A084 /* UserInfoViewController.h */,
+				4437FEDF1E48535A00B8A084 /* UserInfoViewController.m */,
+				4437FEE01E48535A00B8A084 /* UserInfoViewController.xib */,
+			);
+			path = UserInfo;
+			sourceTree = "<group>";
+		};
+		4437FEE51E48542400B8A084 /* BWStatusBarOverlay */ = {
+			isa = PBXGroup;
+			children = (
+				4437FEE61E48542500B8A084 /* BWStatusBarOverlay.h */,
+				4437FEE71E48542500B8A084 /* BWStatusBarOverlay.m */,
+				4437FEE81E48542500B8A084 /* status-bar-pattern-black.jpg */,
+				4437FEE91E48542500B8A084 /* status-bar-pattern-black.png */,
+				4437FEEA1E48542500B8A084 /* status-bar-pattern-black@2x.jpg */,
+				4437FEEB1E48542500B8A084 /* status-bar-pattern-black@2x.png */,
+				4437FEEC1E48542500B8A084 /* status-bar-pattern-black@3x.png */,
+				4437FEED1E48542500B8A084 /* status-bar-pattern-default.jpg */,
+				4437FEEE1E48542500B8A084 /* status-bar-pattern-default@2x.jpg */,
+				4437FEEF1E48542500B8A084 /* status-bar-progress.png */,
+				4437FEF01E48542500B8A084 /* status-bar-progress@2x.png */,
+				4437FEF11E48542500B8A084 /* status-bar-progress@3x.png */,
+			);
+			path = BWStatusBarOverlay;
+			sourceTree = "<group>";
+		};
 		4444EFA01E456C5600E72B41 /* User(个人中心) */ = {
 			isa = PBXGroup;
 			children = (
 				4444EFA11E456C7200E72B41 /* UserCenterViewController.h */,
 				4444EFA21E456C7200E72B41 /* UserCenterViewController.m */,
 				4444EFA31E456C7200E72B41 /* UserCenterViewController.xib */,
+				4437FEDA1E48535A00B8A084 /* UserInfo */,
 				4437FEC81E48212F00B8A084 /* Setting(设置) */,
 			);
 			name = "User(个人中心)";
@@ -3214,6 +3280,7 @@
 		44988C121C04575400D5C59C /* ThiredPartyLib */ = {
 			isa = PBXGroup;
 			children = (
+				4437FEE51E48542400B8A084 /* BWStatusBarOverlay */,
 				4424D63E1E2726A500245B43 /* Masonry */,
 				4424D6321E27254700245B43 /* LCActionSheet */,
 				440E7F631E1B49EE00B5277E /* IQKeyboardManager */,
@@ -3449,11 +3516,17 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4437FEE21E48535A00B8A084 /* UserInfoTableViewCell.xib in Resources */,
 				44217BB61E2EF94B008699C1 /* StoreViewController.xib in Resources */,
+				4437FEE41E48535A00B8A084 /* UserInfoViewController.xib in Resources */,
+				4437FEF51E48542500B8A084 /* status-bar-pattern-black@2x.jpg in Resources */,
+				4437FEFC1E48542500B8A084 /* status-bar-progress@3x.png in Resources */,
 				4437FED51E48212F00B8A084 /* AboutViewController.xib in Resources */,
 				440E7ED61E1B367C00B5277E /* LoginViewController.xib in Resources */,
 				44988C1B1C04575400D5C59C /* btnCheck@2x.png in Resources */,
 				440E7ED81E1B367C00B5277E /* RegisterViewController.xib in Resources */,
+				4437FEF81E48542500B8A084 /* status-bar-pattern-default.jpg in Resources */,
+				4437FEF71E48542500B8A084 /* status-bar-pattern-black@3x.png in Resources */,
 				442ED7D91DB9A7D10058DD4C /* ArchitectWorld in Resources */,
 				440E7ED21E1B367C00B5277E /* ForgetPwdViewController.xib in Resources */,
 				4437FED91E48212F00B8A084 /* SettingViewController.xib in Resources */,
@@ -3463,12 +3536,16 @@
 				444D77D71E038D600040F0A7 /* BaiduMapViewController.xib in Resources */,
 				44F029DD1C1E569D00EF9218 /* Feature2ViewController.xib in Resources */,
 				44003D091BFB24ED00CB747A /* Assets.xcassets in Resources */,
+				4437FEF91E48542500B8A084 /* status-bar-pattern-default@2x.jpg in Resources */,
 				441179961C11763E0071E1C0 /* CodeScan.bundle in Resources */,
 				442ED7D71DB9A78F0058DD4C /* DetailViewController.xib in Resources */,
+				4437FEF61E48542500B8A084 /* status-bar-pattern-black@2x.png in Resources */,
+				4437FEFB1E48542500B8A084 /* status-bar-progress@2x.png in Resources */,
 				4437FED71E48212F00B8A084 /* NoticeSettingViewController.xib in Resources */,
 				44E972BF1C2152010014E301 /* ScanResultWebViewController.xib in Resources */,
 				4437FEB21E480A5F00B8A084 /* Localizable.strings in Resources */,
 				44117A8D1C11763E0071E1C0 /* MJRefresh.bundle in Resources */,
+				4437FEF31E48542500B8A084 /* status-bar-pattern-black.jpg in Resources */,
 				440E7F961E1B49EE00B5277E /* IQKeyboardManager.bundle in Resources */,
 				44117A7E1C11763E0071E1C0 /* ScanResultViewController.xib in Resources */,
 				440E7F621E1B423700B5277E /* member_no.gif in Resources */,
@@ -3479,8 +3556,10 @@
 				44117ABA1C11777A0071E1C0 /* AboutMeViewController.xib in Resources */,
 				445C4A791E1DECF800A5B375 /* TrackerResultViewController.xib in Resources */,
 				445C4A7B1E1DF3B800A5B375 /* timg.jpeg in Resources */,
+				4437FEFA1E48542500B8A084 /* status-bar-progress.png in Resources */,
 				440E7ED41E1B367C00B5277E /* LoginForCodeViewController.xib in Resources */,
 				44988C1A1C04575400D5C59C /* btnCheck.png in Resources */,
+				4437FEF41E48542500B8A084 /* status-bar-pattern-black.png in Resources */,
 				443DA7CC1E08C1130014C9B8 /* MoreFunctionViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3511,6 +3590,7 @@
 				441179FB1C11763E0071E1C0 /* ZXDataMatrixASCIIEncoder.m in Sources */,
 				441179EF1C11763E0071E1C0 /* ZXInvertedLuminanceSource.m in Sources */,
 				44117A331C11763E0071E1C0 /* ZXEAN13Reader.m in Sources */,
+				4437FEE31E48535A00B8A084 /* UserInfoViewController.m in Sources */,
 				44EE4BFB1C053FC200031251 /* Util.m in Sources */,
 				440E7F381E1B36D600B5277E /* NSDateFormatter+Make.m in Sources */,
 				441179E61C11763E0071E1C0 /* ZXPerspectiveTransform.m in Sources */,
@@ -3636,6 +3716,7 @@
 				44117A0A1C11763E0071E1C0 /* ZXMaxiCodeDecodedBitStreamParser.m in Sources */,
 				44117A141C11763E0071E1C0 /* ZXAI013x0x1xDecoder.m in Sources */,
 				44117A171C11763E0071E1C0 /* ZXAI01decoder.m in Sources */,
+				4437FEE11E48535A00B8A084 /* UserInfoTableViewCell.m in Sources */,
 				441179AF1C11763E0071E1C0 /* ZXBizcardResultParser.m in Sources */,
 				441179B81C11763E0071E1C0 /* ZXGeoResultParser.m in Sources */,
 				444D77C61E037A180040F0A7 /* UINavigationController+JZExtension.m in Sources */,
@@ -3863,6 +3944,7 @@
 				44117A4E1C11763E0071E1C0 /* ZXPDF417DecodedBitStreamParser.m in Sources */,
 				44117AC31C11789B0071E1C0 /* ChooseJqViewController.m in Sources */,
 				44621BA71E12029500EB3AFC /* UIButton+AFNetworking.m in Sources */,
+				4437FEF21E48542500B8A084 /* BWStatusBarOverlay.m in Sources */,
 				441179CF1C11763E0071E1C0 /* ZXCapture.m in Sources */,
 				44117AA61C1176B20071E1C0 /* Player.m in Sources */,
 				440E7F4B1E1B36D600B5277E /* NSString+Hash.m in Sources */,
