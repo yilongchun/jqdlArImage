@@ -170,6 +170,7 @@
                                                       delegate:self
                                              cancelButtonTitle:@"取消"
                                              otherButtonTitles:@"使用AR实景(近距离步行)", nil];
+    //    otherButtonTitles:@"使用AR实景(近距离步行)", nil];
     
     for (int i = 0; i < maps.count; i++) {
         [actionSheet appendButtonTitles:[maps[i] objectForKey:@"title"], nil];
@@ -238,9 +239,11 @@
     NSLog(@"clickedButtonAtIndex: %d", (int)buttonIndex);
     if (buttonIndex == 0) {//取消
         
-    }else if (buttonIndex == 1){//AR
+    }
+    else if (buttonIndex == 1){//AR
         
-    }else if (buttonIndex == 2){//苹果
+    }
+    else if (buttonIndex == 2){//苹果
         MKMapItem *currentLocation = [MKMapItem mapItemForCurrentLocation];
         //        CLLocationCoordinate2D coords = CLLocationCoordinate2DMake(39.915352,116.397105);//纬度，经度
         MKPlacemark *placemark = [[MKPlacemark alloc] initWithCoordinate:_poi.location.coordinate addressDictionary:nil];

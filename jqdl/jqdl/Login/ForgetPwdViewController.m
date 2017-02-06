@@ -45,7 +45,7 @@
     [getCodeBtn setTitle:@"获取验证码" forState:UIControlStateNormal];
     [getCodeBtn setTitleColor:RGBA(67 ,216 ,230, 1) forState:UIControlStateNormal];
     [getCodeBtn setTitleColor:RGBA(204, 204, 204, 1) forState:UIControlStateHighlighted];
-//    [getCodeBtn setTitleColor:RGBA(255, 255, 255, 0.5) forState:UIControlStateDisabled];
+    [getCodeBtn setTitleColor:RGBA(204, 204, 204, 1) forState:UIControlStateDisabled];//计时
     getCodeBtn.titleLabel.font = [UIFont systemFontOfSize:14];
     [getCodeBtn addTarget:self action:@selector(getCode) forControlEvents:UIControlEventTouchUpInside];
     UIView *rightView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 105, 40)];
