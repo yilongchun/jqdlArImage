@@ -1,0 +1,45 @@
+
+/* Class = "UILabel"; text = "建议内容："; ObjectID = "3HZ-n6-jiC"; */
+"3HZ-n6-jiC.text" = "建议内容：";
+
+/* Class = "UINavigationItem"; title = "攻略"; ObjectID = "4T1-6p-aly"; */
+"4T1-6p-aly.title" = "攻略";
+
+/* Class = "UIViewController"; title = "导览"; ObjectID = "4Tf-ZW-NIO"; */
+"4Tf-ZW-NIO.title" = "导览";
+
+/* Class = "UITabBarItem"; title = "关于"; ObjectID = "9Qm-4F-PhU"; */
+"9Qm-4F-PhU.title" = "关于";
+
+/* Class = "UITextField"; placeholder = "我们将及时联系并帮助您解决问题"; ObjectID = "DAe-8n-l4Q"; */
+"DAe-8n-l4Q.placeholder" = "我们将及时联系并帮助您解决问题";
+
+/* Class = "UITabBarItem"; title = "攻略"; ObjectID = "It2-fC-JRq"; */
+"It2-fC-JRq.title" = "攻略";
+
+/* Class = "UILabel"; text = "Title"; ObjectID = "OTe-ZM-TaT"; */
+"OTe-ZM-TaT.text" = "Title";
+
+/* Class = "UIViewController"; title = "选择景区"; ObjectID = "PiO-fm-CDq"; */
+"PiO-fm-CDq.title" = "选择景区";
+
+/* Class = "UIViewController"; title = "意见反馈"; ObjectID = "Y4s-ic-UKz"; */
+"Y4s-ic-UKz.title" = "意见反馈";
+
+/* Class = "UIViewController"; title = "景点介绍"; ObjectID = "dtJ-1L-Rsl"; */
+"dtJ-1L-Rsl.title" = "景点介绍";
+
+/* Class = "UITabBarItem"; title = "攻略"; ObjectID = "jwj-cQ-jjC"; */
+"jwj-cQ-jjC.title" = "攻略";
+
+/* Class = "UITabBarItem"; title = "关于"; ObjectID = "p6V-TY-Ta3"; */
+"p6V-TY-Ta3.title" = "关于";
+
+/* Class = "UILabel"; text = "加载中"; ObjectID = "phn-g7-yII"; */
+"phn-g7-yII.text" = "加载中";
+
+/* Class = "UITabBarItem"; title = "导览"; ObjectID = "pzU-5y-jHo"; */
+"pzU-5y-jHo.title" = "导览";
+
+/* Class = "UILabel"; text = "联系电话："; ObjectID = "q0W-fi-GtZ"; */
+"q0W-fi-GtZ.text" = "联系电话：";

@@ -209,7 +209,7 @@
     [parameters setObject:@"4e17b8ae60040835e1cf9b93ecc60edf" forKey:@"client_id"];
     [parameters setObject:@"secret.1" forKey:@"client_secret"];
     
-    NSString *url = [NSString stringWithFormat:@"%@%@",kDlHost,@"/oauth2/token"];
+    NSString *url = [NSString stringWithFormat:@"%@%@",@"https://api.qlxing.com",@"/oauth2/token"];
     [manager POST:url parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
         [self hideHud];
         [self showHintInView:self.view hint:@"登录成功"];
@@ -226,7 +226,7 @@
         NSData *data =[error.userInfo objectForKey:@"com.alamofire.serialization.response.error.data"];
         if (data) {
             NSString *result  =[[ NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-            NSDictionary *dic= [NSJSONSerialization JSONObjectWithData:[result dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions error:nil];
+            NSDictionary *dic= [NSJSONSerialization JSONObjectWithData:[result dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions error:nil];            
             NSString *message = [dic objectForKey:@"message"];
             [self showHintInView:self.view hint:NSLocalizedString(message, nil)];
             DLog(@"%@",result);

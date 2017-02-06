@@ -415,6 +415,7 @@
 		442ED7D91DB9A7D10058DD4C /* ArchitectWorld in Resources */ = {isa = PBXBuildFile; fileRef = 442ED7D81DB9A7D10058DD4C /* ArchitectWorld */; };
 		442ED7DB1DB9A9340058DD4C /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 442ED7DA1DB9A9340058DD4C /* MediaPlayer.framework */; };
 		4434AEC11E1CAA490014BE2D /* UIImage+Color.m in Sources */ = {isa = PBXBuildFile; fileRef = 4434AEC01E1CAA490014BE2D /* UIImage+Color.m */; };
+		4437FEB21E480A5F00B8A084 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4437FEB41E480A5F00B8A084 /* Localizable.strings */; };
 		443DA7CB1E08C1130014C9B8 /* MoreFunctionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 443DA7C91E08C1130014C9B8 /* MoreFunctionViewController.m */; };
 		443DA7CC1E08C1130014C9B8 /* MoreFunctionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 443DA7CA1E08C1130014C9B8 /* MoreFunctionViewController.xib */; };
 		4444EFA41E456C7200E72B41 /* UserCenterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4444EFA21E456C7200E72B41 /* UserCenterViewController.m */; };
@@ -1318,6 +1319,8 @@
 		442ED7DA1DB9A9340058DD4C /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		4434AEBF1E1CAA490014BE2D /* UIImage+Color.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Color.h"; sourceTree = "<group>"; };
 		4434AEC01E1CAA490014BE2D /* UIImage+Color.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Color.m"; sourceTree = "<group>"; };
+		4437FEB31E480A5F00B8A084 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		4437FEB51E480A6300B8A084 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		443DA7C81E08C1130014C9B8 /* MoreFunctionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MoreFunctionViewController.h; sourceTree = "<group>"; };
 		443DA7C91E08C1130014C9B8 /* MoreFunctionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MoreFunctionViewController.m; sourceTree = "<group>"; };
 		443DA7CA1E08C1130014C9B8 /* MoreFunctionViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MoreFunctionViewController.xib; sourceTree = "<group>"; };
@@ -1574,6 +1577,7 @@
 				44003CFD1BFB24ED00CB747A /* main.m */,
 				4464FCE21BFEB56C0015320B /* jqdl.pch */,
 				44DD4CE71C02A367003903A4 /* ACMacros.h */,
+				4437FEB41E480A5F00B8A084 /* Localizable.strings */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -3380,6 +3384,7 @@
 			knownRegions = (
 				en,
 				Base,
+				"zh-Hans",
 			);
 			mainGroup = 44003CF01BFB24ED00CB747A;
 			productRefGroup = 44003CFA1BFB24ED00CB747A /* Products */;
@@ -3413,6 +3418,7 @@
 				441179961C11763E0071E1C0 /* CodeScan.bundle in Resources */,
 				442ED7D71DB9A78F0058DD4C /* DetailViewController.xib in Resources */,
 				44E972BF1C2152010014E301 /* ScanResultWebViewController.xib in Resources */,
+				4437FEB21E480A5F00B8A084 /* Localizable.strings in Resources */,
 				44117A8D1C11763E0071E1C0 /* MJRefresh.bundle in Resources */,
 				440E7F961E1B49EE00B5277E /* IQKeyboardManager.bundle in Resources */,
 				44117A7E1C11763E0071E1C0 /* ScanResultViewController.xib in Resources */,
@@ -3908,6 +3914,15 @@
 				44003D061BFB24ED00CB747A /* Base */,
 			);
 			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		4437FEB41E480A5F00B8A084 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4437FEB31E480A5F00B8A084 /* en */,
+				4437FEB51E480A6300B8A084 /* zh-Hans */,
+			);
+			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

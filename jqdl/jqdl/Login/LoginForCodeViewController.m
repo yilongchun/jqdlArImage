@@ -146,7 +146,7 @@
     [parameters setObject:@"secret.1" forKey:@"client_secret"];
     [parameters setObject:[NSNumber numberWithBool:YES] forKey:@"use_code"];
     
-    NSString *url = [NSString stringWithFormat:@"%@%@",kDlHost,@"/oauth2/token"];
+    NSString *url = [NSString stringWithFormat:@"%@%@",@"https://api.qlxing.com",@"/oauth2/token"];
     
     [manager POST:url parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
         [self hideHud];
