@@ -136,7 +136,7 @@
     
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
-    [parameters setObject:_account.text forKey:@"identity"];
+    [parameters setObject:_account.text forKey:@"username"];
 //    [parameters setObject:_password.text forKey:@"code"];
     [parameters setObject:_password.text forKey:@"password"];
     

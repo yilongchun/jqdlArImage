@@ -9,6 +9,7 @@
 #import "UserCenterViewController.h"
 #import "UIViewController+JZExtension.h"
 #import "UIImageView+AFNetworking.h"
+#import "SettingViewController.h"
 
 @interface UserCenterViewController ()
 
@@ -77,6 +78,11 @@
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
 
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -126,7 +132,15 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    
+    if (indexPath.row == 1) {
+        UIBarButtonItem *backItem=[[UIBarButtonItem alloc] init];
+        UIImage *backImage = [UIImage imageNamed:@"navi_back2"];
+        [backItem setBackButtonBackgroundImage:[backImage resizableImageWithCapInsets:UIEdgeInsetsMake(0, backImage.size.width, 0, 0)] forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];//更改背景图片
+        self.navigationItem.backBarButtonItem = backItem;
+        
+        SettingViewController *vc = [[SettingViewController alloc] init];
+        [self.navigationController pushViewController:vc animated:YES];
+    }
 }
 
 //-(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath{

@@ -713,8 +713,8 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     if (userInfo != nil) {
         imageView.image = [UIImage imageNamed:@"timg.jpeg"];
         imageView.userInteractionEnabled = YES;
-        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(loginOut)];
-//        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toUserCenter)];
+//        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(loginOut)];
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toUserCenter)];
         [imageView addGestureRecognizer:tap];
     }else{
         imageView.userInteractionEnabled = YES;
