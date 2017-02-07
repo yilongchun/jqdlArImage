@@ -41,12 +41,9 @@ typedef NS_ENUM(NSInteger, ResultCodeType){
 
 
 /**
- *  用户相关
+ *  当前用户相关
  */
-//当前用户详情
-#define API_PRIVATE_USERS_ME @"/private/users/me"
-//修改用户信息
-#define API_PRIVATE_USERS_PROFILE @"/private/users/profile"
+#define API_USERS_CURRENT @"/users/current"
 
 /**
  *  auth

@@ -39,6 +39,7 @@
 #import "NSObject+Blocks.h"
 #import "LBXScanNetAnimation.h"
 #import "UserCenterViewController.h"
+#import "UIImageView+AFNetworking.h"
 
 /* this is used to create random positions around you */
 #define WT_RANDOM(startValue, endValue) ((((float) (arc4random() % ((unsigned)RAND_MAX + 1)) / RAND_MAX) * (endValue - startValue)) + startValue)
@@ -711,7 +712,13 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     NSDictionary *userInfo = [ud objectForKey:LOGINED_USER];
     UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithCustomView:imageView];
     if (userInfo != nil) {
-        imageView.image = [UIImage imageNamed:@"timg.jpeg"];
+        NSString *avatar = [userInfo objectForKey:@"avatar"];
+        if (![avatar isEqualToString:@""]) {
+            [imageView setImageWithURL:[NSURL URLWithString:avatar]];
+        }else{
+            imageView.image = [UIImage imageNamed:@"member_no.gif"];
+        }
+//        imageView.image = [UIImage imageNamed:@"timg.jpeg"];
         imageView.userInteractionEnabled = YES;
 //        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(loginOut)];
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toUserCenter)];

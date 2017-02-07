@@ -15,7 +15,7 @@
 
 @interface UserInfoViewController (){
     UIImageView *headImageView;
-    NSDictionary *userInfo;
+    NSMutableDictionary *userInfo;
     
     int type;
     UIImage *avatar;
@@ -47,15 +47,16 @@
     
     headImageView = [[UIImageView alloc] init];
     [headImageView setFrame:CGRectMake(0, 0, 60, 60)];
-    //设置头像显示形状
-    UIRectCorner corners = UIRectCornerTopLeft | UIRectCornerTopRight | UIRectCornerBottomLeft;
-    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:headImageView.bounds
-                                                   byRoundingCorners:corners
-                                                         cornerRadii:CGSizeMake(headImageView.frame.size.width/2, headImageView.frame.size.width/2)];
-    CAShapeLayer *maskLayer = [CAShapeLayer layer];
-    maskLayer.frame = headImageView.bounds;
-    maskLayer.path = maskPath.CGPath;
-    headImageView.layer.mask = maskLayer;
+    ViewBorderRadius(headImageView, 30, 1, [UIColor whiteColor]);
+//    //设置头像显示形状
+//    UIRectCorner corners = UIRectCornerTopLeft | UIRectCornerTopRight | UIRectCornerBottomLeft;
+//    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:headImageView.bounds
+//                                                   byRoundingCorners:corners
+//                                                         cornerRadii:CGSizeMake(headImageView.frame.size.width/2, headImageView.frame.size.width/2)];
+//    CAShapeLayer *maskLayer = [CAShapeLayer layer];
+//    maskLayer.frame = headImageView.bounds;
+//    maskLayer.path = maskPath.CGPath;
+//    headImageView.layer.mask = maskLayer;
     
     [self loadData];
 }
@@ -63,7 +64,7 @@
 //加载个人信息
 -(void)loadData{
     NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
-    userInfo = [ud objectForKey:USER_INFO];
+    userInfo = [NSMutableDictionary dictionaryWithDictionary:[ud objectForKey:LOGINED_USER]];
     
     [_myTableView reloadData];
 }
@@ -80,9 +81,9 @@
     if (![cityTF.text isEqualToString:@""]) {
         [updateUserInfoDic setObject:cityTF.text forKey:@"city"];//城市
     }
-    if (![taglineTF.text isEqualToString:@""]) {
-        [updateUserInfoDic setObject:taglineTF.text forKey:@"tagline"];//个性签名
-    }
+//    if (![taglineTF.text isEqualToString:@""]) {
+//        [updateUserInfoDic setObject:taglineTF.text forKey:@"tagline"];//个性签名
+//    }
     if ([sexTF.text isEqualToString:@"男"]) {
         [updateUserInfoDic setObject:@"male" forKey:@"sex"];//性别
     }else if ([sexTF.text isEqualToString:@"女"]){
@@ -164,7 +165,7 @@
     
     NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
     NSDictionary *loginedUser = [ud objectForKey:LOGINED_USER];
-    NSString *value = [NSString stringWithFormat:@"Bearer %@",[[loginedUser objectForKey:@"data"] objectForKey:@"access_token"]];
+    NSString *value = [NSString stringWithFormat:@"Bearer %@",[loginedUser objectForKey:@"access_token"]];
     [manager.requestSerializer setValue:value forHTTPHeaderField:@"Authorization"];
     
     [manager GET:url parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
@@ -208,7 +209,7 @@
     
     NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
     NSDictionary *loginedUser = [ud objectForKey:LOGINED_USER];
-    [parameters setValue:[NSString stringWithFormat:@"%@",[[loginedUser objectForKey:@"data"] objectForKey:@"id"]] forKey:@"x:userId"];
+    [parameters setValue:[NSString stringWithFormat:@"%@",[loginedUser objectForKey:@"id"]] forKey:@"x:userId"];
     
     
     
@@ -421,21 +422,26 @@
     
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     
-    NSString *url = [NSString stringWithFormat:@"%@%@",kDlHost,API_PRIVATE_USERS_PROFILE];
+    NSString *url = [NSString stringWithFormat:@"%@%@",kDlHost,API_USERS_CURRENT];
     
     NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
     NSDictionary *loginedUser = [ud objectForKey:LOGINED_USER];
-    NSString *value = [NSString stringWithFormat:@"Bearer %@",[[loginedUser objectForKey:@"data"] objectForKey:@"access_token"]];
+    NSString *value = [NSString stringWithFormat:@"Bearer %@",[loginedUser objectForKey:@"access_token"]];
     [manager.requestSerializer setValue:value forHTTPHeaderField:@"Authorization"];
     
     [manager PUT:url parameters:parameters success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         
         DLog(@"%@",responseObject);
-        userInfo = responseObject;
+//        userInfo = responseObject;
         
         NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
-        [ud setObject:userInfo forKey:USER_INFO];
-//        [[NSNotificationCenter defaultCenter] postNotificationName:KNOTIFICATION_LOGINED_REFRESH_USERCENTER object:nil];
+        [userInfo setValuesForKeysWithDictionary:parameters];
+        [ud setObject:userInfo forKey:LOGINED_USER];
+        
+        DLog(@"%@",userInfo);
+//        [ud setObject:userInfo forKey:USER_INFO];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"loadUserCenterInfo" object:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"setLeftItem" object:nil];
         
         if (flag) {
             [self hideHud];
@@ -446,7 +452,7 @@
 //            [self hideHud];
             
             
-            
+            [self loadData];
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 UIImage *image = [[UIImage imageNamed:@"Checkmark"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];

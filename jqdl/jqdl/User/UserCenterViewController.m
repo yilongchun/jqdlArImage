@@ -12,7 +12,11 @@
 #import "SettingViewController.h"
 #import "UserInfoViewController.h"
 
-@interface UserCenterViewController ()
+@interface UserCenterViewController (){
+    UILabel *nameLabel;
+    UIImageView *headBackImageView;
+    UIImageView *headImageView;
+}
 
 @end
 
@@ -26,6 +30,8 @@
     self.jz_navigationBarBackgroundHidden = YES;
     self.automaticallyAdjustsScrollViewInsets = false;
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadUserInfo) name:@"loadUserCenterInfo" object:nil];
+    
     UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"navi_back"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] style:UIBarButtonItemStyleDone target:self action:@selector(dissMissView)];
     
     self.navigationItem.leftBarButtonItem = leftItem;
@@ -37,7 +43,7 @@
     
     
     UIView *tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, Main_Screen_Width, 272)];
-    UIImageView *headBackImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, Main_Screen_Width, 272)];
+    headBackImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, Main_Screen_Width, 272)];
     [tableHeaderView addSubview:headBackImageView];
     
     
@@ -46,22 +52,24 @@
     [effectView setEffect:effect];
     [tableHeaderView addSubview:effectView];
     
-    UIImageView *headImageView = [[UIImageView alloc] initWithFrame:CGRectMake((Main_Screen_Width - 80)/2, 67, 80, 80)];
+    headImageView = [[UIImageView alloc] initWithFrame:CGRectMake((Main_Screen_Width - 80)/2, 67, 80, 80)];
     ViewBorderRadius(headImageView, 40, 1, [UIColor whiteColor]);
     [effectView.contentView addSubview:headImageView];
     
-    UILabel *nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(headImageView.frame) + 14, Main_Screen_Width, 22)];
+    
+    
+    nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(headImageView.frame) + 14, Main_Screen_Width, 22)];
     nameLabel.textAlignment = NSTextAlignmentCenter;
     nameLabel.textColor =[UIColor whiteColor];
     nameLabel.font = BOLDSYSTEMFONT(16);
-    nameLabel.text = @"LightTrip";
+    
     [effectView.contentView addSubview:nameLabel];
     
 //    [headBackImageView setImageWithURL:[NSURL URLWithString:@""]];
 //    [headImageView setImageWithURL:[NSURL URLWithString:@""]];
     
-    [headBackImageView setImage:[UIImage imageNamed:@"timg.jpeg"]];
-    [headImageView setImage:[UIImage imageNamed:@"timg.jpeg"]];
+    
+    
     headImageView.userInteractionEnabled = YES;
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toUserInfo)];
     [headImageView addGestureRecognizer:tap];
@@ -76,7 +84,28 @@
     tipsLabel.textAlignment = NSTextAlignmentCenter;
     [self.view addSubview:tipsLabel];
     
+    [self loadUserInfo];
 }
+
+-(void)loadUserInfo{
+    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+    NSDictionary *userInfo = [ud objectForKey:LOGINED_USER];
+    
+    NSString *name = [userInfo objectForKey:@"nickname"];
+    nameLabel.text = name;
+    
+    if (userInfo != nil) {
+        NSString *avatar = [userInfo objectForKey:@"avatar"];
+        if (![avatar isEqualToString:@""]) {
+            [headBackImageView setImageWithURL:[NSURL URLWithString:avatar]];
+            [headImageView setImageWithURL:[NSURL URLWithString:avatar]];
+        }else{
+            headBackImageView.image = [UIImage imageNamed:@"member_no.gif"];
+            headImageView.image = [UIImage imageNamed:@"member_no.gif"];
+        }
+    }
+}
+
 
 //个人信息
 -(void)toUserInfo{

@@ -215,8 +215,33 @@
         [self showHintInView:self.view hint:@"登录成功"];
         NSDictionary *dic= [NSDictionary dictionaryWithDictionary:responseObject];
         NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
-        [ud setObject:dic forKey:LOGINED_USER];
-        DLog(@"%@",dic);
+        [ud setObject:[dic objectForKey:@"data"] forKey:LOGINED_USER];
+//        data =     {
+//            "access_token" = 942da2e8840c8e2ef3558d66dad65a57826d2349;
+//            "created_at" = "2016-12-22T19:32:36.690Z";
+//            "expires_in" = 3600;
+//            id = 852240d5d7dcf8b3e866e3dbae73dc0f;
+//            "last_login_time" = "2017-02-06T15:44:08.166Z";
+//            name = "\U5c0f\U5f20";
+//            phone = 18671701215;
+//            "refresh_token" = ea8271c2618aeed1c25868cecec7bfee96edc186;
+//            roles =         (
+//                             judge
+//                             );
+//            stores =         (
+//                              {
+//                                  "domain_name" = snjly;
+//                                  id = 66c005a1dde2152bb630142a0c797844;
+//                                  key = 11887157;
+//                                  name = "\U795e\U519c\U67b6";
+//                                  rev = "_UfX145C---";
+//                              }
+//                              );
+//            "token_type" = bearer;
+//            "updated_at" = "2017-02-06T15:44:08.174Z";
+//            username = user02;
+//        };
+        DLog(@"%@",[dic objectForKey:@"data"]);
         [self.navigationController dismissViewControllerAnimated:YES completion:^{
             [[NSNotificationCenter defaultCenter] postNotificationName:@"setLeftItem" object:nil];
         }];
