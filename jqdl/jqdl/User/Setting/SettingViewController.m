@@ -10,6 +10,8 @@
 #import "JZNavigationExtension.h"
 #import "NoticeSettingViewController.h"
 #import "AboutViewController.h"
+#import "AccountViewController.h"
+#import "FeedbackViewController.h"
 
 @interface SettingViewController ()
 
@@ -189,7 +191,12 @@
     UIImage *backImage = [UIImage imageNamed:@"navi_back2"];
     [backItem setBackButtonBackgroundImage:[backImage resizableImageWithCapInsets:UIEdgeInsetsMake(0, backImage.size.width, 0, 0)] forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];//更改背景图片
     self.navigationItem.backBarButtonItem = backItem;
-    
+    if (indexPath.section == 0) {
+        if (indexPath.row == 0) {
+            AccountViewController *vc = [[AccountViewController alloc] init];
+            [self.navigationController pushViewController:vc animated:YES];
+        }
+    }
     if (indexPath.section == 0) {
         if (indexPath.row == 1) {
             NoticeSettingViewController *vc = [[NoticeSettingViewController alloc] init];
@@ -199,6 +206,10 @@
     if (indexPath.section == 1) {
         if (indexPath.row == 0) {
             [self clearCache];
+        }
+        if (indexPath.row == 1) {
+            FeedbackViewController *vc = [[FeedbackViewController alloc] init];
+            [self.navigationController pushViewController:vc animated:YES];
         }
     }
     if (indexPath.section == 2) {

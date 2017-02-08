@@ -60,7 +60,7 @@
     _rightsTwoLabel = [[UILabel alloc]initWithFrame:CGRectMake(16, 180, Main_Screen_Width-32, 21)];
     _rightsTwoLabel.font = [UIFont systemFontOfSize:14.f];
     _rightsTwoLabel.textColor = RGB(102, 102, 102);
-    _rightsTwoLabel.text = @"        氢旅行，一款热爱自助旅行的人不可错过的旅游服务平台。氢旅行，一款热爱自助旅行的人不可错过的旅游服务平台。氢旅行，一款热爱自助旅行的人不可错过的旅游服务平台。";
+    _rightsTwoLabel.text = @"              氢旅行，一款专为游客打造的全新视角体验的探索式景区AR导览工具。";
     _rightsTwoLabel.numberOfLines = 0;
     [tableHeaderView addSubview:_rightsTwoLabel];
     

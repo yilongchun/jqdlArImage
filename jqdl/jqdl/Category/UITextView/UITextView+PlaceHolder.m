@@ -18,7 +18,7 @@ static const char *phTextView = "placeHolderTextView";
 - (void)addPlaceHolder:(NSString *)placeHolder {
     if (![self placeHolderTextView]) {
         self.delegate = self;
-        UITextView *textView = [[UITextView alloc] initWithFrame:self.bounds];
+        UITextView *textView = [[UITextView alloc] initWithFrame:CGRectMake(10, 0, self.bounds.size.width-10, self.bounds.size.height-5)];
         textView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         textView.font = self.font;
         textView.backgroundColor = [UIColor clearColor];

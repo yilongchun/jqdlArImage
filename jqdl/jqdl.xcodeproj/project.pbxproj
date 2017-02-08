@@ -373,7 +373,6 @@
 		44117ABE1C1177AA0071E1C0 /* FeedBack.m in Sources */ = {isa = PBXBuildFile; fileRef = 44117ABD1C1177AA0071E1C0 /* FeedBack.m */; };
 		44117AC31C11789B0071E1C0 /* ChooseJqViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44117AC01C11789B0071E1C0 /* ChooseJqViewController.m */; };
 		44117AC61C1184CF0071E1C0 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 44117AC51C1184CF0071E1C0 /* libxml2.tbd */; };
-		44166BFD1CC0EB36005628F5 /* UITextView+PlaceHolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 44166BFC1CC0EB36005628F5 /* UITextView+PlaceHolder.m */; };
 		44217BB51E2EF94B008699C1 /* StoreViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44217BB31E2EF94B008699C1 /* StoreViewController.m */; };
 		44217BB61E2EF94B008699C1 /* StoreViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44217BB41E2EF94B008699C1 /* StoreViewController.xib */; };
 		4424D63A1E27254800245B43 /* LCActionSheet.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4424D6331E27254800245B43 /* LCActionSheet.bundle */; };
@@ -439,6 +438,11 @@
 		4437FEFC1E48542500B8A084 /* status-bar-progress@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4437FEF11E48542500B8A084 /* status-bar-progress@3x.png */; };
 		443DA7CB1E08C1130014C9B8 /* MoreFunctionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 443DA7C91E08C1130014C9B8 /* MoreFunctionViewController.m */; };
 		443DA7CC1E08C1130014C9B8 /* MoreFunctionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 443DA7CA1E08C1130014C9B8 /* MoreFunctionViewController.xib */; };
+		44435E181E4ACE5F00F9C84A /* AccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44435E161E4ACE5F00F9C84A /* AccountViewController.m */; };
+		44435E191E4ACE5F00F9C84A /* AccountViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44435E171E4ACE5F00F9C84A /* AccountViewController.xib */; };
+		44435E1E1E4AFC1E00F9C84A /* FeedbackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44435E1C1E4AFC1E00F9C84A /* FeedbackViewController.m */; };
+		44435E1F1E4AFC1E00F9C84A /* FeedbackViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44435E1D1E4AFC1E00F9C84A /* FeedbackViewController.xib */; };
+		44435E231E4B032C00F9C84A /* UITextView+PlaceHolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 44435E221E4B032C00F9C84A /* UITextView+PlaceHolder.m */; };
 		4444EFA41E456C7200E72B41 /* UserCenterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4444EFA21E456C7200E72B41 /* UserCenterViewController.m */; };
 		4444EFA51E456C7200E72B41 /* UserCenterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4444EFA31E456C7200E72B41 /* UserCenterViewController.xib */; };
 		444D77C11E037A180040F0A7 /* _JZNavigationInteractiveTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 444D77B41E037A180040F0A7 /* _JZNavigationInteractiveTransition.m */; };
@@ -1266,8 +1270,6 @@
 		44117ABF1C11789B0071E1C0 /* ChooseJqViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChooseJqViewController.h; sourceTree = "<group>"; };
 		44117AC01C11789B0071E1C0 /* ChooseJqViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChooseJqViewController.m; sourceTree = "<group>"; };
 		44117AC51C1184CF0071E1C0 /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
-		44166BFB1CC0EB36005628F5 /* UITextView+PlaceHolder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITextView+PlaceHolder.h"; sourceTree = "<group>"; };
-		44166BFC1CC0EB36005628F5 /* UITextView+PlaceHolder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITextView+PlaceHolder.m"; sourceTree = "<group>"; };
 		44217BB21E2EF94B008699C1 /* StoreViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StoreViewController.h; sourceTree = "<group>"; };
 		44217BB31E2EF94B008699C1 /* StoreViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StoreViewController.m; sourceTree = "<group>"; };
 		44217BB41E2EF94B008699C1 /* StoreViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = StoreViewController.xib; sourceTree = "<group>"; };
@@ -1371,6 +1373,14 @@
 		443DA7C81E08C1130014C9B8 /* MoreFunctionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MoreFunctionViewController.h; sourceTree = "<group>"; };
 		443DA7C91E08C1130014C9B8 /* MoreFunctionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MoreFunctionViewController.m; sourceTree = "<group>"; };
 		443DA7CA1E08C1130014C9B8 /* MoreFunctionViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MoreFunctionViewController.xib; sourceTree = "<group>"; };
+		44435E151E4ACE5F00F9C84A /* AccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountViewController.h; sourceTree = "<group>"; };
+		44435E161E4ACE5F00F9C84A /* AccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountViewController.m; sourceTree = "<group>"; };
+		44435E171E4ACE5F00F9C84A /* AccountViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AccountViewController.xib; sourceTree = "<group>"; };
+		44435E1B1E4AFC1E00F9C84A /* FeedbackViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeedbackViewController.h; sourceTree = "<group>"; };
+		44435E1C1E4AFC1E00F9C84A /* FeedbackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeedbackViewController.m; sourceTree = "<group>"; };
+		44435E1D1E4AFC1E00F9C84A /* FeedbackViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FeedbackViewController.xib; sourceTree = "<group>"; };
+		44435E211E4B032C00F9C84A /* UITextView+PlaceHolder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITextView+PlaceHolder.h"; sourceTree = "<group>"; };
+		44435E221E4B032C00F9C84A /* UITextView+PlaceHolder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITextView+PlaceHolder.m"; sourceTree = "<group>"; };
 		4444EFA11E456C7200E72B41 /* UserCenterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserCenterViewController.h; sourceTree = "<group>"; };
 		4444EFA21E456C7200E72B41 /* UserCenterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserCenterViewController.m; sourceTree = "<group>"; };
 		4444EFA31E456C7200E72B41 /* UserCenterViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserCenterViewController.xib; sourceTree = "<group>"; };
@@ -3017,12 +3027,11 @@
 		44117A9D1C11768C0071E1C0 /* Category */ = {
 			isa = PBXGroup;
 			children = (
+				44435E201E4B032C00F9C84A /* UITextView */,
 				440E7F541E1B371E00B5277E /* UIViewController */,
 				440E7ED91E1B36D600B5277E /* Foundation */,
 				44621BAC1E1246FE00EB3AFC /* UILabel */,
 				44621B911E12029400EB3AFC /* UIKit+AFNetworking */,
-				44166BFB1CC0EB36005628F5 /* UITextView+PlaceHolder.h */,
-				44166BFC1CC0EB36005628F5 /* UITextView+PlaceHolder.m */,
 				4434AEBF1E1CAA490014BE2D /* UIImage+Color.h */,
 				4434AEC01E1CAA490014BE2D /* UIImage+Color.m */,
 			);
@@ -3119,6 +3128,8 @@
 		4437FEC81E48212F00B8A084 /* Setting(设置) */ = {
 			isa = PBXGroup;
 			children = (
+				44435E1A1E4AFB8D00F9C84A /* Feedback */,
+				44435E141E4ACE5F00F9C84A /* AccountInfo */,
 				4437FEC91E48212F00B8A084 /* About */,
 				4437FECD1E48212F00B8A084 /* NoticeSetting */,
 				4437FED11E48212F00B8A084 /* SettingViewController.h */,
@@ -3149,7 +3160,7 @@
 			path = NoticeSetting;
 			sourceTree = "<group>";
 		};
-		4437FEDA1E48535A00B8A084 /* UserInfo */ = {
+		4437FEDA1E48535A00B8A084 /* UserInfo(用户信息) */ = {
 			isa = PBXGroup;
 			children = (
 				4437FEDB1E48535A00B8A084 /* UserInfoTableViewCell.h */,
@@ -3159,6 +3170,7 @@
 				4437FEDF1E48535A00B8A084 /* UserInfoViewController.m */,
 				4437FEE01E48535A00B8A084 /* UserInfoViewController.xib */,
 			);
+			name = "UserInfo(用户信息)";
 			path = UserInfo;
 			sourceTree = "<group>";
 		};
@@ -3181,13 +3193,42 @@
 			path = BWStatusBarOverlay;
 			sourceTree = "<group>";
 		};
+		44435E141E4ACE5F00F9C84A /* AccountInfo */ = {
+			isa = PBXGroup;
+			children = (
+				44435E151E4ACE5F00F9C84A /* AccountViewController.h */,
+				44435E161E4ACE5F00F9C84A /* AccountViewController.m */,
+				44435E171E4ACE5F00F9C84A /* AccountViewController.xib */,
+			);
+			path = AccountInfo;
+			sourceTree = "<group>";
+		};
+		44435E1A1E4AFB8D00F9C84A /* Feedback */ = {
+			isa = PBXGroup;
+			children = (
+				44435E1B1E4AFC1E00F9C84A /* FeedbackViewController.h */,
+				44435E1C1E4AFC1E00F9C84A /* FeedbackViewController.m */,
+				44435E1D1E4AFC1E00F9C84A /* FeedbackViewController.xib */,
+			);
+			path = Feedback;
+			sourceTree = "<group>";
+		};
+		44435E201E4B032C00F9C84A /* UITextView */ = {
+			isa = PBXGroup;
+			children = (
+				44435E211E4B032C00F9C84A /* UITextView+PlaceHolder.h */,
+				44435E221E4B032C00F9C84A /* UITextView+PlaceHolder.m */,
+			);
+			path = UITextView;
+			sourceTree = "<group>";
+		};
 		4444EFA01E456C5600E72B41 /* User(个人中心) */ = {
 			isa = PBXGroup;
 			children = (
 				4444EFA11E456C7200E72B41 /* UserCenterViewController.h */,
 				4444EFA21E456C7200E72B41 /* UserCenterViewController.m */,
 				4444EFA31E456C7200E72B41 /* UserCenterViewController.xib */,
-				4437FEDA1E48535A00B8A084 /* UserInfo */,
+				4437FEDA1E48535A00B8A084 /* UserInfo(用户信息) */,
 				4437FEC81E48212F00B8A084 /* Setting(设置) */,
 			);
 			name = "User(个人中心)";
@@ -3558,8 +3599,10 @@
 				445C4A7B1E1DF3B800A5B375 /* timg.jpeg in Resources */,
 				4437FEFA1E48542500B8A084 /* status-bar-progress.png in Resources */,
 				440E7ED41E1B367C00B5277E /* LoginForCodeViewController.xib in Resources */,
+				44435E1F1E4AFC1E00F9C84A /* FeedbackViewController.xib in Resources */,
 				44988C1A1C04575400D5C59C /* btnCheck.png in Resources */,
 				4437FEF41E48542500B8A084 /* status-bar-pattern-black.png in Resources */,
+				44435E191E4ACE5F00F9C84A /* AccountViewController.xib in Resources */,
 				443DA7CC1E08C1130014C9B8 /* MoreFunctionViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3592,6 +3635,7 @@
 				44117A331C11763E0071E1C0 /* ZXEAN13Reader.m in Sources */,
 				4437FEE31E48535A00B8A084 /* UserInfoViewController.m in Sources */,
 				44EE4BFB1C053FC200031251 /* Util.m in Sources */,
+				44435E231E4B032C00F9C84A /* UITextView+PlaceHolder.m in Sources */,
 				440E7F381E1B36D600B5277E /* NSDateFormatter+Make.m in Sources */,
 				441179E61C11763E0071E1C0 /* ZXPerspectiveTransform.m in Sources */,
 				44117A451C11763E0071E1C0 /* ZXUPCEReader.m in Sources */,
@@ -3611,6 +3655,7 @@
 				44117A991C1176610071E1C0 /* Constants.m in Sources */,
 				44621B8D1E1200E700EB3AFC /* AFURLConnectionOperation.m in Sources */,
 				4411798A1C11763E0071E1C0 /* FSXMLHttpRequest.m in Sources */,
+				44435E181E4ACE5F00F9C84A /* AccountViewController.m in Sources */,
 				440E7F8A1E1B49EE00B5277E /* IQUITextFieldView+Additions.m in Sources */,
 				44117A341C11763E0071E1C0 /* ZXEAN13Writer.m in Sources */,
 				44117A831C11763E0071E1C0 /* MJRefreshHeader.m in Sources */,
@@ -3745,6 +3790,7 @@
 				44117A261C11763E0071E1C0 /* ZXAbstractRSSReader.m in Sources */,
 				44117A2E1C11763E0071E1C0 /* ZXCode128Reader.m in Sources */,
 				444D77C41E037A180040F0A7 /* UINavigationBar+JZExtension.m in Sources */,
+				44435E1E1E4AFC1E00F9C84A /* FeedbackViewController.m in Sources */,
 				44117A401C11763E0071E1C0 /* ZXUPCEANExtension2Support.m in Sources */,
 				44117A6A1C11763E0071E1C0 /* ZXQRCodeAlignmentPatternFinder.m in Sources */,
 				441179881C11763E0071E1C0 /* FSParseRssPodcastFeedRequest.m in Sources */,
@@ -3852,7 +3898,6 @@
 				4411799D1C11763E0071E1C0 /* LBXScanResult.m in Sources */,
 				4411798D1C11763E0071E1C0 /* JSONModelArray.m in Sources */,
 				440E7F4D1E1B36D600B5277E /* NSString+RemoveEmoji.m in Sources */,
-				44166BFD1CC0EB36005628F5 /* UITextView+PlaceHolder.m in Sources */,
 				441179931C11763E0071E1C0 /* JSONModel+networking.m in Sources */,
 				44217BB51E2EF94B008699C1 /* StoreViewController.m in Sources */,
 				441179FE1C11763E0071E1C0 /* ZXDataMatrixDefaultPlacement.m in Sources */,

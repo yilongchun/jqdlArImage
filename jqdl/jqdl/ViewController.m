@@ -1640,37 +1640,40 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
         else if ( [[URL absoluteString] hasPrefix:@"architectsdk://tracker"])//识别到结果 跳转识别结果界面
         {
             
-            if (!trackerFlag) {
-                trackerFlag = YES;
-                
-//                [self showHintInView:self.view hint:@"识别成功"];
-                
-                UILabel *tipsLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, CGRectGetMinY(bottomBtn.frame) - 20 - 20, Main_Screen_Width, 20)];
-                tipsLabel.textAlignment = NSTextAlignmentCenter;
-                tipsLabel.font = SYSTEMFONT(12);
-                tipsLabel.textColor = [UIColor whiteColor];
-                tipsLabel.text = @"识别成功";
-                
-                tipsLabel.shadowColor = [UIColor blackColor];
-//                tipsLabel.shadowOffset =
-                [self.view addSubview:tipsLabel];
-                
-                
-                UIBarButtonItem *backItem=[[UIBarButtonItem alloc] init];
-                UIImage *backImage = [UIImage imageNamed:@"navi_back2"];
-                [backItem setBackButtonBackgroundImage:[backImage resizableImageWithCapInsets:UIEdgeInsetsMake(0, backImage.size.width, 0, 0)] forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];//更改背景图片
-                self.navigationItem.backBarButtonItem = backItem;
-                
-                [self performBlock:^{
-                    [tipsLabel removeFromSuperview];
-                    
-                    TrackerResultViewController *vc = [[TrackerResultViewController alloc] init];
-                    [self.navigationController pushViewController:vc animated:YES];
-                    DLog(@"%@",parameters);
-                    
-                    trackerFlag = NO;
-                } afterDelay:1.5];
-            }
+            
+            DLog(@"识别成功");
+            
+//            if (!trackerFlag) {
+//                trackerFlag = YES;
+//                
+////                [self showHintInView:self.view hint:@"识别成功"];
+//                
+//                UILabel *tipsLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, CGRectGetMinY(bottomBtn.frame) - 20 - 20, Main_Screen_Width, 20)];
+//                tipsLabel.textAlignment = NSTextAlignmentCenter;
+//                tipsLabel.font = SYSTEMFONT(12);
+//                tipsLabel.textColor = [UIColor whiteColor];
+//                tipsLabel.text = @"识别成功";
+//                
+//                tipsLabel.shadowColor = [UIColor blackColor];
+////                tipsLabel.shadowOffset =
+//                [self.view addSubview:tipsLabel];
+//                
+//                
+//                UIBarButtonItem *backItem=[[UIBarButtonItem alloc] init];
+//                UIImage *backImage = [UIImage imageNamed:@"navi_back2"];
+//                [backItem setBackButtonBackgroundImage:[backImage resizableImageWithCapInsets:UIEdgeInsetsMake(0, backImage.size.width, 0, 0)] forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];//更改背景图片
+//                self.navigationItem.backBarButtonItem = backItem;
+//                
+//                [self performBlock:^{
+//                    [tipsLabel removeFromSuperview];
+//                    
+//                    TrackerResultViewController *vc = [[TrackerResultViewController alloc] init];
+//                    [self.navigationController pushViewController:vc animated:YES];
+//                    DLog(@"%@",parameters);
+//                    
+//                    trackerFlag = NO;
+//                } afterDelay:1.5];
+//            }
         }
     }
 }
