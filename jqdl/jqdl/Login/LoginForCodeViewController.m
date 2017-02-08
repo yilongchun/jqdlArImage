@@ -153,8 +153,8 @@
         [self showHintInView:self.view hint:@"登录成功"];
         NSDictionary *dic= [NSDictionary dictionaryWithDictionary:responseObject];
         NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
-        [ud setObject:dic forKey:LOGINED_USER];
-        DLog(@"%@",dic);
+        [ud setObject:[dic objectForKey:@"data"] forKey:LOGINED_USER];
+        DLog(@"%@",[dic objectForKey:@"data"]);
         [self.navigationController dismissViewControllerAnimated:YES completion:^{
             [[NSNotificationCenter defaultCenter] postNotificationName:@"setLeftItem" object:nil];
         }];

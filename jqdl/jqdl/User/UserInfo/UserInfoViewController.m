@@ -306,11 +306,7 @@
 //        dispatch_sync(dispatch_get_main_queue(), ^{
 //            [[BWStatusBarOverlay shared] setProgress:progress animated:YES];
 //        });
-        
-        
-        
-        
-        
+
         dispatch_async(dispatch_get_main_queue(), ^{
             hud.progress = progress;
         });
@@ -320,94 +316,6 @@
     }];  
     
     [operation start];
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-//    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
-//    manager.requestSerializer = [AFHTTPRequestSerializer serializer];
-//    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
-//    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json",@"text/json", @"text/plain", @"text/html", nil];
-//    
-//    
-//    [manager POST:urlString parameters:parameters constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
-//        [formData appendPartWithFileData:data name:@"file" fileName:@"1.png" mimeType:@"image/png"];
-//    } progress:^(NSProgress * _Nonnull uploadProgress) {
-//        dispatch_sync(dispatch_get_main_queue(), ^{
-//            [[BWStatusBarOverlay shared] setProgress:uploadProgress.fractionCompleted animated:YES];
-//        });
-//    } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-//        NSLog(@"JSON: %@", responseObject);
-//        DLog(@"上传图片 第二步 带上 token 上传文件 成功");
-//        
-//        [BWStatusBarOverlay setMessage:@"上传成功" animated:NO];
-//        [BWStatusBarOverlay setProgress:1.0 animated:YES];
-//        [BWStatusBarOverlay dismissAnimated:YES duration:1.0];
-//        
-//        NSString *result  =[[ NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
-//        
-//        DLog(@"%@",result);
-//        
-////        {
-////            id = "7f1bc291-0ad4-4276-b2b8-a1b033f0a896";
-////            type = image;
-////            url = "http://o85ghilm8.bkt.clouddn.com//7f1bc291-0ad4-4276-b2b8-a1b033f0a896";
-////            userId = 57ba76b31f5496001a31e7ee;
-////        }
-//        
-//        
-//        NSDictionary *resultDic = [result dictionaryValue];
-//        DLog(@"%@",resultDic);
-//        NSString *imgUrl = [resultDic objectForKey:@"url"];
-//        NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
-//        if (type == 1) {//用户头像
-//            [parameters setObject:imgUrl forKey:@"avatar"];
-//        }
-//        else if (type == 2){//背景图片
-//            [parameters setObject:imgUrl forKey:@"backgroundImage"];
-//        }
-//        [self saveData:parameters dissmissView:NO];
-//        
-////        NSDictionary *dic = [NSDictionary di]
-//        
-////        {"id":"54176ff8-8299-4ea9-9140-cd1b89456648","type":"image","url":"http://o85ghilm8.bkt.clouddn.com//54176ff8-8299-4ea9-9140-cd1b89456648","userId":"57ba76b31f5496001a31e7ee"}
-//        
-////        NSError *error;
-////        NSDictionary *dic= [NSJSONSerialization JSONObjectWithData:[result dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions error:&error];
-////        if (dic == nil) {
-////            NSLog(@"json parse failed \r\n");
-////        }else{
-////            NSString *key = [dic objectForKey:@"key"];
-////            DLog(@"key:%@",key);
-//////            [self saveData:key];
-////        }
-//    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-//        NSLog(@"发生错误！%@",error);
-//        DLog(@"上传图片 第二步 带上 token 上传文件 失败");
-////        [BWStatusBarOverlay dismissAnimated:YES];
-//        [self hideHud];
-//        NSData *data =[error.userInfo objectForKey:@"com.alamofire.serialization.response.error.data"];
-//        if (data) {
-//            NSString *result  =[[ NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-//            NSDictionary *dic= [NSJSONSerialization JSONObjectWithData:[result dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions error:nil];
-//            NSString *message = [dic objectForKey:@"message"];
-//            [self showHintInView:self.view hint:NSLocalizedString(message, nil)];
-//            DLog(@"%@",result);
-//        }else{
-//            [self showHintInView:self.view hint:error.localizedDescription];
-//        }
-//    }];
-    
-    
-    
 }
 
 //保存数据
@@ -432,14 +340,14 @@
     [manager PUT:url parameters:parameters success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         
         DLog(@"%@",responseObject);
-//        userInfo = responseObject;
+
         
         NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
         [userInfo setValuesForKeysWithDictionary:parameters];
         [ud setObject:userInfo forKey:LOGINED_USER];
         
         DLog(@"%@",userInfo);
-//        [ud setObject:userInfo forKey:USER_INFO];
+
         [[NSNotificationCenter defaultCenter] postNotificationName:@"loadUserCenterInfo" object:nil];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"setLeftItem" object:nil];
         
@@ -447,13 +355,8 @@
             [self hideHud];
             [self dismissViewControllerAnimated:YES completion:nil];
         }else{
-            [_myTableView reloadData];
-//            [self showHintInView:self.view hint:@"修改成功"];
-//            [self hideHud];
-            
-            
             [self loadData];
-            
+
             dispatch_async(dispatch_get_main_queue(), ^{
                 UIImage *image = [[UIImage imageNamed:@"Checkmark"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
                 UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
@@ -686,7 +589,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-   
+    
     if (indexPath.section == 0) {
         type = 1;
         [self showImagePicker];
