@@ -39,21 +39,35 @@ function Marker(poiData) {
     });
     
     
-//    if(poiData.id == "317bd48cce2eb96a07eced68eded5b19"){
-//        //添加左侧图标
-//        this.leftImage = new AR.ImageDrawable(new AR.ImageResource("assets/marker_type2.png"), 2.1, {
-//                                              zOrder: 1,
-//                                              opacity: 1.0,
-//                                              offsetX:-3.3
-//                                              });
-//    }else{
-        //添加左侧图标
-        this.leftImage = new AR.ImageDrawable(new AR.ImageResource("assets/marker_type1.png"), 2.1, {
-                                              zOrder: 1,
-                                              opacity: 1.0,
-                                              offsetX:-3.3
-                                              });
-//    }
+    var typeImage;
+    
+    if(poiData.type == "food"){//美食
+        typeImage = "assets/food.png";
+    }else if(poiData.type == "entrance"){//出入口
+        typeImage = "assets/entrance.png";
+    }else if(poiData.type == "infomation"){//百科
+        typeImage = "assets/infomation.png";
+    }else if(poiData.type == "recreational_facility"){//娱乐
+        typeImage = "assets/recreational_facility.png";
+    }else if(poiData.type == "scenery_spot"){//景点
+        typeImage = "assets/scenery_spot.png";
+    }else if(poiData.type == "service_point"){//服务点
+        typeImage = "assets/service_point.png";
+    }else if(poiData.type == "shop"){//商铺
+        typeImage = "assets/shop.png";
+    }else if(poiData.type == "toilet"){//公厕
+        typeImage = "assets/toilet.png";
+    }else{
+        typeImage = "assets/scenery_spot.png";
+    }
+    
+    this.leftImage = new AR.ImageDrawable(new AR.ImageResource(typeImage), 2.1, {
+                                          zOrder: 1,
+                                          opacity: 1.0,
+                                          offsetX:-3.3
+                                          });
+    
+    
     
     
     
@@ -76,7 +90,7 @@ function Marker(poiData) {
                 AR.logger.debug(World.currentMarker.poiData.id + " getOnHtmlClickTrigger");
                                             
                 var currentMarker = World.currentMarker;
-                var architectSdkUrl = "architectsdk://markerselected?id=" + encodeURIComponent(currentMarker.poiData.id) + "&title=" + escape(encodeURIComponent(currentMarker.poiData.title)) + "&description=" + escape(encodeURIComponent(currentMarker.poiData.description)) + "&image=" + encodeURIComponent(currentMarker.poiData.image) + "&images=" + encodeURIComponent(currentMarker.poiData.images) + "&voice=" + encodeURIComponent(currentMarker.poiData.voice) + "&address=" + escape(encodeURIComponent(currentMarker.poiData.address)) + "&latitude=" + encodeURIComponent(currentMarker.poiData.latitude)+ "&longitude=" + encodeURIComponent(currentMarker.poiData.longitude);
+                var architectSdkUrl = "architectsdk://markerselected?id=" + encodeURIComponent(currentMarker.poiData.id) + "&title=" + escape(encodeURIComponent(currentMarker.poiData.title)) + "&description=" + escape(encodeURIComponent(currentMarker.poiData.description)) + "&image=" + encodeURIComponent(currentMarker.poiData.image) + "&images=" + encodeURIComponent(currentMarker.poiData.images) + "&voice=" + encodeURIComponent(currentMarker.poiData.voice) + "&address=" + escape(encodeURIComponent(currentMarker.poiData.address)) + "&latitude=" + encodeURIComponent(currentMarker.poiData.latitude)+ "&longitude=" + encodeURIComponent(currentMarker.poiData.longitude) + "&type=" + escape(encodeURIComponent(currentMarker.poiData.type));
                 /*
                  The urlListener of the native project intercepts this call and parses the arguments.
                  This is the only way to pass information from JavaSCript to your native code.
@@ -87,6 +101,8 @@ function Marker(poiData) {
                 document.location = architectSdkUrl;
             }
        });
+    
+    
     
     
 
@@ -283,8 +299,12 @@ Marker.prototype.setSelected = function(marker) {
     marker.markerDrawable_selected.opacity = 1.0;
     
     
-    marker.htmlDrawable.opacity = 1.0;
-    marker.htmlDrawable.enabled = true;
+    if(marker.poiData.image != ""){
+        marker.htmlDrawable.opacity = 1.0;
+        marker.htmlDrawable.enabled = true;
+    }
+    
+    
 
     marker.titleLabel.style.textColor = "#666666";
     marker.descriptionLabel.style.textColor = "#666666";
@@ -340,8 +360,12 @@ Marker.prototype.setDeselected = function(marker) {
     
     marker.markerDrawable_idle.opacity = 0.6;
     marker.markerDrawable_selected.opacity = 0.0;
-    marker.htmlDrawable.opacity = 0.0;
-    marker.htmlDrawable.enabled = false;
+    
+    if(marker.poiData.image != ""){
+        marker.htmlDrawable.opacity = 0.0;
+        marker.htmlDrawable.enabled = false;
+    }
+    
 
     marker.titleLabel.style.textColor = "#ffffff";
     marker.descriptionLabel.style.textColor = "#ffffff";

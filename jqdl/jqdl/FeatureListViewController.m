@@ -263,11 +263,25 @@
     }
     WTPoi *poi = [_jingdianArray objectAtIndex:indexPath.row];
     DLog(@"%@",poi.image);
-    [cell.myImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@",poi.image]]];
+    if (![poi.image isEqualToString:@""]) {
+        [cell.myImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@",poi.image]]];
+    }else{
+        [cell.myImageView setImage:[UIImage new]];
+    }
+    
     cell.name.text = poi.name;
     cell.desLabel.text = poi.detailedDescription;
-    cell.playBtn.tag = indexPath.row;
-    [cell.playBtn addTarget:self action:@selector(playVoice:) forControlEvents:UIControlEventTouchUpInside];
+    
+    if (![poi.voice isEqualToString:@""]) {
+        cell.playBtn.enabled = YES;
+        cell.playBtn.hidden = NO;
+        cell.playBtn.tag = indexPath.row;
+        [cell.playBtn addTarget:self action:@selector(playVoice:) forControlEvents:UIControlEventTouchUpInside];
+    }else{
+        cell.playBtn.enabled = NO;
+        cell.playBtn.hidden = YES;
+    }
+    
     
     if (oldPlayBtn != nil && cell.playBtn.tag == playIndex) {
         [cell.playBtn setImage:[UIImage imageNamed:@"zt"] forState:UIControlStateNormal];

@@ -83,7 +83,8 @@ var World = {
                 "image":poiData[currentPlaceNr].image,
                 "images":poiData[currentPlaceNr].images,
                 "voice":poiData[currentPlaceNr].voice,
-                "address":poiData[currentPlaceNr].address
+                "address":poiData[currentPlaceNr].address,
+                "type":poiData[currentPlaceNr].type
 			};
             AR.logger.debug("currentPlaceNr:" + currentPlaceNr + "," + poiData[currentPlaceNr].name);
 			World.markerList.push(new Marker(singlePoi));

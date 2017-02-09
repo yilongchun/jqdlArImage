@@ -191,9 +191,15 @@
         //图片
         UIImageView *imageview = [[UIImageView alloc] initWithFrame:CGRectMake(12, 12, 108 - 12 * 2, 108 - 12 * 2)];
         imageview.tag = i;
-        imageview.userInteractionEnabled = YES;
-        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toDetail:)];
-        [imageview addGestureRecognizer:tap];
+        
+        NSString *description = poi.detailedDescription;
+        if (![description isEqualToString:@""]) {
+            imageview.userInteractionEnabled = YES;
+            UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toDetail:)];
+            [imageview addGestureRecognizer:tap];
+        }
+        
+        
         
         imageview.backgroundColor = [UIColor lightGrayColor];
         [imageview setImageWithURL:[NSURL URLWithString:poi.image]];
@@ -224,17 +230,22 @@
 //        
 //        CLLocationDistance distance = BMKMetersBetweenMapPoints(point1,point2);
         
-        UIButton *playBtn = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetWidth(v.frame) - 56, CGRectGetHeight(v.frame) - 28, 46, 18)];
-        playBtn.tag = i;
-        playBtn.titleLabel.font = SYSTEMFONT(10);
-        [playBtn addTarget:self action:@selector(playVoice:) forControlEvents:UIControlEventTouchUpInside];
-//        [playBtn setTitle:@"播放" forState:UIControlStateNormal];
-//        [playBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        NSString *voice = poi.voice;
+        if (![voice isEqualToString:@""]) {
+            UIButton *playBtn = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetWidth(v.frame) - 56, CGRectGetHeight(v.frame) - 28, 46, 18)];
+            playBtn.tag = i;
+            playBtn.titleLabel.font = SYSTEMFONT(10);
+            [playBtn addTarget:self action:@selector(playVoice:) forControlEvents:UIControlEventTouchUpInside];
+            //        [playBtn setTitle:@"播放" forState:UIControlStateNormal];
+            //        [playBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            
+            [playBtn setImage:[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
+            
+            //        playBtn.backgroundColor = RGB(255, 192, 20);
+            [v addSubview:playBtn];
+        }
         
-        [playBtn setImage:[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
         
-//        playBtn.backgroundColor = RGB(255, 192, 20);
-        [v addSubview:playBtn];
         
         
         [sv addSubview:v];
@@ -575,9 +586,12 @@
         
 //        DLog(@"%@",annotation.poi.image);
         
-        DetailViewController *vc = [[DetailViewController alloc] init];
-        vc.poi = annotation.poi;
-        [self.navigationController pushViewController:vc animated:YES];
+        NSString *description = annotation.poi.detailedDescription;
+        if (![description isEqualToString:@""]) {
+            DetailViewController *vc = [[DetailViewController alloc] init];
+            vc.poi = annotation.poi;
+            [self.navigationController pushViewController:vc animated:YES];
+        }
         
     }
 }

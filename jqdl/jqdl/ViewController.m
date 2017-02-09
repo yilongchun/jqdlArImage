@@ -286,7 +286,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                                     longitude = coordinates[1];
                                 }
                                 
-                                
+                                NSString *type = [spot objectForKey:@"type"];
                                 
                                 //            CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake(myLocation.coordinate.latitude + WT_RANDOM(-0.1, 0.1), myLocation.coordinate.longitude + WT_RANDOM(-0.1, 0.1));
                                 
@@ -307,6 +307,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                                                                         images:[images componentsJoinedByString:@","]
                                                                          voice:audio
                                                                        address:[spot objectForKey:@"address"]
+                                                                          type:type
                                               
                                               ];
                                 DLog(@"%@",poi.jsonRepresentation);
@@ -817,7 +818,10 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                     longitude = coordinates[1];
                 }
                 
-                
+                NSString *type = [storeDic objectForKey:@"type"];
+                if (type == nil) {
+                    type = @"";
+                }
                 
 //                CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake(myLocation.coordinate.latitude + WT_RANDOM(-0.1, 0.1), myLocation.coordinate.longitude + WT_RANDOM(-0.1, 0.1));
                 
@@ -838,6 +842,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                                                         images:[images componentsJoinedByString:@","]
                                                          voice:audio
                                                        address:[storeDic objectForKey:@"address"]
+                                                          type:type
                               
                               ];
                 DLog(@"%@",poi.jsonRepresentation);
@@ -892,15 +897,15 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
         for (int i = 0 ; i < data.count; i++) {
             
             
-            storeDic = [[NSMutableDictionary alloc] initWithDictionary:data[i]];
+            NSMutableDictionary *spotDic = [[NSMutableDictionary alloc] initWithDictionary:data[i]];
             
-            NSNumber *is_public = [storeDic objectForKey:@"is_public"];
+            NSNumber *is_public = [spotDic objectForKey:@"is_public"];
             if (![is_public boolValue]) {
                 continue;
             }
             
             
-            NSArray *imagesArr = [storeDic objectForKey:@"images"];
+            NSArray *imagesArr = [spotDic objectForKey:@"images"];
             NSMutableArray *images = [NSMutableArray array];
             NSString *image = @"";
             
@@ -911,13 +916,13 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                 image = [images objectAtIndex:0];
             }
             
-            NSArray *audio_clips = [storeDic objectForKey:@"audio_clips"];
+            NSArray *audio_clips = [spotDic objectForKey:@"audio_clips"];
             NSString *audio = @"";
             if (audio_clips.count > 0) {
                 audio = [[audio_clips objectAtIndex:0] objectForKey:@"url"];
             }
             
-            NSArray *coordinates = [storeDic objectForKey:@"coordinates"];
+            NSArray *coordinates = [spotDic objectForKey:@"coordinates"];
             NSNumber *latitude;
             NSNumber *longitude;
             if (coordinates.count > 1) {
@@ -925,7 +930,10 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                 longitude = coordinates[1];
             }
             
-            
+            NSString *type = [spotDic objectForKey:@"type"];
+            if (type == nil) {
+                type = @"";
+            }
             
 //            CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake(myLocation.coordinate.latitude + WT_RANDOM(-0.1, 0.1), myLocation.coordinate.longitude + WT_RANDOM(-0.1, 0.1));
             
@@ -938,14 +946,15 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                                                          verticalAccuracy:0
                                                                 timestamp:[NSDate date]];
             
-            WTPoi *poi = [[WTPoi alloc] initWithIdentifier:[storeDic objectForKey:@"id"]
+            WTPoi *poi = [[WTPoi alloc] initWithIdentifier:[spotDic objectForKey:@"id"]
                                                   location:location
-                                                      name:[storeDic objectForKey:@"name"]
-                                       detailedDescription:[storeDic objectForKey:@"description"]
+                                                      name:[spotDic objectForKey:@"name"]
+                                       detailedDescription:[spotDic objectForKey:@"description"]
                                                      image:image
                                                     images:[images componentsJoinedByString:@","]
                                                      voice:audio
-                                                   address:[storeDic objectForKey:@"address"]
+                                                   address:[spotDic objectForKey:@"address"]
+                                                     type:type
                           
                           ];
             DLog(@"%@",poi.jsonRepresentation);
@@ -1690,8 +1699,9 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     NSString *poiAddress = [poiDetails objectForKey:@"address"];
     NSNumber *latitude = [poiDetails objectForKey:@"latitude"];
     NSNumber *longitude = [poiDetails objectForKey:@"longitude"];
+    NSString *type = [poiDetails objectForKey:@"type"];
     
-    WTPoi *poi = [[WTPoi alloc] initWithIdentifier:poiIdentifier location:[[CLLocation alloc] initWithLatitude:[latitude doubleValue] longitude:[longitude doubleValue]] name:poiName detailedDescription:poiDescription image:poiImage images:poiImages voice:poiVoice address:poiAddress];
+    WTPoi *poi = [[WTPoi alloc] initWithIdentifier:poiIdentifier location:[[CLLocation alloc] initWithLatitude:[latitude doubleValue] longitude:[longitude doubleValue]] name:poiName detailedDescription:poiDescription image:poiImage images:poiImages voice:poiVoice address:poiAddress type:type];
     
     if (poi)
     {
