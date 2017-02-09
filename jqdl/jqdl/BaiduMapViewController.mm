@@ -201,8 +201,10 @@
         
         
         
-        imageview.backgroundColor = [UIColor lightGrayColor];
-        [imageview setImageWithURL:[NSURL URLWithString:poi.image]];
+//        imageview.backgroundColor = [UIColor lightGrayColor];
+        
+        [imageview setImageWithURL:[NSURL URLWithString:poi.image] placeholderImage:[UIImage imageNamed:@"flat"]];
+        
         ViewBorderRadius(imageview, 2, 0, [UIColor whiteColor]);
         [v addSubview:imageview];
         //文字
@@ -821,7 +823,16 @@
     self.navigationItem.backBarButtonItem = backItem;
     
     FeatureListViewController *vc = [FeatureListViewController new];
-    vc.jingdianArray = _jingdianArray;
+    NSMutableArray *array = [NSMutableArray array];
+    
+    for (int i = 0; i < _jingdianArray.count; i++) {
+        WTPoi *poi = [_jingdianArray objectAtIndex:i];
+        if ([poi.type isEqualToString:@"scenery_spot"]) {
+            [array addObject:poi];
+        }
+    }
+    
+    vc.jingdianArray = array;
     [self.navigationController pushViewController:vc animated:YES];
 }
 
