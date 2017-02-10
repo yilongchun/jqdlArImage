@@ -58,7 +58,7 @@
     
     NSMutableArray *annotations;
     UIScrollView *sv;
-    
+    UIButton *oldBtn;
     UIButton *oldPlayBtn;
     
     
@@ -129,20 +129,7 @@
     [_mapView setZoomLevel:20.9];
     
     
-    annotations = [NSMutableArray array];
-    //添加景点标注
-    for (int i = 0; i < _jingdianArray.count; i++) {
-        WTPoi *poi = [_jingdianArray objectAtIndex:i];
-        //添加PointAnnotation
-        MyPointAnnotation* annotation = [[MyPointAnnotation alloc]init];
-        CLLocationCoordinate2D coor = poi.location.coordinate;
-        annotation.coordinate = coor;
-        annotation.title = poi.name;
-        annotation.poi = poi;
-        annotation.index = i;
-        [_mapView addAnnotation:annotation];
-        [annotations addObject:annotation];
-    }
+    
     
     //添加景点分类选择
     CGFloat typeWidth = 76;
@@ -159,18 +146,37 @@
         
         NSString *name = [NSString stringWithFormat:@"type%d",i+1];
         NSString *nameH = [NSString stringWithFormat:@"type%dH",i+1];
-        
+        type1Btn.tag = i;
         [type1Btn setImage:[UIImage imageNamed:name] forState:UIControlStateNormal];
         [type1Btn setImage:[UIImage imageNamed:nameH] forState:UIControlStateSelected];
 //        [type1Btn setImage:[UIImage imageNamed:@"type1H"] forState:UIControlStateHighlighted];
         [type1Btn addTarget:self action:@selector(typeClick:) forControlEvents:UIControlEventTouchUpInside];
         [typeScrollView addSubview:type1Btn];
         typeX += typeWidth + typeSpace;
+        if (i == 0) {
+            type1Btn.selected = YES;
+            oldBtn = type1Btn;
+        }
     }
     
     
     
     [self.view addSubview:typeScrollView];
+    
+    annotations = [NSMutableArray array];
+    //添加景点标注
+    for (int i = 0; i < _jingdianArray.count; i++) {
+        WTPoi *poi = [_jingdianArray objectAtIndex:i];
+        //添加PointAnnotation
+        MyPointAnnotation* annotation = [[MyPointAnnotation alloc]init];
+        CLLocationCoordinate2D coor = poi.location.coordinate;
+        annotation.coordinate = coor;
+        annotation.title = poi.name;
+        annotation.poi = poi;
+        annotation.index = i;
+        [_mapView addAnnotation:annotation];
+        [annotations addObject:annotation];
+    }
     
     //添加底部景点卡片
     MyView *view = [[MyView alloc] initWithFrame:CGRectMake(0, Main_Screen_Height - 15 - 108, Main_Screen_Width, 108)];
@@ -351,11 +357,205 @@
 
 //景点分类按钮点击
 -(void)typeClick:(UIButton *)btn{
-    if (btn.selected) {
-        btn.selected = !btn.selected;
-    }else{
-        btn.selected = !btn.selected;
+    
+    oldBtn.selected = NO;
+    if (!btn.selected) {
+        btn.selected = YES;
+        oldBtn = btn;
     }
+    
+    DLog(@"%d",btn.tag);
+    
+    
+    [_mapView removeAnnotations:annotations];
+    
+    annotations = [NSMutableArray array];
+    int index = 0;
+    //添加景点标注
+    for (int i = 0; i < _jingdianArray.count; i++) {
+        WTPoi *poi = [_jingdianArray objectAtIndex:i];
+        
+        
+        if (btn.selected) {
+            
+            
+            if (btn.tag == 0) {//全部
+                
+            }else if (btn.tag == 1){//景点
+                if(![poi.type isEqualToString:@"scenery_spot"]){
+                    continue;
+                }
+            }else if (btn.tag == 2){//游乐
+                if(![poi.type isEqualToString:@"recreational_facility"]){
+                    continue;
+                }
+            }else if (btn.tag == 3){//美食
+                if(![poi.type isEqualToString:@"food"]){
+                    continue;
+                }
+            }else if (btn.tag == 4){//商铺
+                if(![poi.type isEqualToString:@"shop"]){
+                    continue;
+                }
+            }else if (btn.tag == 5){//公厕
+                if(![poi.type isEqualToString:@"toilet"]){
+                    continue;
+                }
+            }else if (btn.tag == 6){//出入口
+                if(![poi.type isEqualToString:@"entrance"]){
+                    continue;
+                }
+            }else if (btn.tag == 7){//服务点
+                if(![poi.type isEqualToString:@"service_point"]){
+                    continue;
+                }
+            }
+            
+            //添加PointAnnotation
+            MyPointAnnotation* annotation = [[MyPointAnnotation alloc]init];
+            CLLocationCoordinate2D coor = poi.location.coordinate;
+            annotation.coordinate = coor;
+            annotation.title = poi.name;
+            annotation.poi = poi;
+            annotation.index = index;
+            [_mapView addAnnotation:annotation];
+            [annotations addObject:annotation];
+            index++;
+        }
+        
+        
+    }
+    
+    
+    
+    //添加底部景点卡片
+    
+    [sv.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [obj removeFromSuperview];
+    }];
+    
+    CGFloat x = 10;
+    int seq = 0;
+    for (int i = 0; i < _jingdianArray.count; i++) {
+        WTPoi *poi = [_jingdianArray objectAtIndex:i];
+        
+        
+        if (btn.selected) {
+            
+            
+            if (btn.tag == 0) {//全部
+                
+            }else if (btn.tag == 1){//景点
+                if(![poi.type isEqualToString:@"scenery_spot"]){
+                    continue;
+                }
+            }else if (btn.tag == 2){//游乐
+                if(![poi.type isEqualToString:@"recreational_facility"]){
+                    continue;
+                }
+            }else if (btn.tag == 3){//美食
+                if(![poi.type isEqualToString:@"food"]){
+                    continue;
+                }
+            }else if (btn.tag == 4){//商铺
+                if(![poi.type isEqualToString:@"shop"]){
+                    continue;
+                }
+            }else if (btn.tag == 5){//公厕
+                if(![poi.type isEqualToString:@"toilet"]){
+                    continue;
+                }
+            }else if (btn.tag == 6){//出入口
+                if(![poi.type isEqualToString:@"entrance"]){
+                    continue;
+                }
+            }else if (btn.tag == 7){//服务点
+                if(![poi.type isEqualToString:@"service_point"]){
+                    continue;
+                }
+            }
+            
+            UIView *v = [[UIView alloc] initWithFrame:CGRectMake(x, 0, Main_Screen_Width - 40, 108)];
+            
+            
+            v.backgroundColor = [UIColor whiteColor];
+            ViewBorderRadius(v, 5, 1, RGBA(0, 0, 0, 0.15));
+            //图片
+            UIImageView *imageview = [[UIImageView alloc] initWithFrame:CGRectMake(12, 12, 108 - 12 * 2, 108 - 12 * 2)];
+            imageview.tag = seq;
+            
+            NSString *description = poi.detailedDescription;
+            if (![description isEqualToString:@""]) {
+                imageview.userInteractionEnabled = YES;
+                UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toDetail:)];
+                [imageview addGestureRecognizer:tap];
+            }
+            
+            
+            
+            //        imageview.backgroundColor = [UIColor lightGrayColor];
+            
+            [imageview setImageWithURL:[NSURL URLWithString:poi.image] placeholderImage:[UIImage imageNamed:@"flat"]];
+            
+            ViewBorderRadius(imageview, 2, 0, [UIColor whiteColor]);
+            [v addSubview:imageview];
+            //文字
+            UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(imageview.frame) + 12, 12, 0, 0)];
+            label.font = BOLDSYSTEMFONT(14);
+            label.textColor = RGB(102, 102, 102);
+            label.text = [NSString stringWithFormat:@"%d.%@",seq+1,poi.name];
+            [label sizeToFit];
+            [v addSubview:label];
+            //描述
+            UILabel *desLabel = [[UILabel alloc] initWithFrame:CGRectMake(label.frame.origin.x, CGRectGetMaxY(label.frame), CGRectGetWidth(v.frame) - label.frame.origin.x - 10, 108 - CGRectGetMaxY(label.frame) - 31)];
+            desLabel.font = SYSTEMFONT(12);
+            desLabel.textColor = RGB(151, 151, 151);
+            desLabel.numberOfLines = 0;
+            desLabel.text = poi.detailedDescription;
+            //        desLabel.backgroundColor = [UIColor grayColor];
+            [UILabel setLabelSpace:desLabel withValue:poi.detailedDescription withFont:desLabel.font];
+            [v addSubview:desLabel];
+            
+            
+            
+            //        BMKMapPoint point1 = BMKMapPointForCoordinate(poi.location.coordinate);
+            //
+            //        BMKMapPoint point2 = BMKMapPointForCoordinate(CLLocationCoordinate2DMake(, ));
+            //
+            //        CLLocationDistance distance = BMKMetersBetweenMapPoints(point1,point2);
+            
+            NSString *voice = poi.voice;
+            if (![voice isEqualToString:@""]) {
+                UIButton *playBtn = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetWidth(v.frame) - 56, CGRectGetHeight(v.frame) - 28, 46, 18)];
+                playBtn.tag = seq;
+                playBtn.titleLabel.font = SYSTEMFONT(10);
+                [playBtn addTarget:self action:@selector(playVoice:) forControlEvents:UIControlEventTouchUpInside];
+                //        [playBtn setTitle:@"播放" forState:UIControlStateNormal];
+                //        [playBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+                
+                [playBtn setImage:[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
+                
+                //        playBtn.backgroundColor = RGB(255, 192, 20);
+                [v addSubview:playBtn];
+            }
+            
+            
+            
+            
+            [sv addSubview:v];
+            x += CGRectGetWidth(v.frame) + 10;
+            seq++;
+        }
+        
+        
+    }
+    x-=10;
+    [sv setContentSize:CGSizeMake(x, 108)];
+    
+    
+    
+    
+    
 }
 
 -(void)setZoomBtn{
