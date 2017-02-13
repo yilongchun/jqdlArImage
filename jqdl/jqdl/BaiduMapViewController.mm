@@ -205,10 +205,6 @@
             [imageview addGestureRecognizer:tap];
         }
         
-        
-        
-//        imageview.backgroundColor = [UIColor lightGrayColor];
-        
         [imageview setImageWithURL:[NSURL URLWithString:poi.image] placeholderImage:[UIImage imageNamed:@"flat"]];
         
         ViewBorderRadius(imageview, 2, 0, [UIColor whiteColor]);

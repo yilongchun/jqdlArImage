@@ -80,6 +80,8 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     
     NSString *last_minor_number;
     
+    UILabel *debugLabel;
+    
 }
 
 @property (strong, nonatomic) NSDate *lastPlaySoundDate;
@@ -180,11 +182,15 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     }
     
     
-    
+    NSMutableString *debugStr = [NSMutableString string];
     for (int i = 0;i < beacons.count;i++) {
         CLBeacon* beacon = beacons[i];
 //        NSLog(@"UUID:%@ major:%d minor:%d rssi:%ld proximity:%ld accuracy:%f",[beacon.proximityUUID UUIDString],[beacon.major intValue],[beacon.minor intValue],beacon.rssi,beacon.proximity,beacon.accuracy);
         if (beacon.accuracy > 0 ) {
+            [debugStr appendString:[NSString stringWithFormat:@"minor:%d accuracy:%f\n",[beacon.minor intValue],beacon.accuracy]];
+            
+            
+            
             if ([beacon.major intValue] == 10) {
                 if ([beacon.minor intValue] == 1) {//1模拟景区
                     
@@ -223,6 +229,8 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                 
                 
                 
+                
+                
                 if (spotsArr) {
                     for (int j = 0;j < spotsArr.count;j++) {
                         
@@ -233,6 +241,9 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                             NSString *major_number = [ibeacon objectForKey:@"major_number"];
                             NSString *minor_number = [ibeacon objectForKey:@"minor_number"];
                             NSNumber *effective_radius = [ibeacon objectForKey:@"effective_radius"];
+                            
+                            
+                
                             
                             if ([[beacon.proximityUUID UUIDString] isEqualToString:uuid] &&
                                 [beacon.major intValue] == [major_number intValue] &&
@@ -344,6 +355,11 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
 //                }
             }
         }
+        
+        
+        debugLabel.text = debugStr;
+        DLog(@"%@",debugStr);
+        
     }
     
     
@@ -473,6 +489,10 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     self.jz_navigationBarBackgroundHidden = YES;
     self.jz_navigationBarTintColor = [UIColor whiteColor];
     self.jz_navigationBarBackgroundAlpha = 0.f;
+    
+    
+    
+     
     
     
     jingquType = @"1";
@@ -1509,6 +1529,17 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
         
         
     }
+    if (debugLabel == nil) {
+        debugLabel = [[UILabel alloc] initWithFrame:CGRectMake(Main_Screen_Width - 160, Main_Screen_Height - 50, 160, 50)];
+        debugLabel.font = SYSTEMFONT(10);
+        debugLabel.textColor = [UIColor blackColor];
+        debugLabel.backgroundColor = [UIColor whiteColor];
+//        debugLabel.textAlignment = NSTextAlignmentCenter;
+        debugLabel.alpha = 0.5;
+        debugLabel.numberOfLines = 0;
+        [self.view addSubview:debugLabel];
+    }
+    
     
 }
 
