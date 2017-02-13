@@ -41,6 +41,8 @@
 #import "UserCenterViewController.h"
 #import "UIImageView+AFNetworking.h"
 
+#import <CoreBluetooth/CoreBluetooth.h>
+
 /* this is used to create random positions around you */
 #define WT_RANDOM(startValue, endValue) ((((float) (arc4random() % ((unsigned)RAND_MAX + 1)) / RAND_MAX) * (endValue - startValue)) + startValue)
 
@@ -50,7 +52,7 @@ static const CGFloat kDefaultPlaySoundInterval = 3.0;
 static char *kWTAugmentedRealityViewController_AssociatedPoiManagerKey = "kWTARVCAMEWTP";
 static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "kWTARVCAMECLK";
 
-@interface ViewController () <WTArchitectViewDelegate, WTArchitectViewDebugDelegate, CLLocationManagerDelegate,UIScrollViewDelegate>{
+@interface ViewController () <WTArchitectViewDelegate, WTArchitectViewDebugDelegate, CLLocationManagerDelegate,UIScrollViewDelegate,CBCentralManagerDelegate>{
     NSString *firsetParams;
 //    ChooseJqViewController *jqvc;
     CLLocation *myLocation;
@@ -92,6 +94,9 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
 /* And keep a weak property to the navigation object which represents the loading status of your Architect World */
 @property (nonatomic, weak) WTNavigation                    *architectWorldNavigation;
 
+// 蓝牙检测
+@property (nonatomic,strong) CBCentralManager *centralManager;
+
 @end
 
 @implementation ViewController
@@ -112,11 +117,14 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
 //    self.beacon1 = [[CLBeaconRegion alloc] initWithProximityUUID:[[NSUUID alloc] initWithUUIDString:BEACONUUID] major:10 minor:3 identifier:@"media2"];
         self.beacon1 = [[CLBeaconRegion alloc] initWithProximityUUID:[[NSUUID alloc] initWithUUIDString:BEACONUUID] identifier:@"media"];//初始化监测的iBeacon信息
     
-    [self.locationmanager requestAlwaysAuthorization];
+    
 //    [self.locationmanager requestWhenInUseAuthorization];
     if ([CLLocationManager locationServicesEnabled]) { // 判断是否打开了位置服务
+        [self.locationmanager requestAlwaysAuthorization];
         [self.locationmanager startUpdatingLocation];
         [self loadStore];
+    }else{
+        DLog(@"没有开启定位");
     }
 
 }
@@ -491,8 +499,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     self.jz_navigationBarBackgroundAlpha = 0.f;
     
     
-    
-     
+    self.centralManager = [[CBCentralManager alloc] initWithDelegate:self queue:nil];
     
     
     jingquType = @"1";
@@ -1174,6 +1181,25 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
 //        return;
 //    }];
 //}
+
+#pragma mark - CLLocationManagerDelegate
+-(void)centralManagerDidUpdateState:(CBCentralManager *)central
+{
+    //第一次打开或者每次蓝牙状态改变都会调用这个函数
+    if(central.state==CBCentralManagerStatePoweredOn)
+    {
+        NSLog(@"蓝牙设备开着");
+        
+    }
+    else
+    {
+        NSLog(@"蓝牙设备关着");
+//        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:@"设备未开启蓝牙" preferredStyle:UIAlertControllerStyleAlert];
+//        UIAlertAction *action = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleDefault handler:nil];
+//        [alert addAction:action];
+//        [self presentViewController:alert animated:YES completion:nil];
+    }
+}
 
 #pragma mark - UIScrollViewDelegate
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
