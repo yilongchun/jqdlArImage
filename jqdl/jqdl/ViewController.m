@@ -119,8 +119,9 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     
     
 //    [self.locationmanager requestWhenInUseAuthorization];
+    [self.locationmanager requestAlwaysAuthorization];
     if ([CLLocationManager locationServicesEnabled]) { // 判断是否打开了位置服务
-        [self.locationmanager requestAlwaysAuthorization];
+        
         [self.locationmanager startUpdatingLocation];
         [self loadStore];
     }else{
