@@ -105,7 +105,7 @@
         return 2;
     }
     if (section == 2) {
-        return 3;
+        return 1;
     }
     return 1;
 }
@@ -141,22 +141,22 @@
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         }
     }else if (indexPath.section == 2){
-        if (indexPath.row == 0) {
-            cell.textLabel.text = @"给我们评分";
-            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        }
-        if (indexPath.row == 1) {
-            cell.textLabel.text = @"分享给好友";
-            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        }
-        if (indexPath.row == 2) {
+//        if (indexPath.row == 0) {
+//            cell.textLabel.text = @"给我们评分";
+//            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+//        }
+//        if (indexPath.row == 1) {
+//            cell.textLabel.text = @"分享给好友";
+//            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+//        }
+//        if (indexPath.row == 2) {
             cell.textLabel.text = @"关于氢旅行";
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             NSDictionary *infoDict = [[NSBundle mainBundle]infoDictionary];
             NSString *version = [infoDict objectForKey:@"CFBundleShortVersionString"];
             cell.detailTextLabel.text = [NSString stringWithFormat:@"V%@", version];
             cell.detailTextLabel.textColor = RGB(67,216,230);
-        }
+//        }
     }else if (indexPath.section == 3){
         static NSString *CellIdentifier2 = @"cell2";
         UITableViewCell *cell2 = [tableView dequeueReusableCellWithIdentifier:CellIdentifier2];
@@ -217,10 +217,10 @@
         }
     }
     if (indexPath.section == 2) {
-        if (indexPath.row == 2) {
+//        if (indexPath.row == 2) {
             AboutViewController *vc = [[AboutViewController alloc] init];
             [self.navigationController pushViewController:vc animated:YES];
-        }
+//        }
     }
     if (indexPath.section == 3) {
         

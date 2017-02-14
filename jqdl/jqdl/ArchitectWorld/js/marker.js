@@ -119,9 +119,10 @@ function Marker(poiData) {
     });
     
     
-//    var currentUserLocation = new AR.GeoLocation(World.currentLat, World.currentLng);
-//    var dist = markerLocation.distanceTo(currentUserLocation);
-//    var distanceToUserValue = (dist > 999) ? ((dist / 1000).toFixed(2) + " km") : (Math.round(dist) + " m");
+    var currentUserLocation = new AR.GeoLocation(World.currentLat, World.currentLng);
+    var dist = markerLocation.distanceTo(currentUserLocation);
+    var distanceToUserValue = (dist > 999) ? ((dist / 1000).toFixed(2) + " km") : (Math.round(dist) + " m");
+    AR.logger.debug(poiData.title + "," + distanceToUserValue);
     
     // create an AR.Label for the marker's description
     this.descriptionLabel = new AR.Label("", 0.8, {

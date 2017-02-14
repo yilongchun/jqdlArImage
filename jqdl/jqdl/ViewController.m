@@ -40,7 +40,7 @@
 #import "LBXScanNetAnimation.h"
 #import "UserCenterViewController.h"
 #import "UIImageView+AFNetworking.h"
-
+#import <BaiduMapAPI_Utils/BMKUtilsComponent.h>
 #import <CoreBluetooth/CoreBluetooth.h>
 
 /* this is used to create random positions around you */
@@ -203,7 +203,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
             if ([beacon.major intValue] == 10) {
                 if ([beacon.minor intValue] == 1) {//1模拟景区
                     
-                    if (beacon.accuracy < 20) {//进入景区
+                    if (beacon.accuracy < 50) {//进入景区
                         if ([jingquType isEqualToString:@"1"]) {
                             jingquType = @"2";
                             UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"即将切换到景区导览模式" message:@"检测到您已经抵达景区周边范围" preferredStyle:UIAlertControllerStyleAlert];
@@ -308,10 +308,18 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                                 
                                 NSString *type = [spot objectForKey:@"type"];
                                 
+                                NSString *address = [spot objectForKey:@"address"];
+                                if (address == nil) {
+                                    address = @"";
+                                }
+                                
                                 //            CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake(myLocation.coordinate.latitude + WT_RANDOM(-0.1, 0.1), myLocation.coordinate.longitude + WT_RANDOM(-0.1, 0.1));
                                 
                                 CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake([longitude doubleValue], [latitude doubleValue]);
                                 
+                                DLog(@"转换前 %f %f",locationCoordinate.longitude,locationCoordinate.latitude);
+                                CLLocationCoordinate2D locationCoordinate2 = [self hhTrans_bdGPS:locationCoordinate];
+                                DLog(@"转换后 %f %f",locationCoordinate2.longitude,locationCoordinate2.latitude);
                                 
                                 CLLocation *location = [[CLLocation alloc] initWithCoordinate:locationCoordinate
                                                                                      altitude:0
@@ -326,7 +334,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                                                                          image:image
                                                                         images:[images componentsJoinedByString:@","]
                                                                          voice:audio
-                                                                       address:[spot objectForKey:@"address"]
+                                                                       address:address
                                                                           type:type
                                               
                                               ];
@@ -366,8 +374,8 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
         }
         
         
-        debugLabel.text = debugStr;
-        DLog(@"%@",debugStr);
+//        debugLabel.text = debugStr;
+//        DLog(@"%@",debugStr);
         
     }
     
@@ -413,6 +421,9 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
 {
     id firstLocation = [locations firstObject];
     myLocation = (CLLocation *)firstLocation;
+//    DLog(@"当前坐标 %@",myLocation);
+    
+    debugLabel.text = [NSString stringWithFormat:@"%@",myLocation];
 //    DLog(@"didUpdateLocations");
     if ( firstLocation )
     {
@@ -667,9 +678,31 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     
     
     
+    //其他坐标系转为百度坐标系
     
     
     
+    
+    CLLocationCoordinate2D coor = CLLocationCoordinate2DMake(30.767777777777777,111.26527777777778);//原始坐标 GPS
+//    CLLocationCoordinate2D coor = CLLocationCoordinate2DMake(30.735248 ,111.31595);//原始坐标 WIKITUDE
+//    
+    //转换 google地图、soso地图、aliyun地图、mapabc地图和amap地图所用坐标至百度坐标
+    NSDictionary* testdic = BMKConvertBaiduCoorFrom(coor,BMK_COORDTYPE_GPS);
+    NSLog(@"x=%@,y=%@",[testdic objectForKey:@"x"],[testdic objectForKey:@"y"]);
+    //解密加密后的坐标字典
+    CLLocationCoordinate2D baiduCoor = BMKCoorDictionaryDecode(testdic);//转换后的百度坐标
+    NSLog(@"转换后:x=%f,y=%f",baiduCoor.latitude,baiduCoor.longitude);
+//
+//    
+//    //    //计算距离
+//    BMKMapPoint point1 = BMKMapPointForCoordinate(coor);//当前位置
+//    BMKMapPoint point2 = BMKMapPointForCoordinate(CLLocationCoordinate2DMake(30.739950,111.327881));//目的地
+//    CLLocationDistance distance = BMKMetersBetweenMapPoints(point1,point2);
+//    DLog(@"distance %f",distance);
+    
+    CLLocationCoordinate2D coor3 = CLLocationCoordinate2DMake(30.73653867,111.31557422);//
+    CLLocationCoordinate2D coor4 = [self hhTrans_bdGPS:coor3];//
+    DLog(@"%f %f",coor4.latitude,coor4.longitude);
     
     
 }
@@ -854,7 +887,9 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
 //                CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake(myLocation.coordinate.latitude + WT_RANDOM(-0.1, 0.1), myLocation.coordinate.longitude + WT_RANDOM(-0.1, 0.1));
                 
                 CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake([longitude doubleValue], [latitude doubleValue]);
-                
+                DLog(@"转换前 %f %f",locationCoordinate.longitude,locationCoordinate.latitude);
+                CLLocationCoordinate2D locationCoordinate2 = [self hhTrans_bdGPS:locationCoordinate];
+                DLog(@"转换后 %f %f",locationCoordinate2.longitude,locationCoordinate2.latitude);
                 
                 CLLocation *location = [[CLLocation alloc] initWithCoordinate:locationCoordinate
                                                                      altitude:0
@@ -953,9 +988,15 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
             NSArray *coordinates = [spotDic objectForKey:@"coordinates"];
             NSNumber *latitude;
             NSNumber *longitude;
+            NSNumber *altitude;
             if (coordinates.count > 1) {
                 latitude = coordinates[0];
                 longitude = coordinates[1];
+                if (coordinates.count > 2) {
+                    altitude = coordinates[2];
+                }else{
+                    altitude = [NSNumber numberWithInt:0];
+                }
             }
             
             NSString *type = [spotDic objectForKey:@"type"];
@@ -963,13 +1004,22 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                 type = @"";
             }
             
-//            CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake(myLocation.coordinate.latitude + WT_RANDOM(-0.1, 0.1), myLocation.coordinate.longitude + WT_RANDOM(-0.1, 0.1));
+            NSString *address = [spotDic objectForKey:@"address"];
+            if (address == nil) {
+                address = @"";
+            }
             
-            CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake([longitude doubleValue], [latitude doubleValue]);
+//            CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake(myLocation.coordinate.latitude + WT_RANDOM(-0.01, 0.01), myLocation.coordinate.longitude + WT_RANDOM(-0.1, 0.1));
             
+            CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake([longitude doubleValue] - 0.00347516, [latitude doubleValue] - 0.01223381);
+            //百度地图 转换为gps
+            
+//            DLog(@"转换前 %f %f",locationCoordinate.longitude,locationCoordinate.latitude);
+//            CLLocationCoordinate2D locationCoordinate2 = [self hhTrans_bdGPS:locationCoordinate];
+//            DLog(@"转换后 %f %f",locationCoordinate2.longitude,locationCoordinate2.latitude);
             
             CLLocation *location = [[CLLocation alloc] initWithCoordinate:locationCoordinate
-                                                                 altitude:0
+                                                                 altitude:[altitude doubleValue]
                                                        horizontalAccuracy:0
                                                          verticalAccuracy:0
                                                                 timestamp:[NSDate date]];
@@ -981,7 +1031,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                                                      image:image
                                                     images:[images componentsJoinedByString:@","]
                                                      voice:audio
-                                                   address:[spotDic objectForKey:@"address"]
+                                                   address:address
                                                      type:type
                           
                           ];
@@ -1092,7 +1142,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
 //                                                             voice:jingdianList.voice
 //                                  
 //                                ];
-//                    DLog(@"%@",poi.jsonRepresentation);
+//
 //                    
 //                    [poiManager addPoi:poi];
 //                    
@@ -1182,6 +1232,53 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
 //        return;
 //    }];
 //}
+
+
+//  把火星坐标转换成百度坐标
+-(CLLocationCoordinate2D)hhTrans_bdGPS:(CLLocationCoordinate2D)fireGps
+{
+    
+    CLLocationCoordinate2D bdGps;
+    
+    double huo_x=fireGps.longitude;
+    
+    double huo_y=fireGps.latitude;
+    
+    double z = sqrt(huo_x * huo_x + huo_y * huo_y) + 0.00002 * sin(huo_y * 3.14159265358979324 * 3000.0 / 180.0);
+    
+    double theta = atan2(huo_y, huo_x) + 0.000003 * cos(huo_x * 3.14159265358979324 * 3000.0 / 180.0);
+    
+    bdGps.longitude = z * cos(theta) + 0.0065;
+    
+    bdGps.latitude = z * sin(theta) + 0.006;
+    
+    return bdGps;
+    
+}
+
+// 百度转火星
+-(CLLocationCoordinate2D)hhTrans_GCGPS:(CLLocationCoordinate2D)baiduGps
+{
+    
+    CLLocationCoordinate2D googleGps;
+    
+    double bd_x=baiduGps.longitude - 0.0065;
+    
+    double bd_y=baiduGps.latitude - 0.006;
+    
+    double z = sqrt(bd_x * bd_x + bd_y * bd_y) - 0.00002 * sin(bd_y *  3.14159265358979324 * 3000.0 / 180.0);
+    
+    double theta = atan2(bd_y, bd_x) - 0.000003 * cos(bd_x * 3.14159265358979324 * 3000.0 / 180.0);
+    
+    googleGps.longitude = z * cos(theta);
+    
+    googleGps.latitude = z * sin(theta);
+    
+    return googleGps;
+    
+}
+
+
 
 #pragma mark - CLLocationManagerDelegate
 -(void)centralManagerDidUpdateState:(CBCentralManager *)central
