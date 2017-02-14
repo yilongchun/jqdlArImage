@@ -374,7 +374,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
         }
         
         
-//        debugLabel.text = debugStr;
+        debugLabel.text = debugStr;
 //        DLog(@"%@",debugStr);
         
     }
@@ -423,7 +423,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     myLocation = (CLLocation *)firstLocation;
 //    DLog(@"当前坐标 %@",myLocation);
     
-    debugLabel.text = [NSString stringWithFormat:@"%@",myLocation];
+//    debugLabel.text = [NSString stringWithFormat:@"%@",myLocation];
 //    DLog(@"didUpdateLocations");
     if ( firstLocation )
     {
