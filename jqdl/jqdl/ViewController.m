@@ -331,7 +331,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
 //    // 取出之前保存的版本号
 //    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
 //    NSString *appVersion = [userDefaults objectForKey:@"appVersion"];
-//    
+////
 //    if (appVersion == nil || ![appVersion isEqualToString:currentAppVersion]) {
 //        // 保存最新的版本号
 //        [userDefaults setValue:currentAppVersion forKey:@"appVersion"];
@@ -371,10 +371,9 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     NSDictionary* testdic = BMKConvertBaiduCoorFrom(coor,BMK_COORDTYPE_GPS);
     //解密加密后的坐标字典
     CLLocationCoordinate2D baiduCoor = BMKCoorDictionaryDecode(testdic);//转换后的百度坐标
-    NSLog(@"转换后:x=%f,y=%f",baiduCoor.latitude,baiduCoor.longitude);
+    NSLog(@"转换后:x=%lf,y=%lf",baiduCoor.latitude,baiduCoor.longitude);
 
-    CLLocationCoordinate2D coor4 = [self hhTrans_bdGPS:coor];//
-    NSLog(@"转换后:x=%f,y=%f",coor4.latitude,coor4.longitude);
+    
     
     //
     //
@@ -916,61 +915,56 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
 //}
 
 
-//  把火星坐标转换成百度坐标
--(CLLocationCoordinate2D)hhTrans_bdGPS:(CLLocationCoordinate2D)fireGps
-{
-    
-    CLLocationCoordinate2D bdGps;
-    
-    double huo_x=fireGps.longitude;
-    
-    double huo_y=fireGps.latitude;
-    
-    double z = sqrt(huo_x * huo_x + huo_y * huo_y) + 0.00002 * sin(huo_y * 3.14159265358979324 * 3000.0 / 180.0);
-    
-    double theta = atan2(huo_y, huo_x) + 0.000003 * cos(huo_x * 3.14159265358979324 * 3000.0 / 180.0);
-    
-    bdGps.longitude = z * cos(theta) + 0.0065;
-    
-    bdGps.latitude = z * sin(theta) + 0.006;
-    
-    return bdGps;
-    
-}
-
-// 百度转火星
--(CLLocationCoordinate2D)hhTrans_GCGPS:(CLLocationCoordinate2D)baiduGps
-{
-    
-    CLLocationCoordinate2D googleGps;
-    
-    double bd_x=baiduGps.longitude - 0.0065;
-    
-    double bd_y=baiduGps.latitude - 0.006;
-    
-    double z = sqrt(bd_x * bd_x + bd_y * bd_y) - 0.00002 * sin(bd_y *  3.14159265358979324 * 3000.0 / 180.0);
-    
-    double theta = atan2(bd_y, bd_x) - 0.000003 * cos(bd_x * 3.14159265358979324 * 3000.0 / 180.0);
-    
-    googleGps.longitude = z * cos(theta);
-    
-    googleGps.latitude = z * sin(theta);
-    
-    return googleGps;
-    
-}
-
-
 #pragma mark - Delegation
 #pragma mark CLLocationManager
 
 - (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status{
     
-    if (status == kCLAuthorizationStatusAuthorizedAlways) {
-        noticeFlag = NO;
-        [self.locationmanager startMonitoringForRegion:self.beacon1];//开始MonitoringiBeacon+
-        [self.locationmanager startRangingBeaconsInRegion:self.beacon1];//开始RegionBeacons
+//    if (status == kCLAuthorizationStatusAuthorizedAlways) {
+//        noticeFlag = NO;
+//        [self.locationmanager startMonitoringForRegion:self.beacon1];//开始MonitoringiBeacon+
+//        [self.locationmanager startRangingBeaconsInRegion:self.beacon1];//开始RegionBeacons
+//    }
+    
+    
+    NSLog(@"【注意】 ———— 定位授权的状态将要发生改变！");
+    switch (status) {
+        case kCLAuthorizationStatusNotDetermined: {
+            NSLog(@"定位授权状态：———— 用户还未决定授权状态！"); // 什么都不做，不能进行定位（这种情况常见于第一次安装应用打开后用户还未决定如何选择定位方式）
+        }
+            break;
+        case kCLAuthorizationStatusAuthorizedAlways: {
+            NSLog(@"定位授权状态：———— 已授权一直定位！");
+            if ([_locationmanager respondsToSelector:@selector(requestAlwaysAuthorization)]){
+                [_locationmanager requestAlwaysAuthorization];
+                [_locationmanager startUpdatingLocation]; // 开始刷新定位
+                
+                noticeFlag = NO;
+                [self.locationmanager startMonitoringForRegion:self.beacon1];//开始MonitoringiBeacon+
+                [self.locationmanager startRangingBeaconsInRegion:self.beacon1];//开始RegionBeacons
+            }
+        }
+            break;
+        case kCLAuthorizationStatusAuthorizedWhenInUse: {
+            NSLog(@"定位授权状态：———— 已授权使用期间定位！");
+            if ([_locationmanager respondsToSelector:@selector(requestWhenInUseAuthorization)]){
+                [_locationmanager requestWhenInUseAuthorization];
+                [_locationmanager startUpdatingLocation]; // 开始刷新定位
+            }
+        }
+            break;
+        case kCLAuthorizationStatusDenied: {
+            NSLog(@"定位授权状态：———— 已拒绝定位！");
+            [_locationmanager stopUpdatingLocation]; // 停止刷新定位
+        }
+            break;
+        default:{
+            
+        }
+            break;
     }
+    
+    
 }
 
 //发现设备进入iBeacon监测范围
@@ -1147,10 +1141,6 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                                 
                                 CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake([longitude doubleValue], [latitude doubleValue]);
                                 
-                                DLog(@"转换前 %f %f",locationCoordinate.longitude,locationCoordinate.latitude);
-                                CLLocationCoordinate2D locationCoordinate2 = [self hhTrans_bdGPS:locationCoordinate];
-                                DLog(@"转换后 %f %f",locationCoordinate2.longitude,locationCoordinate2.latitude);
-                                
                                 CLLocation *location = [[CLLocation alloc] initWithCoordinate:locationCoordinate
                                                                                      altitude:0
                                                                            horizontalAccuracy:0
@@ -1309,23 +1299,23 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     
     
     
-    if ( firstLocation )
-    {
-        myLocation = (CLLocation *)firstLocation;
-        //        [manager stopUpdatingLocation];
-        
-        //        //加载数据 景区
-        //        [self loadStore];
-        
-        //        manager.delegate = nil;
-        //
-        //        [self generatePois:1 aroundLocation:location];
-        //
-        //        WTPoiManager *poiManager = objc_getAssociatedObject(self, kWTAugmentedRealityViewController_AssociatedPoiManagerKey);
-        //        NSString *poisInJsonData = [poiManager convertPoiModelToJson];
-        //
-        //        [self.architectView callJavaScript:[NSString stringWithFormat:@"World.loadPoisFromJsonData(%@)", poisInJsonData]];
-    }
+//    if ( firstLocation )
+//    {
+//        myLocation = (CLLocation *)firstLocation;
+//        //        [manager stopUpdatingLocation];
+//        
+//        //        //加载数据 景区
+//        //        [self loadStore];
+//        
+//        //        manager.delegate = nil;
+//        //
+//        //        [self generatePois:1 aroundLocation:location];
+//        //
+//        //        WTPoiManager *poiManager = objc_getAssociatedObject(self, kWTAugmentedRealityViewController_AssociatedPoiManagerKey);
+//        //        NSString *poisInJsonData = [poiManager convertPoiModelToJson];
+//        //
+//        //        [self.architectView callJavaScript:[NSString stringWithFormat:@"World.loadPoisFromJsonData(%@)", poisInJsonData]];
+//    }
 }
 
 /** 不能获取位置信息时调用*/

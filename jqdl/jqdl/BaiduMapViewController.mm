@@ -169,7 +169,12 @@
         WTPoi *poi = [_jingdianArray objectAtIndex:i];
         //添加PointAnnotation
         MyPointAnnotation* annotation = [[MyPointAnnotation alloc]init];
-        CLLocationCoordinate2D coor = poi.location.coordinate;
+        
+        
+        
+        CLLocationCoordinate2D coor = CLLocationCoordinate2DMake(poi.location.coordinate.latitude + 0.00347516, poi.location.coordinate.longitude + 0.01223381);
+        
+//        CLLocationCoordinate2D coor = poi.location.coordinate;
         annotation.coordinate = coor;
         annotation.title = poi.name;
         annotation.poi = poi;
@@ -360,7 +365,7 @@
         oldBtn = btn;
     }
     
-    DLog(@"%d",btn.tag);
+    
     
     
     [_mapView removeAnnotations:annotations];
@@ -409,7 +414,8 @@
             
             //添加PointAnnotation
             MyPointAnnotation* annotation = [[MyPointAnnotation alloc]init];
-            CLLocationCoordinate2D coor = poi.location.coordinate;
+            CLLocationCoordinate2D coor = CLLocationCoordinate2DMake(poi.location.coordinate.latitude + 0.00347516, poi.location.coordinate.longitude + 0.01223381);
+//            CLLocationCoordinate2D coor = poi.location.coordinate;
             annotation.coordinate = coor;
             annotation.title = poi.name;
             annotation.poi = poi;
