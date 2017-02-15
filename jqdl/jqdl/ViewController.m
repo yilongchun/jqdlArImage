@@ -119,390 +119,24 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     
     
 //    [self.locationmanager requestWhenInUseAuthorization];
-    [self.locationmanager requestAlwaysAuthorization];
+    [self.locationmanager requestAlwaysAuthorization];//授权用户开启定位
     if ([CLLocationManager locationServicesEnabled]) { // 判断是否打开了位置服务
         
-        [self.locationmanager startUpdatingLocation];
-        [self loadStore];
+        [self.locationmanager startUpdatingLocation];//开始定位
+//        [self loadStore];
     }else{
         DLog(@"没有开启定位");
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"定位服务已经关闭"
+                                                        message:@"请进入系统【设置】>【隐私】>【定位服务】中打开开关，并允许本应用使用定位服务"
+                                                       delegate:self
+                                              cancelButtonTitle:@"确定"
+                                              otherButtonTitles:nil, nil];
+        [alert show];
     }
 
 }
 
-#pragma mark - Delegation
-#pragma mark CLLocationManager
 
-- (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status{
-    
-    if (status == kCLAuthorizationStatusAuthorizedAlways) {
-        noticeFlag = NO;
-        [self.locationmanager startMonitoringForRegion:self.beacon1];//开始MonitoringiBeacon+
-        [self.locationmanager startRangingBeaconsInRegion:self.beacon1];//开始RegionBeacons
-        
-    }
-}
-
-//发现设备进入iBeacon监测范围
--(void)locationManager:(CLLocationManager *)manager didEnterRegion:(CLRegion *)region{
-    noticeFlag = NO;
-    [self.locationmanager startRangingBeaconsInRegion:self.beacon1];//开始RegionBeacons
-    
-    [self showHintInView:self.view hint:@"你已进入iBeacon区域"];
-    
-//    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"进入iBeacon区域" message:@"" preferredStyle:UIAlertControllerStyleAlert];
-//    UIAlertAction *action = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleDefault handler:nil];
-//    [alert addAction:action];
-//    [self presentViewController:alert animated:YES completion:nil];
-    
-}
-
-//发现设备离开iBeacon监测范围
-- (void)locationManager:(CLLocationManager *)manager didExitRegion:(CLRegion *)region {
-    noticeFlag = YES;
-    [self.locationmanager stopRangingBeaconsInRegion:self.beacon1];
-    
-    [self showHintInView:self.view hint:@"你已离开iBeacon区域"];
-    
-//    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"离开iBeacon区域" message:@"" preferredStyle:UIAlertControllerStyleAlert];
-//    UIAlertAction *action = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleDefault handler:nil];
-//    [alert addAction:action];
-//    [self presentViewController:alert animated:YES completion:nil];
-//    if ([region isKindOfClass:[CLBeaconRegion class]]) {
-//        UILocalNotification *notification = [[UILocalNotification alloc] init];
-//        notification.alertBody = @"Are you forgetting something?";
-//        notification.soundName = @"Default";
-//        [[UIApplication sharedApplication] presentLocalNotificationNow:notification];
-//    }
-}
-
-//找的iBeacon后扫描它的信息
-
-- (void)locationManager:(CLLocationManager *)manager didRangeBeacons:(NSArray *)beacons inRegion:(CLBeaconRegion *)region{
-    
-    //如果存在不是我们要监测的iBeacon那就停止扫描他
-    
-    if (![[region.proximityUUID UUIDString] isEqualToString:BEACONUUID]){
-        
-        [self.locationmanager stopMonitoringForRegion:region];
-        
-        [self.locationmanager stopRangingBeaconsInRegion:region];
-        
-    }
-    
-    
-    NSMutableString *debugStr = [NSMutableString string];
-    for (int i = 0;i < beacons.count;i++) {
-        CLBeacon* beacon = beacons[i];
-//        NSLog(@"UUID:%@ major:%d minor:%d rssi:%ld proximity:%ld accuracy:%f",[beacon.proximityUUID UUIDString],[beacon.major intValue],[beacon.minor intValue],beacon.rssi,beacon.proximity,beacon.accuracy);
-        if (beacon.accuracy > 0 ) {
-            [debugStr appendString:[NSString stringWithFormat:@"minor:%d accuracy:%f\n",[beacon.minor intValue],beacon.accuracy]];
-            
-            
-            
-            if ([beacon.major intValue] == 10) {
-                if ([beacon.minor intValue] == 1) {//1模拟景区
-                    
-                    if (beacon.accuracy < 50) {//进入景区
-                        if (![jingquType isEqualToString:@"2"]) {
-                            jingquType = @"2";
-                            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"即将切换到景区导览模式" message:@"检测到您已经抵达景区周边范围" preferredStyle:UIAlertControllerStyleAlert];
-                            UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-                                [self performBlock:^{
-                                    [self.navigationController popToRootViewControllerAnimated:YES];
-                                    [self loadSpots];//重新加载ar数据
-                                } afterDelay:0.];
-                            }];
-                            [alert addAction:action1];
-                            [self presentViewController:alert animated:YES completion:nil];
-                        }
-                    }else{//离开景区
-                        
-                        if (![jingquType isEqualToString:@"1"]) {
-                            jingquType = @"1";
-                            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"即将切换到街景导览模式" message:@"检测到您已经进入街道周边范围" preferredStyle:UIAlertControllerStyleAlert];
-                            UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-                                [self performBlock:^{
-                                    [self.navigationController popToRootViewControllerAnimated:YES];
-                                    [self loadStore];//重新加载ar数据
-                                } afterDelay:0.];
-                            }];
-                            [alert addAction:action1];
-                            [self presentViewController:alert animated:YES completion:nil];
-                        }
-                        
-                        
-                    }
-                }
-                
-                
-                
-                
-                
-                
-                if (spotsArr) {
-                    for (int j = 0;j < spotsArr.count;j++) {
-                        
-                        NSDictionary *spot = spotsArr[j];
-                        NSDictionary *ibeacon = [spot objectForKey:@"ibeacon"];
-                        if (ibeacon) {
-                            NSString *uuid = [ibeacon objectForKey:@"uuid"];
-                            NSString *major_number = [ibeacon objectForKey:@"major_number"];
-                            NSString *minor_number = [ibeacon objectForKey:@"minor_number"];
-                            NSNumber *effective_radius = [ibeacon objectForKey:@"effective_radius"];
-                            
-                            
-                
-                            
-                            if ([[beacon.proximityUUID UUIDString] isEqualToString:uuid] &&
-                                [beacon.major intValue] == [major_number intValue] &&
-                                [beacon.minor intValue] == [minor_number intValue] &&
-                                beacon.accuracy*100 < [effective_radius intValue] &&
-                                ![minor_number isEqualToString:last_minor_number]) {
-                                
-                                NSNumber *is_public = [spot objectForKey:@"is_public"];
-                                if (![is_public boolValue]) {
-                                    continue;
-                                }
-                                
-                                NSTimeInterval timeInterval = [[NSDate date]
-                                                               timeIntervalSinceDate:self.lastPlaySoundDate];
-                                if (timeInterval < kDefaultPlaySoundInterval) {
-                                    //如果距离上次响铃和震动时间太短, 则跳过响铃
-                                    NSLog(@"skip ringing & vibration %@, %@", [NSDate date], self.lastPlaySoundDate);
-                                    return;
-                                }
-                                
-                                
-                                
-                                //保存最后一次响铃时间
-                                self.lastPlaySoundDate = [NSDate date];
-                                
-                                DLog(@"%@ %@ %@ %d last_minor_number:%@",uuid,major_number,minor_number,[effective_radius intValue],last_minor_number);
-                                last_minor_number = minor_number;
-                            
-                                NSArray *imagesArr = [spot objectForKey:@"images"];
-                                NSMutableArray *images = [NSMutableArray array];
-                                NSString *image = @"";
-                                
-                                [imagesArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                                    [images addObject:[obj objectForKey:@"url"]];
-                                }];
-                                if (images.count > 0) {
-                                    image = [images objectAtIndex:0];
-                                }
-                                
-                                NSArray *audio_clips = [spot objectForKey:@"audio_clips"];
-                                NSString *audio = @"";
-                                if (audio_clips.count > 0) {
-                                    audio = [[audio_clips objectAtIndex:0] objectForKey:@"url"];
-                                }
-                                
-                                NSArray *coordinates = [spot objectForKey:@"coordinates"];
-                                NSNumber *latitude;
-                                NSNumber *longitude;
-                                if (coordinates.count > 1) {
-                                    latitude = coordinates[0];
-                                    longitude = coordinates[1];
-                                }
-                                
-                                NSString *type = [spot objectForKey:@"type"];
-                                
-                                NSString *address = [spot objectForKey:@"address"];
-                                if (address == nil) {
-                                    address = @"";
-                                }
-                                
-                                //            CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake(myLocation.coordinate.latitude + WT_RANDOM(-0.1, 0.1), myLocation.coordinate.longitude + WT_RANDOM(-0.1, 0.1));
-                                
-                                CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake([longitude doubleValue], [latitude doubleValue]);
-                                
-                                DLog(@"转换前 %f %f",locationCoordinate.longitude,locationCoordinate.latitude);
-                                CLLocationCoordinate2D locationCoordinate2 = [self hhTrans_bdGPS:locationCoordinate];
-                                DLog(@"转换后 %f %f",locationCoordinate2.longitude,locationCoordinate2.latitude);
-                                
-                                CLLocation *location = [[CLLocation alloc] initWithCoordinate:locationCoordinate
-                                                                                     altitude:0
-                                                                           horizontalAccuracy:0
-                                                                             verticalAccuracy:0
-                                                                                    timestamp:[NSDate date]];
-                                
-                                WTPoi *poi = [[WTPoi alloc] initWithIdentifier:[spot objectForKey:@"id"]
-                                                                      location:location
-                                                                          name:[spot objectForKey:@"name"]
-                                                           detailedDescription:[spot objectForKey:@"description"]
-                                                                         image:image
-                                                                        images:[images componentsJoinedByString:@","]
-                                                                         voice:audio
-                                                                       address:address
-                                                                          type:type
-                                              
-                                              ];
-                                DLog(@"%@",poi.jsonRepresentation);
-                                
-                                UIBarButtonItem *backItem=[[UIBarButtonItem alloc] init];
-                                UIImage *backImage = [UIImage imageNamed:@"navi_back"];
-                                [backItem setBackButtonBackgroundImage:[backImage resizableImageWithCapInsets:UIEdgeInsetsMake(0, backImage.size.width, 0, 0)] forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];//更改背景图片
-                                self.navigationItem.backBarButtonItem = backItem;
-                                
-                                DetailViewController *vc = [[DetailViewController alloc] init];
-                                vc.poi = poi;
-                                [self.navigationController pushViewController:vc animated:YES];
-                                
-                                
-                                
-                                
-                            }
-                        }
-                        
-                    }
-                }
-                
-                
-//                if ([beacon.minor intValue] == 4) {//4模拟景点
-//                    if (beacon.accuracy < 0.5) {//靠近景点
-//                        if (!trackerFlag) {
-//                            trackerFlag = YES;
-//                            TrackerResultViewController *vc = [[TrackerResultViewController alloc] init];
-//                            [self.navigationController pushViewController:vc animated:YES];
-//                        }
-//                    }else{
-//                        trackerFlag = NO;
-//                    }
-//                }
-            }
-        }
-        
-        
-        debugLabel.text = debugStr;
-//        DLog(@"%@",debugStr);
-        
-    }
-    
-    
-    
-    
-    
-//    //最近的iBeacon
-//    CLBeacon *immediateBeacon;
-//    if (beaconsArray.count > 0) {
-//        immediateBeacon = beaconsArray[0];
-//    }
-//    //查找最近的iBeacon
-//    for (CLBeacon* beacon in beaconsArray) {
-//        if (beacon.accuracy > 0 && beacon.accuracy < immediateBeacon.accuracy) {
-//            immediateBeacon = beacon;
-//        }
-//    }
-//    if (immediateBeacon) {
-////        [self showHintInView:self.view hint:[NSString stringWithFormat:@"%f",immediateBeacon.accuracy]];
-//        
-//        NSLog(@"最近的 UUID:%@ major:%d minor:%d rssi:%ld proximity:%ld accuracy:%f",[immediateBeacon.proximityUUID UUIDString],[immediateBeacon.major intValue],[immediateBeacon.minor intValue],immediateBeacon.rssi,immediateBeacon.proximity,immediateBeacon.accuracy);//信号
-//        
-//        if (!noticeFlag && immediateBeacon.accuracy < 1) {
-//            noticeFlag = YES;
-//            
-//            
-//            [self performBlock:^{
-//                TrackerResultViewController *vc = [[TrackerResultViewController alloc] init];
-//                [self.navigationController pushViewController:vc animated:YES];
-//            } afterDelay:1.5];
-//            
-//        }
-//    }
-//    self.beaconArr = beacons;
-}
-
--(void)locationManager:(CLLocationManager *)manager monitoringDidFailForRegion:(CLRegion *)region withError:(NSError *)error{
-    NSLog(@"Failed monitoring region: %@",error);
-}
-
-- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
-{
-    id firstLocation = [locations firstObject];
-    myLocation = (CLLocation *)firstLocation;
-//    DLog(@"当前坐标 %@",myLocation);
-    
-//    debugLabel.text = [NSString stringWithFormat:@"%@",myLocation];
-//    DLog(@"didUpdateLocations");
-    
-    
-    
-    DLog(@"%f %f ",myLocation.coordinate.latitude,myLocation.coordinate.longitude);
-    
-    
-    //其他坐标系转为百度坐标系
-    
-    NSDictionary* testdic1 = BMKConvertBaiduCoorFrom(myLocation.coordinate,BMK_COORDTYPE_GPS);
-    CLLocationCoordinate2D baiduCoor1 = BMKCoorDictionaryDecode(testdic1);//转换后的百度坐标
-    
-    NSDictionary* testdic2 = BMKConvertBaiduCoorFrom(CLLocationCoordinate2DMake(30.735248,111.31595),BMK_COORDTYPE_GPS);
-    CLLocationCoordinate2D baiduCoor2 = BMKCoorDictionaryDecode(testdic2);//转换后的百度坐标
-    
-    BMKMapPoint point1 = BMKMapPointForCoordinate(baiduCoor1);//当前位置
-    BMKMapPoint point2 = BMKMapPointForCoordinate(baiduCoor2);//景区中心点
-    
-//    BMKMapPoint point1 = BMKMapPointForCoordinate(myLocation.coordinate);//当前位置
-//    BMKMapPoint point2 = BMKMapPointForCoordinate(CLLocationCoordinate2DMake(30.735248,111.31595));//景区中心点
-    
-    CLLocationDistance distance = BMKMetersBetweenMapPoints(point1,point2);
-    DLog(@"当前位置距离景区中心距离 %fm",distance);
-    debugLabel.text = [NSString stringWithFormat:@"当前位置距离景区中心距离 %fm",distance];
-    if (distance < 300) {//进入景区
-        if (![jingquType isEqualToString:@"2"]) {//模拟景区
-            jingquType = @"2";
-            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"即将切换到景区导览模式" message:@"检测到您已经抵达景区周边范围" preferredStyle:UIAlertControllerStyleAlert];
-            UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-                [self performBlock:^{
-                    [self.navigationController popToRootViewControllerAnimated:YES];
-                    [self loadSpots];//重新加载ar数据
-                } afterDelay:0.];
-            }];
-            [alert addAction:action1];
-            [self presentViewController:alert animated:YES completion:nil];
-        }
-    }else{
-        if (![jingquType isEqualToString:@"1"]) {
-            jingquType = @"1";
-            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"即将切换到街景导览模式" message:@"检测到您已经进入街道周边范围" preferredStyle:UIAlertControllerStyleAlert];
-            UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-                [self performBlock:^{
-                    [self.navigationController popToRootViewControllerAnimated:YES];
-                    [self loadStore];//重新加载ar数据
-                } afterDelay:0.];
-            }];
-            [alert addAction:action1];
-            [self presentViewController:alert animated:YES completion:nil];
-        }
-    }
-    
-    
-    
-    
-    if ( firstLocation )
-    {
-        myLocation = (CLLocation *)firstLocation;
-//        [manager stopUpdatingLocation];
-        
-//        //加载数据 景区
-//        [self loadStore];
-        
-//        manager.delegate = nil;
-//
-//        [self generatePois:1 aroundLocation:location];
-//        
-//        WTPoiManager *poiManager = objc_getAssociatedObject(self, kWTAugmentedRealityViewController_AssociatedPoiManagerKey);
-//        NSString *poisInJsonData = [poiManager convertPoiModelToJson];
-//        
-//        [self.architectView callJavaScript:[NSString stringWithFormat:@"World.loadPoisFromJsonData(%@)", poisInJsonData]];
-    }
-}
-
-/** 不能获取位置信息时调用*/
--(void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
-{
-    NSLog(@"获取定位失败");
-}
 
 //- (void)generatePois:(NSUInteger)numberOfPois aroundLocation:(CLLocation *)referenceLocation
 //{
@@ -562,7 +196,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     self.jz_navigationBarBackgroundAlpha = 0.f;
     
     
-    self.centralManager = [[CBCentralManager alloc] initWithDelegate:self queue:nil];
+    self.centralManager = [[CBCentralManager alloc] initWithDelegate:self queue:nil];//蓝牙
     
     
     jingquType = @"0";
@@ -730,30 +364,25 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     
     
     //其他坐标系转为百度坐标系
-    
-    
-    
-    
-    CLLocationCoordinate2D coor = CLLocationCoordinate2DMake(30.767777777777777,111.26527777777778);//原始坐标 GPS
+    CLLocationCoordinate2D coor = CLLocationCoordinate2DMake(30.73540884,111.31521866);//原始坐标 GPS
 //    CLLocationCoordinate2D coor = CLLocationCoordinate2DMake(30.735248 ,111.31595);//原始坐标 WIKITUDE
-//    
+    NSLog(@"转换前:x=%f,y=%f",coor.latitude,coor.longitude);
     //转换 google地图、soso地图、aliyun地图、mapabc地图和amap地图所用坐标至百度坐标
     NSDictionary* testdic = BMKConvertBaiduCoorFrom(coor,BMK_COORDTYPE_GPS);
-    NSLog(@"x=%@,y=%@",[testdic objectForKey:@"x"],[testdic objectForKey:@"y"]);
     //解密加密后的坐标字典
     CLLocationCoordinate2D baiduCoor = BMKCoorDictionaryDecode(testdic);//转换后的百度坐标
     NSLog(@"转换后:x=%f,y=%f",baiduCoor.latitude,baiduCoor.longitude);
-//
-//    
-//    //    //计算距离
-//    BMKMapPoint point1 = BMKMapPointForCoordinate(coor);//当前位置
-//    BMKMapPoint point2 = BMKMapPointForCoordinate(CLLocationCoordinate2DMake(30.739950,111.327881));//目的地
-//    CLLocationDistance distance = BMKMetersBetweenMapPoints(point1,point2);
-//    DLog(@"distance %f",distance);
+
+    CLLocationCoordinate2D coor4 = [self hhTrans_bdGPS:coor];//
+    NSLog(@"转换后:x=%f,y=%f",coor4.latitude,coor4.longitude);
     
-    CLLocationCoordinate2D coor3 = CLLocationCoordinate2DMake(30.73653867,111.31557422);//
-    CLLocationCoordinate2D coor4 = [self hhTrans_bdGPS:coor3];//
-    DLog(@"%f %f",coor4.latitude,coor4.longitude);
+    //
+    //
+    //    //    //计算距离
+    //    BMKMapPoint point1 = BMKMapPointForCoordinate(coor);//当前位置
+    //    BMKMapPoint point2 = BMKMapPointForCoordinate(CLLocationCoordinate2DMake(30.739950,111.327881));//目的地
+    //    CLLocationDistance distance = BMKMetersBetweenMapPoints(point1,point2);
+    //    DLog(@"distance %f",distance);
     
     
 }
@@ -1332,6 +961,401 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
 }
 
 
+#pragma mark - Delegation
+#pragma mark CLLocationManager
+
+- (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status{
+    
+    if (status == kCLAuthorizationStatusAuthorizedAlways) {
+        noticeFlag = NO;
+        [self.locationmanager startMonitoringForRegion:self.beacon1];//开始MonitoringiBeacon+
+        [self.locationmanager startRangingBeaconsInRegion:self.beacon1];//开始RegionBeacons
+    }
+}
+
+//发现设备进入iBeacon监测范围
+-(void)locationManager:(CLLocationManager *)manager didEnterRegion:(CLRegion *)region{
+    noticeFlag = NO;
+    [self.locationmanager startRangingBeaconsInRegion:self.beacon1];//开始RegionBeacons
+    
+    [self showHintInView:self.view hint:@"你已进入iBeacon区域"];
+    
+    //    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"进入iBeacon区域" message:@"" preferredStyle:UIAlertControllerStyleAlert];
+    //    UIAlertAction *action = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleDefault handler:nil];
+    //    [alert addAction:action];
+    //    [self presentViewController:alert animated:YES completion:nil];
+    
+}
+
+//发现设备离开iBeacon监测范围
+- (void)locationManager:(CLLocationManager *)manager didExitRegion:(CLRegion *)region {
+    noticeFlag = YES;
+    [self.locationmanager stopRangingBeaconsInRegion:self.beacon1];
+    
+    [self showHintInView:self.view hint:@"你已离开iBeacon区域"];
+    
+    //    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"离开iBeacon区域" message:@"" preferredStyle:UIAlertControllerStyleAlert];
+    //    UIAlertAction *action = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleDefault handler:nil];
+    //    [alert addAction:action];
+    //    [self presentViewController:alert animated:YES completion:nil];
+    //    if ([region isKindOfClass:[CLBeaconRegion class]]) {
+    //        UILocalNotification *notification = [[UILocalNotification alloc] init];
+    //        notification.alertBody = @"Are you forgetting something?";
+    //        notification.soundName = @"Default";
+    //        [[UIApplication sharedApplication] presentLocalNotificationNow:notification];
+    //    }
+}
+
+//找的iBeacon后扫描它的信息
+
+- (void)locationManager:(CLLocationManager *)manager didRangeBeacons:(NSArray *)beacons inRegion:(CLBeaconRegion *)region{
+    
+    //如果存在不是我们要监测的iBeacon那就停止扫描他
+    
+    if (![[region.proximityUUID UUIDString] isEqualToString:BEACONUUID]){
+        
+        [self.locationmanager stopMonitoringForRegion:region];
+        
+        [self.locationmanager stopRangingBeaconsInRegion:region];
+        
+    }
+    
+    
+    NSMutableString *debugStr = [NSMutableString string];
+    for (int i = 0;i < beacons.count;i++) {
+        CLBeacon* beacon = beacons[i];
+        //        NSLog(@"UUID:%@ major:%d minor:%d rssi:%ld proximity:%ld accuracy:%f",[beacon.proximityUUID UUIDString],[beacon.major intValue],[beacon.minor intValue],beacon.rssi,beacon.proximity,beacon.accuracy);
+        if (beacon.accuracy > 0 ) {
+            [debugStr appendString:[NSString stringWithFormat:@"minor:%d accuracy:%f\n",[beacon.minor intValue],beacon.accuracy]];
+            
+            
+            
+            if ([beacon.major intValue] == 10) {
+                if ([beacon.minor intValue] == 1) {//1模拟景区
+                    
+                    if (beacon.accuracy < 50) {//进入景区
+                        if (![jingquType isEqualToString:@"2"]) {
+                            jingquType = @"2";
+                            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"即将切换到景区导览模式" message:@"检测到您已经抵达景区周边范围" preferredStyle:UIAlertControllerStyleAlert];
+                            UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                                [self performBlock:^{
+                                    [self.navigationController popToRootViewControllerAnimated:YES];
+                                    [self loadSpots];//重新加载ar数据
+                                } afterDelay:0.];
+                            }];
+                            [alert addAction:action1];
+                            [self presentViewController:alert animated:YES completion:nil];
+                        }
+                    }else{//离开景区
+                        
+                        if (![jingquType isEqualToString:@"1"]) {
+                            jingquType = @"1";
+                            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"即将切换到街景导览模式" message:@"检测到您已经进入街道周边范围" preferredStyle:UIAlertControllerStyleAlert];
+                            UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                                [self performBlock:^{
+                                    [self.navigationController popToRootViewControllerAnimated:YES];
+                                    [self loadStore];//重新加载ar数据
+                                } afterDelay:0.];
+                            }];
+                            [alert addAction:action1];
+                            [self presentViewController:alert animated:YES completion:nil];
+                        }
+                        
+                        
+                    }
+                }
+                
+                
+                
+                
+                
+                
+                if (spotsArr) {
+                    for (int j = 0;j < spotsArr.count;j++) {
+                        
+                        NSDictionary *spot = spotsArr[j];
+                        NSDictionary *ibeacon = [spot objectForKey:@"ibeacon"];
+                        if (ibeacon) {
+                            NSString *uuid = [ibeacon objectForKey:@"uuid"];
+                            NSString *major_number = [ibeacon objectForKey:@"major_number"];
+                            NSString *minor_number = [ibeacon objectForKey:@"minor_number"];
+                            NSNumber *effective_radius = [ibeacon objectForKey:@"effective_radius"];
+                            
+                            
+                            
+                            
+                            if ([[beacon.proximityUUID UUIDString] isEqualToString:uuid] &&
+                                [beacon.major intValue] == [major_number intValue] &&
+                                [beacon.minor intValue] == [minor_number intValue] &&
+                                beacon.accuracy*100 < [effective_radius intValue] &&
+                                ![minor_number isEqualToString:last_minor_number]) {
+                                
+                                NSNumber *is_public = [spot objectForKey:@"is_public"];
+                                if (![is_public boolValue]) {
+                                    continue;
+                                }
+                                
+                                NSTimeInterval timeInterval = [[NSDate date]
+                                                               timeIntervalSinceDate:self.lastPlaySoundDate];
+                                if (timeInterval < kDefaultPlaySoundInterval) {
+                                    //如果距离上次响铃和震动时间太短, 则跳过响铃
+                                    NSLog(@"skip ringing & vibration %@, %@", [NSDate date], self.lastPlaySoundDate);
+                                    return;
+                                }
+                                
+                                
+                                
+                                //保存最后一次响铃时间
+                                self.lastPlaySoundDate = [NSDate date];
+                                
+                                DLog(@"%@ %@ %@ %d last_minor_number:%@",uuid,major_number,minor_number,[effective_radius intValue],last_minor_number);
+                                last_minor_number = minor_number;
+                                
+                                NSArray *imagesArr = [spot objectForKey:@"images"];
+                                NSMutableArray *images = [NSMutableArray array];
+                                NSString *image = @"";
+                                
+                                [imagesArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                                    [images addObject:[obj objectForKey:@"url"]];
+                                }];
+                                if (images.count > 0) {
+                                    image = [images objectAtIndex:0];
+                                }
+                                
+                                NSArray *audio_clips = [spot objectForKey:@"audio_clips"];
+                                NSString *audio = @"";
+                                if (audio_clips.count > 0) {
+                                    audio = [[audio_clips objectAtIndex:0] objectForKey:@"url"];
+                                }
+                                
+                                NSArray *coordinates = [spot objectForKey:@"coordinates"];
+                                NSNumber *latitude;
+                                NSNumber *longitude;
+                                if (coordinates.count > 1) {
+                                    latitude = coordinates[0];
+                                    longitude = coordinates[1];
+                                }
+                                
+                                NSString *type = [spot objectForKey:@"type"];
+                                
+                                NSString *address = [spot objectForKey:@"address"];
+                                if (address == nil) {
+                                    address = @"";
+                                }
+                                
+                                //            CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake(myLocation.coordinate.latitude + WT_RANDOM(-0.1, 0.1), myLocation.coordinate.longitude + WT_RANDOM(-0.1, 0.1));
+                                
+                                CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake([longitude doubleValue], [latitude doubleValue]);
+                                
+                                DLog(@"转换前 %f %f",locationCoordinate.longitude,locationCoordinate.latitude);
+                                CLLocationCoordinate2D locationCoordinate2 = [self hhTrans_bdGPS:locationCoordinate];
+                                DLog(@"转换后 %f %f",locationCoordinate2.longitude,locationCoordinate2.latitude);
+                                
+                                CLLocation *location = [[CLLocation alloc] initWithCoordinate:locationCoordinate
+                                                                                     altitude:0
+                                                                           horizontalAccuracy:0
+                                                                             verticalAccuracy:0
+                                                                                    timestamp:[NSDate date]];
+                                
+                                WTPoi *poi = [[WTPoi alloc] initWithIdentifier:[spot objectForKey:@"id"]
+                                                                      location:location
+                                                                          name:[spot objectForKey:@"name"]
+                                                           detailedDescription:[spot objectForKey:@"description"]
+                                                                         image:image
+                                                                        images:[images componentsJoinedByString:@","]
+                                                                         voice:audio
+                                                                       address:address
+                                                                          type:type
+                                              
+                                              ];
+                                DLog(@"%@",poi.jsonRepresentation);
+                                
+                                UIBarButtonItem *backItem=[[UIBarButtonItem alloc] init];
+                                UIImage *backImage = [UIImage imageNamed:@"navi_back"];
+                                [backItem setBackButtonBackgroundImage:[backImage resizableImageWithCapInsets:UIEdgeInsetsMake(0, backImage.size.width, 0, 0)] forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];//更改背景图片
+                                self.navigationItem.backBarButtonItem = backItem;
+                                
+                                DetailViewController *vc = [[DetailViewController alloc] init];
+                                vc.poi = poi;
+                                [self.navigationController pushViewController:vc animated:YES];
+                                
+                                
+                                
+                                
+                            }
+                        }
+                        
+                    }
+                }
+                
+                
+                //                if ([beacon.minor intValue] == 4) {//4模拟景点
+                //                    if (beacon.accuracy < 0.5) {//靠近景点
+                //                        if (!trackerFlag) {
+                //                            trackerFlag = YES;
+                //                            TrackerResultViewController *vc = [[TrackerResultViewController alloc] init];
+                //                            [self.navigationController pushViewController:vc animated:YES];
+                //                        }
+                //                    }else{
+                //                        trackerFlag = NO;
+                //                    }
+                //                }
+            }
+        }
+        
+        
+        debugLabel.text = debugStr;
+        //        DLog(@"%@",debugStr);
+        
+    }
+    
+    
+    
+    
+    
+    //    //最近的iBeacon
+    //    CLBeacon *immediateBeacon;
+    //    if (beaconsArray.count > 0) {
+    //        immediateBeacon = beaconsArray[0];
+    //    }
+    //    //查找最近的iBeacon
+    //    for (CLBeacon* beacon in beaconsArray) {
+    //        if (beacon.accuracy > 0 && beacon.accuracy < immediateBeacon.accuracy) {
+    //            immediateBeacon = beacon;
+    //        }
+    //    }
+    //    if (immediateBeacon) {
+    ////        [self showHintInView:self.view hint:[NSString stringWithFormat:@"%f",immediateBeacon.accuracy]];
+    //
+    //        NSLog(@"最近的 UUID:%@ major:%d minor:%d rssi:%ld proximity:%ld accuracy:%f",[immediateBeacon.proximityUUID UUIDString],[immediateBeacon.major intValue],[immediateBeacon.minor intValue],immediateBeacon.rssi,immediateBeacon.proximity,immediateBeacon.accuracy);//信号
+    //
+    //        if (!noticeFlag && immediateBeacon.accuracy < 1) {
+    //            noticeFlag = YES;
+    //
+    //
+    //            [self performBlock:^{
+    //                TrackerResultViewController *vc = [[TrackerResultViewController alloc] init];
+    //                [self.navigationController pushViewController:vc animated:YES];
+    //            } afterDelay:1.5];
+    //
+    //        }
+    //    }
+    //    self.beaconArr = beacons;
+}
+
+-(void)locationManager:(CLLocationManager *)manager monitoringDidFailForRegion:(CLRegion *)region withError:(NSError *)error{
+    NSLog(@"Failed monitoring region: %@",error);
+}
+
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
+{
+    id firstLocation = [locations firstObject];
+    myLocation = (CLLocation *)firstLocation;
+    //    DLog(@"当前坐标 %@",myLocation);
+    
+    //    debugLabel.text = [NSString stringWithFormat:@"%@",myLocation];
+    //    DLog(@"didUpdateLocations");
+    
+    
+    
+    DLog(@"%f %f ",myLocation.coordinate.latitude,myLocation.coordinate.longitude);
+    
+    
+    //其他坐标系转为百度坐标系
+    
+    NSDictionary* testdic1 = BMKConvertBaiduCoorFrom(myLocation.coordinate,BMK_COORDTYPE_GPS);
+    CLLocationCoordinate2D baiduCoor1 = BMKCoorDictionaryDecode(testdic1);//转换后的百度坐标
+    
+    NSDictionary* testdic2 = BMKConvertBaiduCoorFrom(CLLocationCoordinate2DMake(30.735248,111.31595),BMK_COORDTYPE_GPS);
+    CLLocationCoordinate2D baiduCoor2 = BMKCoorDictionaryDecode(testdic2);//转换后的百度坐标
+    
+    BMKMapPoint point1 = BMKMapPointForCoordinate(baiduCoor1);//当前位置
+    BMKMapPoint point2 = BMKMapPointForCoordinate(baiduCoor2);//景区中心点
+    
+    //    BMKMapPoint point1 = BMKMapPointForCoordinate(myLocation.coordinate);//当前位置
+    //    BMKMapPoint point2 = BMKMapPointForCoordinate(CLLocationCoordinate2DMake(30.735248,111.31595));//景区中心点
+    
+    CLLocationDistance distance = BMKMetersBetweenMapPoints(point1,point2);
+    DLog(@"当前位置距离景区中心距离 %fm",distance);
+    debugLabel.text = [NSString stringWithFormat:@"当前位置距离景区中心距离 %fm",distance];
+    if (distance < 300) {//进入景区
+        if (![jingquType isEqualToString:@"2"]) {//模拟景区
+            jingquType = @"2";
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"即将切换到景区导览模式" message:@"检测到您已经抵达景区周边范围" preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                [self performBlock:^{
+                    [self.navigationController popToRootViewControllerAnimated:YES];
+                    [self loadSpots];//重新加载ar数据
+                } afterDelay:0.];
+            }];
+            [alert addAction:action1];
+            [self presentViewController:alert animated:YES completion:nil];
+        }
+    }else{
+        if (![jingquType isEqualToString:@"1"]) {
+            jingquType = @"1";
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"即将切换到街景导览模式" message:@"检测到您已经进入街道周边范围" preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                [self performBlock:^{
+                    [self.navigationController popToRootViewControllerAnimated:YES];
+                    [self loadStore];//重新加载ar数据
+                } afterDelay:0.];
+            }];
+            [alert addAction:action1];
+            [self presentViewController:alert animated:YES completion:nil];
+        }
+    }
+    
+    
+    
+    
+    if ( firstLocation )
+    {
+        myLocation = (CLLocation *)firstLocation;
+        //        [manager stopUpdatingLocation];
+        
+        //        //加载数据 景区
+        //        [self loadStore];
+        
+        //        manager.delegate = nil;
+        //
+        //        [self generatePois:1 aroundLocation:location];
+        //
+        //        WTPoiManager *poiManager = objc_getAssociatedObject(self, kWTAugmentedRealityViewController_AssociatedPoiManagerKey);
+        //        NSString *poisInJsonData = [poiManager convertPoiModelToJson];
+        //
+        //        [self.architectView callJavaScript:[NSString stringWithFormat:@"World.loadPoisFromJsonData(%@)", poisInJsonData]];
+    }
+}
+
+/** 不能获取位置信息时调用*/
+-(void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
+{
+    NSLog(@"获取定位失败");
+    
+    if ( [error code] == kCLErrorDenied ) {
+        //第一次安装含有定位功能的软件时
+        //程序将自动提示用户是否让当前App打开定位功能，
+        //如果这里选择不打开定位功能，
+        //再次调用定位的方法将会失败，并且进到这里。
+        //除非用户在手机的设置页面中重新对该软件打开定位服务，
+        //否则程序只要用到定位就总会进到这里。
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"定位服务已经关闭"
+                                                        message:@"请进入系统【设置】>【隐私】>【定位服务】中打开开关，并允许本应用使用定位服务"
+                                                       delegate:self
+                                              cancelButtonTitle:@"确定"
+                                              otherButtonTitles:nil, nil];
+        [alert show];
+        
+        
+        [self.locationmanager stopUpdatingLocation];
+        
+    }
+    else if ([error code] == kCLErrorHeadingFailure) {
+        
+    }
+    
+}
 
 #pragma mark - CLLocationManagerDelegate
 -(void)centralManagerDidUpdateState:(CBCentralManager *)central
