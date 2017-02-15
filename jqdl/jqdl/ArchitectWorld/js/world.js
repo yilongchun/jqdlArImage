@@ -142,15 +142,44 @@ var World = {
 			World.markerList[i].distanceToUser = distanceToUser;
             var distanceToUserValue = (distanceToUser > 999) ? ((distanceToUser / 1000).toFixed(2) + " km") : (Math.round(distanceToUser) + " m");
             World.markerList[i].descriptionLabel.text = distanceToUserValue;
-            
+            if(distanceToUser < 500){
+                World.markerList[i].markerDrawable_idle.height = 1.0;
+                World.markerList[i].markerDrawable_selected.height = 1.0;
+                
+                World.markerList[i].leftImage.height = 0.8;
+                World.markerList[i].leftImage.offsetX = -1.3;
+                
+                World.markerList[i].htmlDrawable.width = 3.5;
+                World.markerList[i].htmlDrawable.offsetY = -2.5;
+                
+                World.markerList[i].titleLabel.height = 0.4;
+                World.markerList[i].titleLabel.offsetX = -0.8;
+                World.markerList[i].titleLabel.offsetY = 0.2;
+                
+                World.markerList[i].descriptionLabel.height = 0.3;
+                World.markerList[i].descriptionLabel.offsetX = -0.8;
+                World.markerList[i].descriptionLabel.offsetY = -0.2;
+            }else{
+                World.markerList[i].markerDrawable_idle.height = 2.5;
+                World.markerList[i].markerDrawable_selected.height = 2.5;
+                
+                World.markerList[i].leftImage.height = 2.1;
+                World.markerList[i].leftImage.offsetX = -3.3;
+                
+                World.markerList[i].htmlDrawable.width = 9;
+                World.markerList[i].htmlDrawable.offsetY = -6.2;
+                
+                World.markerList[i].titleLabel.height = 0.9;
+                World.markerList[i].titleLabel.offsetX = -2;
+                World.markerList[i].titleLabel.offsetY = 0.55;
+                
+                World.markerList[i].descriptionLabel.height = 0.8;
+                World.markerList[i].descriptionLabel.offsetX = -2;
+                World.markerList[i].descriptionLabel.offsetY = -0.55;
+            }
             
             AR.logger.debug("updateDistanceToUserValues " + i + "," + World.markerList[i].titleLabel.text + "," + World.markerList[i].descriptionLabel.text + "," + distanceToUser + "," + distanceToUserValue);
 		}
-        
-
-        
-        
-        
 	},
 
 	// updates status message shon in small "i"-button aligned bottom center

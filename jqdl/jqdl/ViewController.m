@@ -554,8 +554,8 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                 NSNumber *latitude;
                 NSNumber *longitude;
                 if (coordinates.count > 1) {
-                    latitude = coordinates[0];
-                    longitude = coordinates[1];
+                    longitude = coordinates[0];
+                    latitude = coordinates[1];
                 }
                 
                 NSString *type = [storeDic objectForKey:@"type"];
@@ -565,7 +565,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                 
 //                CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake(myLocation.coordinate.latitude + WT_RANDOM(-0.1, 0.1), myLocation.coordinate.longitude + WT_RANDOM(-0.1, 0.1));
                 
-                CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake([longitude doubleValue] - 0.00347516, [latitude doubleValue] - 0.01223381);
+                CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake([latitude doubleValue] - 0.00347516, [longitude doubleValue] - 0.01223381);
                 
 //                CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake([longitude doubleValue], [latitude doubleValue]);
 //                DLog(@"转换前 %f %f",locationCoordinate.longitude,locationCoordinate.latitude);
@@ -671,8 +671,8 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
             NSNumber *longitude;
             NSNumber *altitude;
             if (coordinates.count > 1) {
-                latitude = coordinates[0];
-                longitude = coordinates[1];
+                longitude = coordinates[0];
+                latitude = coordinates[1];
                 if (coordinates.count > 2) {
                     altitude = coordinates[2];
                 }else{
@@ -692,7 +692,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
             
 //            CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake(myLocation.coordinate.latitude + WT_RANDOM(-0.01, 0.01), myLocation.coordinate.longitude + WT_RANDOM(-0.1, 0.1));
             //latitude 30 longitude 111
-            CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake([longitude doubleValue] - 0.00347516, [latitude doubleValue] - 0.01223381);
+            CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake([latitude doubleValue] - 0.00347516, [longitude doubleValue] - 0.01223381);
             //百度地图 转换为gps
             
 //            DLog(@"转换前 %f %f",locationCoordinate.longitude,locationCoordinate.latitude);
@@ -1126,8 +1126,8 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                                 NSNumber *latitude;
                                 NSNumber *longitude;
                                 if (coordinates.count > 1) {
-                                    latitude = coordinates[0];
-                                    longitude = coordinates[1];
+                                    longitude = coordinates[0];
+                                    latitude = coordinates[1];
                                 }
                                 
                                 NSString *type = [spot objectForKey:@"type"];
@@ -1139,7 +1139,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                                 
                                 //            CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake(myLocation.coordinate.latitude + WT_RANDOM(-0.1, 0.1), myLocation.coordinate.longitude + WT_RANDOM(-0.1, 0.1));
                                 
-                                CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake([longitude doubleValue], [latitude doubleValue]);
+                                CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake([latitude doubleValue] - 0.00347516, [longitude doubleValue] - 0.01223381);
                                 
                                 CLLocation *location = [[CLLocation alloc] initWithCoordinate:locationCoordinate
                                                                                      altitude:0
