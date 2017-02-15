@@ -691,7 +691,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
             }
             
 //            CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake(myLocation.coordinate.latitude + WT_RANDOM(-0.01, 0.01), myLocation.coordinate.longitude + WT_RANDOM(-0.1, 0.1));
-            
+            //latitude 30 longitude 111
             CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake([longitude doubleValue] - 0.00347516, [latitude doubleValue] - 0.01223381);
             //百度地图 转换为gps
             
