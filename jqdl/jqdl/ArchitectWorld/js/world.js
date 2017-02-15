@@ -58,7 +58,7 @@ var World = {
         AR.context.destroyAll();
 		// show radar & set click-listener
 		PoiRadar.show();
-//        PoiRadar.setMaxDistance(10000);
+//        PoiRadar.setMaxDistance(1000);
 //        AR.context.scene.cullingDistance = 10000;
 		$('#radarContainer').unbind('click');
 		$("#radarContainer").click(PoiRadar.clickedRadar);

@@ -19,7 +19,7 @@
 			AR.radar.centerX = 0.5;
 			AR.radar.centerY = 0.5;
 
-			AR.radar.radius = 0.3;
+			AR.radar.radius = 0.5;
 			AR.radar.northIndicator.radius = 0.0;
 
 			AR.radar.enabled = true;
