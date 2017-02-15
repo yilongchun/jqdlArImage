@@ -38,7 +38,7 @@ var World = {
 	currentMarker: null,
 
 	locationUpdateCounter: 0,
-	updatePlacemarkDistancesEveryXLocationUpdates: 10,
+	updatePlacemarkDistancesEveryXLocationUpdates: 1,
     
 	// called to inject new POI data
 	loadPoisFromJsonData: function loadPoisFromJsonDataFn(poiData) {

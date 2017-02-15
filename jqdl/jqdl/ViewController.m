@@ -204,7 +204,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                 if ([beacon.minor intValue] == 1) {//1模拟景区
                     
                     if (beacon.accuracy < 50) {//进入景区
-                        if ([jingquType isEqualToString:@"1"]) {
+                        if (![jingquType isEqualToString:@"2"]) {
                             jingquType = @"2";
                             UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"即将切换到景区导览模式" message:@"检测到您已经抵达景区周边范围" preferredStyle:UIAlertControllerStyleAlert];
                             UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
@@ -218,7 +218,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                         }
                     }else{//离开景区
                         
-                        if ([jingquType isEqualToString:@"2"]) {
+                        if (![jingquType isEqualToString:@"1"]) {
                             jingquType = @"1";
                             UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"即将切换到街景导览模式" message:@"检测到您已经进入街道周边范围" preferredStyle:UIAlertControllerStyleAlert];
                             UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
@@ -425,11 +425,62 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     
 //    debugLabel.text = [NSString stringWithFormat:@"%@",myLocation];
 //    DLog(@"didUpdateLocations");
+    
+    
+    
+    DLog(@"%f %f ",myLocation.coordinate.latitude,myLocation.coordinate.longitude);
+    
+    
+    //其他坐标系转为百度坐标系
+    
+    NSDictionary* testdic1 = BMKConvertBaiduCoorFrom(myLocation.coordinate,BMK_COORDTYPE_GPS);
+    CLLocationCoordinate2D baiduCoor1 = BMKCoorDictionaryDecode(testdic1);//转换后的百度坐标
+    
+    NSDictionary* testdic2 = BMKConvertBaiduCoorFrom(CLLocationCoordinate2DMake(30.735248,111.31595),BMK_COORDTYPE_GPS);
+    CLLocationCoordinate2D baiduCoor2 = BMKCoorDictionaryDecode(testdic2);//转换后的百度坐标
+    
+    BMKMapPoint point1 = BMKMapPointForCoordinate(baiduCoor1);//当前位置
+    BMKMapPoint point2 = BMKMapPointForCoordinate(baiduCoor2);//景区中心点
+    
+//    BMKMapPoint point1 = BMKMapPointForCoordinate(myLocation.coordinate);//当前位置
+//    BMKMapPoint point2 = BMKMapPointForCoordinate(CLLocationCoordinate2DMake(30.735248,111.31595));//景区中心点
+    
+    CLLocationDistance distance = BMKMetersBetweenMapPoints(point1,point2);
+    DLog(@"当前位置距离景区中心距离 %fm",distance);
+    debugLabel.text = [NSString stringWithFormat:@"当前位置距离景区中心距离 %fm",distance];
+    if (distance < 300) {//进入景区
+        if (![jingquType isEqualToString:@"2"]) {//模拟景区
+            jingquType = @"2";
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"即将切换到景区导览模式" message:@"检测到您已经抵达景区周边范围" preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                [self performBlock:^{
+                    [self.navigationController popToRootViewControllerAnimated:YES];
+                    [self loadSpots];//重新加载ar数据
+                } afterDelay:0.];
+            }];
+            [alert addAction:action1];
+            [self presentViewController:alert animated:YES completion:nil];
+        }
+    }else{
+        if (![jingquType isEqualToString:@"1"]) {
+            jingquType = @"1";
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"即将切换到街景导览模式" message:@"检测到您已经进入街道周边范围" preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                [self performBlock:^{
+                    [self.navigationController popToRootViewControllerAnimated:YES];
+                    [self loadStore];//重新加载ar数据
+                } afterDelay:0.];
+            }];
+            [alert addAction:action1];
+            [self presentViewController:alert animated:YES completion:nil];
+        }
+    }
+    
+    
+    
+    
     if ( firstLocation )
     {
-        
-        
-        
         myLocation = (CLLocation *)firstLocation;
 //        [manager stopUpdatingLocation];
         
@@ -514,7 +565,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     self.centralManager = [[CBCentralManager alloc] initWithDelegate:self queue:nil];
     
     
-    jingquType = @"1";
+    jingquType = @"0";
     last_minor_number = @"-1";
     
     titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
@@ -886,10 +937,12 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                 
 //                CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake(myLocation.coordinate.latitude + WT_RANDOM(-0.1, 0.1), myLocation.coordinate.longitude + WT_RANDOM(-0.1, 0.1));
                 
-                CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake([longitude doubleValue], [latitude doubleValue]);
-                DLog(@"转换前 %f %f",locationCoordinate.longitude,locationCoordinate.latitude);
-                CLLocationCoordinate2D locationCoordinate2 = [self hhTrans_bdGPS:locationCoordinate];
-                DLog(@"转换后 %f %f",locationCoordinate2.longitude,locationCoordinate2.latitude);
+                CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake([longitude doubleValue] - 0.00347516, [latitude doubleValue] - 0.01223381);
+                
+//                CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake([longitude doubleValue], [latitude doubleValue]);
+//                DLog(@"转换前 %f %f",locationCoordinate.longitude,locationCoordinate.latitude);
+//                CLLocationCoordinate2D locationCoordinate2 = [self hhTrans_bdGPS:locationCoordinate];
+//                DLog(@"转换后 %f %f",locationCoordinate2.longitude,locationCoordinate2.latitude);
                 
                 CLLocation *location = [[CLLocation alloc] initWithCoordinate:locationCoordinate
                                                                      altitude:0
