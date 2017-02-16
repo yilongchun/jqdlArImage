@@ -700,10 +700,10 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
 //            DLog(@"转换后 %f %f",locationCoordinate2.longitude,locationCoordinate2.latitude);
             
             CLLocation *location = [[CLLocation alloc] initWithCoordinate:locationCoordinate
-                                                                 altitude:[altitude doubleValue]
-                                                       horizontalAccuracy:0
-                                                         verticalAccuracy:0
-                                                                timestamp:[NSDate date]];
+                                                                 altitude:myLocation.altitude + [altitude doubleValue]
+                                                       horizontalAccuracy:myLocation.horizontalAccuracy
+                                                         verticalAccuracy:myLocation.verticalAccuracy
+                                                                timestamp:myLocation.timestamp];
             
             WTPoi *poi = [[WTPoi alloc] initWithIdentifier:[spotDic objectForKey:@"id"]
                                                   location:location

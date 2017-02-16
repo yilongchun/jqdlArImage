@@ -58,6 +58,7 @@
     
     NSMutableArray *annotations;
     UIScrollView *sv;
+    UIScrollView *typeScrollView;
     UIButton *oldBtn;
     UIButton *oldPlayBtn;
     
@@ -135,7 +136,7 @@
     CGFloat typeWidth = 76;
     CGFloat typeHeight = 38;
     CGFloat typeSpace = 12;
-    UIScrollView *typeScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(CGRectGetMaxX(locationBtn.frame), CGRectGetMinY(locationBtn.frame)+64+3, Main_Screen_Width - CGRectGetMaxX(locationBtn.frame) - typeSpace, typeHeight)];
+    typeScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(CGRectGetMaxX(locationBtn.frame), CGRectGetMinY(locationBtn.frame)+64+3, Main_Screen_Width - CGRectGetMaxX(locationBtn.frame) - typeSpace, typeHeight)];
 //    typeScrollView.backgroundColor = [UIColor grayColor];
     typeScrollView.showsHorizontalScrollIndicator = NO;
     [typeScrollView setContentSize:CGSizeMake(8 * (typeWidth + typeSpace), typeHeight)];
@@ -368,6 +369,11 @@
     
     
     
+//    [sv scrollRectToVisible:btn.frame animated:YES];
+    
+    
+    
+    
     [_mapView removeAnnotations:annotations];
     
     annotations = [NSMutableArray array];
@@ -378,7 +384,6 @@
         
         
         if (btn.selected) {
-            
             
             if (btn.tag == 0) {//全部
                 
@@ -553,6 +558,15 @@
     }
     x-=10;
     [sv setContentSize:CGSizeMake(x, 108)];
+    if (annotations.count > 0) {
+        [_mapView selectAnnotation:annotations[0] animated:YES];
+    }
+   
+//    [typeScrollView scrollRectToVisible:btn.frame animated:YES];
+    
+    if (btn.frame.origin.x >= 100) {
+        [typeScrollView setContentOffset:CGPointMake(btn.frame.origin.x - 100, 0) animated:YES];
+    }
     
     
     
@@ -826,8 +840,30 @@
         BMKAnnotationView * view = [[BMKAnnotationView alloc]initWithAnnotation:annotation reuseIdentifier:@"annotation"];
         
         
-        //设置标注的图片
-        view.image=[UIImage imageNamed:@"greenPoint"];
+        MyPointAnnotation *anno = (MyPointAnnotation *)view.annotation;
+        WTPoi *poi = anno.poi;
+        if([poi.type isEqualToString:@"scenery_spot"]){//景点
+            view.image=[UIImage imageNamed:@"greenPoint"];
+        }
+        if([poi.type isEqualToString:@"recreational_facility"]){//游乐
+            view.image=[UIImage imageNamed:@"bluePoint"];
+        }
+        if([poi.type isEqualToString:@"food"]){//美食
+            view.image=[UIImage imageNamed:@"yellowPoint"];    
+        }
+        if([poi.type isEqualToString:@"shop"]){//商铺
+            view.image=[UIImage imageNamed:@"purplePoint"]; 
+        }
+        if([poi.type isEqualToString:@"toilet"]){//公厕
+            view.image=[UIImage imageNamed:@"brownPoint"];
+        }
+        if([poi.type isEqualToString:@"entrance"]){//出入口
+            view.image=[UIImage imageNamed:@"linghtGreenPonit"];
+        }
+        if([poi.type isEqualToString:@"service_point"]){//服务点
+            view.image=[UIImage imageNamed:@"redPoint"];
+        }
+        
         //点击显示图详情视图 必须MJPointAnnotation对象设置了标题和副标题
         view.canShowCallout=YES;
         
