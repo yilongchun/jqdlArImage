@@ -429,8 +429,6 @@
             [annotations addObject:annotation];
             index++;
         }
-        
-        
     }
     
     

@@ -1267,7 +1267,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     
     CLLocationDistance distance = BMKMetersBetweenMapPoints(point1,point2);
     DLog(@"当前位置距离景区中心距离 %fm",distance);
-    debugLabel.text = [NSString stringWithFormat:@"当前位置距离景区中心距离 %fm",distance];
+//    debugLabel.text = [NSString stringWithFormat:@"当前位置距离景区中心距离 %fm",distance];
     if (distance < 300) {//进入景区
         if (![jingquType isEqualToString:@"2"]) {//模拟景区
             jingquType = @"2";
