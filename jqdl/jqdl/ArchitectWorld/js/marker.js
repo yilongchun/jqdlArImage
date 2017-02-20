@@ -64,7 +64,9 @@ function Marker(poiData) {
     this.leftImage = new AR.ImageDrawable(new AR.ImageResource(typeImage), 2.1, {
                                           zOrder: 1,
                                           opacity: 1.0,
-                                          offsetX:-3.3
+                                          translate: {
+                                          x: -3.3
+                                          }
                                           });
     
     
@@ -78,7 +80,9 @@ function Marker(poiData) {
 //    AR.logger.debug(poiData.image + "," + poiData.title);
     this.htmlDrawable = new AR.HtmlDrawable({html:_html}, 9,
         {
-            offsetY:-6.2,
+                                            translate: {
+                                            y: -6.2
+                                            },
             zOrder:1,
             horizontalAnchor : AR.CONST.HORIZONTAL_ANCHOR.CENTER,
             opacity : 0.0,
@@ -109,8 +113,11 @@ function Marker(poiData) {
     // create an AR.Label for the marker's title 
     this.titleLabel = new AR.Label(poiData.title, 0.9, {
         zOrder: 1,
-        offsetX:-2,
-        offsetY: 0.55,
+                                   translate: {
+                                   x: -2,
+                                   y:0.55
+                                   },
+        
         horizontalAnchor: AR.CONST.HORIZONTAL_ANCHOR.LEFT,
         style: {
             textColor: '#FFFFFF',
@@ -119,16 +126,19 @@ function Marker(poiData) {
     });
     
     
-    var currentUserLocation = new AR.GeoLocation(World.currentLat, World.currentLng);
-    var dist = markerLocation.distanceTo(currentUserLocation);
-    var distanceToUserValue = (dist > 999) ? ((dist / 1000).toFixed(2) + " km") : (Math.round(dist) + " m");
-    AR.logger.debug(poiData.title + "," + distanceToUserValue);
+//    var currentUserLocation = new AR.GeoLocation(World.currentLat, World.currentLng);
+//    var dist = markerLocation.distanceTo(currentUserLocation);
+//    var distanceToUserValue = (dist > 999) ? ((dist / 1000).toFixed(2) + " km") : (Math.round(dist) + " m");
+//    AR.logger.debug(poiData.title + "," + distanceToUserValue);
     
     // create an AR.Label for the marker's description
     this.descriptionLabel = new AR.Label("", 0.8, {
         zOrder: 1,
-        offsetX:-2,
-        offsetY: -0.55,
+                                         translate: {
+                                         x: -2,
+                                         y:-0.55
+                                         },
+        
         horizontalAnchor: AR.CONST.HORIZONTAL_ANCHOR.LEFT,
         style: {
             textColor: '#FFFFFF'

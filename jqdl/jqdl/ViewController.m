@@ -235,7 +235,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
 //    [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
     
     NSError *deviceSupportError = nil;
-    if ( [WTArchitectView isDeviceSupportedForRequiredFeatures:WTFeature_2DTracking error:&deviceSupportError] ) {
+    if ( [WTArchitectView isDeviceSupportedForRequiredFeatures:WTFeature_Geo error:&deviceSupportError] ) {
         
         /* Standard WTArchitectView object creation and initial configuration */
         self.architectView = [[WTArchitectView alloc] initWithFrame:CGRectZero motionManager:nil];
@@ -254,8 +254,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
         
         [self startLocationUpdatesForPoiInjection];
         
-        self.architectWorldNavigation = [self.architectView loadArchitectWorldFromURL:[[NSBundle mainBundle] URLForResource:@"index" withExtension:@"html" subdirectory:@"ArchitectWorld"] withRequiredFeatures:WTFeature_Geo];
-        
+        self.architectWorldNavigation = [self.architectView loadArchitectWorldFromURL:[[NSBundle mainBundle] URLForResource:@"index" withExtension:@"html" subdirectory:@"ArchitectWorld"]];
         
         
         /* Because the WTArchitectView does some OpenGL rendering, frame updates have to be suspended and resumed when the application changes its active state.
@@ -520,7 +519,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     
     NSString *url = [NSString stringWithFormat:@"%@%@",kDlHost,@"/stores"];
     [manager GET:url parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
-        [self hideHud];
+        
         
         
         NSDictionary *dic= [NSDictionary dictionaryWithDictionary:responseObject];
@@ -553,9 +552,15 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                 NSArray *coordinates = [storeDic objectForKey:@"coordinates"];
                 NSNumber *latitude;
                 NSNumber *longitude;
+                NSNumber *altitude;
                 if (coordinates.count > 1) {
                     longitude = coordinates[0];
                     latitude = coordinates[1];
+                    if (coordinates.count > 2) {
+                        altitude = coordinates[2];
+                    }else{
+                        altitude = [NSNumber numberWithInt:0];
+                    }
                 }
                 
                 NSString *type = [storeDic objectForKey:@"type"];
@@ -573,10 +578,10 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
 //                DLog(@"转换后 %f %f",locationCoordinate2.longitude,locationCoordinate2.latitude);
                 
                 CLLocation *location = [[CLLocation alloc] initWithCoordinate:locationCoordinate
-                                                                     altitude:0
-                                                           horizontalAccuracy:0
-                                                             verticalAccuracy:0
-                                                                    timestamp:[NSDate date]];
+                                                                     altitude:[altitude doubleValue]
+                                                           horizontalAccuracy:myLocation.horizontalAccuracy
+                                                             verticalAccuracy:myLocation.verticalAccuracy
+                                                                    timestamp:myLocation.timestamp];
                 
                 WTPoi *poi = [[WTPoi alloc] initWithIdentifier:[storeDic objectForKey:@"id"]
                                                       location:location
@@ -594,13 +599,14 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                 [poiManager addPoi:poi];
                 
                 NSString *poisInJsonData = [poiManager convertPoiModelToJson];
-                
+                DLog(@"%@",poisInJsonData);
                 [self.architectView callJavaScript:[NSString stringWithFormat:@"World.loadPoisFromJsonData(%@)", poisInJsonData]];
                 
                 break;
             }
         }
         DLog(@"storeDic:%@",storeDic);
+        [self hideHud];
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
         [self hideHud];
         
@@ -630,7 +636,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     
     NSString *url = [NSString stringWithFormat:@"%@%@",kDlHost,@"/spots"];
     [manager GET:url parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
-        [self hideHud];
+        
         
         
         NSDictionary *dic= [NSDictionary dictionaryWithDictionary:responseObject];
@@ -700,7 +706,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
 //            DLog(@"转换后 %f %f",locationCoordinate2.longitude,locationCoordinate2.latitude);
             
             CLLocation *location = [[CLLocation alloc] initWithCoordinate:locationCoordinate
-                                                                 altitude:myLocation.altitude + [altitude doubleValue]
+                                                                 altitude:[altitude doubleValue]
                                                        horizontalAccuracy:myLocation.horizontalAccuracy
                                                          verticalAccuracy:myLocation.verticalAccuracy
                                                                 timestamp:myLocation.timestamp];
@@ -727,7 +733,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
         [self.architectView callJavaScript:[NSString stringWithFormat:@"World.loadPoisFromJsonData(%@)", poisInJsonData]];
         
         DLog(@"storeDic:%@",storeDic);
-        
+        [self hideHud];
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
         [self hideHud];
         
@@ -1028,8 +1034,8 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                 if ([beacon.minor intValue] == 1) {//1模拟景区
                     
                     if (beacon.accuracy < 50) {//进入景区
-                        if (![jingquType isEqualToString:@"2"]) {
-                            jingquType = @"2";
+                        if (![jingquType isEqualToString:@"1"]) {
+                            jingquType = @"1";
                             UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"即将切换到景区导览模式" message:@"检测到您已经抵达景区周边范围" preferredStyle:UIAlertControllerStyleAlert];
                             UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
                                 [self performBlock:^{
@@ -1042,8 +1048,8 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                         }
                     }else{//离开景区
                         
-                        if (![jingquType isEqualToString:@"1"]) {
-                            jingquType = @"1";
+                        if (![jingquType isEqualToString:@"2"]) {
+                            jingquType = @"2";
                             UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"即将切换到街景导览模式" message:@"检测到您已经进入街道周边范围" preferredStyle:UIAlertControllerStyleAlert];
                             UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
                                 [self performBlock:^{
@@ -1247,75 +1253,88 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     //    DLog(@"didUpdateLocations");
     
     
-    
-    DLog(@"%f %f ",myLocation.coordinate.latitude,myLocation.coordinate.longitude);
-    
-    
-    //其他坐标系转为百度坐标系
-    
-    NSDictionary* testdic1 = BMKConvertBaiduCoorFrom(myLocation.coordinate,BMK_COORDTYPE_GPS);
-    CLLocationCoordinate2D baiduCoor1 = BMKCoorDictionaryDecode(testdic1);//转换后的百度坐标
-    
-    NSDictionary* testdic2 = BMKConvertBaiduCoorFrom(CLLocationCoordinate2DMake(30.735248,111.31595),BMK_COORDTYPE_GPS);
-    CLLocationCoordinate2D baiduCoor2 = BMKCoorDictionaryDecode(testdic2);//转换后的百度坐标
-    
-    BMKMapPoint point1 = BMKMapPointForCoordinate(baiduCoor1);//当前位置
-    BMKMapPoint point2 = BMKMapPointForCoordinate(baiduCoor2);//景区中心点
-    
-    //    BMKMapPoint point1 = BMKMapPointForCoordinate(myLocation.coordinate);//当前位置
-    //    BMKMapPoint point2 = BMKMapPointForCoordinate(CLLocationCoordinate2DMake(30.735248,111.31595));//景区中心点
-    
-    CLLocationDistance distance = BMKMetersBetweenMapPoints(point1,point2);
-    DLog(@"当前位置距离景区中心距离 %fm",distance);
-//    debugLabel.text = [NSString stringWithFormat:@"当前位置距离景区中心距离 %fm",distance];
-    if (distance < 300) {//进入景区
-        if (![jingquType isEqualToString:@"2"]) {//模拟景区
-            jingquType = @"2";
-            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"即将切换到景区导览模式" message:@"检测到您已经抵达景区周边范围" preferredStyle:UIAlertControllerStyleAlert];
-            UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-                [self performBlock:^{
-                    [self.navigationController popToRootViewControllerAnimated:YES];
-                    [self loadSpots];//重新加载ar数据
-                } afterDelay:0.];
-            }];
-            [alert addAction:action1];
-            [self presentViewController:alert animated:YES completion:nil];
-        }
-    }else{
-        if (![jingquType isEqualToString:@"1"]) {
-            jingquType = @"1";
-            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"即将切换到街景导览模式" message:@"检测到您已经进入街道周边范围" preferredStyle:UIAlertControllerStyleAlert];
-            UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-                [self performBlock:^{
-                    [self.navigationController popToRootViewControllerAnimated:YES];
-                    [self loadStore];//重新加载ar数据
-                } afterDelay:0.];
-            }];
-            [alert addAction:action1];
-            [self presentViewController:alert animated:YES completion:nil];
-        }
-    }
-    
-    
-    
-    
-//    if ( firstLocation )
-//    {
-//        myLocation = (CLLocation *)firstLocation;
-//        //        [manager stopUpdatingLocation];
-//        
-//        //        //加载数据 景区
-//        //        [self loadStore];
-//        
-//        //        manager.delegate = nil;
-//        //
-//        //        [self generatePois:1 aroundLocation:location];
-//        //
-//        //        WTPoiManager *poiManager = objc_getAssociatedObject(self, kWTAugmentedRealityViewController_AssociatedPoiManagerKey);
-//        //        NSString *poisInJsonData = [poiManager convertPoiModelToJson];
-//        //
-//        //        [self.architectView callJavaScript:[NSString stringWithFormat:@"World.loadPoisFromJsonData(%@)", poisInJsonData]];
+//    
+//    DLog(@"%f %f ",myLocation.coordinate.latitude,myLocation.coordinate.longitude);
+//    
+//    
+//    //其他坐标系转为百度坐标系
+//    
+//    NSDictionary* testdic1 = BMKConvertBaiduCoorFrom(myLocation.coordinate,BMK_COORDTYPE_GPS);
+//    CLLocationCoordinate2D baiduCoor1 = BMKCoorDictionaryDecode(testdic1);//转换后的百度坐标
+//    
+//    NSDictionary* testdic2 = BMKConvertBaiduCoorFrom(CLLocationCoordinate2DMake(30.735248,111.31595),BMK_COORDTYPE_GPS);
+//    CLLocationCoordinate2D baiduCoor2 = BMKCoorDictionaryDecode(testdic2);//转换后的百度坐标
+//    
+//    BMKMapPoint point1 = BMKMapPointForCoordinate(baiduCoor1);//当前位置
+//    BMKMapPoint point2 = BMKMapPointForCoordinate(baiduCoor2);//景区中心点
+//    
+//    //    BMKMapPoint point1 = BMKMapPointForCoordinate(myLocation.coordinate);//当前位置
+//    //    BMKMapPoint point2 = BMKMapPointForCoordinate(CLLocationCoordinate2DMake(30.735248,111.31595));//景区中心点
+//    
+//    CLLocationDistance distance = BMKMetersBetweenMapPoints(point1,point2);
+//    DLog(@"当前位置距离景区中心距离 %fm",distance);
+////    debugLabel.text = [NSString stringWithFormat:@"当前位置距离景区中心距离 %fm",distance];
+//    if (distance < 300) {//进入景区
+//        if (![jingquType isEqualToString:@"2"]) {//模拟景区
+//            jingquType = @"2";
+//            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"即将切换到景区导览模式" message:@"检测到您已经抵达景区周边范围" preferredStyle:UIAlertControllerStyleAlert];
+//            UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+//                [self performBlock:^{
+//                    [self.navigationController popToRootViewControllerAnimated:YES];
+//                    [self loadSpots];//重新加载ar数据
+//                } afterDelay:0.];
+//            }];
+//            [alert addAction:action1];
+//            [self presentViewController:alert animated:YES completion:nil];
+//        }
+//    }else{
+//        if (![jingquType isEqualToString:@"1"]) {
+//            jingquType = @"1";
+//            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"即将切换到街景导览模式" message:@"检测到您已经进入街道周边范围" preferredStyle:UIAlertControllerStyleAlert];
+//            UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+//                [self performBlock:^{
+//                    [self.navigationController popToRootViewControllerAnimated:YES];
+//                    [self loadStore];//重新加载ar数据
+//                } afterDelay:0.];
+//            }];
+//            [alert addAction:action1];
+//            [self presentViewController:alert animated:YES completion:nil];
+//        }
 //    }
+    
+//    if ([jingquType isEqualToString:@"0"]) {
+//        jingquType = @"2";
+////        if (![jingquType isEqualToString:@"2"]) {//模拟景区
+////                        jingquType = @"2";
+////                        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"即将切换到景区导览模式" message:@"检测到您已经抵达景区周边范围" preferredStyle:UIAlertControllerStyleAlert];
+////                        UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+////                            [self performBlock:^{
+////                                [self.navigationController popToRootViewControllerAnimated:YES];
+//                                [self loadStore];//重新加载ar数据
+////                            } afterDelay:0.];
+////                        }];
+////                        [alert addAction:action1];
+////                        [self presentViewController:alert animated:YES completion:nil];
+////                    }
+//    }
+    
+    
+    if ( firstLocation )
+    {
+        myLocation = (CLLocation *)firstLocation;
+        [manager stopUpdatingLocation];
+        
+        
+        
+        //        manager.delegate = nil;
+        //
+        //        [self generatePois:1 aroundLocation:location];
+        //
+        //        WTPoiManager *poiManager = objc_getAssociatedObject(self, kWTAugmentedRealityViewController_AssociatedPoiManagerKey);
+        //        NSString *poisInJsonData = [poiManager convertPoiModelToJson];
+        //
+        //        [self.architectView callJavaScript:[NSString stringWithFormat:@"World.loadPoisFromJsonData(%@)", poisInJsonData]];
+    }
 }
 
 /** 不能获取位置信息时调用*/
@@ -1721,7 +1740,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
         
     }
     if (debugLabel == nil) {
-        debugLabel = [[UILabel alloc] initWithFrame:CGRectMake(Main_Screen_Width - 160, Main_Screen_Height - 50, 160, 50)];
+        debugLabel = [[UILabel alloc] initWithFrame:CGRectMake(Main_Screen_Width - 160, Main_Screen_Height - 100, 160, 100)];
         debugLabel.font = SYSTEMFONT(10);
         debugLabel.textColor = [UIColor blackColor];
         debugLabel.backgroundColor = [UIColor whiteColor];
@@ -1809,6 +1828,26 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
 - (void)architectView:(WTArchitectView *)architectView didFinishLoadArchitectWorldNavigation:(WTNavigation *)navigation {
     /* Architect World did finish loading */
     DLog(@"Architect World did finish loading");
+    
+        if ([jingquType isEqualToString:@"0"] && myLocation) {
+            jingquType = @"2";
+            
+            [self performBlock:^{
+                [self loadStore];
+            } afterDelay:1.5];
+                
+//            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"即将切换到街景导览模式" message:@"检测到您已经抵达街景周边范围" preferredStyle:UIAlertControllerStyleAlert];
+//            UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+//                [self performBlock:^{
+//                    [self.navigationController popToRootViewControllerAnimated:YES];
+//                    [self loadStore];
+//                } afterDelay:0.];
+//            }];
+//            [alert addAction:action1];
+//            [self presentViewController:alert animated:YES completion:nil];
+        }
+    
+    
 }
 
 - (void)architectView:(WTArchitectView *)architectView didFailToLoadArchitectWorldNavigation:(WTNavigation *)navigation withError:(NSError *)error {
@@ -1824,6 +1863,16 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
         if ( [[URL absoluteString] hasPrefix:@"architectsdk://button"] )
         {
             NSString *action = [parameters objectForKey:@"action"];
+            if ([action isEqualToString:@"locationChangedFn"]) {
+                DLog(@"ar 当前位置已更新 重新布局");
+            }
+            if ([action isEqualToString:@"locationChangedFn2"]) {
+                DLog(@"ar 当前位置已更新");
+                debugLabel.text = [NSString stringWithFormat:@"%@",parameters];
+            }
+            if ([action isEqualToString:@"locationChangedFn3"]) {
+                DLog(@"ar 当前位置已更新 修改距离");
+            }
             if ( [action isEqualToString:@"captureScreen"] )
             {
 //                [self captureScreen];
@@ -1838,30 +1887,35 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
             }
             if ([action isEqualToString:@"reloadArData"]){
                 
-                jingquType = [parameters objectForKey:@"jingquType"];//1街景 2景区
+                NSString *type = [parameters objectForKey:@"jingquType"];//1街景 2景区
+                if ([type intValue] != [jingquType intValue]) {
+                    jingquType = type;
+                    if ([type intValue] == 1) {//景区
+                        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"即将切换到景区导览模式" message:@"检测到您已经抵达景区周边范围" preferredStyle:UIAlertControllerStyleAlert];
+                        UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                            [self performBlock:^{
+                                [self.navigationController popToRootViewControllerAnimated:YES];
+                                [self loadSpots];//重新加载ar数据
+                            } afterDelay:0.];
+                        }];
+                        [alert addAction:action1];
+                        [self presentViewController:alert animated:YES completion:nil];
+                    }
+                    if ([type intValue] == 2) {//街景
+                        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"即将切换到街景导览模式" message:@"检测到您已经进入街道周边范围" preferredStyle:UIAlertControllerStyleAlert];
+                        UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                            [self performBlock:^{
+                                [self.navigationController popToRootViewControllerAnimated:YES];
+                                [self loadStore];//重新加载ar数据
+                            } afterDelay:0.];
+                        }];
+                        [alert addAction:action1];
+                        [self presentViewController:alert animated:YES completion:nil];
+                    }
+                    
+                }
                 
-                if ([jingquType isEqualToString:@"1"]) {//街景
-                    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"即将切换到街景导览模式" message:@"检测到您已经进入街道周边范围" preferredStyle:UIAlertControllerStyleAlert];
-                    UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-                        [self performBlock:^{
-                            [self.navigationController popToRootViewControllerAnimated:YES];
-                            [self loadStore];//重新加载ar数据
-                        } afterDelay:0.];
-                    }];
-                    [alert addAction:action1];
-                    [self presentViewController:alert animated:YES completion:nil];
-                }
-                if ([jingquType isEqualToString:@"2"]) {//景区
-                    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"即将切换到景区导览模式" message:@"检测到您已经抵达景区周边范围" preferredStyle:UIAlertControllerStyleAlert];
-                    UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-                        [self performBlock:^{
-                            [self.navigationController popToRootViewControllerAnimated:YES];
-                            [self loadSpots];//重新加载ar数据
-                        } afterDelay:0.];
-                    }];
-                    [alert addAction:action1];
-                    [self presentViewController:alert animated:YES completion:nil];
-                }
+                
             }
         }
         else if ( [[URL absoluteString] hasPrefix:@"architectsdk://markerselected"])//点击查看详情

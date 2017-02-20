@@ -23,6 +23,7 @@ namespace wikitude {
         namespace impl {
             class PositionableWrapper;
         }
+        using impl::PositionableWrapper;
     }
     
     namespace sdk {
@@ -107,7 +108,7 @@ namespace wikitude {
              *
              * Note: This method is only available when using the Wikitude Architect SDK (JS API).
              */
-            virtual void updatePositionables(const std::unordered_map<std::string, sdk_core::impl::PositionableWrapper*>& positionables_);
+            virtual void updatePositionables(const std::unordered_map<std::string, sdk_core::PositionableWrapper*>& positionables_);
             
             /**
              * Will be called before any Wikitude SDK internal rendering is done. Therefore any drawn objects are behind any Wikitude SDK object.

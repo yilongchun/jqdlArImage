@@ -1,13 +1,13 @@
 //
-//  InputFrameRenderSettings.h
+//  InputRenderSettings.h
 //  FoundationSDK
 //
 //  Created by Andreas Schacherbauer on 12/03/16.
 //  Copyright © 2016 Wikitude. All rights reserved.
 //
 
-#ifndef InputFrameRenderSettings_h
-#define InputFrameRenderSettings_h
+#ifndef InputRenderSettings_h
+#define InputRenderSettings_h
 
 #ifdef __cplusplus
 
@@ -16,11 +16,12 @@ namespace wikitude { namespace sdk {
 
     namespace impl {
 
+        class InputPlugin;
 
-        class InputFrameRenderSettings {
+        class InputRenderSettings {
         public:
-            InputFrameRenderSettings();
-            virtual ~InputFrameRenderSettings();
+            InputRenderSettings(InputPlugin* inputPlugin_);
+            virtual ~InputRenderSettings();
 
             /**
              * Defines if given input frames should be mirrored when rendering. This setting should be used when e.g. front cameras are used.
@@ -74,11 +75,13 @@ namespace wikitude { namespace sdk {
             bool            _baseOrientationLandscape;
 
             unsigned int    _renderTargetTextureId;
+
+            InputPlugin*    _inputPlugin;
         };
     }
-    using impl::InputFrameRenderSettings;
+    using impl::InputRenderSettings;
 }}
 
 #endif /* __cplusplus */
 
-#endif /* InputFrameRenderSettings_h */
+#endif /* InputRenderSettings_h */

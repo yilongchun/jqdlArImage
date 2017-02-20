@@ -392,7 +392,6 @@
 		44270EFA1E16465800561C69 /* MyPointAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 44270EF91E16465800561C69 /* MyPointAnnotation.m */; };
 		44270F031E164F1B00561C69 /* FeatureTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 44270F011E164F1B00561C69 /* FeatureTableViewCell.m */; };
 		44270F041E164F1B00561C69 /* FeatureTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44270F021E164F1B00561C69 /* FeatureTableViewCell.xib */; };
-		442ED7A81DB9A6470058DD4C /* WikitudeSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 442ED7A71DB9A6470058DD4C /* WikitudeSDK.framework */; };
 		442ED7AA1DB9A66A0058DD4C /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 442ED7A91DB9A66A0058DD4C /* Accelerate.framework */; };
 		442ED7AC1DB9A6730058DD4C /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 442ED7AB1DB9A6730058DD4C /* AssetsLibrary.framework */; };
 		442ED7AE1DB9A67B0058DD4C /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 442ED7AD1DB9A67B0058DD4C /* AVFoundation.framework */; };
@@ -438,6 +437,9 @@
 		4437FEFC1E48542500B8A084 /* status-bar-progress@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4437FEF11E48542500B8A084 /* status-bar-progress@3x.png */; };
 		443DA7CB1E08C1130014C9B8 /* MoreFunctionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 443DA7C91E08C1130014C9B8 /* MoreFunctionViewController.m */; };
 		443DA7CC1E08C1130014C9B8 /* MoreFunctionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 443DA7CA1E08C1130014C9B8 /* MoreFunctionViewController.xib */; };
+		443DFD541E5A97EA0022B7F3 /* WikitudeSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 443DFD521E5A944E0022B7F3 /* WikitudeSDK.framework */; };
+		443DFD561E5A986A0022B7F3 /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 443DFD551E5A986A0022B7F3 /* SafariServices.framework */; };
+		443DFD591E5A9B570022B7F3 /* mapapi.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 443DFD581E5A9B570022B7F3 /* mapapi.bundle */; };
 		44435E181E4ACE5F00F9C84A /* AccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44435E161E4ACE5F00F9C84A /* AccountViewController.m */; };
 		44435E191E4ACE5F00F9C84A /* AccountViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44435E171E4ACE5F00F9C84A /* AccountViewController.xib */; };
 		44435E1E1E4AFC1E00F9C84A /* FeedbackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44435E1C1E4AFC1E00F9C84A /* FeedbackViewController.m */; };
@@ -453,7 +455,6 @@
 		444D77C61E037A180040F0A7 /* UINavigationController+JZExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 444D77BE1E037A180040F0A7 /* UINavigationController+JZExtension.m */; };
 		444D77C71E037A180040F0A7 /* UIViewController+JZExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 444D77C01E037A180040F0A7 /* UIViewController+JZExtension.m */; };
 		444D77C91E0389830040F0A7 /* BaiduMapAPI_Base.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 444D77C81E0389830040F0A7 /* BaiduMapAPI_Base.framework */; };
-		444D77CD1E038B140040F0A7 /* mapapi.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 444D77CC1E038B140040F0A7 /* mapapi.bundle */; };
 		444D77D61E038D600040F0A7 /* BaiduMapViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 444D77D41E038D600040F0A7 /* BaiduMapViewController.mm */; };
 		444D77D71E038D600040F0A7 /* BaiduMapViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 444D77D51E038D600040F0A7 /* BaiduMapViewController.xib */; };
 		444D77D91E038DD90040F0A7 /* BaiduMapAPI_Map.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 444D77D81E038DD90040F0A7 /* BaiduMapAPI_Map.framework */; };
@@ -1310,7 +1311,6 @@
 		44270F001E164F1B00561C69 /* FeatureTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeatureTableViewCell.h; sourceTree = "<group>"; };
 		44270F011E164F1B00561C69 /* FeatureTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeatureTableViewCell.m; sourceTree = "<group>"; };
 		44270F021E164F1B00561C69 /* FeatureTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FeatureTableViewCell.xib; sourceTree = "<group>"; };
-		442ED7A71DB9A6470058DD4C /* WikitudeSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = WikitudeSDK.framework; sourceTree = "<group>"; };
 		442ED7A91DB9A66A0058DD4C /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		442ED7AB1DB9A6730058DD4C /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		442ED7AD1DB9A67B0058DD4C /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -1373,6 +1373,9 @@
 		443DA7C81E08C1130014C9B8 /* MoreFunctionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MoreFunctionViewController.h; sourceTree = "<group>"; };
 		443DA7C91E08C1130014C9B8 /* MoreFunctionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MoreFunctionViewController.m; sourceTree = "<group>"; };
 		443DA7CA1E08C1130014C9B8 /* MoreFunctionViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MoreFunctionViewController.xib; sourceTree = "<group>"; };
+		443DFD521E5A944E0022B7F3 /* WikitudeSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = WikitudeSDK.framework; sourceTree = "<group>"; };
+		443DFD551E5A986A0022B7F3 /* SafariServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SafariServices.framework; path = System/Library/Frameworks/SafariServices.framework; sourceTree = SDKROOT; };
+		443DFD581E5A9B570022B7F3 /* mapapi.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = mapapi.bundle; path = jqdl/mapapi.bundle; sourceTree = SOURCE_ROOT; };
 		44435E151E4ACE5F00F9C84A /* AccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountViewController.h; sourceTree = "<group>"; };
 		44435E161E4ACE5F00F9C84A /* AccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountViewController.m; sourceTree = "<group>"; };
 		44435E171E4ACE5F00F9C84A /* AccountViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AccountViewController.xib; sourceTree = "<group>"; };
@@ -1401,7 +1404,6 @@
 		444D77BF1E037A180040F0A7 /* UIViewController+JZExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+JZExtension.h"; sourceTree = "<group>"; };
 		444D77C01E037A180040F0A7 /* UIViewController+JZExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+JZExtension.m"; sourceTree = "<group>"; };
 		444D77C81E0389830040F0A7 /* BaiduMapAPI_Base.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BaiduMapAPI_Base.framework; path = ThiredPartyLib/BaiduMap/BaiduMapAPI_Base.framework; sourceTree = "<group>"; };
-		444D77CC1E038B140040F0A7 /* mapapi.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = mapapi.bundle; path = "../../../../qlxing/ar/百度地图/BaiduMap_IOSSDK_v3.0_All/BaiduMap_IOSSDK_v3.0.0_Sample/BMKOCDemo/BaiduMapAPI/BaiduMapAPI_Map.framework/Resources/mapapi.bundle"; sourceTree = "<group>"; };
 		444D77D31E038D600040F0A7 /* BaiduMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaiduMapViewController.h; sourceTree = "<group>"; };
 		444D77D41E038D600040F0A7 /* BaiduMapViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = BaiduMapViewController.mm; sourceTree = "<group>"; };
 		444D77D51E038D600040F0A7 /* BaiduMapViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BaiduMapViewController.xib; sourceTree = "<group>"; };
@@ -1499,6 +1501,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				443DFD561E5A986A0022B7F3 /* SafariServices.framework in Frameworks */,
+				443DFD541E5A97EA0022B7F3 /* WikitudeSDK.framework in Frameworks */,
 				44621BB31E12607900EB3AFC /* BaiduMapAPI_Utils.framework in Frameworks */,
 				44621BB11E125ECA00EB3AFC /* BaiduMapAPI_Search.framework in Frameworks */,
 				448738D01E03C16000E5862C /* BaiduMapAPI_Location.framework in Frameworks */,
@@ -1519,7 +1523,6 @@
 				442ED7AE1DB9A67B0058DD4C /* AVFoundation.framework in Frameworks */,
 				442ED7AC1DB9A6730058DD4C /* AssetsLibrary.framework in Frameworks */,
 				442ED7AA1DB9A66A0058DD4C /* Accelerate.framework in Frameworks */,
-				442ED7A81DB9A6470058DD4C /* WikitudeSDK.framework in Frameworks */,
 				44117AC61C1184CF0071E1C0 /* libxml2.tbd in Frameworks */,
 				44B516B31BFEB85100E74E13 /* libstdc++.6.0.9.tbd in Frameworks */,
 				44B516B11BFEB84500E74E13 /* libz.tbd in Frameworks */,
@@ -3355,9 +3358,9 @@
 		44B516BA1BFEBCE200E74E13 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				443DFD581E5A9B570022B7F3 /* mapapi.bundle */,
 				445C4A7A1E1DF3B800A5B375 /* timg.jpeg */,
 				440E7F611E1B423700B5277E /* member_no.gif */,
-				444D77CC1E038B140040F0A7 /* mapapi.bundle */,
 			);
 			name = Resources;
 			path = Core;
@@ -3404,6 +3407,8 @@
 		44D44B7D1BFC29C5005D8E98 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				443DFD551E5A986A0022B7F3 /* SafariServices.framework */,
+				443DFD521E5A944E0022B7F3 /* WikitudeSDK.framework */,
 				44621BB21E12607900EB3AFC /* BaiduMapAPI_Utils.framework */,
 				44621BB01E125EC900EB3AFC /* BaiduMapAPI_Search.framework */,
 				448738CF1E03C16000E5862C /* BaiduMapAPI_Location.framework */,
@@ -3422,7 +3427,6 @@
 				442ED7AD1DB9A67B0058DD4C /* AVFoundation.framework */,
 				442ED7AB1DB9A6730058DD4C /* AssetsLibrary.framework */,
 				442ED7A91DB9A66A0058DD4C /* Accelerate.framework */,
-				442ED7A71DB9A6470058DD4C /* WikitudeSDK.framework */,
 				44117AC51C1184CF0071E1C0 /* libxml2.tbd */,
 				44B516B41BFEB85B00E74E13 /* Security.framework */,
 				44B516B21BFEB85100E74E13 /* libstdc++.6.0.9.tbd */,
@@ -3572,7 +3576,6 @@
 				440E7ED21E1B367C00B5277E /* ForgetPwdViewController.xib in Resources */,
 				4437FED91E48212F00B8A084 /* SettingViewController.xib in Resources */,
 				4444EFA51E456C7200E72B41 /* UserCenterViewController.xib in Resources */,
-				444D77CD1E038B140040F0A7 /* mapapi.bundle in Resources */,
 				44F6146C1E1F92BB00482D23 /* FeatureListViewController.xib in Resources */,
 				444D77D71E038D600040F0A7 /* BaiduMapViewController.xib in Resources */,
 				44F029DD1C1E569D00EF9218 /* Feature2ViewController.xib in Resources */,
@@ -3583,6 +3586,7 @@
 				4437FEF61E48542500B8A084 /* status-bar-pattern-black@2x.png in Resources */,
 				4437FEFB1E48542500B8A084 /* status-bar-progress@2x.png in Resources */,
 				4437FED71E48212F00B8A084 /* NoticeSettingViewController.xib in Resources */,
+				443DFD591E5A9B570022B7F3 /* mapapi.bundle in Resources */,
 				44E972BF1C2152010014E301 /* ScanResultWebViewController.xib in Resources */,
 				4437FEB21E480A5F00B8A084 /* Localizable.strings in Resources */,
 				44117A8D1C11763E0071E1C0 /* MJRefresh.bundle in Resources */,
@@ -4189,6 +4193,10 @@
 		44003D271BFB24ED00CB747A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = (
+					"$(ARCHS_STANDARD)",
+					armv7s,
+				);
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -4221,6 +4229,10 @@
 		44003D281BFB24ED00CB747A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = (
+					"$(ARCHS_STANDARD)",
+					armv7s,
+				);
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";

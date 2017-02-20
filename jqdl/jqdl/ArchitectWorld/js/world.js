@@ -27,23 +27,24 @@ var World = {
 	// list of AR.GeoObjects that are currently shown in the scene / World
 	markerList: [],
     
-    jingquType:1,//1 街景默认 2 景区
+    jingquType:2,//2 街景默认 1 景区
     
 //    lineList: [],
     
-    currentLat:0,
-    currentLng:0,
+//    currentLat:0,
+//    currentLng:0,
 
 	// The last selected marker
 	currentMarker: null,
+    
 
 	locationUpdateCounter: 0,
-	updatePlacemarkDistancesEveryXLocationUpdates: 1,
+	updatePlacemarkDistancesEveryXLocationUpdates: 3,
     
 	// called to inject new POI data
 	loadPoisFromJsonData: function loadPoisFromJsonDataFn(poiData) {
         
-        World.locationUpdateCounter = 0;
+        
         
         if (World.currentMarker) {
             World.currentMarker.setDeselected(World.currentMarker);
@@ -189,6 +190,7 @@ var World = {
 //            }
             
             AR.logger.debug("updateDistanceToUserValues " + i + "," + World.markerList[i].titleLabel.text + "," + World.markerList[i].descriptionLabel.text + "," + distanceToUser + "," + distanceToUserValue);
+            document.location = "architectsdk://button?action=locationChangedFn3";
 		}
 	},
 
@@ -210,16 +212,23 @@ var World = {
 	// location updates, fired every time you call architectView.setLocation() in native environment
 	locationChanged: function locationChangedFn(lat, lon, alt, acc) {//位置更改回调
         
-        AR.logger.debug("lat:"+lat+",log:"+lon+",alt:"+alt+",acc:"+acc);
-        World.currentLat = lat;
-        World.currentLng = lon;
-        AR.logger.debug("locationChanged currentLat:"+World.currentLat + ",currentLng:"+World.currentLng);
+        
+        
+        
+        
+        document.location = "architectsdk://button?action=locationChangedFn2&lat="+lat+"&lon="+lon+"&alt="+alt+"&acc="+acc;
+        
+//        AR.logger.debug("lat:"+lat+",log:"+lon+",alt:"+alt+",acc:"+acc);
+//        World.currentLat = lat;
+//        World.currentLng = lon;
+//        AR.logger.debug("locationChanged currentLat:"+World.currentLat + ",currentLng:"+World.currentLng);
 		// request data if not already present
 		if (!World.initiallyLoadedData) {
 			//World.requestDataFromServer(lat, lon);
 			World.initiallyLoadedData = true;
 		} else if (World.locationUpdateCounter === 0) {
 			// update placemark distance information frequently, you max also update distances only every 10m with some more effort
+            document.location = "architectsdk://button?action=locationChangedFn";
 			World.updateDistanceToUserValues();
 		}        
 		// helper used to update placemark information every now and then (e.g. every 10 location upadtes fired)
@@ -233,6 +242,30 @@ var World = {
 //               }
 //            }, 10 * 1000 );
 //        }
+        
+        var location1 = new AR.GeoLocation(30.735292, 111.3158);
+        var actionRange = new AR.ActionRange(location1, 300);
+        var location2 = new AR.GeoLocation(lat, lon);
+        var inArea = actionRange.isInArea(location1);
+        AR.logger.debug("inArea:"+inArea);
+        if(inArea != undefined){
+            if(inArea){
+                if(World.jingquType != 1){
+                    World.jingquType = 1;
+                    AR.logger.debug("inArea2:"+inArea);
+                    document.location = "architectsdk://button?action=reloadArData&jingquType=1";
+                }
+                
+            }else{
+                if(World.jingquType != 2){
+                    World.jingquType = 2;
+                    AR.logger.debug("inArea3:"+inArea);
+                    document.location = "architectsdk://button?action=reloadArData&jingquType=2";
+                }
+                
+            }
+        }
+        
         
 	},
 
@@ -282,7 +315,7 @@ var World = {
         
         AR.logger.debug("onMarkerSelected:" + marker.poiData.image)
         AR.logger.debug("目的地位置 latitude:" + marker.poiData.latitude + " , longitude:" + marker.poiData.longitude)
-        AR.logger.debug("起点位置 currentLat:"+World.currentLat + ",currentLng:"+World.currentLng);
+//        AR.logger.debug("起点位置 currentLat:"+World.currentLat + ",currentLng:"+World.currentLng);
         //点击景点 显示路线按钮
 //        $(".paizhao").css('display','block');
         

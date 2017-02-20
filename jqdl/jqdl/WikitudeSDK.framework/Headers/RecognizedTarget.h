@@ -21,18 +21,20 @@ namespace wikitude { namespace sdk {
         
         class RecognizedTarget {
         public:
-            RecognizedTarget(const std::string& name, const unsigned int distanceToTarget, const Rectangle<int>& targetRectInCameraFrame, const Matrix4& modelView, const Matrix4& projection);
+            RecognizedTarget(const std::string& name, const bool isExtended, const unsigned int distanceToTarget, const Rectangle<int>& targetRectInCameraFrame, const Matrix4& modelView, const Matrix4& projection);
 
             const std::string& getName() const;
+            const bool isExtended() const;
             const unsigned int& getDistanceToTarget() const;
             const Rectangle<int>& getTargetPositionInCameraFrame() const;
             const Matrix4& getModelViewMatrix() const;
             const Matrix4& getProjectionMatrix() const;
 
         protected:
-            const std::string&      _name;
+            const std::string       _name;
+            const bool              _isExtended;
             unsigned int            _distanceToTarget;
-            const Rectangle<int>&   _targetRectInCameraFrame;
+            const Rectangle<int>    _targetRectInCameraFrame;
             Matrix4                 _modelView;
             Matrix4                 _projection;
         };

@@ -17,8 +17,8 @@
 #include "Geometry.h"
 
 #include "Plugin.h"
-#include "FrameColorSpace.h"
-#include "InputFrameRenderSettings.h"
+#include "InputRenderSettings.h"
+#include "InputFrameSettings.h"
 
 
 namespace wikitude { namespace sdk {
@@ -34,11 +34,12 @@ namespace wikitude { namespace sdk {
          * In case the Wikitude SDK takes care of rendering, the memory is managed 100% by the Wikitude SDK internally and no additional code needs to be written. Just make sure that the std::shared_ptr has an appropriate deleter set (Please refer to our examples on how to do so).
          *
          * If ::requestsInputFrameRendering returns false, the Wikitude SDK still tries to manage the input frame data as good as possible, meaning that the input frame data should be retrieved through the ::getPresentableInputFrameData method.
-         * This method always returns the input frame data that was processed most recently and is therefore the prefered data to render. If the input frame data is retrieved using this method, the SDK manages again all the memory related operations internally.
+         * This method always returns the input frame data that was processed most recently and is therefore the preferred data to render. If the input frame data is retrieved using this method, the SDK manages again all the memory related operations internally.
          * There might be cases where this is not the desired behaviour. In that case developer can override ::prepareRenderingOfInputFrame and set the managedFromOutside_ flag to true. Doing so will completely turn off any memory management in the background and developer are responsible for making sure that the input frame data, that was given with a certain id, is accessible until it's id was given in a call to ::prepareRenderingOfInputFrame.
          */
         class InputPlugin: public Plugin {
 
+        public:
             /**
              * Defines a function that is used to connect InputPlugins with the Wikitude SDK.
              *
@@ -46,8 +47,21 @@ namespace wikitude { namespace sdk {
              * @param frameData is set to a valid memory addess, containing the newly available input frame.
              * @return int specifying if the given information were valid or not
              */
-        public:
             using InputFrameAvailableNotifier = std::function<int(long frameId, std::shared_ptr<unsigned char> frameData)>;
+
+            /**
+             * Defines a function that is used to connect the InputRenderSettings of the InputPlugin with the Wikitude SDK.
+             *
+             * @param inputRenderSettings is used to store all rendering related settings(e.g. should the camera frame be mirrored) of the InputPlugin.
+             */
+            using InputRenderSettingsChangedNotifier = std::function<void(InputRenderSettings inputRenderSettings_)>;
+
+            /**
+             * Defines a function that is used to connect the InputFrameSettings of the InputPlugin with the Wikitude SDK.
+             *
+             * @param inputFrameSettings is used to store all frame related settings(e.g. color space) of the InputPlugin.
+             */
+            using InputFrameSettingsChangedNotifier = std::function<void(InputFrameSettings inputFrameSettings_)>;
 
         public:
             InputPlugin(std::string identifier_);
@@ -66,27 +80,25 @@ namespace wikitude { namespace sdk {
             virtual void cameraFrameAvailable(const Frame& cameraFrame_);
 
             /**
+             * @deprecated use InputFrameSettings instead.
+             *
              * Returns the input frame color space.
              * Please refer to the enum documentation about more information. It describes in detail in which format, arrangement and size the Wikitude SDK expects given input frames.
              *
              * @return the color space in which input frames are delivered
              */
-            virtual FrameColorSpace getInputFrameColorSpace() = 0;
+            virtual FrameColorSpace getInputFrameColorSpace() __attribute__ ((deprecated)) {
+                return YUV_420_NV21;
+            };
 
             /**
-             * Returns the cameras horizontal field of view in degree.
-             * This is a device specific value. If the returned value is not correct for the current device, computer vision algorithm preciseness is lost.
+             * @deprecated use InputFrameSettings instead.
              *
-             * @return the cameras horizontal field of view in degree.
-             */
-            virtual float getHorizontalAngle() = 0;
-
-            /**
              * Returns the input frame size in pixel.
              *
              * @return the input frame size in pixel
              */
-            virtual Size<int> getInputFrameSize() = 0;
+            virtual Size<int> getInputFrameSize() __attribute__ ((deprecated)) { return { -1, -1 }; };
 
             /**
              * Defines if input frames delivered from a specific plugin should be rendered by the Wikitude SDK or not.
@@ -133,12 +145,42 @@ namespace wikitude { namespace sdk {
             void notifyNewInputFrame(long frameId_, std::shared_ptr<unsigned char> inputFrame_, bool managedFromOutside_ = false);
 
             /**
-             * In case the Wikitude SDK also renders the input frame, the InputFrameRenderSettings object provides more information on how to do so.
+             * @deprecated use InputFrameSettings instead.
+             *
+             * Notifies the underlying Wikitude SDK about a new raw camera field of view.
+             *
+             * This needs to be called when the camera is opened.
+             *
+             * @param rawCameraFieldOfView_ is the raw field of view from the platform camera.
+             */
+            void notifyNewRawCameraFieldOfView(float rawCameraFieldOfView_) __attribute__ ((deprecated));
+
+            /**
+             * @deprecated use InputFrameSettings instead.
+             *
+             * Notifies the underlying Wikitude SDK about a new dynamic camera field of view.
+             *
+             * This needs to be called when the camera field of view is changed for example in the case of a zoom.
+             *
+             * @param dynamicCameraFieldOfView_ is the new camera field of view.
+             */
+            void notifyNewDynamicCameraFieldOfView(float dynamicCameraFieldOfView_) __attribute__ ((deprecated));
+
+            /**
+             * In case the Wikitude SDK also renders the input frame, the InputRenderSettings object provides more information on how to do so.
              * Subclasses usually change render settings in the constructor of there InputPlugin subclass.
              *
-             * @return an InputFrameRenderSettins objects which provides more information about how to render the given input frame data.
+             * @return an InputRenderSettings objects which provides more information about how to render the given input frame data.
              */
-            InputFrameRenderSettings& getRenderSettings();
+            InputRenderSettings& getRenderSettings();
+
+            /**
+             * The InputFrameSettings object provides information about the camera frame.
+             * Subclasses usually change render settings in the constructor of there InputPlugin subclass.
+             *
+             * @return an InputFrameSettings objects which provides more information about the given input frame data.
+             */
+            InputFrameSettings& getFrameSettings();
 
             /**
              * This method is only called if ::requestsInputFrameRendering returns false. It reports back the last processed frame id. The next time an input frame is rendered, it should be the input frame that is associated with this id.
@@ -160,6 +202,14 @@ namespace wikitude { namespace sdk {
              */
             virtual std::shared_ptr<unsigned char> getPresentableInputFrameData();
 
+            
+            /**
+             * Use this method to retrieve the latest processed input frame index. This method is used when ::requestsInputFrameRendering returns false but the Wikitude SDK should take care about input frame memory management.
+             *
+             * @return the input frame index that should be used when rendering input frames. A value of -1 indicates that no target was found .
+             */
+            virtual long getPresentableInputFrameIndex();
+            
             /**
              * This method is called whenever an internal error occurs that was not directly related to any InputPlugin related API call.
              *
@@ -170,9 +220,13 @@ namespace wikitude { namespace sdk {
             virtual void internalError(const std::string& errorMessage);
 
             /**
-             * This method is called from the Wikitude SDK internally when the plugin is regiserted and should not be invoked from anywhere else.
+             * These methods are called from the Wikitude SDK internally when the plugin is registered and should not be invoked from anywhere else.
              */
+            void notifyInputFrameSettingsChanged(InputFrameSettings inputFrameSettings_);
+            void notifyInputRenderSettingsChanged(InputRenderSettings inputRenderSettings_);
             void setInputFrameAvailableNotifier(InputFrameAvailableNotifier newInputFrameAvailableNotifier);
+            void setInputRenderSettingsChangedNotifier(InputRenderSettingsChangedNotifier newInputRenderSettingsChangedNotifier_);
+            void setInputFrameSettingsChangedNotifier(InputFrameSettingsChangedNotifier newInputFrameSettingsChangedNotifier_);
 
         private:
 
@@ -180,7 +234,10 @@ namespace wikitude { namespace sdk {
              * Internal InputPlugin members
              */
             InputFrameAvailableNotifier                     _newInputFrameAvailableNotifier;
-            InputFrameRenderSettings                        _renderSettings;
+            InputRenderSettingsChangedNotifier              _inputRenderSettingsChangedNotifier;
+            InputFrameSettingsChangedNotifier               _inputFrameSettingsChangedNotifier;
+            InputRenderSettings                             _renderSettings;
+            InputFrameSettings                              _frameSettings;
             std::unique_ptr<InputFrameBufferController>     _inputFrameBufferController;
         };
     }
