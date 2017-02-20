@@ -103,7 +103,10 @@ var World = {
 		World.updateDistanceToUserValues();
         World.initialized = true;
 	},
-    
+    updateJingquType: function updateJingquTypeFn(data) {
+        AR.logger.debug("updateJingquTypeFn:" + data);
+        World.jingquType = data;
+    },
 //    loadPoisFromJsonDataTest: function loadPoisFromJsonDataTestFn(poiData) {
 //        
 //        AR.context.destroyAll();
@@ -228,8 +231,31 @@ var World = {
 			World.initiallyLoadedData = true;
 		} else if (World.locationUpdateCounter === 0) {
 			// update placemark distance information frequently, you max also update distances only every 10m with some more effort
-            document.location = "architectsdk://button?action=locationChangedFn";
+//            document.location = "architectsdk://button?action=locationChangedFn";
 			World.updateDistanceToUserValues();
+            
+            var location1 = new AR.GeoLocation(30.735292, 111.3158);
+            var actionRange = new AR.ActionRange(location1, 300);
+            var location2 = new AR.GeoLocation(lat, lon);
+            var inArea = actionRange.isInArea(location1);
+            AR.logger.debug("inArea:"+inArea);
+            if(inArea != undefined){
+                if(inArea){
+                    if(World.jingquType != 1){
+                        
+                        AR.logger.debug("inArea2:"+inArea);
+                        document.location = "architectsdk://button?action=reloadArData&jingquType=1";
+                    }
+                    
+                }else{
+                    if(World.jingquType != 2){
+                        
+                        AR.logger.debug("inArea3:"+inArea);
+                        document.location = "architectsdk://button?action=reloadArData&jingquType=2";
+                    }
+                    
+                }
+            }
 		}        
 		// helper used to update placemark information every now and then (e.g. every 10 location upadtes fired)
 		World.locationUpdateCounter = (++World.locationUpdateCounter % World.updatePlacemarkDistancesEveryXLocationUpdates);
@@ -243,28 +269,7 @@ var World = {
 //            }, 10 * 1000 );
 //        }
         
-        var location1 = new AR.GeoLocation(30.735292, 111.3158);
-        var actionRange = new AR.ActionRange(location1, 300);
-        var location2 = new AR.GeoLocation(lat, lon);
-        var inArea = actionRange.isInArea(location1);
-        AR.logger.debug("inArea:"+inArea);
-        if(inArea != undefined){
-            if(inArea){
-                if(World.jingquType != 1){
-                    World.jingquType = 1;
-                    AR.logger.debug("inArea2:"+inArea);
-                    document.location = "architectsdk://button?action=reloadArData&jingquType=1";
-                }
-                
-            }else{
-                if(World.jingquType != 2){
-                    World.jingquType = 2;
-                    AR.logger.debug("inArea3:"+inArea);
-                    document.location = "architectsdk://button?action=reloadArData&jingquType=2";
-                }
-                
-            }
-        }
+        
         
         
 	},

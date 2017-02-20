@@ -601,7 +601,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                 NSString *poisInJsonData = [poiManager convertPoiModelToJson];
                 DLog(@"%@",poisInJsonData);
                 [self.architectView callJavaScript:[NSString stringWithFormat:@"World.loadPoisFromJsonData(%@)", poisInJsonData]];
-                
+                [self.architectView callJavaScript:[NSString stringWithFormat:@"World.updateJingquType(%@)", @"2"]];
                 break;
             }
         }
@@ -731,6 +731,9 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
         NSString *poisInJsonData = [poiManager convertPoiModelToJson];
         
         [self.architectView callJavaScript:[NSString stringWithFormat:@"World.loadPoisFromJsonData(%@)", poisInJsonData]];
+        
+        [self.architectView callJavaScript:[NSString stringWithFormat:@"World.updateJingquType(%@)", @"1"]];
+        
         
         DLog(@"storeDic:%@",storeDic);
         [self hideHud];

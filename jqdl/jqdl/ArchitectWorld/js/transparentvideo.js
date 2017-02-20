@@ -13,8 +13,10 @@ var World2 = {
                                             });
         
         var video = new AR.VideoDrawable("assets2/transparentVideo.mp4", 0.7, {
-                                         offsetX: -0.2,
-                                         offsetY: -0.12,
+                                         translate: {
+                                         x: -0.2,
+                                         y:-0.12
+                                         },
                                          isTransparent: true
         });
         
@@ -27,15 +29,15 @@ var World2 = {
                                            },
                                            onEnterFieldOfVision: function onEnterFieldOfVisionFn() {
                                                AR.logger.debug("识别到物品");
-//                                               video.resume();
+                                               video.resume();
                                                
-                                               var architectSdkUrl = "architectsdk://tracker?id=123";
-                                               document.location = architectSdkUrl;
+//                                               var architectSdkUrl = "architectsdk://tracker?id=123";
+//                                               document.location = architectSdkUrl;
                                                
                                            },
                                            onExitFieldOfVision: function onExitFieldOfVisionFn() {
                                                AR.logger.debug("识别结束,视频暂停");
-//                                               video.pause();
+                                               video.pause();
                                            }
        });
     }
