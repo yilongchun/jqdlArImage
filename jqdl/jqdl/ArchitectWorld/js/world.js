@@ -27,12 +27,10 @@ var World = {
 	// list of AR.GeoObjects that are currently shown in the scene / World
 	markerList: [],
     
-    jingquType:2,//2 街景默认 1 景区
+    jingquType:0,//2 街景默认 1 景区
     
-//    lineList: [],
-    
-//    currentLat:0,
-//    currentLng:0,
+    jingquLat:0,
+    jingquLng:0,
 
 	// The last selected marker
 	currentMarker: null,
@@ -97,7 +95,7 @@ var World = {
                 "address":poiData[currentPlaceNr].address,
                 "type":poiData[currentPlaceNr].type
 			};
-            AR.logger.debug("currentPlaceNr:" + currentPlaceNr + "," + poiData[currentPlaceNr].name);
+//            AR.logger.debug("currentPlaceNr:" + currentPlaceNr + "," + poiData[currentPlaceNr].name);
 			World.markerList.push(new Marker(singlePoi));
 		}
 		World.updateDistanceToUserValues();
@@ -106,6 +104,12 @@ var World = {
     updateJingquType: function updateJingquTypeFn(data) {
         AR.logger.debug("updateJingquTypeFn:" + data);
         World.jingquType = data;
+    },
+    updateJingquCoor: function updateJingquCoorFn(data) {
+        AR.logger.debug("updateJingquCoor:" + data.latitude + "," + data.longitude);
+        World.jingquLat = data.latitude;
+        World.jingquLng = data.longitude;
+        
     },
 //    loadPoisFromJsonDataTest: function loadPoisFromJsonDataTestFn(poiData) {
 //        
@@ -192,8 +196,8 @@ var World = {
 //                World.markerList[i].descriptionLabel.offsetY = -0.55;
 //            }
             
-            AR.logger.debug("updateDistanceToUserValues " + i + "," + World.markerList[i].titleLabel.text + "," + World.markerList[i].descriptionLabel.text + "," + distanceToUser + "," + distanceToUserValue);
-            document.location = "architectsdk://button?action=locationChangedFn3";
+//            AR.logger.debug("updateDistanceToUserValues " + i + "," + World.markerList[i].titleLabel.text + "," + World.markerList[i].descriptionLabel.text + "," + distanceToUser + "," + distanceToUserValue);
+//            document.location = "architectsdk://button?action=locationChangedFn3";
 		}
 	},
 
@@ -217,11 +221,9 @@ var World = {
         
         
         
+//        document.location = "architectsdk://button?action=locationChangedFn2&lat="+lat+"&lon="+lon+"&alt="+alt+"&acc="+acc;
         
-        
-        document.location = "architectsdk://button?action=locationChangedFn2&lat="+lat+"&lon="+lon+"&alt="+alt+"&acc="+acc;
-        
-//        AR.logger.debug("lat:"+lat+",log:"+lon+",alt:"+alt+",acc:"+acc);
+        AR.logger.debug("locationChanged lat:"+lat+",log:"+lon+",alt:"+alt+",acc:"+acc);
 //        World.currentLat = lat;
 //        World.currentLng = lon;
 //        AR.logger.debug("locationChanged currentLat:"+World.currentLat + ",currentLng:"+World.currentLng);
@@ -234,28 +236,7 @@ var World = {
 //            document.location = "architectsdk://button?action=locationChangedFn";
 			World.updateDistanceToUserValues();
             
-            var location1 = new AR.GeoLocation(30.735292, 111.3158);
-            var actionRange = new AR.ActionRange(location1, 300);
-            var location2 = new AR.GeoLocation(lat, lon);
-            var inArea = actionRange.isInArea(location1);
-            AR.logger.debug("inArea:"+inArea);
-            if(inArea != undefined){
-                if(inArea){
-                    if(World.jingquType != 1){
-                        
-                        AR.logger.debug("inArea2:"+inArea);
-                        document.location = "architectsdk://button?action=reloadArData&jingquType=1";
-                    }
-                    
-                }else{
-                    if(World.jingquType != 2){
-                        
-                        AR.logger.debug("inArea3:"+inArea);
-                        document.location = "architectsdk://button?action=reloadArData&jingquType=2";
-                    }
-                    
-                }
-            }
+            
 		}        
 		// helper used to update placemark information every now and then (e.g. every 10 location upadtes fired)
 		World.locationUpdateCounter = (++World.locationUpdateCounter % World.updatePlacemarkDistancesEveryXLocationUpdates);
@@ -269,9 +250,26 @@ var World = {
 //            }, 10 * 1000 );
 //        }
         
-        
-        
-        
+        if(World.jingquType != 0){
+            var location3 = new AR.GeoLocation(World.jingquLat, World.jingquLng);
+            var location4 = new AR.GeoLocation(lat, lon, alt);
+            var dist = location4.distanceTo(location3);
+            AR.logger.debug("dist:" + dist + ",World.jingquType:" + World.jingquType);
+            if(dist != undefined){
+                if(dist < 500){
+                    if(World.jingquType != "1"){
+                        AR.logger.debug("已进入景区");
+                        document.location = "architectsdk://button?action=reloadArData&jingquType=1";
+                    }
+                }else{
+                    if(parseInt(World.jingquType) != 2){
+                        AR.logger.debug("已离开景区");
+                        document.location = "architectsdk://button?action=reloadArData&jingquType=2";
+                    }
+                }
+            }
+            
+        }
 	},
 
 	// fired when user pressed maker in cam

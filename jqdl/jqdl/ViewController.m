@@ -133,6 +133,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                                               otherButtonTitles:nil, nil];
         [alert show];
     }
+    DLog(@"开始定位");
 
 }
 
@@ -252,7 +253,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
          */
 //        self.architectWorldNavigation = [self.architectView loadArchitectWorldFromURL:[[NSBundle mainBundle] URLForResource:@"index" withExtension:@"html" subdirectory:@"ArchitectWorld"] withRequiredFeatures:WTFeature_2DTracking];
         
-        [self startLocationUpdatesForPoiInjection];
+        
         
         self.architectWorldNavigation = [self.architectView loadArchitectWorldFromURL:[[NSBundle mainBundle] URLForResource:@"index" withExtension:@"html" subdirectory:@"ArchitectWorld"]];
         
@@ -510,7 +511,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
 
 //加载景区
 -(void)loadStore{
-    
+    DLog(@"loadStore");
     [self showHudInView:self.view];
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     
@@ -594,14 +595,22 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                                                           type:type
                               
                               ];
-                DLog(@"%@",poi.jsonRepresentation);
+//                DLog(@"%@",poi.jsonRepresentation);
                 
                 [poiManager addPoi:poi];
                 
                 NSString *poisInJsonData = [poiManager convertPoiModelToJson];
-                DLog(@"%@",poisInJsonData);
+//                DLog(@"%@",poisInJsonData);
                 [self.architectView callJavaScript:[NSString stringWithFormat:@"World.loadPoisFromJsonData(%@)", poisInJsonData]];
                 [self.architectView callJavaScript:[NSString stringWithFormat:@"World.updateJingquType(%@)", @"2"]];
+                
+                NSArray *poiObjects = @[@(30.735285),@(111.3158)];
+//                NSArray *poiObjects = @[@([latitude doubleValue]),@([longitude doubleValue])];
+                NSArray *poiKeys = @[@"latitude", @"longitude"];
+                NSDictionary *jsonRepresentation = [NSDictionary dictionaryWithObjects:poiObjects forKeys:poiKeys];
+                NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonRepresentation options:kNilOptions error:nil];
+                [self.architectView callJavaScript:[NSString stringWithFormat:@"World.updateJingquCoor(%@)", [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding]]];
+                
                 break;
             }
         }
@@ -626,7 +635,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
 
 //加载景点列表
 -(void)loadSpots{
-    
+    DLog(@"loadSpots");
     [self showHudInView:self.view];
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     
@@ -722,7 +731,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                                                      type:type
                           
                           ];
-            DLog(@"%@",poi.jsonRepresentation);
+//            DLog(@"%@",poi.jsonRepresentation);
             
             [poiManager addPoi:poi];
             
@@ -735,7 +744,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
         [self.architectView callJavaScript:[NSString stringWithFormat:@"World.updateJingquType(%@)", @"1"]];
         
         
-        DLog(@"storeDic:%@",storeDic);
+//        DLog(@"storeDic:%@",storeDic);
         [self hideHud];
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
         [self hideHud];
@@ -1326,17 +1335,19 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     {
         myLocation = (CLLocation *)firstLocation;
         [manager stopUpdatingLocation];
-        
-        
-        
-        //        manager.delegate = nil;
-        //
-        //        [self generatePois:1 aroundLocation:location];
-        //
-        //        WTPoiManager *poiManager = objc_getAssociatedObject(self, kWTAugmentedRealityViewController_AssociatedPoiManagerKey);
-        //        NSString *poisInJsonData = [poiManager convertPoiModelToJson];
-        //
-        //        [self.architectView callJavaScript:[NSString stringWithFormat:@"World.loadPoisFromJsonData(%@)", poisInJsonData]];
+        DLog(@"获取到定位信息");
+        if ([jingquType isEqualToString:@"0"] && myLocation) {
+            jingquType = @"2";
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"即将切换到街景导览模式" message:@"检测到您已经进入街道周边范围" preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                [self performBlock:^{
+                    [self.navigationController popToRootViewControllerAnimated:YES];
+                    [self loadStore];//重新加载ar数据
+                } afterDelay:0.];
+            }];
+            [alert addAction:action1];
+            [self presentViewController:alert animated:YES completion:nil];
+        }
     }
 }
 
@@ -1832,23 +1843,10 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     /* Architect World did finish loading */
     DLog(@"Architect World did finish loading");
     
-        if ([jingquType isEqualToString:@"0"] && myLocation) {
-            jingquType = @"2";
-            
-            [self performBlock:^{
-                [self loadStore];
-            } afterDelay:1.5];
-                
-//            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"即将切换到街景导览模式" message:@"检测到您已经抵达街景周边范围" preferredStyle:UIAlertControllerStyleAlert];
-//            UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-//                [self performBlock:^{
-//                    [self.navigationController popToRootViewControllerAnimated:YES];
-//                    [self loadStore];
-//                } afterDelay:0.];
-//            }];
-//            [alert addAction:action1];
-//            [self presentViewController:alert animated:YES completion:nil];
-        }
+    [self startLocationUpdatesForPoiInjection];
+    
+    
+    
     
     
 }
@@ -2002,12 +2000,12 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
         [backItem setBackButtonBackgroundImage:[backImage resizableImageWithCapInsets:UIEdgeInsetsMake(0, backImage.size.width, 0, 0)] forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];//更改背景图片
         self.navigationItem.backBarButtonItem = backItem;
         
-        if([jingquType isEqualToString:@"1"]){
+        if([jingquType isEqualToString:@"2"]){
             StoreViewController *vc = [[StoreViewController alloc] init];
             vc.poi = poi;
             [self.navigationController pushViewController:vc animated:YES];
         }
-        if ([jingquType isEqualToString:@"2"]) {
+        if ([jingquType isEqualToString:@"1"]) {
             DetailViewController *vc = [[DetailViewController alloc] init];
             vc.poi = poi;
             [self.navigationController pushViewController:vc animated:YES];
