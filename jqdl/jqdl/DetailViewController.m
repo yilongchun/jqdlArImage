@@ -15,6 +15,7 @@
 #import "Util.h"
 #import "LCActionSheet.h"
 
+
 @interface DetailViewController ()<LCActionSheetDelegate>{
     UIButton *jieshuoBtn;
     NSArray *maps;
@@ -154,7 +155,7 @@
     DLog(@"%f %f",_poi.location.coordinate.latitude,_poi.location.coordinate.longitude);
     
 //    CLLocationCoordinate2D coords = CLLocationCoordinate2DMake(_poi.location.coordinate,116.397105);//纬度，经度
-    if (maps == nil) {
+    if (maps == nil) {        
         maps = [Util getInstalledMapAppWithEndLocation:_poi.location.coordinate];
     }
     LCActionSheet *actionSheet = [LCActionSheet sheetWithTitle:nil
@@ -236,7 +237,7 @@
 //    }
     else if (buttonIndex == 1){//苹果
         MKMapItem *currentLocation = [MKMapItem mapItemForCurrentLocation];
-//        CLLocationCoordinate2D coords = CLLocationCoordinate2DMake(39.915352,116.397105);//纬度，经度
+
         MKPlacemark *placemark = [[MKPlacemark alloc] initWithCoordinate:_poi.location.coordinate addressDictionary:nil];
         MKMapItem *toLocation = [[MKMapItem alloc] initWithPlacemark:placemark];
         toLocation.name = [_poi.name stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];

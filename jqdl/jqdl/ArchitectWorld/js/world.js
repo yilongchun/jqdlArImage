@@ -95,7 +95,7 @@ var World = {
                 "address":poiData[currentPlaceNr].address,
                 "type":poiData[currentPlaceNr].type
 			};
-//            AR.logger.debug("currentPlaceNr:" + currentPlaceNr + "," + poiData[currentPlaceNr].name);
+            AR.logger.debug("currentPlaceNr:" + currentPlaceNr + "," + poiData[currentPlaceNr].name);
 			World.markerList.push(new Marker(singlePoi));
 		}
 		World.updateDistanceToUserValues();
@@ -256,7 +256,7 @@ var World = {
             var dist = location4.distanceTo(location3);
             AR.logger.debug("dist:" + dist + ",World.jingquType:" + World.jingquType);
             if(dist != undefined){
-                if(dist < 500){
+                if(dist < 3000){
                     if(World.jingquType != "1"){
                         AR.logger.debug("已进入景区");
                         document.location = "architectsdk://button?action=reloadArData&jingquType=1";
@@ -268,8 +268,10 @@ var World = {
                     }
                 }
             }
-            
+        }else{
+            document.location = "architectsdk://button?action=reloadArData&jingquType=2";
         }
+        
 	},
 
 	// fired when user pressed maker in cam

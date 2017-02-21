@@ -192,6 +192,9 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
      NOTE: On iOS, an unsupported device might be an iPhone 3GS for image recognition or an iPod Touch 4th generation for Geo augmented reality.
      */
     
+    
+    
+    
     self.jz_navigationBarBackgroundHidden = YES;
     self.jz_navigationBarTintColor = [UIColor whiteColor];
     self.jz_navigationBarBackgroundAlpha = 0.f;
@@ -363,15 +366,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     
     
     
-    //其他坐标系转为百度坐标系
-    CLLocationCoordinate2D coor = CLLocationCoordinate2DMake(30.73540884,111.31521866);//原始坐标 GPS
-//    CLLocationCoordinate2D coor = CLLocationCoordinate2DMake(30.735248 ,111.31595);//原始坐标 WIKITUDE
-    NSLog(@"转换前:x=%f,y=%f",coor.latitude,coor.longitude);
-    //转换 google地图、soso地图、aliyun地图、mapabc地图和amap地图所用坐标至百度坐标
-    NSDictionary* testdic = BMKConvertBaiduCoorFrom(coor,BMK_COORDTYPE_GPS);
-    //解密加密后的坐标字典
-    CLLocationCoordinate2D baiduCoor = BMKCoorDictionaryDecode(testdic);//转换后的百度坐标
-    NSLog(@"转换后:x=%lf,y=%lf",baiduCoor.latitude,baiduCoor.longitude);
+    
 
     
     
@@ -555,8 +550,8 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                 NSNumber *longitude;
                 NSNumber *altitude;
                 if (coordinates.count > 1) {
-                    longitude = coordinates[0];
-                    latitude = coordinates[1];
+                    longitude = coordinates[1];
+                    latitude = coordinates[0];
                     if (coordinates.count > 2) {
                         altitude = coordinates[2];
                     }else{
@@ -569,14 +564,19 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                     type = @"";
                 }
                 
+                //随机坐标
 //                CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake(myLocation.coordinate.latitude + WT_RANDOM(-0.1, 0.1), myLocation.coordinate.longitude + WT_RANDOM(-0.1, 0.1));
                 
-                CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake([latitude doubleValue] - 0.00347516, [longitude doubleValue] - 0.01223381);
+                //百度坐标 > GPS
+//                CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake([latitude doubleValue] - 0.00347516, [longitude doubleValue] - 0.01223381);
                 
-//                CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake([longitude doubleValue], [latitude doubleValue]);
-//                DLog(@"转换前 %f %f",locationCoordinate.longitude,locationCoordinate.latitude);
-//                CLLocationCoordinate2D locationCoordinate2 = [self hhTrans_bdGPS:locationCoordinate];
-//                DLog(@"转换后 %f %f",locationCoordinate2.longitude,locationCoordinate2.latitude);
+                
+                
+                CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake(30.7748922,111.285375);
+                altitude = [NSNumber numberWithInt:80];
+                //GPS
+//                CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake([latitude doubleValue], [longitude doubleValue]);
+                
                 
                 CLLocation *location = [[CLLocation alloc] initWithCoordinate:locationCoordinate
                                                                      altitude:[altitude doubleValue]
@@ -600,11 +600,12 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                 [poiManager addPoi:poi];
                 
                 NSString *poisInJsonData = [poiManager convertPoiModelToJson];
-//                DLog(@"%@",poisInJsonData);
+                DLog(@"%@",poisInJsonData);
                 [self.architectView callJavaScript:[NSString stringWithFormat:@"World.loadPoisFromJsonData(%@)", poisInJsonData]];
                 [self.architectView callJavaScript:[NSString stringWithFormat:@"World.updateJingquType(%@)", @"2"]];
+                jingquType = @"2";
                 
-                NSArray *poiObjects = @[@(30.735285),@(111.3158)];
+                NSArray *poiObjects = @[@(30.735285),@(111.3358)];
 //                NSArray *poiObjects = @[@([latitude doubleValue]),@([longitude doubleValue])];
                 NSArray *poiKeys = @[@"latitude", @"longitude"];
                 NSDictionary *jsonRepresentation = [NSDictionary dictionaryWithObjects:poiObjects forKeys:poiKeys];
@@ -686,8 +687,8 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
             NSNumber *longitude;
             NSNumber *altitude;
             if (coordinates.count > 1) {
-                longitude = coordinates[0];
-                latitude = coordinates[1];
+                longitude = coordinates[1];
+                latitude = coordinates[0];
                 if (coordinates.count > 2) {
                     altitude = coordinates[2];
                 }else{
@@ -705,14 +706,16 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                 address = @"";
             }
             
-//            CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake(myLocation.coordinate.latitude + WT_RANDOM(-0.01, 0.01), myLocation.coordinate.longitude + WT_RANDOM(-0.1, 0.1));
-            //latitude 30 longitude 111
-            CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake([latitude doubleValue] - 0.00347516, [longitude doubleValue] - 0.01223381);
-            //百度地图 转换为gps
+            //随机坐标
+//                CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake(myLocation.coordinate.latitude + WT_RANDOM(-0.1, 0.1), myLocation.coordinate.longitude + WT_RANDOM(-0.1, 0.1));
             
-//            DLog(@"转换前 %f %f",locationCoordinate.longitude,locationCoordinate.latitude);
-//            CLLocationCoordinate2D locationCoordinate2 = [self hhTrans_bdGPS:locationCoordinate];
-//            DLog(@"转换后 %f %f",locationCoordinate2.longitude,locationCoordinate2.latitude);
+            //百度坐标 > GPS
+//                CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake([latitude doubleValue] - 0.00347516, [longitude doubleValue] - 0.01223381);
+            
+            
+            //GPS
+            CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake([latitude doubleValue], [longitude doubleValue]);
+            
             
             CLLocation *location = [[CLLocation alloc] initWithCoordinate:locationCoordinate
                                                                  altitude:[altitude doubleValue]
@@ -742,6 +745,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
         [self.architectView callJavaScript:[NSString stringWithFormat:@"World.loadPoisFromJsonData(%@)", poisInJsonData]];
         
         [self.architectView callJavaScript:[NSString stringWithFormat:@"World.updateJingquType(%@)", @"1"]];
+        jingquType = @"1";
         
         
 //        DLog(@"storeDic:%@",storeDic);
@@ -1047,7 +1051,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                     
                     if (beacon.accuracy < 50) {//进入景区
                         if (![jingquType isEqualToString:@"1"]) {
-                            jingquType = @"1";
+                            
                             UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"即将切换到景区导览模式" message:@"检测到您已经抵达景区周边范围" preferredStyle:UIAlertControllerStyleAlert];
                             UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
                                 [self performBlock:^{
@@ -1061,7 +1065,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                     }else{//离开景区
                         
                         if (![jingquType isEqualToString:@"2"]) {
-                            jingquType = @"2";
+                            
                             UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"即将切换到街景导览模式" message:@"检测到您已经进入街道周边范围" preferredStyle:UIAlertControllerStyleAlert];
                             UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
                                 [self performBlock:^{
@@ -1337,7 +1341,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
         [manager stopUpdatingLocation];
         DLog(@"获取到定位信息");
         if ([jingquType isEqualToString:@"0"] && myLocation) {
-            jingquType = @"2";
+            
             UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"即将切换到街景导览模式" message:@"检测到您已经进入街道周边范围" preferredStyle:UIAlertControllerStyleAlert];
             UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
                 [self performBlock:^{

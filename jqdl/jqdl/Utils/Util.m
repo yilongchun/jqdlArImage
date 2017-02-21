@@ -7,6 +7,7 @@
 //
 
 #import "Util.h"
+#import <BaiduMapAPI_Utils/BMKUtilsComponent.h>
 
 @implementation Util
 
@@ -151,7 +152,12 @@
     if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"baidumap://"]]) {
         NSMutableDictionary *baiduMapDic = [NSMutableDictionary dictionary];
         baiduMapDic[@"title"] = @"百度地图";
-        NSString *urlString = [[NSString stringWithFormat:@"baidumap://map/direction?origin={{我的位置}}&destination=latlng:%f,%f|name=北京&mode=driving&coord_type=gcj02",endLocation.latitude,endLocation.longitude] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        
+        
+        NSDictionary* testdic = BMKConvertBaiduCoorFrom(endLocation,BMK_COORDTYPE_GPS);
+        CLLocationCoordinate2D locationCoordinate = BMKCoorDictionaryDecode(testdic);
+        
+        NSString *urlString = [[NSString stringWithFormat:@"baidumap://map/direction?origin={{我的位置}}&destination=latlng:%f,%f|name=北京&mode=driving&coord_type=gcj02",locationCoordinate.latitude,locationCoordinate.longitude] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         baiduMapDic[@"url"] = urlString;
         [maps addObject:baiduMapDic];
     }

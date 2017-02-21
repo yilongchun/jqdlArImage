@@ -419,9 +419,15 @@
             
             //添加PointAnnotation
             MyPointAnnotation* annotation = [[MyPointAnnotation alloc]init];
-            CLLocationCoordinate2D coor = CLLocationCoordinate2DMake(poi.location.coordinate.latitude + 0.00347516, poi.location.coordinate.longitude + 0.01223381);
+            CLLocationCoordinate2D coor = CLLocationCoordinate2DMake(poi.location.coordinate.latitude, poi.location.coordinate.longitude);
+            DLog(@"GPS > 百度坐标 转换前 %f %f",coor.longitude,coor.latitude);
+            NSDictionary* testdic = BMKConvertBaiduCoorFrom(coor,BMK_COORDTYPE_GPS);
+            CLLocationCoordinate2D locationCoordinate = BMKCoorDictionaryDecode(testdic);
+            DLog(@"GPS > 百度坐标 转换后 %f %f",locationCoordinate.longitude,locationCoordinate.latitude);
+            
+            
 //            CLLocationCoordinate2D coor = poi.location.coordinate;
-            annotation.coordinate = coor;
+            annotation.coordinate = locationCoordinate;
             annotation.title = poi.name;
             annotation.poi = poi;
             annotation.index = index;
