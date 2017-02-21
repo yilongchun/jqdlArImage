@@ -84,6 +84,8 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     
     UILabel *debugLabel;
     
+    
+    
 }
 
 @property (strong, nonatomic) NSDate *lastPlaySoundDate;
@@ -193,14 +195,14 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
      */
     
     
-    
+    [self startLocationUpdatesForPoiInjection];
     
     self.jz_navigationBarBackgroundHidden = YES;
     self.jz_navigationBarTintColor = [UIColor whiteColor];
     self.jz_navigationBarBackgroundAlpha = 0.f;
     
     
-    self.centralManager = [[CBCentralManager alloc] initWithDelegate:self queue:nil];//蓝牙
+//    self.centralManager = [[CBCentralManager alloc] initWithDelegate:self queue:nil];//蓝牙
     
     
     jingquType = @"0";
@@ -1846,13 +1848,6 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
 - (void)architectView:(WTArchitectView *)architectView didFinishLoadArchitectWorldNavigation:(WTNavigation *)navigation {
     /* Architect World did finish loading */
     DLog(@"Architect World did finish loading");
-    
-    [self startLocationUpdatesForPoiInjection];
-    
-    
-    
-    
-    
 }
 
 - (void)architectView:(WTArchitectView *)architectView didFailToLoadArchitectWorldNavigation:(WTNavigation *)navigation withError:(NSError *)error {

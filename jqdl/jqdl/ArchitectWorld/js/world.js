@@ -243,7 +243,7 @@ var World = {
                 var dist = location4.distanceTo(location3);
                 AR.logger.debug("dist:" + dist + ",World.jingquType:" + World.jingquType);
                 if(dist != undefined){
-                    if(dist < 3000){
+                    if(dist < 1000000){
                         if(World.jingquType != "1"){
                             AR.logger.debug("已进入景区");
                             document.location = "architectsdk://button?action=reloadArData&jingquType=1";
