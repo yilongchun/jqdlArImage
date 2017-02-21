@@ -71,13 +71,8 @@
                         <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
                 </button>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JLD-Ll-hju">
-                    <rect key="frame" x="15" y="271" width="14" height="22"/>
-                    <animations/>
-                    <state key="normal" image="checked"/>
-                </button>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="同意《用户注册协议》" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i9y-80-IPC">
-                    <rect key="frame" x="35" y="274" width="140" height="17"/>
+                    <rect key="frame" x="15" y="274" width="140" height="17"/>
                     <animations/>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <color key="textColor" red="0.80000000000000004" green="0.80000000000000004" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
@@ -133,10 +128,10 @@
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="MvI-gc-YrP" secondAttribute="trailing" constant="15" id="2QB-Im-Zex"/>
                 <constraint firstItem="i9y-80-IPC" firstAttribute="top" secondItem="MvI-gc-YrP" secondAttribute="bottom" constant="10" id="69N-r2-DWy"/>
-                <constraint firstItem="i9y-80-IPC" firstAttribute="centerY" secondItem="JLD-Ll-hju" secondAttribute="centerY" id="6hf-d3-92i"/>
                 <constraint firstItem="MvI-gc-YrP" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="15" id="E4Q-QT-72K"/>
                 <constraint firstItem="GXd-U6-bTR" firstAttribute="top" secondItem="MNp-cb-tlH" secondAttribute="bottom" id="EdI-61-4mu"/>
                 <constraint firstItem="5b8-zF-JBH" firstAttribute="top" secondItem="i9y-80-IPC" secondAttribute="bottom" constant="35" id="Gi4-z2-tCI"/>
+                <constraint firstItem="i9y-80-IPC" firstAttribute="leading" secondItem="5R4-EL-F0z" secondAttribute="leading" id="GxR-Wn-UvB"/>
                 <constraint firstItem="MNp-cb-tlH" firstAttribute="top" secondItem="thU-Pk-pPa" secondAttribute="bottom" constant="10" id="HkJ-fE-iEt"/>
                 <constraint firstAttribute="trailing" secondItem="YBl-Sy-Byq" secondAttribute="trailing" constant="15" id="JGw-0T-IwU"/>
                 <constraint firstItem="YBl-Sy-Byq" firstAttribute="top" secondItem="oU7-1W-h02" secondAttribute="bottom" id="PS9-Wj-8a5"/>
@@ -148,7 +143,6 @@
                 <constraint firstItem="oU7-1W-h02" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="15" id="aVR-RB-jDG"/>
                 <constraint firstItem="5R4-EL-F0z" firstAttribute="top" secondItem="YBl-Sy-Byq" secondAttribute="bottom" constant="10" id="brh-fY-ANS"/>
                 <constraint firstItem="MNp-cb-tlH" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="15" id="dhd-Vm-O7Z"/>
-                <constraint firstItem="JLD-Ll-hju" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="15" id="eIs-H6-aMZ"/>
                 <constraint firstItem="5b8-zF-JBH" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="15" id="fOF-Hz-VDu"/>
                 <constraint firstItem="YBl-Sy-Byq" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="15" id="hN9-Sz-tWf"/>
                 <constraint firstAttribute="trailing" secondItem="thU-Pk-pPa" secondAttribute="trailing" constant="15" id="nIG-Gp-6Zs"/>
@@ -160,14 +154,10 @@
                 <constraint firstItem="thU-Pk-pPa" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="15" id="sYf-vh-yYi"/>
                 <constraint firstAttribute="trailing" secondItem="5R4-EL-F0z" secondAttribute="trailing" constant="15" id="tdw-54-EHf"/>
                 <constraint firstAttribute="trailing" secondItem="prr-ch-LfI" secondAttribute="trailing" constant="15" id="vf4-0t-XAy"/>
-                <constraint firstItem="i9y-80-IPC" firstAttribute="leading" secondItem="JLD-Ll-hju" secondAttribute="trailing" constant="6" id="wG4-51-tuj"/>
                 <constraint firstAttribute="trailing" secondItem="oU7-1W-h02" secondAttribute="trailing" constant="15" id="xlg-2a-Qcw"/>
             </constraints>
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
             <point key="canvasLocation" x="333" y="302"/>
         </view>
     </objects>
-    <resources>
-        <image name="checked" width="14" height="14"/>
-    </resources>
 </document>

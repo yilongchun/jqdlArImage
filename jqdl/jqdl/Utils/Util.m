@@ -143,9 +143,9 @@
     NSMutableArray *maps = [NSMutableArray array];
     
     //苹果地图
-    NSMutableDictionary *iosMapDic = [NSMutableDictionary dictionary];
-    iosMapDic[@"title"] = @"苹果地图";
-    [maps addObject:iosMapDic];
+//    NSMutableDictionary *iosMapDic = [NSMutableDictionary dictionary];
+//    iosMapDic[@"title"] = @"苹果地图";
+//    [maps addObject:iosMapDic];
     
     //百度地图
     if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"baidumap://"]]) {

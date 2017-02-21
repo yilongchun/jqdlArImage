@@ -1719,11 +1719,11 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     [super viewDidAppear:animated];
     
     if (bottomBtn == nil) {
-        bottomBtn = [[UIButton alloc] init];
-        [bottomBtn setFrame:CGRectMake((Main_Screen_Width - 70)/2, Main_Screen_Height - 38 - 70,70, 70)];
-        [bottomBtn setImage:[UIImage imageNamed:@"camera01"] forState:UIControlStateNormal];
-        [bottomBtn addTarget:self action:@selector(openMoreFunctionView) forControlEvents:UIControlEventTouchUpInside];
-        [self.view addSubview:bottomBtn];
+//        bottomBtn = [[UIButton alloc] init];
+//        [bottomBtn setFrame:CGRectMake((Main_Screen_Width - 70)/2, Main_Screen_Height - 38 - 70,70, 70)];
+//        [bottomBtn setImage:[UIImage imageNamed:@"camera01"] forState:UIControlStateNormal];
+//        [bottomBtn addTarget:self action:@selector(openMoreFunctionView) forControlEvents:UIControlEventTouchUpInside];
+//        [self.view addSubview:bottomBtn];
         
         
 //        UIImageView *gifImageView = [[UIImageView alloc] initWithFrame:CGRectMake((Main_Screen_Width - 70)/2, CGRectGetMinY(bottomBtn.frame) - 90, 70, 70)];

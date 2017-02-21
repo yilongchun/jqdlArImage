@@ -12,3 +12,4 @@
 "Bad Request"="请求失败";
 "Missing parameters. \"username\" and \"password\" are required" = "缺少参数";
 "invalid user credentials" = "用户名或密码错误";
+"unique constraint violated" = "用户已存在";
