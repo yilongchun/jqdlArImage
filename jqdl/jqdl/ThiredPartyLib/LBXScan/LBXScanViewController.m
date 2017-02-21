@@ -111,12 +111,8 @@
         _topTitle.text = @"将取景框对准二维码即可自动扫描";
         _topTitle.textColor = [UIColor whiteColor];
         [self.view addSubview:_topTitle];
-    }    
-    
-    
+    }
       [_qRScanView startDeviceReadyingWithText:@"相机启动中"];
-    
-    
 }
 
 - (void)drawBottomItems

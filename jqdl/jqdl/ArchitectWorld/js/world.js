@@ -37,7 +37,7 @@ var World = {
     
 
 	locationUpdateCounter: 0,
-	updatePlacemarkDistancesEveryXLocationUpdates: 3,
+	updatePlacemarkDistancesEveryXLocationUpdates: 5,
     
 	// called to inject new POI data
 	loadPoisFromJsonData: function loadPoisFromJsonDataFn(poiData) {
@@ -223,7 +223,7 @@ var World = {
         
 //        document.location = "architectsdk://button?action=locationChangedFn2&lat="+lat+"&lon="+lon+"&alt="+alt+"&acc="+acc;
         
-        AR.logger.debug("locationChanged lat:"+lat+",log:"+lon+",alt:"+alt+",acc:"+acc);
+//        AR.logger.debug("locationChanged lat:"+lat+",log:"+lon+",alt:"+alt+",acc:"+acc);
 //        World.currentLat = lat;
 //        World.currentLng = lon;
 //        AR.logger.debug("locationChanged currentLat:"+World.currentLat + ",currentLng:"+World.currentLng);
@@ -237,7 +237,28 @@ var World = {
 			World.updateDistanceToUserValues();
             
             
-		}        
+            if(World.jingquType != 0){
+                var location3 = new AR.GeoLocation(World.jingquLat, World.jingquLng);
+                var location4 = new AR.GeoLocation(lat, lon, alt);
+                var dist = location4.distanceTo(location3);
+                AR.logger.debug("dist:" + dist + ",World.jingquType:" + World.jingquType);
+                if(dist != undefined){
+                    if(dist < 3000){
+                        if(World.jingquType != "1"){
+                            AR.logger.debug("已进入景区");
+                            document.location = "architectsdk://button?action=reloadArData&jingquType=1";
+                        }
+                    }else{
+                        if(parseInt(World.jingquType) != 2){
+                            AR.logger.debug("已离开景区");
+                            document.location = "architectsdk://button?action=reloadArData&jingquType=2";
+                        }
+                    }
+                }
+            }else{
+                document.location = "architectsdk://button?action=reloadArData&jingquType=2";
+            }
+		}
 		// helper used to update placemark information every now and then (e.g. every 10 location upadtes fired)
 		World.locationUpdateCounter = (++World.locationUpdateCounter % World.updatePlacemarkDistancesEveryXLocationUpdates);
         
@@ -250,27 +271,6 @@ var World = {
 //            }, 10 * 1000 );
 //        }
         
-        if(World.jingquType != 0){
-            var location3 = new AR.GeoLocation(World.jingquLat, World.jingquLng);
-            var location4 = new AR.GeoLocation(lat, lon, alt);
-            var dist = location4.distanceTo(location3);
-            AR.logger.debug("dist:" + dist + ",World.jingquType:" + World.jingquType);
-            if(dist != undefined){
-                if(dist < 3000){
-                    if(World.jingquType != "1"){
-                        AR.logger.debug("已进入景区");
-                        document.location = "architectsdk://button?action=reloadArData&jingquType=1";
-                    }
-                }else{
-                    if(parseInt(World.jingquType) != 2){
-                        AR.logger.debug("已离开景区");
-                        document.location = "architectsdk://button?action=reloadArData&jingquType=2";
-                    }
-                }
-            }
-        }else{
-            document.location = "architectsdk://button?action=reloadArData&jingquType=2";
-        }
         
 	},
 

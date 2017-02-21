@@ -847,25 +847,25 @@
         MyPointAnnotation *anno = (MyPointAnnotation *)view.annotation;
         WTPoi *poi = anno.poi;
         if([poi.type isEqualToString:@"scenery_spot"]){//景点
-            view.image=[UIImage imageNamed:@"greenPoint"];
+            view.image=[UIImage imageNamed:@"greenPoint2"];
         }
         if([poi.type isEqualToString:@"recreational_facility"]){//游乐
-            view.image=[UIImage imageNamed:@"bluePoint"];
+            view.image=[UIImage imageNamed:@"bluePoint2"];
         }
         if([poi.type isEqualToString:@"food"]){//美食
-            view.image=[UIImage imageNamed:@"yellowPoint"];    
+            view.image=[UIImage imageNamed:@"yellowPoint2"];
         }
         if([poi.type isEqualToString:@"shop"]){//商铺
-            view.image=[UIImage imageNamed:@"purplePoint"]; 
+            view.image=[UIImage imageNamed:@"purplePoint2"];
         }
         if([poi.type isEqualToString:@"toilet"]){//公厕
-            view.image=[UIImage imageNamed:@"brownPoint"];
+            view.image=[UIImage imageNamed:@"brownPoint2"];
         }
         if([poi.type isEqualToString:@"entrance"]){//出入口
-            view.image=[UIImage imageNamed:@"linghtGreenPonit"];
+            view.image=[UIImage imageNamed:@"linghtGreenPonit2"];
         }
         if([poi.type isEqualToString:@"service_point"]){//服务点
-            view.image=[UIImage imageNamed:@"redPoint"];
+            view.image=[UIImage imageNamed:@"redPoint2"];
         }
         
         //点击显示图详情视图 必须MJPointAnnotation对象设置了标题和副标题

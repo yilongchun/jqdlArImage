@@ -1757,16 +1757,16 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
         
         
     }
-    if (debugLabel == nil) {
-        debugLabel = [[UILabel alloc] initWithFrame:CGRectMake(Main_Screen_Width - 160, Main_Screen_Height - 100, 160, 100)];
-        debugLabel.font = SYSTEMFONT(10);
-        debugLabel.textColor = [UIColor blackColor];
-        debugLabel.backgroundColor = [UIColor whiteColor];
-//        debugLabel.textAlignment = NSTextAlignmentCenter;
-        debugLabel.alpha = 0.5;
-        debugLabel.numberOfLines = 0;
-        [self.view addSubview:debugLabel];
-    }
+//    if (debugLabel == nil) {
+//        debugLabel = [[UILabel alloc] initWithFrame:CGRectMake(Main_Screen_Width - 160, Main_Screen_Height - 100, 160, 100)];
+//        debugLabel.font = SYSTEMFONT(10);
+//        debugLabel.textColor = [UIColor blackColor];
+//        debugLabel.backgroundColor = [UIColor whiteColor];
+////        debugLabel.textAlignment = NSTextAlignmentCenter;
+//        debugLabel.alpha = 0.5;
+//        debugLabel.numberOfLines = 0;
+//        [self.view addSubview:debugLabel];
+//    }
     
     
 }
@@ -1894,7 +1894,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                 
                 NSString *type = [parameters objectForKey:@"jingquType"];//1街景 2景区
                 if ([type intValue] != [jingquType intValue]) {
-                    jingquType = type;
+                    
                     if ([type intValue] == 1) {//景区
                         UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"即将切换到景区导览模式" message:@"检测到您已经抵达景区周边范围" preferredStyle:UIAlertControllerStyleAlert];
                         UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
