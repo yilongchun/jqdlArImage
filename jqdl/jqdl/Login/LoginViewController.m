@@ -342,6 +342,7 @@
         msgVc = [[LoginForCodeViewController alloc] init];
 //        msgVc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
     }
+    msgVc.loginVCAccount = self.account.text;
     UIBarButtonItem *backItem=[[UIBarButtonItem alloc] init];
     UIImage *backImage = [UIImage imageNamed:@"navi_back"];
     [backItem setBackButtonBackgroundImage:[backImage resizableImageWithCapInsets:UIEdgeInsetsMake(0, backImage.size.width, 0, 0)] forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];//更改背景图片

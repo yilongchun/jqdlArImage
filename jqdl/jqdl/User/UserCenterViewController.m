@@ -96,7 +96,7 @@
     
     if (userInfo != nil) {
         NSString *avatar = [userInfo objectForKey:@"avatar"];
-        if (![avatar isEqualToString:@""]) {
+        if (avatar != nil && ![avatar isEqualToString:@""]) {
             [headBackImageView setImageWithURL:[NSURL URLWithString:avatar]];
             [headImageView setImageWithURL:[NSURL URLWithString:avatar]];
         }else{

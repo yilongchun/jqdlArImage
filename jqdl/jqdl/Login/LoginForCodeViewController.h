@@ -18,4 +18,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *toRegister;
 @property (weak, nonatomic) IBOutlet UILabel *pwdLogin;
 
+
+@property(strong,nonatomic) NSString *loginVCAccount;
+
 @end

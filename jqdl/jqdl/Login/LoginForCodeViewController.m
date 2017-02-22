@@ -107,6 +107,10 @@
     [registerBtn setTitleColor:RGB(66, 216, 230) forState:UIControlStateNormal];
     [registerBtn addTarget:self action:@selector(goToRegisger) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:registerBtn];
+    
+    if (_loginVCAccount) {
+        _account.text = _loginVCAccount;
+    }
 }
 
 -(void)dissMissView{

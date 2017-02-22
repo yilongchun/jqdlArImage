@@ -99,6 +99,9 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
 // 蓝牙检测
 @property (nonatomic,strong) CBCentralManager *centralManager;
 
+//权限
+@property (nonatomic, strong) WTAuthorizationRequestManager                         *augmentedRealityAuthenticationRequestManager;
+
 @end
 
 @implementation ViewController
@@ -120,8 +123,8 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
         self.beacon1 = [[CLBeaconRegion alloc] initWithProximityUUID:[[NSUUID alloc] initWithUUIDString:BEACONUUID] identifier:@"media"];//初始化监测的iBeacon信息
     
     
-//    [self.locationmanager requestWhenInUseAuthorization];
-    [self.locationmanager requestAlwaysAuthorization];//授权用户开启定位
+    [self.locationmanager requestWhenInUseAuthorization];
+//    [self.locationmanager requestAlwaysAuthorization];//授权用户开启定位
     if ([CLLocationManager locationServicesEnabled]) { // 判断是否打开了位置服务
         
         [self.locationmanager startUpdatingLocation];//开始定位
@@ -194,123 +197,173 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
      NOTE: On iOS, an unsupported device might be an iPhone 3GS for image recognition or an iPod Touch 4th generation for Geo augmented reality.
      */
     
-    
-    [self startLocationUpdatesForPoiInjection];
-    
     self.jz_navigationBarBackgroundHidden = YES;
     self.jz_navigationBarTintColor = [UIColor whiteColor];
     self.jz_navigationBarBackgroundAlpha = 0.f;
     
+    _augmentedRealityAuthenticationRequestManager = [[WTAuthorizationRequestManager alloc] init];
     
-//    self.centralManager = [[CBCentralManager alloc] initWithDelegate:self queue:nil];//蓝牙
-    
-    
-    jingquType = @"0";
-    last_minor_number = @"-1";
-    
-    titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
-    titleLabel.font = BOLDSYSTEMFONT(17);
-    titleLabel.textColor = [UIColor whiteColor];
-    titleLabel.textAlignment = NSTextAlignmentCenter;
-    titleLabel.text = @"";
-    self.navigationItem.titleView = titleLabel;
-    
-//    self.title = @"东湖海洋世界风景区";
-    
-    self.navigationController.navigationBar.translucent = YES;
-    
-    [self setLeftItem];
-    
-    
-//    UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithTitle:@"地图" style:UIBarButtonItemStyleDone target:self action:@selector(toMap)];
-//    [leftItem setTintColor:[UIColor whiteColor]];
-//    self.navigationItem.leftBarButtonItem = leftItem;
-    
-//    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"msg"] style:UIBarButtonItemStyleDone target:self action:nil];
-//    [rightItem setTintColor:[UIColor whiteColor]];
-//    self.navigationItem.rightBarButtonItem = rightItem;
-    
-    UIBarButtonItem *backItem=[[UIBarButtonItem alloc] init];
-    UIImage *backImage = [UIImage imageNamed:@"navi_back2"];
-    [backItem setBackButtonBackgroundImage:[backImage resizableImageWithCapInsets:UIEdgeInsetsMake(0, backImage.size.width, 0, 0)] forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];//更改背景图片
-    self.navigationItem.backBarButtonItem = backItem;
-    
-    
-    
-//    self.navigationController.navigationBar.barStyle = UIStatusBarStyleLightContent;
-//    [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
-    
-    NSError *deviceSupportError = nil;
-    if ( [WTArchitectView isDeviceSupportedForRequiredFeatures:WTFeature_Geo error:&deviceSupportError] ) {
-        
-        /* Standard WTArchitectView object creation and initial configuration */
-        self.architectView = [[WTArchitectView alloc] initWithFrame:CGRectZero motionManager:nil];
-        self.architectView.delegate = self;
-        self.architectView.debugDelegate = self;
-        
-        /* Use the -setLicenseKey method to unlock all Wikitude SDK features that you bought with your license. */
-        
-        [self.architectView setLicenseKey:@"VZXuOlo5BrXcfg1u/SZHDsH8Z0WVK2GgKXNc6oSdGR9xdf8u+4QUfIMmV/xpm5OVskMWk/civMgaG69IeCpx06lDfwJCjJ6aML8lguA++GE4+y40GADJyaogsgLxPy02rNcecAqy0JacWlQFNR0yIspw+S4QYiGShktm+mNo96lTYWx0ZWRfX0u5ZeaGCsrwxQpy2pligySNSBTSMVuiX58BLoqX3WHoFRRT6Eg8cOHHLhBi43rzW8aG9eDaT5qdrJY+hE04NU8HvQR8YC6Y9ljsLdL4qA0PSHTebTs2tn9TR2KyCTw45RKMa4SJi7p7ItFqzXevPzhg+MGh1OuNPk1d30Mkpm2AGzimQEQ9JB7aHFcqwwj8ukC20ZPYcWLO2qG3giSVomEJ3swCJ2VWQAVfkt7JLBIhjQ3eKpu/SgrGcrV/ijAplPgs/tpvacyEyybBIsOMwxc3up4kWK4rr+c1BmG0H5jPXmWMqbHnrZ4S/bUWVovqdxhpn/djZZ8Ki/R370iLhxU5b3V8dtLs6LqQcBG5mbZ0B5hyJ/F6lnAnfAh1ccdOru9ArbbJry1AZ3/nvakLcv5ja5EHEL42jafeg6leNJFOmFLOghZ4N2fY7qusmSCy+8Vq1ZK38ApnghE7Q6wO1QqwNwcMiDOYLg=="];
-        
-        /* The Architect World can be loaded independently from the WTArchitectView rendering.
-         
-         NOTE: The architectWorldNavigation property is assigned at this point. The navigation object is valid until another Architect World is loaded.
-         */
-//        self.architectWorldNavigation = [self.architectView loadArchitectWorldFromURL:[[NSBundle mainBundle] URLForResource:@"index" withExtension:@"html" subdirectory:@"ArchitectWorld"] withRequiredFeatures:WTFeature_2DTracking];
-        
-        
-        
-        self.architectWorldNavigation = [self.architectView loadArchitectWorldFromURL:[[NSBundle mainBundle] URLForResource:@"index" withExtension:@"html" subdirectory:@"ArchitectWorld"]];
-        
-        
-        /* Because the WTArchitectView does some OpenGL rendering, frame updates have to be suspended and resumed when the application changes its active state.
-         Here, UIApplication notifications are used to respond to the active state changes.
-         
-         NOTE: Since the application will resign active even when an UIAlert is shown, some special handling is implemented in the UIApplicationDidBecomeActiveNotification.
-         */
-        [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidBecomeActiveNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
-            
-            /* When the application starts for the first time, several UIAlert's might be shown to ask the user for camera and/or GPS access.
-             Because the WTArchitectView is paused when the application resigns active (See line 86), also Architect JavaScript evaluation is interrupted.
-             To resume properly from the inactive state, the Architect World has to be reloaded if and only if an active Architect World load request was active at the time the application resigned active.
-             This loading state/interruption can be detected using the navigation object that was returned from the -loadArchitectWorldFromURL:withRequiredFeatures method.
-             */
-            if (self.architectWorldNavigation.wasInterrupted) {
-                [self.architectView reloadArchitectWorld];
+    if ( !self.augmentedRealityAuthenticationRequestManager.isRequestingRestrictedAppleiOSSDKAPIAuthorization )
+    {
+        NSOrderedSet<NSNumber *> *restrictedAppleiOSSDKAPIs = [WTAuthorizationRequestManager restrictedAppleiOSSDKAPIAuthorizationsForRequiredFeatures:WTFeature_Geo];
+        [self.augmentedRealityAuthenticationRequestManager requestRestrictedAppleiOSSDKAPIAuthorization:restrictedAppleiOSSDKAPIs completion:^(BOOL success, NSError * _Nonnull error) {
+            DLog(@"error:%@",error);
+            if ( success )
+            {
+                
+                
+                
+                
+                
+                
+                //    self.centralManager = [[CBCentralManager alloc] initWithDelegate:self queue:nil];//蓝牙
+                
+                
+                jingquType = @"0";
+                last_minor_number = @"-1";
+                
+                titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
+                titleLabel.font = BOLDSYSTEMFONT(17);
+                titleLabel.textColor = [UIColor whiteColor];
+                titleLabel.textAlignment = NSTextAlignmentCenter;
+                titleLabel.text = @"";
+                self.navigationItem.titleView = titleLabel;
+                
+                //    self.title = @"东湖海洋世界风景区";
+                
+                self.navigationController.navigationBar.translucent = YES;
+                
+                [self setLeftItem];
+                
+                
+                //    UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithTitle:@"地图" style:UIBarButtonItemStyleDone target:self action:@selector(toMap)];
+                //    [leftItem setTintColor:[UIColor whiteColor]];
+                //    self.navigationItem.leftBarButtonItem = leftItem;
+                
+                //    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"msg"] style:UIBarButtonItemStyleDone target:self action:nil];
+                //    [rightItem setTintColor:[UIColor whiteColor]];
+                //    self.navigationItem.rightBarButtonItem = rightItem;
+                
+                UIBarButtonItem *backItem=[[UIBarButtonItem alloc] init];
+                UIImage *backImage = [UIImage imageNamed:@"navi_back2"];
+                [backItem setBackButtonBackgroundImage:[backImage resizableImageWithCapInsets:UIEdgeInsetsMake(0, backImage.size.width, 0, 0)] forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];//更改背景图片
+                self.navigationItem.backBarButtonItem = backItem;
+                
+                
+                
+                //    self.navigationController.navigationBar.barStyle = UIStatusBarStyleLightContent;
+                //    [self.navigationController.navigationBar setTintColor:[UIColor whiteColor]];
+                
+                NSError *deviceSupportError = nil;
+                if ( [WTArchitectView isDeviceSupportedForRequiredFeatures:WTFeature_Geo error:&deviceSupportError] ) {
+                    
+                    /* Standard WTArchitectView object creation and initial configuration */
+                    self.architectView = [[WTArchitectView alloc] initWithFrame:CGRectZero motionManager:nil];
+                    self.architectView.delegate = self;
+                    self.architectView.debugDelegate = self;
+                    
+                    /* Use the -setLicenseKey method to unlock all Wikitude SDK features that you bought with your license. */
+                    
+                    [self.architectView setLicenseKey:@"VZXuOlo5BrXcfg1u/SZHDsH8Z0WVK2GgKXNc6oSdGR9xdf8u+4QUfIMmV/xpm5OVskMWk/civMgaG69IeCpx06lDfwJCjJ6aML8lguA++GE4+y40GADJyaogsgLxPy02rNcecAqy0JacWlQFNR0yIspw+S4QYiGShktm+mNo96lTYWx0ZWRfX0u5ZeaGCsrwxQpy2pligySNSBTSMVuiX58BLoqX3WHoFRRT6Eg8cOHHLhBi43rzW8aG9eDaT5qdrJY+hE04NU8HvQR8YC6Y9ljsLdL4qA0PSHTebTs2tn9TR2KyCTw45RKMa4SJi7p7ItFqzXevPzhg+MGh1OuNPk1d30Mkpm2AGzimQEQ9JB7aHFcqwwj8ukC20ZPYcWLO2qG3giSVomEJ3swCJ2VWQAVfkt7JLBIhjQ3eKpu/SgrGcrV/ijAplPgs/tpvacyEyybBIsOMwxc3up4kWK4rr+c1BmG0H5jPXmWMqbHnrZ4S/bUWVovqdxhpn/djZZ8Ki/R370iLhxU5b3V8dtLs6LqQcBG5mbZ0B5hyJ/F6lnAnfAh1ccdOru9ArbbJry1AZ3/nvakLcv5ja5EHEL42jafeg6leNJFOmFLOghZ4N2fY7qusmSCy+8Vq1ZK38ApnghE7Q6wO1QqwNwcMiDOYLg=="];
+                    
+                    /* The Architect World can be loaded independently from the WTArchitectView rendering.
+                     
+                     NOTE: The architectWorldNavigation property is assigned at this point. The navigation object is valid until another Architect World is loaded.
+                     */
+                    //        self.architectWorldNavigation = [self.architectView loadArchitectWorldFromURL:[[NSBundle mainBundle] URLForResource:@"index" withExtension:@"html" subdirectory:@"ArchitectWorld"] withRequiredFeatures:WTFeature_2DTracking];
+                    
+                    
+                    
+                    self.architectWorldNavigation = [self.architectView loadArchitectWorldFromURL:[[NSBundle mainBundle] URLForResource:@"index" withExtension:@"html" subdirectory:@"ArchitectWorld"]];
+                    
+                    
+                    /* Because the WTArchitectView does some OpenGL rendering, frame updates have to be suspended and resumed when the application changes its active state.
+                     Here, UIApplication notifications are used to respond to the active state changes.
+                     
+                     NOTE: Since the application will resign active even when an UIAlert is shown, some special handling is implemented in the UIApplicationDidBecomeActiveNotification.
+                     */
+                    [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidBecomeActiveNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
+                        
+                        /* When the application starts for the first time, several UIAlert's might be shown to ask the user for camera and/or GPS access.
+                         Because the WTArchitectView is paused when the application resigns active (See line 86), also Architect JavaScript evaluation is interrupted.
+                         To resume properly from the inactive state, the Architect World has to be reloaded if and only if an active Architect World load request was active at the time the application resigned active.
+                         This loading state/interruption can be detected using the navigation object that was returned from the -loadArchitectWorldFromURL:withRequiredFeatures method.
+                         */
+                        if (self.architectWorldNavigation.wasInterrupted) {
+                            [self.architectView reloadArchitectWorld];
+                        }
+                        
+                        /* Standard WTArchitectView rendering resuming after the application becomes active again */
+                        [self startWikitudeSDKRendering];
+                    }];
+                    [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationWillResignActiveNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
+                        
+                        /* Standard WTArchitectView rendering suspension when the application resignes active */
+                        [self stopWikitudeSDKRendering];
+                    }];
+                    
+                    /* Standard subview handling using Autolayout */
+                    [self.view addSubview:self.architectView];
+                    self.architectView.translatesAutoresizingMaskIntoConstraints = NO;
+                    
+                    NSDictionary *views = NSDictionaryOfVariableBindings(_architectView);
+                    [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat:@"|[_architectView]|" options:0 metrics:nil views:views] ];
+                    [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_architectView]|" options:0 metrics:nil views:views] ];
+                }
+                else {
+                    NSLog(@"This device is not supported. Show either an alert or use this class method even before presenting the view controller that manages the WTArchitectView. Error: %@", [deviceSupportError localizedDescription]);
+                }
+                
+                
+                
+                
+                
+                
+                //选择景区
+                //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(chooseJq:) name:@"chooseJq" object:nil];
+                //    //景点详情
+                //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showJdDetail:) name:@"showJdDetail" object:nil];
+                //刷新左上角头像
+                [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setLeftItem) name:@"setLeftItem" object:nil];
+                
+                
+                
+                
             }
-            
-            /* Standard WTArchitectView rendering resuming after the application becomes active again */
-            [self startWikitudeSDKRendering];
+            else
+            {
+                //            /* Reset table view selection */
+                //            [tableView deselectRowAtIndexPath:indexPath animated:YES];
+                //
+                //            /* Collect information to show an alert and log a message to the console that explains what is missing and how it can be fixed */
+                //            NSDictionary *unauthorizedAPIInfo = [[error userInfo] objectForKey:kWTUnauthorizedAppleiOSSDKAPIsKey];
+                //
+                //            NSMutableString *detailedAuthorizationErrorLogMessage = [[NSMutableString alloc] initWithFormat:@"The following authorization states do not meet the requirements:"];
+                //            NSMutableString *missingAuthorizations = [[NSMutableString alloc] initWithFormat:@"In order to use the Wikitude SDK, please grant access to the following:"];
+                //            for (NSString *unauthorizedAPIKey in [unauthorizedAPIInfo allKeys])
+                //            {
+                //                [missingAuthorizations appendFormat:@"\n* %@", [WTAuthorizationRequestManager humanReadableDescriptionForUnauthorizedAppleiOSSDKAPI:unauthorizedAPIKey]];
+                //
+                //                [detailedAuthorizationErrorLogMessage appendFormat:@"\n%@ = %@", unauthorizedAPIKey, [WTAuthorizationRequestManager stringFromAuthorizationStatus:[[unauthorizedAPIInfo objectForKey:unauthorizedAPIKey] integerValue] forUnauthorizedAppleiOSSDKAPI:unauthorizedAPIKey]];
+                //            }
+                //
+                //            NSLog(@"%@", detailedAuthorizationErrorLogMessage);
+                //
+                //            UIAlertController *settingsAlertController = [UIAlertController alertControllerWithTitle:@"Required API authorizations missing" message:missingAuthorizations preferredStyle:UIAlertControllerStyleAlert];
+                //            [settingsAlertController addAction:[UIAlertAction actionWithTitle:@"Open Settings" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                //                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+                //            }]];
+                //            [settingsAlertController addAction:[UIAlertAction actionWithTitle:@"NO" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {}]];
+                //            
+                //            [self presentViewController:settingsAlertController animated:YES completion:nil];
+            }
         }];
-        [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationWillResignActiveNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
-            
-            /* Standard WTArchitectView rendering suspension when the application resignes active */
-            [self stopWikitudeSDKRendering];
-        }];
-        
-        /* Standard subview handling using Autolayout */
-        [self.view addSubview:self.architectView];
-        self.architectView.translatesAutoresizingMaskIntoConstraints = NO;
-        
-        NSDictionary *views = NSDictionaryOfVariableBindings(_architectView);
-        [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat:@"|[_architectView]|" options:0 metrics:nil views:views] ];
-        [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_architectView]|" options:0 metrics:nil views:views] ];
-    }
-    else {
-        NSLog(@"This device is not supported. Show either an alert or use this class method even before presenting the view controller that manages the WTArchitectView. Error: %@", [deviceSupportError localizedDescription]);
-    }
-    
 
+    }
     
     
     
     
-    //选择景区
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(chooseJq:) name:@"chooseJq" object:nil];
-//    //景点详情
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showJdDetail:) name:@"showJdDetail" object:nil];
-    //刷新左上角头像
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setLeftItem) name:@"setLeftItem" object:nil];
     
     
    //右下角搜索按钮
@@ -451,7 +504,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithCustomView:imageView];
     if (userInfo != nil) {
         NSString *avatar = [userInfo objectForKey:@"avatar"];
-        if (![avatar isEqualToString:@""]) {
+        if (avatar != nil && ![avatar isEqualToString:@""]) {
             [imageView setImageWithURL:[NSURL URLWithString:avatar]];
         }else{
             imageView.image = [UIImage imageNamed:@"member_no.gif"];
@@ -573,8 +626,11 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
 //                CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake([latitude doubleValue] - 0.00347516, [longitude doubleValue] - 0.01223381);
                 
                 
+                //景区中心点 默认就已当前用户位置
+                CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake(myLocation.coordinate.latitude,myLocation.coordinate.longitude);
                 
-                CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake(30.7748922,111.285375);
+                
+//                CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake(30.7748922,111.285375);
                 altitude = [NSNumber numberWithInt:80];
                 //GPS
 //                CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake([latitude doubleValue], [longitude doubleValue]);
@@ -613,6 +669,14 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                 NSDictionary *jsonRepresentation = [NSDictionary dictionaryWithObjects:poiObjects forKeys:poiKeys];
                 NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonRepresentation options:kNilOptions error:nil];
                 [self.architectView callJavaScript:[NSString stringWithFormat:@"World.updateJingquCoor(%@)", [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding]]];
+                
+                
+                if (self.architectWorldNavigation.wasInterrupted) {
+                    [self.architectView reloadArchitectWorld];
+                }
+                
+                /* Standard WTArchitectView rendering resuming after the application becomes active again */
+                [self startWikitudeSDKRendering];
                 
                 break;
             }
@@ -709,14 +773,14 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
             }
             
             //随机坐标
-//                CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake(myLocation.coordinate.latitude + WT_RANDOM(-0.1, 0.1), myLocation.coordinate.longitude + WT_RANDOM(-0.1, 0.1));
+                CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake(myLocation.coordinate.latitude + WT_RANDOM(-0.01, 0.01), myLocation.coordinate.longitude + WT_RANDOM(-0.01, 0.01));
             
             //百度坐标 > GPS
 //                CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake([latitude doubleValue] - 0.00347516, [longitude doubleValue] - 0.01223381);
             
             
-            //GPS
-            CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake([latitude doubleValue], [longitude doubleValue]);
+            //GPS 后台数据
+//            CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake([latitude doubleValue], [longitude doubleValue]);
             
             
             CLLocation *location = [[CLLocation alloc] initWithCoordinate:locationCoordinate
@@ -1265,6 +1329,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
 {
     id firstLocation = [locations firstObject];
     myLocation = (CLLocation *)firstLocation;
+    
     //    DLog(@"当前坐标 %@",myLocation);
     
     //    debugLabel.text = [NSString stringWithFormat:@"%@",myLocation];
@@ -1341,18 +1406,19 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     {
         myLocation = (CLLocation *)firstLocation;
         [manager stopUpdatingLocation];
+        self.locationmanager.delegate = nil;
         DLog(@"获取到定位信息");
         if ([jingquType isEqualToString:@"0"] && myLocation) {
             
-            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"即将切换到街景导览模式" message:@"检测到您已经进入街道周边范围" preferredStyle:UIAlertControllerStyleAlert];
-            UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-                [self performBlock:^{
-                    [self.navigationController popToRootViewControllerAnimated:YES];
+//            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"即将切换到街景导览模式" message:@"检测到您已经进入街道周边范围" preferredStyle:UIAlertControllerStyleAlert];
+//            UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+//                [self performBlock:^{
+//                    [self.navigationController popToRootViewControllerAnimated:YES];
                     [self loadStore];//重新加载ar数据
-                } afterDelay:0.];
-            }];
-            [alert addAction:action1];
-            [self presentViewController:alert animated:YES completion:nil];
+//                } afterDelay:0.];
+//            }];
+//            [alert addAction:action1];
+//            [self presentViewController:alert animated:YES completion:nil];
         }
     }
 }
@@ -1848,6 +1914,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
 - (void)architectView:(WTArchitectView *)architectView didFinishLoadArchitectWorldNavigation:(WTNavigation *)navigation {
     /* Architect World did finish loading */
     DLog(@"Architect World did finish loading");
+    [self startLocationUpdatesForPoiInjection];
 }
 
 - (void)architectView:(WTArchitectView *)architectView didFailToLoadArchitectWorldNavigation:(WTNavigation *)navigation withError:(NSError *)error {
