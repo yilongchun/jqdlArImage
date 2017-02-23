@@ -97,8 +97,8 @@
     if (userInfo != nil) {
         NSString *avatar = [userInfo objectForKey:@"avatar"];
         if (avatar != nil && ![avatar isEqualToString:@""]) {
-            [headBackImageView setImageWithURL:[NSURL URLWithString:avatar]];
-            [headImageView setImageWithURL:[NSURL URLWithString:avatar]];
+            [headBackImageView setImageWithURL:[NSURL URLWithString:avatar] placeholderImage:[UIImage imageNamed:@"member_no.gif"]];
+            [headImageView setImageWithURL:[NSURL URLWithString:avatar] placeholderImage:[UIImage imageNamed:@"member_no.gif"]];
         }else{
             headBackImageView.image = [UIImage imageNamed:@"member_no.gif"];
             headImageView.image = [UIImage imageNamed:@"member_no.gif"];

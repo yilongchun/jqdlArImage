@@ -17,4 +17,6 @@
 @property (weak, nonatomic) IBOutlet UITextField *password;
 @property (weak, nonatomic) IBOutlet UITextField *password2;
 
+@property BOOL backToRoot;
+
 @end

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9060" systemVersion="15A284" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9051"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="UpdatePhoneViewController">
+            <connections>
+                <outlet property="code" destination="eIO-C4-6HI" id="apr-pN-JfC"/>
+                <outlet property="phone" destination="Bzn-1K-Y6U" id="ggi-GL-PKx"/>
+                <outlet property="submitBtn" destination="1p5-Wy-ZlZ" id="zyS-PC-he7"/>
+                <outlet property="view" destination="fLp-fM-SJO" id="9KC-cN-tgg"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="fLp-fM-SJO">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="请输入手机号码" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="Bzn-1K-Y6U">
+                    <rect key="frame" x="15" y="70" width="290" height="40"/>
+                    <animations/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="40" id="qq9-la-imJ"/>
+                    </constraints>
+                    <color key="textColor" red="0.80000000000000004" green="0.80000000000000004" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                </textField>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1p5-Wy-ZlZ">
+                    <rect key="frame" x="15" y="197" width="290" height="44"/>
+                    <animations/>
+                    <constraints>
+                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="44" id="4Md-66-3WQ"/>
+                        <constraint firstAttribute="height" constant="44" id="INP-RW-WBd"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <state key="normal" title="绑定新手机号">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                </button>
+                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="请输入短信验证码" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="eIO-C4-6HI">
+                    <rect key="frame" x="15" y="121" width="290" height="40"/>
+                    <animations/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="40" id="FRK-vZ-40E"/>
+                    </constraints>
+                    <color key="textColor" red="0.80000000000000004" green="0.80000000000000004" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                </textField>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TUC-uk-oPX">
+                    <rect key="frame" x="15" y="161" width="290" height="1"/>
+                    <animations/>
+                    <color key="backgroundColor" red="0.94117647059999998" green="0.94117647059999998" blue="0.94117647059999998" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="1" id="l3K-nh-1O2"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Aqc-VS-kwI">
+                    <rect key="frame" x="15" y="110" width="290" height="1"/>
+                    <animations/>
+                    <color key="backgroundColor" red="0.94117647059999998" green="0.94117647059999998" blue="0.94117647059999998" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="1" id="LUZ-Tk-i20"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <animations/>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="Aqc-VS-kwI" secondAttribute="trailing" constant="15" id="1FT-B0-bl3"/>
+                <constraint firstItem="1p5-Wy-ZlZ" firstAttribute="leading" secondItem="fLp-fM-SJO" secondAttribute="leading" constant="15" id="4Q1-KS-nCs"/>
+                <constraint firstItem="Aqc-VS-kwI" firstAttribute="top" secondItem="Bzn-1K-Y6U" secondAttribute="bottom" id="8Mh-Tq-nxv"/>
+                <constraint firstAttribute="trailing" secondItem="1p5-Wy-ZlZ" secondAttribute="trailing" constant="15" id="D8g-kg-K3p"/>
+                <constraint firstAttribute="trailing" secondItem="Bzn-1K-Y6U" secondAttribute="trailing" constant="15" id="ERE-pi-YpQ"/>
+                <constraint firstItem="Aqc-VS-kwI" firstAttribute="leading" secondItem="fLp-fM-SJO" secondAttribute="leading" constant="15" id="JiQ-1X-da4"/>
+                <constraint firstItem="eIO-C4-6HI" firstAttribute="top" secondItem="Aqc-VS-kwI" secondAttribute="bottom" constant="10" id="Now-Pm-QtA"/>
+                <constraint firstItem="1p5-Wy-ZlZ" firstAttribute="top" secondItem="TUC-uk-oPX" secondAttribute="bottom" constant="35" id="TvS-H4-red"/>
+                <constraint firstAttribute="trailing" secondItem="TUC-uk-oPX" secondAttribute="trailing" constant="15" id="YvY-DB-kXY"/>
+                <constraint firstItem="TUC-uk-oPX" firstAttribute="top" secondItem="eIO-C4-6HI" secondAttribute="bottom" id="eKo-RO-F2r"/>
+                <constraint firstAttribute="trailing" secondItem="eIO-C4-6HI" secondAttribute="trailing" constant="15" id="efw-54-xN7"/>
+                <constraint firstItem="Bzn-1K-Y6U" firstAttribute="leading" secondItem="fLp-fM-SJO" secondAttribute="leading" constant="15" id="nS1-c4-PFv"/>
+                <constraint firstItem="Bzn-1K-Y6U" firstAttribute="top" secondItem="fLp-fM-SJO" secondAttribute="top" constant="70" id="x8J-fI-C1F"/>
+                <constraint firstItem="TUC-uk-oPX" firstAttribute="leading" secondItem="fLp-fM-SJO" secondAttribute="leading" constant="15" id="yiy-Ab-8Nr"/>
+                <constraint firstItem="eIO-C4-6HI" firstAttribute="leading" secondItem="fLp-fM-SJO" secondAttribute="leading" constant="15" id="ymp-rH-UV1"/>
+            </constraints>
+            <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
+            <point key="canvasLocation" x="333" y="302"/>
+        </view>
+    </objects>
+</document>

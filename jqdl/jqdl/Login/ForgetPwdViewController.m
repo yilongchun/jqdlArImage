@@ -133,10 +133,15 @@
         [self hideHud];
         DLog(@"%@",responseObject);
         //        NSDictionary *dic= [NSDictionary dictionaryWithDictionary:responseObject];
-        [self showHintInView:self.view hint:@"重置成功"];
+        [self showHintInView:self.view hint:@"修改成功"];
         
         [self performBlock:^{
-            [self.navigationController popToRootViewControllerAnimated:YES];
+            if (_backToRoot) {
+                [self.navigationController popToRootViewControllerAnimated:YES];
+            }else{
+                [self.navigationController popViewControllerAnimated:YES];
+            }
+            
         } afterDelay:1.5];
     }
     failure:^(NSURLSessionDataTask *task, NSError *error) {

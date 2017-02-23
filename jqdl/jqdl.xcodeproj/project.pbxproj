@@ -507,6 +507,10 @@
 		44EE4BFB1C053FC200031251 /* Util.m in Sources */ = {isa = PBXBuildFile; fileRef = 44EE4BFA1C053FC200031251 /* Util.m */; };
 		44F029DC1C1E569D00EF9218 /* Feature2ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44F029DA1C1E569D00EF9218 /* Feature2ViewController.m */; };
 		44F029DD1C1E569D00EF9218 /* Feature2ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44F029DB1C1E569D00EF9218 /* Feature2ViewController.xib */; };
+		44F306CF1E5E7465006903E5 /* AccountTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 44F306CD1E5E7465006903E5 /* AccountTableViewCell.m */; };
+		44F306D01E5E7465006903E5 /* AccountTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44F306CE1E5E7465006903E5 /* AccountTableViewCell.xib */; };
+		44F306D41E5E7AAA006903E5 /* UpdatePhoneViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44F306D21E5E7AAA006903E5 /* UpdatePhoneViewController.m */; };
+		44F306D51E5E7AAA006903E5 /* UpdatePhoneViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44F306D31E5E7AAA006903E5 /* UpdatePhoneViewController.xib */; };
 		44F6146B1E1F92BB00482D23 /* FeatureListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44F614691E1F92BB00482D23 /* FeatureListViewController.m */; };
 		44F6146C1E1F92BB00482D23 /* FeatureListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44F6146A1E1F92BB00482D23 /* FeatureListViewController.xib */; };
 /* End PBXBuildFile section */
@@ -1491,6 +1495,12 @@
 		44F029D91C1E569D00EF9218 /* Feature2ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Feature2ViewController.h; path = jqdl/Guide/Feature2ViewController.h; sourceTree = SOURCE_ROOT; };
 		44F029DA1C1E569D00EF9218 /* Feature2ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Feature2ViewController.m; path = jqdl/Guide/Feature2ViewController.m; sourceTree = SOURCE_ROOT; };
 		44F029DB1C1E569D00EF9218 /* Feature2ViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = Feature2ViewController.xib; path = jqdl/Guide/Feature2ViewController.xib; sourceTree = SOURCE_ROOT; };
+		44F306CC1E5E7465006903E5 /* AccountTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountTableViewCell.h; sourceTree = "<group>"; };
+		44F306CD1E5E7465006903E5 /* AccountTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountTableViewCell.m; sourceTree = "<group>"; };
+		44F306CE1E5E7465006903E5 /* AccountTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AccountTableViewCell.xib; sourceTree = "<group>"; };
+		44F306D11E5E7AAA006903E5 /* UpdatePhoneViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpdatePhoneViewController.h; sourceTree = "<group>"; };
+		44F306D21E5E7AAA006903E5 /* UpdatePhoneViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpdatePhoneViewController.m; sourceTree = "<group>"; };
+		44F306D31E5E7AAA006903E5 /* UpdatePhoneViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UpdatePhoneViewController.xib; sourceTree = "<group>"; };
 		44F614681E1F92BB00482D23 /* FeatureListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeatureListViewController.h; sourceTree = "<group>"; };
 		44F614691E1F92BB00482D23 /* FeatureListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeatureListViewController.m; sourceTree = "<group>"; };
 		44F6146A1E1F92BB00482D23 /* FeatureListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FeatureListViewController.xib; sourceTree = "<group>"; };
@@ -3199,9 +3209,15 @@
 		44435E141E4ACE5F00F9C84A /* AccountInfo */ = {
 			isa = PBXGroup;
 			children = (
+				44F306CC1E5E7465006903E5 /* AccountTableViewCell.h */,
+				44F306CD1E5E7465006903E5 /* AccountTableViewCell.m */,
+				44F306CE1E5E7465006903E5 /* AccountTableViewCell.xib */,
 				44435E151E4ACE5F00F9C84A /* AccountViewController.h */,
 				44435E161E4ACE5F00F9C84A /* AccountViewController.m */,
 				44435E171E4ACE5F00F9C84A /* AccountViewController.xib */,
+				44F306D11E5E7AAA006903E5 /* UpdatePhoneViewController.h */,
+				44F306D21E5E7AAA006903E5 /* UpdatePhoneViewController.m */,
+				44F306D31E5E7AAA006903E5 /* UpdatePhoneViewController.xib */,
 			);
 			path = AccountInfo;
 			sourceTree = "<group>";
@@ -3586,7 +3602,9 @@
 				4437FEF61E48542500B8A084 /* status-bar-pattern-black@2x.png in Resources */,
 				4437FEFB1E48542500B8A084 /* status-bar-progress@2x.png in Resources */,
 				4437FED71E48212F00B8A084 /* NoticeSettingViewController.xib in Resources */,
+				44F306D01E5E7465006903E5 /* AccountTableViewCell.xib in Resources */,
 				443DFD591E5A9B570022B7F3 /* mapapi.bundle in Resources */,
+				44F306D51E5E7AAA006903E5 /* UpdatePhoneViewController.xib in Resources */,
 				44E972BF1C2152010014E301 /* ScanResultWebViewController.xib in Resources */,
 				4437FEB21E480A5F00B8A084 /* Localizable.strings in Resources */,
 				44117A8D1C11763E0071E1C0 /* MJRefresh.bundle in Resources */,
@@ -3729,6 +3747,7 @@
 				441179E11C11763E0071E1C0 /* ZXDetectorResult.m in Sources */,
 				441179D01C11763E0071E1C0 /* ZXCGImageLuminanceSource.m in Sources */,
 				44117A881C11763E0071E1C0 /* MJRefreshBackNormalFooter.m in Sources */,
+				44F306CF1E5E7465006903E5 /* AccountTableViewCell.m in Sources */,
 				440E7F531E1B36D600B5277E /* NSURL+Param.m in Sources */,
 				440E7F481E1B36D600B5277E /* NSSet+Block.m in Sources */,
 				441179DF1C11763E0071E1C0 /* ZXDecoderResult.m in Sources */,
@@ -3779,6 +3798,7 @@
 				4411799E1C11763E0071E1C0 /* LBXScanWrapper.m in Sources */,
 				44270F031E164F1B00561C69 /* FeatureTableViewCell.m in Sources */,
 				44117A3D1C11763E0071E1C0 /* ZXOneDReader.m in Sources */,
+				44F306D41E5E7AAA006903E5 /* UpdatePhoneViewController.m in Sources */,
 				441179AD1C11763E0071E1C0 /* ZXAddressBookDoCoMoResultParser.m in Sources */,
 				444D77C11E037A180040F0A7 /* _JZNavigationInteractiveTransition.m in Sources */,
 				4424D6591E2726A500245B43 /* MASConstraint.m in Sources */,

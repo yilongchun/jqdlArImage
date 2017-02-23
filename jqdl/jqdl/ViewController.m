@@ -313,12 +313,6 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                 else {
                     NSLog(@"This device is not supported. Show either an alert or use this class method even before presenting the view controller that manages the WTArchitectView. Error: %@", [deviceSupportError localizedDescription]);
                 }
-                
-                
-                
-                
-                
-                
                 //选择景区
                 //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(chooseJq:) name:@"chooseJq" object:nil];
                 //    //景点详情
@@ -328,34 +322,42 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                 
                 
                 
-                
+//                // 得到当前应用的版本号
+//                NSDictionary *infoDictionary = [NSBundle mainBundle].infoDictionary;
+//                NSString *currentAppVersion = [infoDictionary objectForKey:@"CFBundleShortVersionString"];            
+//                // 取出之前保存的版本号
+//                NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+//                NSString *appVersion = [userDefaults objectForKey:@"appVersion"];
+//                if (appVersion == nil || ![appVersion isEqualToString:currentAppVersion]) {
+//                    // 保存最新的版本号
+//                    [userDefaults setValue:currentAppVersion forKey:@"appVersion"];
+//                    [self initGuideView];
+//            
+//                }
             }
             else
             {
-                //            /* Reset table view selection */
-                //            [tableView deselectRowAtIndexPath:indexPath animated:YES];
-                //
-                //            /* Collect information to show an alert and log a message to the console that explains what is missing and how it can be fixed */
-                //            NSDictionary *unauthorizedAPIInfo = [[error userInfo] objectForKey:kWTUnauthorizedAppleiOSSDKAPIsKey];
-                //
-                //            NSMutableString *detailedAuthorizationErrorLogMessage = [[NSMutableString alloc] initWithFormat:@"The following authorization states do not meet the requirements:"];
-                //            NSMutableString *missingAuthorizations = [[NSMutableString alloc] initWithFormat:@"In order to use the Wikitude SDK, please grant access to the following:"];
-                //            for (NSString *unauthorizedAPIKey in [unauthorizedAPIInfo allKeys])
-                //            {
-                //                [missingAuthorizations appendFormat:@"\n* %@", [WTAuthorizationRequestManager humanReadableDescriptionForUnauthorizedAppleiOSSDKAPI:unauthorizedAPIKey]];
-                //
-                //                [detailedAuthorizationErrorLogMessage appendFormat:@"\n%@ = %@", unauthorizedAPIKey, [WTAuthorizationRequestManager stringFromAuthorizationStatus:[[unauthorizedAPIInfo objectForKey:unauthorizedAPIKey] integerValue] forUnauthorizedAppleiOSSDKAPI:unauthorizedAPIKey]];
-                //            }
-                //
-                //            NSLog(@"%@", detailedAuthorizationErrorLogMessage);
-                //
-                //            UIAlertController *settingsAlertController = [UIAlertController alertControllerWithTitle:@"Required API authorizations missing" message:missingAuthorizations preferredStyle:UIAlertControllerStyleAlert];
-                //            [settingsAlertController addAction:[UIAlertAction actionWithTitle:@"Open Settings" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                //                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
-                //            }]];
-                //            [settingsAlertController addAction:[UIAlertAction actionWithTitle:@"NO" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {}]];
-                //            
-                //            [self presentViewController:settingsAlertController animated:YES completion:nil];
+                /* Collect information to show an alert and log a message to the console that explains what is missing and how it can be fixed */
+                NSDictionary *unauthorizedAPIInfo = [[error userInfo] objectForKey:kWTUnauthorizedAppleiOSSDKAPIsKey];
+    
+                NSMutableString *detailedAuthorizationErrorLogMessage = [[NSMutableString alloc] initWithFormat:@"The following authorization states do not meet the requirements:"];
+                NSMutableString *missingAuthorizations = [[NSMutableString alloc] initWithFormat:@"要使用氢旅行, 请给以下授权访问:"];
+                for (NSString *unauthorizedAPIKey in [unauthorizedAPIInfo allKeys])
+                {
+                    [missingAuthorizations appendFormat:@"\n* %@", [WTAuthorizationRequestManager humanReadableDescriptionForUnauthorizedAppleiOSSDKAPI:unauthorizedAPIKey]];
+    
+                    [detailedAuthorizationErrorLogMessage appendFormat:@"\n%@ = %@", unauthorizedAPIKey, [WTAuthorizationRequestManager stringFromAuthorizationStatus:[[unauthorizedAPIInfo objectForKey:unauthorizedAPIKey] integerValue] forUnauthorizedAppleiOSSDKAPI:unauthorizedAPIKey]];
+                }
+    
+                NSLog(@"%@", detailedAuthorizationErrorLogMessage);
+    
+                UIAlertController *settingsAlertController = [UIAlertController alertControllerWithTitle:@"访问权限不足" message:missingAuthorizations preferredStyle:UIAlertControllerStyleAlert];
+                [settingsAlertController addAction:[UIAlertAction actionWithTitle:@"打开设置" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+                }]];
+                [settingsAlertController addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {}]];
+                
+                [self presentViewController:settingsAlertController animated:YES completion:nil];
             }
         }];
 
@@ -382,20 +384,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     
     
     
-//    // 得到当前应用的版本号
-//    NSDictionary *infoDictionary = [NSBundle mainBundle].infoDictionary;
-//    NSString *currentAppVersion = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
-//    
-//    // 取出之前保存的版本号
-//    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-//    NSString *appVersion = [userDefaults objectForKey:@"appVersion"];
-////
-//    if (appVersion == nil || ![appVersion isEqualToString:currentAppVersion]) {
-//        // 保存最新的版本号
-//        [userDefaults setValue:currentAppVersion forKey:@"appVersion"];
-//        [self initGuideView];
-//
-//    }
+
     
     
 //    NSDictionary *peripheralData = nil;
@@ -505,7 +494,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     if (userInfo != nil) {
         NSString *avatar = [userInfo objectForKey:@"avatar"];
         if (avatar != nil && ![avatar isEqualToString:@""]) {
-            [imageView setImageWithURL:[NSURL URLWithString:avatar]];
+            [imageView setImageWithURL:[NSURL URLWithString:avatar] placeholderImage:[UIImage imageNamed:@"member_no.gif"]];            
         }else{
             imageView.image = [UIImage imageNamed:@"member_no.gif"];
         }
@@ -1410,15 +1399,15 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
         DLog(@"获取到定位信息");
         if ([jingquType isEqualToString:@"0"] && myLocation) {
             
-//            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"即将切换到街景导览模式" message:@"检测到您已经进入街道周边范围" preferredStyle:UIAlertControllerStyleAlert];
-//            UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-//                [self performBlock:^{
-//                    [self.navigationController popToRootViewControllerAnimated:YES];
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"即将切换到街景导览模式" message:@"检测到您已经进入街道周边范围" preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                [self performBlock:^{
+                    [self.navigationController popToRootViewControllerAnimated:YES];
                     [self loadStore];//重新加载ar数据
-//                } afterDelay:0.];
-//            }];
-//            [alert addAction:action1];
-//            [self presentViewController:alert animated:YES completion:nil];
+                } afterDelay:0.];
+            }];
+            [alert addAction:action1];
+            [self presentViewController:alert animated:YES completion:nil];
         }
     }
 }
@@ -1789,7 +1778,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
 #pragma mark - View Lifecycle
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-    
+    DLog(@"viewDidAppear");
     if (bottomBtn == nil) {
 //        bottomBtn = [[UIButton alloc] init];
 //        [bottomBtn setFrame:CGRectMake((Main_Screen_Width - 70)/2, Main_Screen_Height - 38 - 70,70, 70)];

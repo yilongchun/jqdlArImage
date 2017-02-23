@@ -226,6 +226,7 @@
     if (forgetPwdVc == nil) {
         forgetPwdVc = [[ForgetPwdViewController alloc] init];
     }
+    forgetPwdVc.backToRoot = YES;
     UIBarButtonItem *backItem=[[UIBarButtonItem alloc] init];
     UIImage *backImage = [UIImage imageNamed:@"navi_back2"];
     [backItem setBackButtonBackgroundImage:[backImage resizableImageWithCapInsets:UIEdgeInsetsMake(0, backImage.size.width, 0, 0)] forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];//更改背景图片
