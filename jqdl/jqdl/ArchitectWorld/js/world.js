@@ -64,9 +64,9 @@ var World = {
         AR.logger.debug("versionNumber:" + AR.context.versionNumber);
         
         
-        AR.context.scene.minScalingDistance = 30;
+        AR.context.scene.minScalingDistance = 22;
         AR.context.scene.maxScalingDistance = 300;
-        AR.context.scene.scalingFactor = 0.6;
+        AR.context.scene.scalingFactor = 0.4;
         
         
 		$('#radarContainer').unbind('click');
@@ -158,7 +158,7 @@ var World = {
 		for (var i = 0; i < World.markerList.length; i++) {
             var distanceToUser = World.markerList[i].markerObject.locations[0].distanceToUser();
             if(distanceToUser != undefined){
-                AR.logger.debug("distanceToUser:"+distanceToUser);
+//                AR.logger.debug("distanceToUser:"+distanceToUser);
                 World.markerList[i].distanceToUser = distanceToUser;
                 var distanceToUserValue = (distanceToUser > 999) ? ((distanceToUser / 1000).toFixed(2) + " km") : (Math.round(distanceToUser) + " m");
                 World.markerList[i].descriptionLabel.text = distanceToUserValue;
@@ -190,7 +190,7 @@ var World = {
         
 //        document.location = "architectsdk://button?action=locationChangedFn2&lat="+lat+"&lon="+lon+"&alt="+alt+"&acc="+acc;
         
-//        AR.logger.debug("locationChanged lat:"+lat+",log:"+lon+",alt:"+alt+",acc:"+acc);
+        AR.logger.debug("locationChanged lat:"+lat+",log:"+lon+",alt:"+alt+",acc:"+acc);
 //        World.currentLat = lat;
 //        World.currentLng = lon;
 //        AR.logger.debug("locationChanged currentLat:"+World.currentLat + ",currentLng:"+World.currentLng);

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9060" systemVersion="15A284" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9051"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="WebViewController">
+            <connections>
+                <outlet property="myWebView" destination="vG3-uT-qOu" id="snP-ca-CRi"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vG3-uT-qOu">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                    <animations/>
+                    <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="deviceRGB"/>
+                </webView>
+            </subviews>
+            <animations/>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="vG3-uT-qOu" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="82e-l7-Xbu"/>
+                <constraint firstAttribute="trailing" secondItem="vG3-uT-qOu" secondAttribute="trailing" id="NLI-0C-OQd"/>
+                <constraint firstAttribute="bottom" secondItem="vG3-uT-qOu" secondAttribute="bottom" id="cGj-os-Jy5"/>
+                <constraint firstItem="vG3-uT-qOu" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="z5K-Ga-Vi3"/>
+            </constraints>
+            <point key="canvasLocation" x="200" y="394"/>
+        </view>
+    </objects>
+</document>

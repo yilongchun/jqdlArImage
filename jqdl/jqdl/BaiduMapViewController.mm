@@ -173,7 +173,11 @@
         
         
         
-        CLLocationCoordinate2D coor = CLLocationCoordinate2DMake(poi.location.coordinate.latitude + 0.00347516, poi.location.coordinate.longitude + 0.01223381);
+//        CLLocationCoordinate2D coor = CLLocationCoordinate2DMake(poi.location.coordinate.latitude + 0.00347516, poi.location.coordinate.longitude + 0.01223381);
+        
+        
+        NSDictionary* testdic = BMKConvertBaiduCoorFrom(poi.location.coordinate,BMK_COORDTYPE_GPS);
+        CLLocationCoordinate2D coor = BMKCoorDictionaryDecode(testdic);
         
 //        CLLocationCoordinate2D coor = poi.location.coordinate;
         annotation.coordinate = coor;

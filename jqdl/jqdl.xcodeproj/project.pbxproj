@@ -502,6 +502,10 @@
 		44C831D11C031A3F00E509D2 /* FeatureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44C831D01C031A3F00E509D2 /* FeatureViewController.m */; };
 		44D12C251C040A0D00261EB1 /* GonglueViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44D12C241C040A0D00261EB1 /* GonglueViewController.m */; };
 		44D44B7C1BFC2995005D8E98 /* MapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44D44B7B1BFC2995005D8E98 /* MapViewController.m */; };
+		44D4E8021E5FC07C005E6137 /* ValidatePhoneViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44D4E8001E5FC07C005E6137 /* ValidatePhoneViewController.m */; };
+		44D4E8031E5FC07C005E6137 /* ValidatePhoneViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44D4E8011E5FC07C005E6137 /* ValidatePhoneViewController.xib */; };
+		44D4E80C1E5FD36E005E6137 /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44D4E80A1E5FD36E005E6137 /* WebViewController.m */; };
+		44D4E80D1E5FD36E005E6137 /* WebViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44D4E80B1E5FD36E005E6137 /* WebViewController.xib */; };
 		44E972BE1C2152010014E301 /* ScanResultWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44E972BC1C2152010014E301 /* ScanResultWebViewController.m */; };
 		44E972BF1C2152010014E301 /* ScanResultWebViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44E972BD1C2152010014E301 /* ScanResultWebViewController.xib */; };
 		44EE4BFB1C053FC200031251 /* Util.m in Sources */ = {isa = PBXBuildFile; fileRef = 44EE4BFA1C053FC200031251 /* Util.m */; };
@@ -1486,6 +1490,12 @@
 		44D12C241C040A0D00261EB1 /* GonglueViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GonglueViewController.m; path = Gonglue/GonglueViewController.m; sourceTree = "<group>"; };
 		44D44B7A1BFC2995005D8E98 /* MapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MapViewController.h; path = jqdl/Guide/MapViewController.h; sourceTree = SOURCE_ROOT; };
 		44D44B7B1BFC2995005D8E98 /* MapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MapViewController.m; path = jqdl/Guide/MapViewController.m; sourceTree = SOURCE_ROOT; };
+		44D4E7FF1E5FC07C005E6137 /* ValidatePhoneViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ValidatePhoneViewController.h; sourceTree = "<group>"; };
+		44D4E8001E5FC07C005E6137 /* ValidatePhoneViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ValidatePhoneViewController.m; sourceTree = "<group>"; };
+		44D4E8011E5FC07C005E6137 /* ValidatePhoneViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ValidatePhoneViewController.xib; sourceTree = "<group>"; };
+		44D4E8091E5FD36E005E6137 /* WebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewController.h; sourceTree = "<group>"; };
+		44D4E80A1E5FD36E005E6137 /* WebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewController.m; sourceTree = "<group>"; };
+		44D4E80B1E5FD36E005E6137 /* WebViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WebViewController.xib; sourceTree = "<group>"; };
 		44DD4CE71C02A367003903A4 /* ACMacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ACMacros.h; sourceTree = "<group>"; };
 		44E972BB1C2152010014E301 /* ScanResultWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScanResultWebViewController.h; sourceTree = "<group>"; };
 		44E972BC1C2152010014E301 /* ScanResultWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScanResultWebViewController.m; sourceTree = "<group>"; };
@@ -1593,6 +1603,9 @@
 				44003D001BFB24ED00CB747A /* AppDelegate.m */,
 				442ED7C51DB9A72E0058DD4C /* ViewController.h */,
 				442ED7BF1DB9A72E0058DD4C /* ViewController.m */,
+				44D4E8091E5FD36E005E6137 /* WebViewController.h */,
+				44D4E80A1E5FD36E005E6137 /* WebViewController.m */,
+				44D4E80B1E5FD36E005E6137 /* WebViewController.xib */,
 				44217BB21E2EF94B008699C1 /* StoreViewController.h */,
 				44217BB31E2EF94B008699C1 /* StoreViewController.m */,
 				44217BB41E2EF94B008699C1 /* StoreViewController.xib */,
@@ -3215,6 +3228,9 @@
 				44435E151E4ACE5F00F9C84A /* AccountViewController.h */,
 				44435E161E4ACE5F00F9C84A /* AccountViewController.m */,
 				44435E171E4ACE5F00F9C84A /* AccountViewController.xib */,
+				44D4E7FF1E5FC07C005E6137 /* ValidatePhoneViewController.h */,
+				44D4E8001E5FC07C005E6137 /* ValidatePhoneViewController.m */,
+				44D4E8011E5FC07C005E6137 /* ValidatePhoneViewController.xib */,
 				44F306D11E5E7AAA006903E5 /* UpdatePhoneViewController.h */,
 				44F306D21E5E7AAA006903E5 /* UpdatePhoneViewController.m */,
 				44F306D31E5E7AAA006903E5 /* UpdatePhoneViewController.xib */,
@@ -3589,6 +3605,7 @@
 				4437FEF81E48542500B8A084 /* status-bar-pattern-default.jpg in Resources */,
 				4437FEF71E48542500B8A084 /* status-bar-pattern-black@3x.png in Resources */,
 				442ED7D91DB9A7D10058DD4C /* ArchitectWorld in Resources */,
+				44D4E80D1E5FD36E005E6137 /* WebViewController.xib in Resources */,
 				440E7ED21E1B367C00B5277E /* ForgetPwdViewController.xib in Resources */,
 				4437FED91E48212F00B8A084 /* SettingViewController.xib in Resources */,
 				4444EFA51E456C7200E72B41 /* UserCenterViewController.xib in Resources */,
@@ -3602,6 +3619,7 @@
 				4437FEF61E48542500B8A084 /* status-bar-pattern-black@2x.png in Resources */,
 				4437FEFB1E48542500B8A084 /* status-bar-progress@2x.png in Resources */,
 				4437FED71E48212F00B8A084 /* NoticeSettingViewController.xib in Resources */,
+				44D4E8031E5FC07C005E6137 /* ValidatePhoneViewController.xib in Resources */,
 				44F306D01E5E7465006903E5 /* AccountTableViewCell.xib in Resources */,
 				443DFD591E5A9B570022B7F3 /* mapapi.bundle in Resources */,
 				44F306D51E5E7AAA006903E5 /* UpdatePhoneViewController.xib in Resources */,
@@ -3715,6 +3733,7 @@
 				44117A921C11763E0071E1C0 /* URBSegmentedControl.m in Sources */,
 				44117A3F1C11763E0071E1C0 /* ZXUPCAWriter.m in Sources */,
 				441179AA1C11763E0071E1C0 /* ZXAztecWriter.m in Sources */,
+				44D4E8021E5FC07C005E6137 /* ValidatePhoneViewController.m in Sources */,
 				44117A4B1C11763E0071E1C0 /* ZXPDF417BoundingBox.m in Sources */,
 				44621BAA1E12029500EB3AFC /* UIRefreshControl+AFNetworking.m in Sources */,
 				440E7ED11E1B367C00B5277E /* ForgetPwdViewController.m in Sources */,
@@ -3783,6 +3802,7 @@
 				441179C21C11763E0071E1C0 /* ZXSMTPResultParser.m in Sources */,
 				44117A0A1C11763E0071E1C0 /* ZXMaxiCodeDecodedBitStreamParser.m in Sources */,
 				44117A141C11763E0071E1C0 /* ZXAI013x0x1xDecoder.m in Sources */,
+				44D4E80C1E5FD36E005E6137 /* WebViewController.m in Sources */,
 				44117A171C11763E0071E1C0 /* ZXAI01decoder.m in Sources */,
 				4437FEE11E48535A00B8A084 /* UserInfoTableViewCell.m in Sources */,
 				441179AF1C11763E0071E1C0 /* ZXBizcardResultParser.m in Sources */,
@@ -4242,7 +4262,7 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = com.yczoi.qlxing;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "f9ae4000-289c-46b9-9da3-c9316ec8d8f0";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
@@ -4278,7 +4298,7 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = com.yczoi.qlxing;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "f9ae4000-289c-46b9-9da3-c9316ec8d8f0";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};

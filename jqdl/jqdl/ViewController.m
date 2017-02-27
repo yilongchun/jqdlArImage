@@ -42,6 +42,7 @@
 #import "UIImageView+AFNetworking.h"
 #import <BaiduMapAPI_Utils/BMKUtilsComponent.h>
 #import <CoreBluetooth/CoreBluetooth.h>
+#import "WebViewController.h"
 
 /* this is used to create random positions around you */
 #define WT_RANDOM(startValue, endValue) ((((float) (arc4random() % ((unsigned)RAND_MAX + 1)) / RAND_MAX) * (endValue - startValue)) + startValue)
@@ -364,8 +365,9 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     }
     
     
-    
-    
+    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithTitle:@"全景" style:UIBarButtonItemStyleDone target:self action:@selector(rightClick)];
+    [rightItem setTintColor:[UIColor whiteColor]];
+    self.navigationItem.rightBarButtonItem = rightItem;
     
     
    //右下角搜索按钮
@@ -422,6 +424,12 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     //    CLLocationDistance distance = BMKMetersBetweenMapPoints(point1,point2);
     //    DLog(@"distance %f",distance);
     
+    
+}
+
+-(void)rightClick{
+    WebViewController *vc = [[WebViewController alloc] init];
+    [self.navigationController pushViewController:vc animated:YES];
     
 }
 
@@ -616,11 +624,11 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                 
                 
                 //景区中心点 默认就已当前用户位置
-                CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake(myLocation.coordinate.latitude,myLocation.coordinate.longitude);
+                CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake(myLocation.coordinate.latitude + WT_RANDOM(-0.001, 0.001), myLocation.coordinate.longitude + WT_RANDOM(-0.001, 0.001));
                 
                 
 //                CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake(30.7748922,111.285375);
-                altitude = [NSNumber numberWithInt:80];
+//                altitude = [NSNumber numberWithInt:80];
                 //GPS
 //                CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake([latitude doubleValue], [longitude doubleValue]);
                 
@@ -652,7 +660,10 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                 [self.architectView callJavaScript:[NSString stringWithFormat:@"World.updateJingquType(%@)", @"2"]];
                 jingquType = @"2";
                 
-                NSArray *poiObjects = @[@(30.735285),@(111.3358)];
+//                NSArray *poiObjects = @[@(30.735285),@(111.3358)];
+                
+                NSArray *poiObjects = @[@(myLocation.coordinate.latitude),@(myLocation.coordinate.longitude)];
+                
 //                NSArray *poiObjects = @[@([latitude doubleValue]),@([longitude doubleValue])];
                 NSArray *poiKeys = @[@"latitude", @"longitude"];
                 NSDictionary *jsonRepresentation = [NSDictionary dictionaryWithObjects:poiObjects forKeys:poiKeys];
@@ -762,14 +773,14 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
             }
             
             //随机坐标
-                CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake(myLocation.coordinate.latitude + WT_RANDOM(-0.01, 0.01), myLocation.coordinate.longitude + WT_RANDOM(-0.01, 0.01));
+//                CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake(myLocation.coordinate.latitude + WT_RANDOM(-0.01, 0.01), myLocation.coordinate.longitude + WT_RANDOM(-0.01, 0.01));
             
             //百度坐标 > GPS
 //                CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake([latitude doubleValue] - 0.00347516, [longitude doubleValue] - 0.01223381);
             
             
             //GPS 后台数据
-//            CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake([latitude doubleValue], [longitude doubleValue]);
+            CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake([latitude doubleValue], [longitude doubleValue]);
             
             
             CLLocation *location = [[CLLocation alloc] initWithCoordinate:locationCoordinate

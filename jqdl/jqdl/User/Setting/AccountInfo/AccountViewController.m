@@ -9,7 +9,8 @@
 #import "AccountViewController.h"
 #import "ForgetPwdViewController.h"
 #import "AccountTableViewCell.h"
-#import "UpdatePhoneViewController.h"
+
+#import "ValidatePhoneViewController.h"
 
 @interface AccountViewController (){
     NSString *phone;
@@ -41,7 +42,9 @@
     UIImage *backImage = [UIImage imageNamed:@"navi_back2"];
     [backItem setBackButtonBackgroundImage:[backImage resizableImageWithCapInsets:UIEdgeInsetsMake(0, backImage.size.width, 0, 0)] forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];//更改背景图片
     self.navigationItem.backBarButtonItem = backItem;
-    UpdatePhoneViewController *vc = [[UpdatePhoneViewController alloc] init];
+    
+    ValidatePhoneViewController *vc = [[ValidatePhoneViewController alloc] init];
+//    UpdatePhoneViewController *vc = [[UpdatePhoneViewController alloc] init];
     [self.navigationController pushViewController:vc animated:YES];
 }
 
