@@ -203,7 +203,6 @@ var World = {
 //            document.location = "architectsdk://button?action=locationChangedFn";
 			World.updateDistanceToUserValues();
             
-            
             if(World.jingquType != 0){
                 var location3 = new AR.GeoLocation(World.jingquLat, World.jingquLng);
                 var location4 = new AR.GeoLocation(lat, lon, alt);
@@ -225,6 +224,7 @@ var World = {
             }else{
                 document.location = "architectsdk://button?action=reloadArData&jingquType=2";
             }
+            
 		}
 		// helper used to update placemark information every now and then (e.g. every 10 location upadtes fired)
 		World.locationUpdateCounter = (++World.locationUpdateCounter % World.updatePlacemarkDistancesEveryXLocationUpdates);
@@ -237,6 +237,8 @@ var World = {
 //               }
 //            }, 10 * 1000 );
 //        }
+        
+        
         
         
 	},
@@ -287,26 +289,7 @@ var World = {
         
         AR.logger.debug("onMarkerSelected:" + marker.poiData.image)
         AR.logger.debug("目的地位置 latitude:" + marker.poiData.latitude + " , longitude:" + marker.poiData.longitude)
-//        AR.logger.debug("起点位置 currentLat:"+World.currentLat + ",currentLng:"+World.currentLng);
-        //点击景点 显示路线按钮
-//        $(".paizhao").css('display','block');
-        
-//        for(var i = 0;i < 50;i++){
-//            
-//            var singlePoi = {
-//                
-//                "latitude": parseFloat((marker.poiData.latitude-World.currentLat) *i/50+World.currentLat),
-//                "longitude": parseFloat((marker.poiData.longitude-World.currentLng) *i/50+World.currentLng),
-//                "altitude": parseFloat(0)
-//                
-//            };
-//            World.lineList.push(new line(singlePoi));
-//            
-//        }
-//        
-//        AR.logger.debug("添加路线结束 World.lineList.length:"+World.lineList.length);
-        
-        
+
         //设置其他marker禁用
 //        for(var i = 0;i < World.markerList.length;i++){
 //            var tempMarker = World.markerList[i];
@@ -319,35 +302,6 @@ var World = {
         
 	},
     
-//    calcuteLine: function calcuteLine(){
-//        document.location = "architectsdk://button?action=showNavigationInfo";
-//        
-//        AR.logger.debug("计算线路 目的地位置 latitude:" + World.currentMarker.poiData.latitude + " , longitude:" + World.currentMarker.poiData.longitude)
-//        AR.logger.debug("计算线路 起点位置 currentLat:"+World.currentLat + ",currentLng:"+World.currentLng);
-//        
-//        World.lineList = [];
-//        
-//        AR.logger.debug("添加路线开始 World.lineList.length:"+World.lineList.length);
-//        
-//        for(var i = 0;i < 50;i++){
-//            
-//            var singlePoi = {
-//                
-//                "latitude": parseFloat((World.currentMarker.poiData.latitude-World.currentLat) *i/50+World.currentLat),
-//                "longitude": parseFloat((World.currentMarker.poiData.longitude-World.currentLng) *i/50+World.currentLng),
-//                "altitude": parseFloat(0)
-//                
-//            };
-//            World.lineList.push(new line(singlePoi));
-//            
-//        }
-//        
-//        AR.logger.debug("添加路线结束 World.lineList.length:"+World.lineList.length);
-//        
-//        
-//        
-//    },
-//
 //    onDetailImageSelected: function DetailImageSelectedFn(marker){
 //        
 //        

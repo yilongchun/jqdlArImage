@@ -365,7 +365,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     }
     
     
-    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithTitle:@"全景" style:UIBarButtonItemStyleDone target:self action:@selector(rightClick)];
+    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithTitle:@"景区" style:UIBarButtonItemStyleDone target:self action:@selector(rightClick)];
     [rightItem setTintColor:[UIColor whiteColor]];
     self.navigationItem.rightBarButtonItem = rightItem;
     
@@ -385,8 +385,32 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     
     
     
+    //百度坐标转GPS 汉阳造数据
+    float a = 0.00347516;
+    float b = 0.01223381;
+    NSLog(@"比卡兹空间设计：%f,%f",30.562217 - a, 114.274605 - b);
+    NSLog(@"一熹艺术馆：%f,%f",30.562443 - a, 114.274910 - b);
+    NSLog(@"零到壹孵化器：%f,%f",30.562390 - a, 114.275148 - b);
+    NSLog(@"龟缘会馆：%f,%f",30.562651 - a, 114.274826 - b);
+    NSLog(@"薇拉皇后：%f,%f",30.562669 - a, 114.274070 - b);
+    NSLog(@"广告狂人：%f,%f",30.562847 - a, 114.275270 - b);
+    NSLog(@"投资盛世：%f,%f",30.562798 - a, 114.275204 - b);
+    NSLog(@"薇拉摄影60：%f,%f",30.564093 - a, 114.273954 - b);
+    NSLog(@"碧玺文化创意：%f,%f",30.563887 - a, 114.274231 - b);
+    NSLog(@"楼上座品咖啡:%f,%f",30.563380 - a, 114.275247 - b);
+    NSLog(@"福缘百合：%f,%f",30.561636 - a, 114.274420 - b);
+    NSLog(@"百合餐厅：%f,%f",30.561778 - a, 114.274548 - b);
+    NSLog(@"速8：%f,%f",30.561506 - a, 114.273991 - b);
+    NSLog(@"忆江南：%f,%f",30.562900 - a, 114.274128 - b);
+    NSLog(@"加油站：%f,%f",30.562205 - a, 114.273989 - b);
+    NSLog(@"得意原创设计：%f,%f",30.561499 - a, 114.274850 - b);
+    NSLog(@"薇拉摄影15：%f,%f",30.562251 - a, 114.275095 - b);
+    NSLog(@"知音书院：%f,%f",30.562204 - a, 114.274527 - b);
+    NSLog(@"衍艺广告：%f,%f",30.562267 - a, 114.274678 - b);
+    NSLog(@"黑胶星球：%f,%f",30.562239 - a, 114.274958 - b);
+    NSLog(@"邻盛：%f,%f",30.562223 - a, 114.274144 - b);
+    NSLog(@"汉阳会：%f,%f",30.562187 - a, 114.274422 - b);
     
-
     
     
 //    NSDictionary *peripheralData = nil;
@@ -410,12 +434,6 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
 //        [self.locationManager startRangingBeaconsInRegion:region];
 //    }
     
-    
-    
-    
-
-    
-    
     //
     //
     //    //    //计算距离
@@ -427,9 +445,13 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     
 }
 
+//右上角按钮
 -(void)rightClick{
-    WebViewController *vc = [[WebViewController alloc] init];
-    [self.navigationController pushViewController:vc animated:YES];
+    //切换景区
+    
+    
+//    WebViewController *vc = [[WebViewController alloc] init];
+//    [self.navigationController pushViewController:vc animated:YES];
     
 }
 
@@ -710,7 +732,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     WTPoiManager *poiManager = objc_getAssociatedObject(self, kWTAugmentedRealityViewController_AssociatedPoiManagerKey);
     [poiManager removeAllPois];
     
-    NSString *url = [NSString stringWithFormat:@"%@%@",kDlHost,@"/spots"];
+    NSString *url = [NSString stringWithFormat:@"%@%@%@%@",kDlHost,@"/stores/",STORE_ID,@"/spots"];
     [manager GET:url parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
         
         
@@ -1330,7 +1352,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     id firstLocation = [locations firstObject];
     myLocation = (CLLocation *)firstLocation;
     
-    //    DLog(@"当前坐标 %@",myLocation);
+        DLog(@"当前坐标 %@",myLocation);
     
     //    debugLabel.text = [NSString stringWithFormat:@"%@",myLocation];
     //    DLog(@"didUpdateLocations");
