@@ -62,7 +62,7 @@
     UIButton *oldBtn;
     UIButton *oldPlayBtn;
     
-    
+    NSURLSessionDownloadTask *_downloadTask;
 }
 
 @end
@@ -73,9 +73,10 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
+//    [self checkNetState];
+//    [self downloadFile];
+    
     self.view.backgroundColor = [UIColor whiteColor];
-    
-    
     
     UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
     titleLabel.font = BOLDSYSTEMFONT(17);
@@ -113,19 +114,24 @@
     [self setZoomBtn];
 
     //添加手绘地图
-    
 //    BMKCoordinateBounds bounds;
      // 左边的上大 下小   右边的左小 右大
 //    bounds.northEast = CLLocationCoordinate2DMake(30.772352, 111.275587);
 //    bounds.southWest = CLLocationCoordinate2DMake(30.770019, 111.270812);
 //    BMKGroundOverlay* ground = [BMKGroundOverlay groundOverlayWithBounds:bounds icon:[UIImage imageNamed:@"map"]];
     
-                                   
-    CLLocationCoordinate2D coors = CLLocationCoordinate2DMake(30.771156, 111.270301);
+    
+    //map 三游洞 30.771156, 111.270301
+//    CLLocationCoordinate2D coors = CLLocationCoordinate2DMake(30.771156, 111.270301);
+//    BMKGroundOverlay* ground = [BMKGroundOverlay groundOverlayWithPosition:coors
+//                                                                 zoomLevel:20.9 anchor:CGPointMake(0.0f,0.0f)
+//                                                                      icon:[UIImage imageNamed:@"map"]];
+    //hyz 汉阳造                                               小 - 下       小 - 左
+    CLLocationCoordinate2D coors = CLLocationCoordinate2DMake(30.562840, 114.273150);
     BMKGroundOverlay* ground = [BMKGroundOverlay groundOverlayWithPosition:coors
                                                                  zoomLevel:20.9 anchor:CGPointMake(0.0f,0.0f)
-                                                                      icon:[UIImage imageNamed:@"map"]];
-//    ground.alpha = 0.5;
+                                                                      icon:[UIImage imageNamed:@"hyz"]];
+//    ground.alpha = 0.5;//透明度
     [_mapView addOverlay:ground];
     [_mapView setZoomLevel:20.9];
     
@@ -707,6 +713,90 @@
     sv.clipsToBounds = YES;
 }
 
+-(void)checkNetState{
+    //网络监控句柄
+    AFNetworkReachabilityManager *manager = [AFNetworkReachabilityManager sharedManager];
+    
+    //要监控网络连接状态，必须要先调用单例的startMonitoring方法
+    [manager startMonitoring];
+    
+    [manager setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
+        //status:
+        //AFNetworkReachabilityStatusUnknown          = -1,  未知
+        //AFNetworkReachabilityStatusNotReachable     = 0,   未连接
+        //AFNetworkReachabilityStatusReachableViaWWAN = 1,   3G
+        //AFNetworkReachabilityStatusReachableViaWiFi = 2,   无线连接
+        NSLog(@"%ld", (long)status);
+    }];
+}
+
+
+
+#pragma mark - //kvo观察者触发的方法
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary*)change context:(void *)context {
+    NSLog(@"keypath:%@,object:%@,change:%@",keyPath,object,change);
+    //获取 进度变化
+    float chanagefl = [[object valueForKeyPath:keyPath] floatValue];
+//    _progressView.progress = chanagefl; //开始不能体现变化,是因为下载的过程是异步的,不能实时的获取值的变化.所以利用多线程的知识解决问题
+    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+        DLog(@"chanagefl:%f",chanagefl);
+//        _progressView.progress = chanagefl;
+    }];
+}
+
+-(void)downloadFile{
+    //远程地址
+    NSURL *URL = [NSURL URLWithString:@"http://www.baidu.com/img/bdlogo.png"];
+    //默认配置
+    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+    //AFN3.0+基于封住URLSession的句柄
+    AFURLSessionManager *manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:configuration];
+    //下载进度
+    NSProgress *downloadProgress = nil;
+    //请求
+    NSURLRequest *request = [NSURLRequest requestWithURL:URL];
+    _downloadTask = [manager downloadTaskWithRequest:request progress:&downloadProgress destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
+//        NSString *cachesPath = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject];
+//        DLog(@"cachesPath:%@",cachesPath);
+        NSString *path_sandox = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
+        DLog(@"path_sandox:%@",path_sandox);
+        NSString *path = [path_sandox stringByAppendingPathComponent:response.suggestedFilename];
+        DLog(@"path:%@",path);
+        return [NSURL fileURLWithPath:path];
+    } completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
+        DLog(@"completionHandler");
+    }];
+    //监控下载进度
+    [downloadProgress addObserver:self forKeyPath:@"fractionCompleted" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:nil];
+    [_downloadTask resume];//开始下载
+//    [_downloadTask suspend];//暂停下载
+    
+    
+//    NSString *savedPath = [NSHomeDirectory() stringByAppendingString:@"/Documents/bdlogo2.png"];
+//    AFHTTPRequestSerializer *serializer = [AFHTTPRequestSerializer serializer];
+//    NSMutableURLRequest *request =[serializer requestWithMethod:@"POST" URLString:@"http://www.baidu.com/img/bdlogo.png" parameters:nil error:nil];
+//    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc]initWithRequest:request];
+//    [operation setOutputStream:[NSOutputStream outputStreamToFileAtPath:savedPath append:NO]];
+//    [operation setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
+//        float p = (float)totalBytesRead / totalBytesExpectedToRead;
+//        DLog(@"%f",p);
+//    }];
+//    
+//    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+//        DLog(@"下载完成");
+//    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+//        DLog(@"下载失败");
+//    }];
+//    
+//    [operation start];
+    
+    
+
+    
+    
+    
+}
+
 #pragma mark - UIScrollViewDelegate
 
 //- (void) scrollViewDidScroll:(UIScrollView *)sender {
@@ -852,24 +942,26 @@
         WTPoi *poi = anno.poi;
         if([poi.type isEqualToString:@"scenery_spot"]){//景点
             view.image=[UIImage imageNamed:@"greenPoint2"];
-        }
-        if([poi.type isEqualToString:@"recreational_facility"]){//游乐
+        }else if([poi.type isEqualToString:@"recreational_facility"]){//游乐
             view.image=[UIImage imageNamed:@"bluePoint2"];
         }
-        if([poi.type isEqualToString:@"food"]){//美食
+        else if([poi.type isEqualToString:@"food"]){//美食
             view.image=[UIImage imageNamed:@"yellowPoint2"];
         }
-        if([poi.type isEqualToString:@"shop"]){//商铺
+        else if([poi.type isEqualToString:@"shop"]){//商铺
             view.image=[UIImage imageNamed:@"purplePoint2"];
         }
-        if([poi.type isEqualToString:@"toilet"]){//公厕
+        else if([poi.type isEqualToString:@"toilet"]){//公厕
             view.image=[UIImage imageNamed:@"brownPoint2"];
         }
-        if([poi.type isEqualToString:@"entrance"]){//出入口
+        else if([poi.type isEqualToString:@"entrance"]){//出入口
             view.image=[UIImage imageNamed:@"linghtGreenPonit2"];
         }
-        if([poi.type isEqualToString:@"service_point"]){//服务点
+        else if([poi.type isEqualToString:@"service_point"]){//服务点
             view.image=[UIImage imageNamed:@"redPoint2"];
+        }
+        else {
+            view.image=[UIImage imageNamed:@"greenPoint2"];
         }
         
         //点击显示图详情视图 必须MJPointAnnotation对象设置了标题和副标题

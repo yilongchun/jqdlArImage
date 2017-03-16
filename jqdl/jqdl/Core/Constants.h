@@ -32,7 +32,10 @@ typedef NS_ENUM(NSInteger, ResultCodeType){
 
 /***************** API ***************/
 
+//测试服务器
 #define kDlHost @"https://api.qlxing.com/v2"
+//正式服务器
+//#define kDlHost @"https://api.zlyun168.com/v2"
 
 //获取七牛上传token
 #define API_QINIU_UPTOKEN @"/third_party/qiniu/uptoken"

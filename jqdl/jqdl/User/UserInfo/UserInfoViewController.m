@@ -212,16 +212,7 @@
     [parameters setValue:[NSString stringWithFormat:@"%@",[loginedUser objectForKey:@"id"]] forKey:@"x:userId"];
     
     
-    
-    
-    
-    
-    
-    
-    
     AFHTTPRequestOperationManager* _manager = [AFHTTPRequestOperationManager manager];
-    
-    
     
     _manager.requestSerializer = [AFHTTPRequestSerializer serializer];
     _manager.responseSerializer = [AFHTTPResponseSerializer serializer];

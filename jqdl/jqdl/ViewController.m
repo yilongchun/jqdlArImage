@@ -365,9 +365,9 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     }
     
     
-    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithTitle:@"景区" style:UIBarButtonItemStyleDone target:self action:@selector(rightClick)];
-    [rightItem setTintColor:[UIColor whiteColor]];
-    self.navigationItem.rightBarButtonItem = rightItem;
+//    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithTitle:@"景区" style:UIBarButtonItemStyleDone target:self action:@selector(rightClick)];
+//    [rightItem setTintColor:[UIColor whiteColor]];
+//    self.navigationItem.rightBarButtonItem = rightItem;
     
     
    //右下角搜索按钮
@@ -596,12 +596,11 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
         NSArray *data = [dic objectForKey:@"data"];
         
         for (int i = 0 ; i < data.count; i++) {
-            NSString *storeId = [data[i] objectForKey:@"id"];
-            if ([storeId isEqualToString:STORE_ID]) {//神农架
-                storeDic = [[NSMutableDictionary alloc] initWithDictionary:data[i]];
-                
-                titleLabel.text = [storeDic objectForKey:@"name"];
-                
+
+            storeDic = [[NSMutableDictionary alloc] initWithDictionary:data[i]];
+            
+            NSString *type = [storeDic objectForKey:@"type"];
+            if (type != nil && [type isEqualToString:@"tourism_development"]) {
                 NSArray *imagesArr = [storeDic objectForKey:@"images"];
                 NSMutableArray *images = [NSMutableArray array];
                 NSString *image = @"";
@@ -633,76 +632,80 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                     }
                 }
                 
-                NSString *type = [storeDic objectForKey:@"type"];
-                if (type == nil) {
-                    type = @"";
-                }
+                
+                
                 
                 //随机坐标
-//                CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake(myLocation.coordinate.latitude + WT_RANDOM(-0.1, 0.1), myLocation.coordinate.longitude + WT_RANDOM(-0.1, 0.1));
+                //                CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake(myLocation.coordinate.latitude + WT_RANDOM(-0.1, 0.1), myLocation.coordinate.longitude + WT_RANDOM(-0.1, 0.1));
                 
                 //百度坐标 > GPS
-//                CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake([latitude doubleValue] - 0.00347516, [longitude doubleValue] - 0.01223381);
+                //                CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake([latitude doubleValue] - 0.00347516, [longitude doubleValue] - 0.01223381);
                 
+                //景区中心点 测试已当前用户位置
+                CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake(myLocation.coordinate.latitude + WT_RANDOM(-0.001, 0.001), myLocation.coordinate.longitude + WT_RANDOM(-0.01, 0.01));
                 
-                //景区中心点 默认就已当前用户位置
-                CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake(myLocation.coordinate.latitude + WT_RANDOM(-0.001, 0.001), myLocation.coordinate.longitude + WT_RANDOM(-0.001, 0.001));
+                if ([[storeDic objectForKey:@"id"] isEqualToString:@"0070c1938cc15df1d5b891b5adbb7d8b"]) {
+                    locationCoordinate = CLLocationCoordinate2DMake(myLocation.coordinate.latitude + WT_RANDOM(-0.001, 0.001), myLocation.coordinate.longitude + WT_RANDOM(-0.01, 0.01));
+                }else{
+                    locationCoordinate = CLLocationCoordinate2DMake(myLocation.coordinate.latitude + 0.1, myLocation.coordinate.longitude + 0.1);
+                }
                 
-                
-//                CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake(30.7748922,111.285375);
-//                altitude = [NSNumber numberWithInt:80];
-                //GPS
+                //景区中心点
 //                CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake([latitude doubleValue], [longitude doubleValue]);
-                
                 
                 CLLocation *location = [[CLLocation alloc] initWithCoordinate:locationCoordinate
                                                                      altitude:[altitude doubleValue]
                                                            horizontalAccuracy:myLocation.horizontalAccuracy
                                                              verticalAccuracy:myLocation.verticalAccuracy
                                                                     timestamp:myLocation.timestamp];
+                NSString *storeId = [storeDic objectForKey:@"id"];
+                NSString *name = [storeDic objectForKey:@"name"];
+                NSString *description = [storeDic objectForKey:@"description"] == nil ? @"" : [storeDic objectForKey:@"description"];
+                NSString *imagesStr = [images componentsJoinedByString:@","];
+                NSString *address = [storeDic objectForKey:@"address"] == nil ? @"" : [storeDic objectForKey:@"address"];
                 
-                WTPoi *poi = [[WTPoi alloc] initWithIdentifier:[storeDic objectForKey:@"id"]
+                WTPoi *poi = [[WTPoi alloc] initWithIdentifier:storeId
                                                       location:location
-                                                          name:[storeDic objectForKey:@"name"]
-                                           detailedDescription:[storeDic objectForKey:@"description"]
+                                                          name:name
+                                           detailedDescription:description
                                                          image:image
-                                                        images:[images componentsJoinedByString:@","]
+                                                        images:imagesStr
                                                          voice:audio
-                                                       address:[storeDic objectForKey:@"address"]
-                                                          type:type
-                              
-                              ];
-//                DLog(@"%@",poi.jsonRepresentation);
+                                                       address:address
+                                                          type:type];
+                DLog(@"storeId:%@ name:%@ description:%@ image:%@ imagesStr:%@ audio:%@ address:%@ type:%@",storeId,name,description,image,imagesStr,audio,address,type);
+                DLog(@"%@",poi.jsonRepresentation);
                 
                 [poiManager addPoi:poi];
                 
-                NSString *poisInJsonData = [poiManager convertPoiModelToJson];
-                DLog(@"%@",poisInJsonData);
-                [self.architectView callJavaScript:[NSString stringWithFormat:@"World.loadPoisFromJsonData(%@)", poisInJsonData]];
-                [self.architectView callJavaScript:[NSString stringWithFormat:@"World.updateJingquType(%@)", @"2"]];
-                jingquType = @"2";
-                
-//                NSArray *poiObjects = @[@(30.735285),@(111.3358)];
-                
-                NSArray *poiObjects = @[@(myLocation.coordinate.latitude),@(myLocation.coordinate.longitude)];
-                
-//                NSArray *poiObjects = @[@([latitude doubleValue]),@([longitude doubleValue])];
-                NSArray *poiKeys = @[@"latitude", @"longitude"];
-                NSDictionary *jsonRepresentation = [NSDictionary dictionaryWithObjects:poiObjects forKeys:poiKeys];
-                NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonRepresentation options:kNilOptions error:nil];
-                [self.architectView callJavaScript:[NSString stringWithFormat:@"World.updateJingquCoor(%@)", [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding]]];
-                
-                
-                if (self.architectWorldNavigation.wasInterrupted) {
-                    [self.architectView reloadArchitectWorld];
-                }
-                
-                /* Standard WTArchitectView rendering resuming after the application becomes active again */
-                [self startWikitudeSDKRendering];
-                
-                break;
             }
         }
+        
+        NSString *poisInJsonData = [poiManager convertPoiModelToJson];
+        DLog(@"%@",poisInJsonData);
+        [self.architectView callJavaScript:[NSString stringWithFormat:@"World.loadJingquPoisFromJsonData(%@)", poisInJsonData]];
+        [self.architectView callJavaScript:[NSString stringWithFormat:@"World.updateJingquType(%@)", @"2"]];
+        jingquType = @"2";
+        
+        //                NSArray *poiObjects = @[@(30.735285),@(111.3358)];
+        
+        //                NSArray *poiObjects = @[@(myLocation.coordinate.latitude),@(myLocation.coordinate.longitude)];
+        //
+        ////                NSArray *poiObjects = @[@([latitude doubleValue]),@([longitude doubleValue])];
+        //                NSArray *poiKeys = @[@"latitude", @"longitude"];
+        //                NSDictionary *jsonRepresentation = [NSDictionary dictionaryWithObjects:poiObjects forKeys:poiKeys];
+        //                NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonRepresentation options:kNilOptions error:nil];
+        //                [self.architectView callJavaScript:[NSString stringWithFormat:@"World.updateJingquCoor(%@)", [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding]]];
+        
+        
+        if (self.architectWorldNavigation.wasInterrupted) {
+            [self.architectView reloadArchitectWorld];
+        }
+        
+        /* Standard WTArchitectView rendering resuming after the application becomes active again */
+        [self startWikitudeSDKRendering];
+        
+        
         DLog(@"storeDic:%@",storeDic);
         [self hideHud];
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
@@ -723,7 +726,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
 
 
 //加载景点列表
--(void)loadSpots{
+-(void)loadSpots:(NSString *)storeId{
     DLog(@"loadSpots");
     [self showHudInView:self.view];
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
@@ -732,7 +735,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     WTPoiManager *poiManager = objc_getAssociatedObject(self, kWTAugmentedRealityViewController_AssociatedPoiManagerKey);
     [poiManager removeAllPois];
     
-    NSString *url = [NSString stringWithFormat:@"%@%@%@%@",kDlHost,@"/stores/",STORE_ID,@"/spots"];
+    NSString *url = [NSString stringWithFormat:@"%@%@%@%@",kDlHost,@"/stores/",storeId,@"/spots"];
     [manager GET:url parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
         
         
@@ -1144,7 +1147,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                             UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
                                 [self performBlock:^{
                                     [self.navigationController popToRootViewControllerAnimated:YES];
-                                    [self loadSpots];//重新加载ar数据
+                                    [self loadSpots:@""];//重新加载ar数据
                                 } afterDelay:0.];
                             }];
                             [alert addAction:action1];
@@ -1977,6 +1980,9 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
             if ([action isEqualToString:@"reloadArData"]){
                 
                 NSString *type = [parameters objectForKey:@"jingquType"];//1街景 2景区
+                NSString *storeId = [parameters objectForKey:@"storeId"];
+                NSString *name = [[parameters objectForKey:@"name"] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+                titleLabel.text = name;
                 if ([type intValue] != [jingquType intValue]) {
                     
                     if ([type intValue] == 1) {//景区
@@ -1984,7 +1990,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                         UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
                             [self performBlock:^{
                                 [self.navigationController popToRootViewControllerAnimated:YES];
-                                [self loadSpots];//重新加载ar数据
+                                [self loadSpots:storeId];//重新加载ar数据
                             } afterDelay:0.];
                         }];
                         [alert addAction:action1];
