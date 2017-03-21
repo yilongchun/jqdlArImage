@@ -16,5 +16,6 @@
 
 @property(strong,nonatomic) WTPoi *poi;
 @property int index;
+@property(retain,nonatomic) NSDictionary *pointCalloutInfo;
 
 @end

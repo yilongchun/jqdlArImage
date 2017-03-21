@@ -22,6 +22,8 @@
 #import "UIImageView+AFNetworking.h"
 #import "UILabel+SetLabelSpace.h"
 #import "Player.h"
+//#import "CalloutMapAnnotation.h"
+#import "CallOutAnnotationView.h"
 
 #define MYBUNDLE_NAME @ "mapapi.bundle"
 #define MYBUNDLE_PATH [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: MYBUNDLE_NAME]
@@ -63,6 +65,8 @@
     UIButton *oldPlayBtn;
     
     NSURLSessionDownloadTask *_downloadTask;
+    
+//    CalloutMapAnnotation *_calloutMapAnnotation;
 }
 
 @end
@@ -89,14 +93,31 @@
     self.jz_wantsNavigationBarVisible = YES;
     
     //右上角按钮
-    UIImage *image = [[UIImage imageNamed:@"listIcon"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithImage:image style:UIBarButtonItemStyleDone target:self action:@selector(tableStyle)];
-    self.navigationItem.rightBarButtonItem = rightItem;
+//    UIImage *image = [[UIImage imageNamed:@"listIcon"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+//    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithImage:image style:UIBarButtonItemStyleDone target:self action:@selector(tableStyle)];
+//    self.navigationItem.rightBarButtonItem = rightItem;
+    
+    
+    
     
     //添加地图
     _mapView = [[BMKMapView alloc]initWithFrame:CGRectMake(0, 64, Main_Screen_Width, Main_Screen_Height - 64)];
     [_mapView setZoomLevel:13];
     [self.view addSubview:_mapView];
+    
+    //列表
+    UIButton *listBtn = [[UIButton alloc] initWithFrame:CGRectMake(Main_Screen_Width - 12 - 30, 12 + 64, 30, 30)];
+    [listBtn setImage:[UIImage imageNamed:@"listIcon2"] forState:UIControlStateNormal];
+//    [listBtn addTarget:self action:@selector(tableStyle) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:listBtn];
+    
+    //手绘地图设置
+    UIButton *showShouhuiBtn = [[UIButton alloc] initWithFrame:CGRectMake(Main_Screen_Width - 12 - 30, CGRectGetMaxY(listBtn.frame) + 12, 30, 30)];
+    [showShouhuiBtn setImage:[UIImage imageNamed:@"showShouhui"] forState:UIControlStateNormal];
+//    [showShouhuiBtn addTarget:self action:@selector(tableStyle) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:showShouhuiBtn];
+    
+    
     
     _routesearch = [[BMKRouteSearch alloc]init];
     _locService = [[BMKLocationService alloc]init];
@@ -136,8 +157,7 @@
     [_mapView setZoomLevel:20.9];
     
     
-    
-    
+
     //添加景点分类选择
     CGFloat typeWidth = 76;
     CGFloat typeHeight = 38;
@@ -185,11 +205,60 @@
         NSDictionary* testdic = BMKConvertBaiduCoorFrom(poi.location.coordinate,BMK_COORDTYPE_GPS);
         CLLocationCoordinate2D coor = BMKCoorDictionaryDecode(testdic);
         
+        
+//        
+//        NSArray *poiObjects = @[poi.identifier,
+//                                @(poi.location.coordinate.latitude),
+//                                @(poi.location.coordinate.longitude),
+//                                @(poi.location.altitude),
+//                                poi.name,
+//                                poi.detailedDescription,
+//                                poi.image,
+//                                poi.images,
+//                                poi.voice,
+//                                poi.address,
+//                                poi.type
+//                                ];
+//        
+//        DLog(@"%@",poiObjects);
+//        
+//        NSArray *poiKeys = @[@"id",
+//                             @"latitude",
+//                             @"longitude",
+//                             @"altitude",
+//                             @"name",
+//                             @"description",
+//                             @"image",
+//                             @"images",
+//                             @"voice",
+//                             @"address",
+//                             @"type"];
+//
+        
+//        DLog(@"%@",poi.identifier);
+        
+        NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+//        [dic setObject:poi.identifier forKey:@"id"];
+        [dic setObject:[NSNumber numberWithFloat:poi.location.coordinate.latitude] forKey:@"latitude"];
+        [dic setObject:[NSNumber numberWithFloat:poi.location.coordinate.longitude] forKey:@"longitude"];
+        [dic setObject:[NSNumber numberWithFloat:poi.location.altitude] forKey:@"altitude"];
+        [dic setObject:poi.name forKey:@"name"];
+        [dic setObject:poi.detailedDescription forKey:@"description"];
+        [dic setObject:poi.image forKey:@"image"];
+        [dic setObject:poi.images forKey:@"images"];
+        [dic setObject:poi.voice forKey:@"voice"];
+        [dic setObject:poi.address forKey:@"address"];
+        [dic setObject:poi.type forKey:@"type"];
+        
+        DLog(@"%@",dic);
+        
+        
 //        CLLocationCoordinate2D coor = poi.location.coordinate;
         annotation.coordinate = coor;
         annotation.title = poi.name;
         annotation.poi = poi;
         annotation.index = i;
+        annotation.pointCalloutInfo = dic;
         [_mapView addAnnotation:annotation];
         [annotations addObject:annotation];
     }
@@ -323,6 +392,8 @@
     //    //删除某个收藏点(收藏点成功后会得到favId)
     //    BOOL res = [_favManager deleteFavPoi:favId];
     
+    
+//    [_mapView setCenterCoordinate:coors];
 }
 
 
@@ -874,20 +945,67 @@
     DLog(@"%f %f",coordinate.latitude,coordinate.longitude);
 }
 
+-(void)mapView:(BMKMapView *)mapView didDeselectAnnotationView:(BMKAnnotationView *)view{
+//    if (_calloutMapAnnotation&&![view isKindOfClass:[CallOutAnnotationView class]]) {
+//        if (_calloutMapAnnotation.coordinate.latitude == view.annotation.coordinate.latitude&& _calloutMapAnnotation.coordinate.longitude == view.annotation.coordinate.longitude) {
+//            [mapView removeAnnotation:_calloutMapAnnotation];
+//            _calloutMapAnnotation = nil;
+//        }
+//    }
+}
+
 - (void)mapView:(BMKMapView *)mapView didSelectAnnotationView:(BMKAnnotationView *)view{
     if ([view.annotation isKindOfClass:[MyPointAnnotation class]]) {
 //        DLog(@"%@",view);
 //        DLog(@"%@",view.annotation);
         MyPointAnnotation *annotation = (MyPointAnnotation *)view.annotation;
         
-//        DLog(@"%@",annotation.title);
         
-        CLLocationCoordinate2D coors;
-        coors.latitude = annotation.coordinate.latitude;
-        coors.longitude = annotation.coordinate.longitude;
-        end2d = coors;
         
-//        DLog(@"%f %f",annotation.coordinate.latitude,annotation.coordinate.longitude);
+        
+//        //如果点到了这个marker点，什么也不做
+//        if (_calloutMapAnnotation.coordinate.latitude == view.annotation.coordinate.latitude&& _calloutMapAnnotation.coordinate.longitude == view.annotation.coordinate.longitude) {
+//            return;
+//        }
+//        //如果当前显示着calloutview，又触发了select方法，删除这个calloutview annotation
+//        if (_calloutMapAnnotation) {
+//            [mapView removeAnnotation:_calloutMapAnnotation];
+//            _calloutMapAnnotation=nil;
+//        }
+//        //创建搭载自定义calloutview的annotation
+//        _calloutMapAnnotation = [[CalloutMapAnnotation alloc] initWithLatitude:view.annotation.coordinate.latitude andLongitude:view.annotation.coordinate.longitude];
+//        //把通过marker(ZNBCPointAnnotation)设置的pointCalloutInfo信息赋值给CalloutMapAnnotation
+//        _calloutMapAnnotation.locationInfo = annotation.pointCalloutInfo;
+//        [mapView addAnnotation:_calloutMapAnnotation];
+//        [mapView setCenterCoordinate:view.annotation.coordinate animated:YES];
+        
+        
+        
+        
+        
+////        DLog(@"%@",annotation.title);
+//        
+//        CLLocationCoordinate2D coors;
+//        coors.latitude = annotation.coordinate.latitude;
+//        coors.longitude = annotation.coordinate.longitude;
+//        end2d = coors;
+//        
+////        DLog(@"%f %f",annotation.coordinate.latitude,annotation.coordinate.longitude);
+//        
+//        UIView *v = [[UIView alloc] initWithFrame:CGRectMake(0, -60, 100, 50)];
+//        v.backgroundColor = [UIColor whiteColor];
+//        
+//        
+//        UIButton *btn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
+//        
+//        [btn setTitle:@"123" forState:UIControlStateNormal];
+//         [btn setTitle:@"456" forState:UIControlStateHighlighted];
+//        [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+//        [btn setTitleColor:[UIColor redColor] forState:UIControlStateHighlighted];
+//        
+//        [v addSubview:btn];
+//        
+//        [view.paopaoView addSubview:v];
         
         
         [sv setContentOffset:CGPointMake(annotation.index * sv.frame.size.width, 0) animated:NO];
@@ -897,19 +1015,19 @@
 }
 
 - (void)mapView:(BMKMapView *)mapView annotationViewForBubble:(BMKAnnotationView *)view{
-    if ([view.annotation isKindOfClass:[MyPointAnnotation class]]) {
-        MyPointAnnotation *annotation = (MyPointAnnotation *)view.annotation;
-        
-//        DLog(@"%@",annotation.poi.image);
-        
-        NSString *description = annotation.poi.detailedDescription;
-        if (![description isEqualToString:@""]) {
-            DetailViewController *vc = [[DetailViewController alloc] init];
-            vc.poi = annotation.poi;
-            [self.navigationController pushViewController:vc animated:YES];
-        }
-        
-    }
+//    if ([view.annotation isKindOfClass:[MyPointAnnotation class]]) {
+//        MyPointAnnotation *annotation = (MyPointAnnotation *)view.annotation;
+//        
+////        DLog(@"%@",annotation.poi.image);
+//        
+//        NSString *description = annotation.poi.detailedDescription;
+//        if (![description isEqualToString:@""]) {
+//            DetailViewController *vc = [[DetailViewController alloc] init];
+//            vc.poi = annotation.poi;
+//            [self.navigationController pushViewController:vc animated:YES];
+//        }
+//        
+//    }
 }
 
 - (BMKOverlayView *)mapView:(BMKMapView *)mapView viewForOverlay:(id<BMKOverlay>)overlay{
@@ -936,9 +1054,7 @@
     if ([annotation isKindOfClass:[MyPointAnnotation class]]) {
         
         BMKAnnotationView * view = [[BMKAnnotationView alloc]initWithAnnotation:annotation reuseIdentifier:@"annotation"];
-        
-        
-        MyPointAnnotation *anno = (MyPointAnnotation *)view.annotation;
+        MyPointAnnotation *anno = (MyPointAnnotation *)annotation;
         WTPoi *poi = anno.poi;
         if([poi.type isEqualToString:@"scenery_spot"]){//景点
             view.image=[UIImage imageNamed:@"greenPoint2"];
@@ -963,24 +1079,115 @@
         else {
             view.image=[UIImage imageNamed:@"greenPoint2"];
         }
-        
         //点击显示图详情视图 必须MJPointAnnotation对象设置了标题和副标题
-        view.canShowCallout=YES;
+//        view.canShowCallout=NO;
         
-//        UIButton *daohangBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 6, 32, 32)];
-//        daohangBtn.titleLabel.font = SYSTEMFONT(13);
-//        [daohangBtn setTitle:@"导航" forState:UIControlStateNormal];
-//        [daohangBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-//        [daohangBtn addTarget:self action:@selector(onClickWalkSearch) forControlEvents:UIControlEventTouchUpInside];
-//        view.rightCalloutAccessoryView=daohangBtn;
+        UIView *paopaoBgView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 44 * 4 + 5 * 3, 44 + 10)];
+        
+        UIButton *lineBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
+        lineBtn.tag = 1;
+        [lineBtn setImage:[UIImage imageNamed:@"mapLineBtn"] forState:UIControlStateNormal];
+        [lineBtn addTarget:self action:@selector(btnClick:) forControlEvents:UIControlEventTouchUpInside];
+
+        UIButton *voiceBtn = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetMaxX(lineBtn.frame) + 5, 0, 44, 44)];
+        voiceBtn.tag = 2;
+        [voiceBtn setImage:[UIImage imageNamed:@"mapVoiceBtn"] forState:UIControlStateNormal];
+        [voiceBtn addTarget:self action:@selector(btnClick:) forControlEvents:UIControlEventTouchUpInside];
+
+        UIButton *vrBtn = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetMaxX(voiceBtn.frame) + 5, 0, 44, 44)];
+        vrBtn.tag = 3;
+        [vrBtn setImage:[UIImage imageNamed:@"mapVrBtn"] forState:UIControlStateNormal];
+        [vrBtn addTarget:self action:@selector(btnClick:) forControlEvents:UIControlEventTouchUpInside];
+
+        UIButton *imgBtn = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetMaxX(vrBtn.frame) + 5, 0, 44, 44)];
+        imgBtn.tag = 4;
+        [imgBtn setImage:[UIImage imageNamed:@"mapImgBtn"] forState:UIControlStateNormal];
+        [imgBtn addTarget:self action:@selector(btnClick:) forControlEvents:UIControlEventTouchUpInside];
+
+        [paopaoBgView addSubview:lineBtn];
+        [paopaoBgView addSubview:voiceBtn];
+        [paopaoBgView addSubview:vrBtn];
+        [paopaoBgView addSubview:imgBtn];
+
+        BMKActionPaopaoView *paopaoView = [[BMKActionPaopaoView alloc]initWithCustomView:paopaoBgView];
+
+        view.paopaoView = paopaoView;
         return view;
         
-//        BMKPinAnnotationView *newAnnotationView = [[BMKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"myAnnotation"];
-//        newAnnotationView.pinColor = BMKPinAnnotationColorPurple;
-//        newAnnotationView.animatesDrop = YES;// 设置该标注点动画显示
-//        return newAnnotationView;
+        
+//        CallOutAnnotationView *calloutannotationview = (CallOutAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:@"calloutview"];
+//        //否则创建新的calloutView
+//        if (!calloutannotationview) {
+//            
+//            calloutannotationview = [[CallOutAnnotationView alloc] initWithAnnotation:anno reuseIdentifier:@"calloutview"];
+//        }
+//        
+//
+////        calloutannotationview.canShowCallout=;
+//        calloutannotationview.paopaoView = paopaoView;
+//        return calloutannotationview;
+
     }
+    
+//    else if ([annotation isKindOfClass:[CalloutMapAnnotation class]]){
+//        //此时annotation就是我们calloutview的annotation
+//        CalloutMapAnnotation *ann = (CalloutMapAnnotation*)annotation;
+//        //如果可以重用
+//        CallOutAnnotationView *calloutannotationview = (CallOutAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:@"calloutview"];
+//        //否则创建新的calloutView
+//        if (!calloutannotationview) {
+//            calloutannotationview = [[CallOutAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"calloutview"];
+////            BusPointCell *cell = [[[NSBundle mainBundle] loadNibNamed:@"BusPointCell" owner:self options:nil] objectAtIndex:0];
+////            [calloutannotationview.contentView addSubview:cell];
+////            calloutannotationview.busInfoView = cell;
+//            
+//            UIButton *lineBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
+//            lineBtn.tag = 1;
+//            [lineBtn setImage:[UIImage imageNamed:@"mapLineBtn"] forState:UIControlStateNormal];
+//            [lineBtn addTarget:self action:@selector(btnClick:) forControlEvents:UIControlEventTouchUpInside];
+//            
+//            UIButton *voiceBtn = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetMaxX(lineBtn.frame) + 5, 0, 44, 44)];
+//            voiceBtn.tag = 2;
+//            [voiceBtn setImage:[UIImage imageNamed:@"mapVoiceBtn"] forState:UIControlStateNormal];
+//            [voiceBtn addTarget:self action:@selector(btnClick:) forControlEvents:UIControlEventTouchUpInside];
+//            
+//            UIButton *vrBtn = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetMaxX(voiceBtn.frame) + 5, 0, 44, 44)];
+//            vrBtn.tag = 3;
+//            [vrBtn setImage:[UIImage imageNamed:@"mapVrBtn"] forState:UIControlStateNormal];
+//            [vrBtn addTarget:self action:@selector(btnClick:) forControlEvents:UIControlEventTouchUpInside];
+//            
+//            UIButton *imgBtn = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetMaxX(vrBtn.frame) + 5, 0, 44, 44)];
+//            imgBtn.tag = 4;
+//            [imgBtn setImage:[UIImage imageNamed:@"mapImgBtn"] forState:UIControlStateNormal];
+//            [imgBtn addTarget:self action:@selector(btnClick:) forControlEvents:UIControlEventTouchUpInside];
+//            
+//            [calloutannotationview.contentView addSubview:lineBtn];
+//            [calloutannotationview.contentView addSubview:voiceBtn];
+//            [calloutannotationview.contentView addSubview:vrBtn];
+//            [calloutannotationview.contentView addSubview:imgBtn];
+//        }
+//        
+//        NSDictionary *info = ann.locationInfo;
+//        DLog(@"inif:%@",info);
+////        //开始设置添加marker时的赋值
+////        calloutannotationview.busInfoView.aliasLabel.text = [ann.locationInfo objectForKey:@"alias"];
+////        calloutannotationview.busInfoView.speedLabel.text = [ann.locationInfo objectForKey:@"speed"];
+////        calloutannotationview.busInfoView.degreeLabel.text =[ann.locationInfo objectForKey:@"degree"];
+////        calloutannotationview.busInfoView.nameLabel.text = [ann.locationInfo objectForKey:@"name"];
+//        
+//        
+//        
+//        
+//        
+//        
+//        calloutannotationview.canShowCallout=NO;
+//        return calloutannotationview;
+//    }
     return nil;
+}
+
+-(void)btnClick:(UIButton *)btn{
+    DLog(@"%ld",btn.tag);
 }
 
 #pragma mark - BMKRouteSearchDelegate

@@ -483,6 +483,8 @@
 		44621BB11E125ECA00EB3AFC /* BaiduMapAPI_Search.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44621BB01E125EC900EB3AFC /* BaiduMapAPI_Search.framework */; };
 		44621BB31E12607900EB3AFC /* BaiduMapAPI_Utils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44621BB21E12607900EB3AFC /* BaiduMapAPI_Utils.framework */; };
 		44621BB71E12666600EB3AFC /* UIImage+Rotate.m in Sources */ = {isa = PBXBuildFile; fileRef = 44621BB61E12666600EB3AFC /* UIImage+Rotate.m */; };
+		4463938B1E7F684B0021B692 /* CalloutMapAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4463938A1E7F684B0021B692 /* CalloutMapAnnotation.m */; };
+		4463938E1E7F6BD40021B692 /* CallOutAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4463938D1E7F6BD40021B692 /* CallOutAnnotationView.m */; };
 		448738D01E03C16000E5862C /* BaiduMapAPI_Location.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 448738CF1E03C16000E5862C /* BaiduMapAPI_Location.framework */; };
 		44988C1A1C04575400D5C59C /* btnCheck.png in Resources */ = {isa = PBXBuildFile; fileRef = 44988C141C04575400D5C59C /* btnCheck.png */; };
 		44988C1B1C04575400D5C59C /* btnCheck@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44988C151C04575400D5C59C /* btnCheck@2x.png */; };
@@ -1465,6 +1467,10 @@
 		44621BB21E12607900EB3AFC /* BaiduMapAPI_Utils.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BaiduMapAPI_Utils.framework; path = ThiredPartyLib/BaiduMap/BaiduMapAPI_Utils.framework; sourceTree = "<group>"; };
 		44621BB51E12666600EB3AFC /* UIImage+Rotate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Rotate.h"; sourceTree = "<group>"; };
 		44621BB61E12666600EB3AFC /* UIImage+Rotate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Rotate.m"; sourceTree = "<group>"; };
+		446393891E7F684B0021B692 /* CalloutMapAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CalloutMapAnnotation.h; sourceTree = "<group>"; };
+		4463938A1E7F684B0021B692 /* CalloutMapAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CalloutMapAnnotation.m; sourceTree = "<group>"; };
+		4463938C1E7F6BD40021B692 /* CallOutAnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CallOutAnnotationView.h; sourceTree = "<group>"; };
+		4463938D1E7F6BD40021B692 /* CallOutAnnotationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CallOutAnnotationView.m; sourceTree = "<group>"; };
 		4464FCE21BFEB56C0015320B /* jqdl.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = jqdl.pch; sourceTree = "<group>"; };
 		448738CF1E03C16000E5862C /* BaiduMapAPI_Location.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BaiduMapAPI_Location.framework; path = ThiredPartyLib/BaiduMap/BaiduMapAPI_Location.framework; sourceTree = "<group>"; };
 		44988C141C04575400D5C59C /* btnCheck.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btnCheck.png; sourceTree = "<group>"; };
@@ -1622,6 +1628,10 @@
 				444D77D51E038D600040F0A7 /* BaiduMapViewController.xib */,
 				44270EF81E16465800561C69 /* MyPointAnnotation.h */,
 				44270EF91E16465800561C69 /* MyPointAnnotation.m */,
+				446393891E7F684B0021B692 /* CalloutMapAnnotation.h */,
+				4463938A1E7F684B0021B692 /* CalloutMapAnnotation.m */,
+				4463938C1E7F6BD40021B692 /* CallOutAnnotationView.h */,
+				4463938D1E7F6BD40021B692 /* CallOutAnnotationView.m */,
 				44F614681E1F92BB00482D23 /* FeatureListViewController.h */,
 				44F614691E1F92BB00482D23 /* FeatureListViewController.m */,
 				44F6146A1E1F92BB00482D23 /* FeatureListViewController.xib */,
@@ -3959,6 +3969,7 @@
 				440E7F3C1E1B36D600B5277E /* NSDictionary+SafeAccess.m in Sources */,
 				44117A1C1C11763E0071E1C0 /* ZXRSSExpandedDecodedChar.m in Sources */,
 				441179C11C11763E0071E1C0 /* ZXSMSTOMMSTOResultParser.m in Sources */,
+				4463938E1E7F6BD40021B692 /* CallOutAnnotationView.m in Sources */,
 				441179CD1C11763E0071E1C0 /* ZXWifiParsedResult.m in Sources */,
 				441179BA1C11763E0071E1C0 /* ZXISBNResultParser.m in Sources */,
 				44117AB21C1177420071E1C0 /* Data.m in Sources */,
@@ -3978,6 +3989,7 @@
 				440E7F321E1B36D600B5277E /* NSBundle+AppIcon.m in Sources */,
 				44988C1C1C04575400D5C59C /* HUD.m in Sources */,
 				441179911C11763E0071E1C0 /* JSONAPI.m in Sources */,
+				4463938B1E7F684B0021B692 /* CalloutMapAnnotation.m in Sources */,
 				44117A1B1C11763E0071E1C0 /* ZXRSSExpandedCurrentParsingState.m in Sources */,
 				44117A081C11763E0071E1C0 /* ZXDataMatrixWriter.m in Sources */,
 				442ED7D21DB9A7580058DD4C /* UIDevice+SystemVersion.m in Sources */,

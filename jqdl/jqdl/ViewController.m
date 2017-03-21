@@ -385,31 +385,31 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     
     
     
-    //百度坐标转GPS 汉阳造数据
-    float a = 0.00347516;
-    float b = 0.01223381;
-    NSLog(@"比卡兹空间设计：%f,%f",30.562217 - a, 114.274605 - b);
-    NSLog(@"一熹艺术馆：%f,%f",30.562443 - a, 114.274910 - b);
-    NSLog(@"零到壹孵化器：%f,%f",30.562390 - a, 114.275148 - b);
-    NSLog(@"龟缘会馆：%f,%f",30.562651 - a, 114.274826 - b);
-    NSLog(@"薇拉皇后：%f,%f",30.562669 - a, 114.274070 - b);
-    NSLog(@"广告狂人：%f,%f",30.562847 - a, 114.275270 - b);
-    NSLog(@"投资盛世：%f,%f",30.562798 - a, 114.275204 - b);
-    NSLog(@"薇拉摄影60：%f,%f",30.564093 - a, 114.273954 - b);
-    NSLog(@"碧玺文化创意：%f,%f",30.563887 - a, 114.274231 - b);
-    NSLog(@"楼上座品咖啡:%f,%f",30.563380 - a, 114.275247 - b);
-    NSLog(@"福缘百合：%f,%f",30.561636 - a, 114.274420 - b);
-    NSLog(@"百合餐厅：%f,%f",30.561778 - a, 114.274548 - b);
-    NSLog(@"速8：%f,%f",30.561506 - a, 114.273991 - b);
-    NSLog(@"忆江南：%f,%f",30.562900 - a, 114.274128 - b);
-    NSLog(@"加油站：%f,%f",30.562205 - a, 114.273989 - b);
-    NSLog(@"得意原创设计：%f,%f",30.561499 - a, 114.274850 - b);
-    NSLog(@"薇拉摄影15：%f,%f",30.562251 - a, 114.275095 - b);
-    NSLog(@"知音书院：%f,%f",30.562204 - a, 114.274527 - b);
-    NSLog(@"衍艺广告：%f,%f",30.562267 - a, 114.274678 - b);
-    NSLog(@"黑胶星球：%f,%f",30.562239 - a, 114.274958 - b);
-    NSLog(@"邻盛：%f,%f",30.562223 - a, 114.274144 - b);
-    NSLog(@"汉阳会：%f,%f",30.562187 - a, 114.274422 - b);
+//    //百度坐标转GPS 汉阳造数据
+//    float a = 0.00347516;
+//    float b = 0.01223381;
+//    NSLog(@"比卡兹空间设计：%f,%f",30.562217 - a, 114.274605 - b);
+//    NSLog(@"一熹艺术馆：%f,%f",30.562443 - a, 114.274910 - b);
+//    NSLog(@"零到壹孵化器：%f,%f",30.562390 - a, 114.275148 - b);
+//    NSLog(@"龟缘会馆：%f,%f",30.562651 - a, 114.274826 - b);
+//    NSLog(@"薇拉皇后：%f,%f",30.562669 - a, 114.274070 - b);
+//    NSLog(@"广告狂人：%f,%f",30.562847 - a, 114.275270 - b);
+//    NSLog(@"投资盛世：%f,%f",30.562798 - a, 114.275204 - b);
+//    NSLog(@"薇拉摄影60：%f,%f",30.564093 - a, 114.273954 - b);
+//    NSLog(@"碧玺文化创意：%f,%f",30.563887 - a, 114.274231 - b);
+//    NSLog(@"楼上座品咖啡:%f,%f",30.563380 - a, 114.275247 - b);
+//    NSLog(@"福缘百合：%f,%f",30.561636 - a, 114.274420 - b);
+//    NSLog(@"百合餐厅：%f,%f",30.561778 - a, 114.274548 - b);
+//    NSLog(@"速8：%f,%f",30.561506 - a, 114.273991 - b);
+//    NSLog(@"忆江南：%f,%f",30.562900 - a, 114.274128 - b);
+//    NSLog(@"加油站：%f,%f",30.562205 - a, 114.273989 - b);
+//    NSLog(@"得意原创设计：%f,%f",30.561499 - a, 114.274850 - b);
+//    NSLog(@"薇拉摄影15：%f,%f",30.562251 - a, 114.275095 - b);
+//    NSLog(@"知音书院：%f,%f",30.562204 - a, 114.274527 - b);
+//    NSLog(@"衍艺广告：%f,%f",30.562267 - a, 114.274678 - b);
+//    NSLog(@"黑胶星球：%f,%f",30.562239 - a, 114.274958 - b);
+//    NSLog(@"邻盛：%f,%f",30.562223 - a, 114.274144 - b);
+//    NSLog(@"汉阳会：%f,%f",30.562187 - a, 114.274422 - b);
     
     
     
@@ -600,7 +600,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
             storeDic = [[NSMutableDictionary alloc] initWithDictionary:data[i]];
             
             NSString *type = [storeDic objectForKey:@"type"];
-            if (type != nil && [type isEqualToString:@"tourism_development"]) {
+            if (type != nil && ([type isEqualToString:@"tourism_development"] || [type isEqualToString:@"travel_agency"])) {
                 NSArray *imagesArr = [storeDic objectForKey:@"images"];
                 NSMutableArray *images = [NSMutableArray array];
                 NSString *image = @"";
@@ -644,7 +644,9 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                 //景区中心点 测试已当前用户位置
                 CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake(myLocation.coordinate.latitude + WT_RANDOM(-0.001, 0.001), myLocation.coordinate.longitude + WT_RANDOM(-0.01, 0.01));
                 
-                if ([[storeDic objectForKey:@"id"] isEqualToString:@"0070c1938cc15df1d5b891b5adbb7d8b"]) {
+                //f66c0fc1f74580c525365751a9ce21b6 三游洞
+                //0070c1938cc15df1d5b891b5adbb7d8b 汉阳造
+                if ([[storeDic objectForKey:@"id"] isEqualToString:@"f66c0fc1f74580c525365751a9ce21b6"]) {
                     locationCoordinate = CLLocationCoordinate2DMake(myLocation.coordinate.latitude + WT_RANDOM(-0.001, 0.001), myLocation.coordinate.longitude + WT_RANDOM(-0.01, 0.01));
                 }else{
                     locationCoordinate = CLLocationCoordinate2DMake(myLocation.coordinate.latitude + 0.1, myLocation.coordinate.longitude + 0.1);
@@ -1648,6 +1650,30 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     WTPoiManager *poiManager = objc_getAssociatedObject(self, kWTAugmentedRealityViewController_AssociatedPoiManagerKey);
     
     vc.jingdianArray = poiManager.pois;
+    
+    
+//    for (int i = 0; i < poiManager.pois.count; i++) {
+//        WTPoi *poi = [poiManager.pois objectAtIndex:i];
+//        
+//        DLog(@"%@",poi.identifier);
+//        
+//        NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+//        [dic setObject:poi.identifier forKey:@"id"];
+//        [dic setObject:[NSNumber numberWithFloat:poi.location.coordinate.latitude] forKey:@"latitude"];
+//        [dic setObject:[NSNumber numberWithFloat:poi.location.coordinate.longitude] forKey:@"longitude"];
+//        [dic setObject:[NSNumber numberWithFloat:poi.location.altitude] forKey:@"altitude"];
+//        [dic setObject:poi.name forKey:@"name"];
+//        [dic setObject:poi.detailedDescription forKey:@"description"];
+//        [dic setObject:poi.image forKey:@"image"];
+//        [dic setObject:poi.images forKey:@"images"];
+//        [dic setObject:poi.voice forKey:@"voice"];
+//        [dic setObject:poi.address forKey:@"address"];
+//        [dic setObject:poi.type forKey:@"type"];
+//        
+//        DLog(@"%@",dic);
+//    }
+    
+    
     [self.navigationController pushViewController:vc animated:YES];
 }
 
