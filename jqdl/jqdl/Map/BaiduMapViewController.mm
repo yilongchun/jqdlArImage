@@ -1121,6 +1121,18 @@
     return view;
 }
 
+- (void) handlePan: (UISwipeGestureRecognizer *)rec{
+    
+    if(rec.direction == UISwipeGestureRecognizerDirectionRight){
+        DLog(@"向右");
+        [self hideFeatureListView];
+    }else{
+        DLog(@"其他方向");
+    }
+//    rec.view.center = CGPointMake(rec.view.center.x + point.x, rec.view.center.y + point.y);
+//    [rec setTranslation:CGPointMake(0, 0) inView:self.view];
+}
+
 //热点列表
 -(void)showFeatureListView{
     
@@ -1146,6 +1158,15 @@
         UIView *leftMaskView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, Main_Screen_Height)];
         UITapGestureRecognizer *tapView = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideFeatureListView)];
         [leftMaskView addGestureRecognizer:tapView];
+        
+        
+        
+        
+        UISwipeGestureRecognizer *swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
+        leftMaskView.userInteractionEnabled = YES;
+        [leftMaskView addGestureRecognizer:swipe];
+        
+        
         [spotMaskView addSubview:leftMaskView];
         
         spotRightView = [[UIView alloc] initWithFrame:CGRectMake(Main_Screen_Width, 0, Main_Screen_Width - 100, Main_Screen_Height)];
