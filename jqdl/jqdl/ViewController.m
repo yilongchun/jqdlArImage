@@ -85,7 +85,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     
     UILabel *debugLabel;
     
-    
+    NSMutableArray *poiArray;
     
 }
 
@@ -201,6 +201,8 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     self.jz_navigationBarBackgroundHidden = YES;
     self.jz_navigationBarTintColor = [UIColor whiteColor];
     self.jz_navigationBarBackgroundAlpha = 0.f;
+    
+    poiArray = [NSMutableArray array];
     
     _augmentedRealityAuthenticationRequestManager = [[WTAuthorizationRequestManager alloc] init];
     
@@ -587,6 +589,8 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     WTPoiManager *poiManager = objc_getAssociatedObject(self, kWTAugmentedRealityViewController_AssociatedPoiManagerKey);
     [poiManager removeAllPois];
     
+    [poiArray removeAllObjects];
+    
     NSString *url = [NSString stringWithFormat:@"%@%@",kDlHost,@"/stores"];
     [manager GET:url parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
         
@@ -667,6 +671,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                 NSString *address = [storeDic objectForKey:@"address"] == nil ? @"" : [storeDic objectForKey:@"address"];
                 
                 WTPoi *poi = [[WTPoi alloc] initWithIdentifier:storeId
+                                                           ids:storeId
                                                       location:location
                                                           name:name
                                            detailedDescription:description
@@ -675,16 +680,33 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                                                          voice:audio
                                                        address:address
                                                           type:type];
-                DLog(@"storeId:%@ name:%@ description:%@ image:%@ imagesStr:%@ audio:%@ address:%@ type:%@",storeId,name,description,image,imagesStr,audio,address,type);
-                DLog(@"%@",poi.jsonRepresentation);
+//                DLog(@"storeId:%@ name:%@ description:%@ image:%@ imagesStr:%@ audio:%@ address:%@ type:%@",storeId,name,description,image,imagesStr,audio,address,type);
+//                DLog(@"%@",poi.jsonRepresentation);
+                
+                DLog(@"%@\t%@",poi.identifier,poi.name);
                 
                 [poiManager addPoi:poi];
+                
+                [poiArray addObject:[poi jsonRepresentation]];
                 
             }
         }
         
+        
+        
+        
+        WTPoiManager *poiManager2 = objc_getAssociatedObject(self, kWTAugmentedRealityViewController_AssociatedPoiManagerKey);
+        
+        for (int i = 0; i < poiManager2.pois.count; i++) {
+            WTPoi *poi = [poiManager2.pois objectAtIndex:i];
+            
+            DLog(@"%@\t%@",poi.ids,poi.name);
+        }
+        
+        
+        
         NSString *poisInJsonData = [poiManager convertPoiModelToJson];
-        DLog(@"%@",poisInJsonData);
+//        DLog(@"%@",poisInJsonData);
         [self.architectView callJavaScript:[NSString stringWithFormat:@"World.loadJingquPoisFromJsonData(%@)", poisInJsonData]];
         [self.architectView callJavaScript:[NSString stringWithFormat:@"World.updateJingquType(%@)", @"2"]];
         jingquType = @"2";
@@ -708,7 +730,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
         [self startWikitudeSDKRendering];
         
         
-        DLog(@"storeDic:%@",storeDic);
+//        DLog(@"storeDic:%@",storeDic);
         [self hideHud];
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
         [self hideHud];
@@ -736,6 +758,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     
     WTPoiManager *poiManager = objc_getAssociatedObject(self, kWTAugmentedRealityViewController_AssociatedPoiManagerKey);
     [poiManager removeAllPois];
+    [poiArray removeAllObjects];
     
     NSString *url = [NSString stringWithFormat:@"%@%@%@%@",kDlHost,@"/stores/",storeId,@"/spots"];
     [manager GET:url parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
@@ -817,6 +840,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                                                                 timestamp:myLocation.timestamp];
             
             WTPoi *poi = [[WTPoi alloc] initWithIdentifier:[spotDic objectForKey:@"id"]
+                                                       ids:[spotDic objectForKey:@"id"]
                                                   location:location
                                                       name:[spotDic objectForKey:@"name"]
                                        detailedDescription:[spotDic objectForKey:@"description"]
@@ -830,6 +854,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
 //            DLog(@"%@",poi.jsonRepresentation);
             
             [poiManager addPoi:poi];
+             [poiArray addObject:[poi jsonRepresentation]];
             
         }
         
@@ -1263,6 +1288,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                                                                                     timestamp:[NSDate date]];
                                 
                                 WTPoi *poi = [[WTPoi alloc] initWithIdentifier:[spot objectForKey:@"id"]
+                                                                           ids:[spot objectForKey:@"id"]
                                                                       location:location
                                                                           name:[spot objectForKey:@"name"]
                                                            detailedDescription:[spot objectForKey:@"description"]
@@ -1281,7 +1307,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                                 self.navigationItem.backBarButtonItem = backItem;
                                 
                                 DetailViewController *vc = [[DetailViewController alloc] init];
-                                vc.poi = poi;
+                                vc.poi = [poi jsonRepresentation];
                                 [self.navigationController pushViewController:vc animated:YES];
                                 
                                 
@@ -1646,34 +1672,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     
     BaiduMapViewController *vc = [BaiduMapViewController new];
     vc.name = titleLabel.text;
-    
-    WTPoiManager *poiManager = objc_getAssociatedObject(self, kWTAugmentedRealityViewController_AssociatedPoiManagerKey);
-    
-    vc.jingdianArray = poiManager.pois;
-    
-    
-//    for (int i = 0; i < poiManager.pois.count; i++) {
-//        WTPoi *poi = [poiManager.pois objectAtIndex:i];
-//        
-//        DLog(@"%@",poi.identifier);
-//        
-//        NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-//        [dic setObject:poi.identifier forKey:@"id"];
-//        [dic setObject:[NSNumber numberWithFloat:poi.location.coordinate.latitude] forKey:@"latitude"];
-//        [dic setObject:[NSNumber numberWithFloat:poi.location.coordinate.longitude] forKey:@"longitude"];
-//        [dic setObject:[NSNumber numberWithFloat:poi.location.altitude] forKey:@"altitude"];
-//        [dic setObject:poi.name forKey:@"name"];
-//        [dic setObject:poi.detailedDescription forKey:@"description"];
-//        [dic setObject:poi.image forKey:@"image"];
-//        [dic setObject:poi.images forKey:@"images"];
-//        [dic setObject:poi.voice forKey:@"voice"];
-//        [dic setObject:poi.address forKey:@"address"];
-//        [dic setObject:poi.type forKey:@"type"];
-//        
-//        DLog(@"%@",dic);
-//    }
-    
-    
+    vc.jingdianArray = poiArray;
     [self.navigationController pushViewController:vc animated:YES];
 }
 
@@ -2098,7 +2097,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     NSNumber *longitude = [poiDetails objectForKey:@"longitude"];
     NSString *type = [poiDetails objectForKey:@"type"];
     
-    WTPoi *poi = [[WTPoi alloc] initWithIdentifier:poiIdentifier location:[[CLLocation alloc] initWithLatitude:[latitude doubleValue] longitude:[longitude doubleValue]] name:poiName detailedDescription:poiDescription image:poiImage images:poiImages voice:poiVoice address:poiAddress type:type];
+    WTPoi *poi = [[WTPoi alloc] initWithIdentifier:poiIdentifier ids:poiIdentifier location:[[CLLocation alloc] initWithLatitude:[latitude doubleValue] longitude:[longitude doubleValue]] name:poiName detailedDescription:poiDescription image:poiImage images:poiImages voice:poiVoice address:poiAddress type:type];
     
     if (poi)
     {
@@ -2122,12 +2121,12 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
         
         if([jingquType isEqualToString:@"2"]){
             StoreViewController *vc = [[StoreViewController alloc] init];
-            vc.poi = poi;
+            vc.poi = [poi jsonRepresentation];
             [self.navigationController pushViewController:vc animated:YES];
         }
         if ([jingquType isEqualToString:@"1"]) {
             DetailViewController *vc = [[DetailViewController alloc] init];
-            vc.poi = poi;
+            vc.poi = [poi jsonRepresentation];
             [self.navigationController pushViewController:vc animated:YES];
         }
         

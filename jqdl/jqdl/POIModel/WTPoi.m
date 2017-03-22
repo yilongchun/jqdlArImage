@@ -34,12 +34,13 @@
 //    return poi;
 //}
 
-- (instancetype)initWithIdentifier:(NSString *)identifier location:(CLLocation *)location name:(NSString *)name detailedDescription:(NSString *)detailedDescription image:(NSString *)image images:(NSString *)images voice:(NSString *)voice address:(NSString *)address type:(NSString *)type
+- (instancetype)initWithIdentifier:(NSString *)identifier ids:(NSString *)ids location:(CLLocation *)location name:(NSString *)name detailedDescription:(NSString *)detailedDescription image:(NSString *)image images:(NSString *)images voice:(NSString *)voice address:(NSString *)address type:(NSString *)type
 {
     self = [super init];
     if (self)
     {
         _identifier = identifier;
+        _ids = ids;
         _location = location;
         _name = name;
         _detailedDescription = detailedDescription;
@@ -57,6 +58,7 @@
 - (NSDictionary*)jsonRepresentation
 {
     NSArray *poiObjects = @[self.identifier,
+                            self.ids,
                             @(self.location.coordinate.latitude),
                             @(self.location.coordinate.longitude),
                             @(self.location.altitude),
@@ -70,6 +72,7 @@
                             ];
     
     NSArray *poiKeys = @[@"id",
+                         @"ids",
                          @"latitude",
                          @"longitude",
                          @"altitude",

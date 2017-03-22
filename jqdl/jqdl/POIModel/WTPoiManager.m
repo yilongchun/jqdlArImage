@@ -15,7 +15,7 @@
 {
     self = [super init];
     if (self) {
-        self.pois = [NSMutableArray arrayWithCapacity:20];
+        self.pois = [NSMutableArray array];
     }
     
     return self;
@@ -29,18 +29,18 @@
     }
 }
 
-- (WTPoi *)poiForId:(NSInteger)aPoiId
-{
-    WTPoi *poi = nil;
-    
-    for (WTPoi *currentPoi in self.pois) {
-        if (currentPoi.identifier == aPoiId) {
-            poi = currentPoi;
-        }
-    }
-    
-    return poi;
-}
+//- (WTPoi *)poiForId:(NSInteger)aPoiId
+//{
+//    WTPoi *poi = nil;
+//    
+//    for (WTPoi *currentPoi in self.pois) {
+//        if (currentPoi.identifier == aPoiId) {
+//            poi = currentPoi;
+//        }
+//    }
+//    
+//    return poi;
+//}
 
 - (void)removeAllPois
 {

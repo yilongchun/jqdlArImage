@@ -336,7 +336,7 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
     DetailViewController *vc = [[DetailViewController alloc] init];
-    WTPoi *poi = [_jingdianArray objectAtIndex:indexPath.row];
+    NSDictionary *poi = [_jingdianArray objectAtIndex:indexPath.row];
     vc.poi = poi;
     [self.navigationController pushViewController:vc animated:YES];
 }

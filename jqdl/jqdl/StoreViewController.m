@@ -61,7 +61,7 @@
     //顶部广告
     NSMutableArray *arr = [NSMutableArray array];
     NSMutableArray *strArr = [NSMutableArray array];
-    NSArray *images = [_poi.images componentsSeparatedByString:@","];
+    NSArray *images = [[_poi objectForKey:@"images"] componentsSeparatedByString:@","];
     for (int i = 0 ; i < images.count; i++) {
         [arr addObject:[images objectAtIndex:i]];
         [strArr addObject:@"1"];
@@ -70,7 +70,7 @@
     BMAdScrollView *adView = [[BMAdScrollView alloc] initWithFrame:CGRectMake(0, 0, Main_Screen_Width, 250) images:arr titles:strArr];
     [_myScrollView addSubview:adView];
     //标题
-    NSString *slogan = [_poi.name stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSString *slogan = [[_poi objectForKey:@"name"] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     UILabel *titleLabel = [UILabel new];
     CGRect titleRect = CGRectMake(15, 210, Main_Screen_Width - 50, 30);
     [titleLabel setFrame:titleRect];
@@ -89,7 +89,7 @@
     contentLabel.numberOfLines = 0;
     contentLabel.font = [UIFont systemFontOfSize:14];
     contentLabel.textColor = RGB(135, 135, 135);
-    contentLabel.text = [_poi.detailedDescription stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    contentLabel.text = [[_poi objectForKey:@"description"] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     [contentLabel sizeToFit];
     [_myScrollView addSubview:contentLabel];
     
@@ -126,7 +126,7 @@
     UILabel *addressValueLabel = [[UILabel alloc] initWithFrame:CGRectMake(25, CGRectGetMaxY(addressLabel.frame) + 8, 0, 0)];
     addressValueLabel.font = SYSTEMFONT(14);
     addressValueLabel.textColor = RGB(135, 135, 135);
-    addressValueLabel.text = [_poi.address stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    addressValueLabel.text = [[_poi objectForKey:@"address"] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     [addressValueLabel sizeToFit];
     [_myScrollView addSubview:addressValueLabel];
     //距离
@@ -148,7 +148,7 @@
     //控制播放按钮
     if ([[Player sharedManager] isPlaying]) {
         NSString *playingUrlStr = [[[Player sharedManager] url] absoluteString];
-        NSString *path = [NSString stringWithFormat:@"%@",_poi.voice];
+        NSString *path = [NSString stringWithFormat:@"%@",[_poi objectForKey:@"voice"]];
         if ([playingUrlStr isEqualToString:path]) {//当前播放的就是该景点的语音 停止播放
             [jieshuoBtn setImage:[UIImage imageNamed:@"ztbf"] forState:UIControlStateNormal];
         }else{//不是该景点的 重新播放
@@ -161,11 +161,11 @@
 -(void)daohang{
     
     
-    DLog(@"%f %f",_poi.location.coordinate.latitude,_poi.location.coordinate.longitude);
     
-    //    CLLocationCoordinate2D coords = CLLocationCoordinate2DMake(_poi.location.coordinate,116.397105);//纬度，经度
-    if (maps == nil) {        
-        maps = [Util getInstalledMapAppWithEndLocation:_poi.location.coordinate];
+    
+    CLLocationCoordinate2D coords = CLLocationCoordinate2DMake([[_poi objectForKey:@"latitude"] floatValue],[[_poi objectForKey:@"longitude"] floatValue]);//纬度，经度
+    if (maps == nil) {
+        maps = [Util getInstalledMapAppWithEndLocation:coords];
     }
     LCActionSheet *actionSheet = [LCActionSheet sheetWithTitle:nil
                                                       delegate:self
@@ -194,7 +194,7 @@
 -(void)playVoice{
     if ([[Player sharedManager] isPlaying]) {
         NSString *playingUrlStr = [[[Player sharedManager] url] absoluteString];
-        NSString *path = [NSString stringWithFormat:@"%@",_poi.voice];
+        NSString *path = [NSString stringWithFormat:@"%@",[_poi objectForKey:@"voice"]];
         if ([playingUrlStr isEqualToString:path]) {//当前播放的就是该景点的语音 停止播放
             [jieshuoBtn setImage:[UIImage imageNamed:@"ypjs"] forState:UIControlStateNormal];
             [[Player sharedManager] stop];
@@ -211,7 +211,7 @@
         DLog(@"播放");
         [[Player sharedManager] stop];
         [jieshuoBtn setImage:[UIImage imageNamed:@"ztbf"] forState:UIControlStateNormal];
-        NSString *path = [NSString stringWithFormat:@"%@",_poi.voice];
+        NSString *path = [NSString stringWithFormat:@"%@",[_poi objectForKey:@"voice"]];
         DLog(@"%@",path);
         NSURL *url=[NSURL URLWithString:path];
         [[Player sharedManager] setUrl:url];
@@ -246,10 +246,10 @@
 //    }
     else if (buttonIndex == 1){//苹果
         MKMapItem *currentLocation = [MKMapItem mapItemForCurrentLocation];
-        //        CLLocationCoordinate2D coords = CLLocationCoordinate2DMake(39.915352,116.397105);//纬度，经度
-        MKPlacemark *placemark = [[MKPlacemark alloc] initWithCoordinate:_poi.location.coordinate addressDictionary:nil];
+        CLLocationCoordinate2D coords = CLLocationCoordinate2DMake([[_poi objectForKey:@"latitude"] floatValue],[[_poi objectForKey:@"longitude"] floatValue]);//纬度，经度
+        MKPlacemark *placemark = [[MKPlacemark alloc] initWithCoordinate:coords addressDictionary:nil];
         MKMapItem *toLocation = [[MKMapItem alloc] initWithPlacemark:placemark];
-        toLocation.name = [_poi.name stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        toLocation.name = [[_poi objectForKey:@"name"] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         [MKMapItem openMapsWithItems:@[currentLocation, toLocation]
                        launchOptions:@{MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeDriving,MKLaunchOptionsShowsTrafficKey: [NSNumber numberWithBool:YES]}];
     }else{

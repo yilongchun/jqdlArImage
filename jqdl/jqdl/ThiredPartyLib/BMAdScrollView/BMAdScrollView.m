@@ -238,40 +238,43 @@ static  int pageNumber;//页码
 - (void)addImages:(NSArray *)imageArr titles:(NSArray *)titleArr height:(CGFloat)heightValue
 {
     // 添加 Banner
-    for (int i = 0; i <= imageArr.count +1; i++) {
-        
-        NSString *title = @"";
-        NSString *imageURL = @"";
-        
-        if (i != titleArray.count + 1 && i != 0) {
-            title = titleArr[i - 1];
-            imageURL = imageArr[i - 1];
+    if (imageArr.count > 0) {
+        for (int i = 0; i <= imageArr.count +1; i++) {
+            
+            NSString *title = @"";
+            NSString *imageURL = @"";
+            
+            if (i != titleArray.count + 1 && i != 0) {
+                title = titleArr[i - 1];
+                imageURL = imageArr[i - 1];
+            }
+            
+            if (i == 0) {
+                title = titleArr[titleArr.count - 1];
+                imageURL = imageArr[imageArr.count - 1];
+            }else if(i == titleArr.count +1)
+            {
+                title = titleArr[0];
+                imageURL = imageArr[0];
+            }
+            
+            //创建内容对象
+            CGRect bannerFrame = CGRectMake(kWIDTH * i, 0, kWIDTH, heightValue);
+            
+            bannerView = [[BMBannerView alloc]initWithFrame:bannerFrame ImageName:imageURL title:title];
+            bannerView.titleHidden = YES;
+            //制定AOView委托
+            
+            bannerView.delegate = self;
+            
+            //设置视图标示
+            bannerView.tag = i;
+            
+            //添加视图
+            [imageSV addSubview:bannerView];
         }
-        
-        if (i == 0) {
-            title = titleArr[titleArr.count - 1];
-            imageURL = imageArr[imageArr.count - 1];
-        }else if(i == titleArr.count +1)
-        {
-            title = titleArr[0];
-            imageURL = imageArr[0];
-        }
-        
-        //创建内容对象
-        CGRect bannerFrame = CGRectMake(kWIDTH * i, 0, kWIDTH, heightValue);
-        
-        bannerView = [[BMBannerView alloc]initWithFrame:bannerFrame ImageName:imageURL title:title];
-        bannerView.titleHidden = YES;
-        //制定AOView委托
-        
-        bannerView.delegate = self;
-        
-        //设置视图标示
-        bannerView.tag = i;
-        
-        //添加视图
-        [imageSV addSubview:bannerView];
     }
+    
     
     [imageSV setContentOffset:CGPointMake(0, 0)];
     [imageSV scrollRectToVisible:CGRectMake(kWIDTH,0,kWIDTH,self.frame.size.height) animated:NO]; // 默认从序号1位置放第1页 ，序号0位置位置放第4页

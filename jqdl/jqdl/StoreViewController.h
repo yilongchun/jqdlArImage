@@ -11,7 +11,7 @@
 
 @interface StoreViewController : UIViewController
 
-@property (strong,nonatomic) WTPoi *poi;
+@property (strong,nonatomic) NSDictionary *poi;
 @property (weak, nonatomic) IBOutlet UIScrollView *myScrollView;
 
 @end

@@ -14,7 +14,7 @@
 
 @interface MyPointAnnotation : BMKPointAnnotation
 
-@property(strong,nonatomic) WTPoi *poi;
+@property(strong,nonatomic) NSDictionary *poi;
 @property int index;
 @property(retain,nonatomic) NSDictionary *pointCalloutInfo;
 

@@ -15,7 +15,7 @@
 
 - (void)addPoi:(WTPoi *)poiObject;
 
-- (WTPoi *)poiForId:(NSInteger)aPoiId;
+//- (WTPoi *)poiForId:(NSInteger)aPoiId;
 
 - (void)removeAllPois;
 
