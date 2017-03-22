@@ -31,6 +31,8 @@
 #define MYBUNDLE [NSBundle bundleWithPath: MYBUNDLE_PATH]
 
 #define WT_RANDOM(startValue, endValue) ((((float) (arc4random() % ((unsigned)RAND_MAX + 1)) / RAND_MAX) * (endValue - startValue)) + startValue)
+//弹出视图左侧间隔
+#define LEFT_MASK_WIDTH 120
 
 @interface RouteAnnotation : BMKPointAnnotation
 {
@@ -73,11 +75,14 @@
     UIView *spotRightView;//热点右侧界面
     UITableView *spotTableView;//列表
     
+    UIView *drawMaskView;//手绘地图遮罩层
+    UIView *drawRightView;//手绘地图右侧界面
+    
     
     NSMutableArray *tuijianArray;//列表推荐
     NSMutableArray *otherArray;//列表其他
     
-    
+    BMKGroundOverlay* ground;
 }
 
 @end
@@ -126,7 +131,7 @@
     //手绘地图设置
     UIButton *showShouhuiBtn = [[UIButton alloc] initWithFrame:CGRectMake(Main_Screen_Width - 12 - 30, CGRectGetMaxY(listBtn.frame) + 12, 30, 30)];
     [showShouhuiBtn setImage:[UIImage imageNamed:@"showShouhui"] forState:UIControlStateNormal];
-//    [showShouhuiBtn addTarget:self action:@selector(tableStyle) forControlEvents:UIControlEventTouchUpInside];
+    [showShouhuiBtn addTarget:self action:@selector(showDrawMapView) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:showShouhuiBtn];
     
     
@@ -159,17 +164,19 @@
     
     //map 三游洞 30.771156, 111.270301
 //    CLLocationCoordinate2D coors = CLLocationCoordinate2DMake(30.771156, 111.270301);
-//    BMKGroundOverlay* ground = [BMKGroundOverlay groundOverlayWithPosition:coors
+//    ground = [BMKGroundOverlay groundOverlayWithPosition:coors
 //                                                                 zoomLevel:20.9 anchor:CGPointMake(0.0f,0.0f)
 //                                                                      icon:[UIImage imageNamed:@"map"]];
-    //hyz 汉阳造                                               小 - 下       小 - 左
-    CLLocationCoordinate2D coors = CLLocationCoordinate2DMake(30.562840, 114.273150);
-    BMKGroundOverlay* ground = [BMKGroundOverlay groundOverlayWithPosition:coors
-                                                                 zoomLevel:20.9 anchor:CGPointMake(0.0f,0.0f)
-                                                                      icon:[UIImage imageNamed:@"hyz"]];
-//    ground.alpha = 0.5;//透明度
-    [_mapView addOverlay:ground];
+//    //hyz 汉阳造                                               小 - 下       小 - 左
+////    CLLocationCoordinate2D coors = CLLocationCoordinate2DMake(30.562840, 114.273150);
+////    BMKGroundOverlay* ground = [BMKGroundOverlay groundOverlayWithPosition:coors
+////                                                                 zoomLevel:20.9 anchor:CGPointMake(0.0f,0.0f)
+////                                                                      icon:[UIImage imageNamed:@"hyz"]];
+////    ground.alpha = 0.5;//透明度
+//    [_mapView addOverlay:ground];
     [_mapView setZoomLevel:20.9];
+    
+    
     
     
 
@@ -386,6 +393,13 @@
     
     
 //    [_mapView setCenterCoordinate:coors];
+    
+    //小 - 下       小 - 左
+    CLLocationCoordinate2D coors = CLLocationCoordinate2DMake(30.771626, 111.270551);
+    ground = [BMKGroundOverlay groundOverlayWithPosition:coors
+                                               zoomLevel:20.9 anchor:CGPointMake(0.0f,0.0f)
+                                                    icon:[UIImage imageNamed:@"map"]];
+    [_mapView addOverlay:ground];
 }
 
 
@@ -1124,8 +1138,14 @@
 - (void) handlePan: (UISwipeGestureRecognizer *)rec{
     
     if(rec.direction == UISwipeGestureRecognizerDirectionRight){
+        if (rec.view.tag == 1) {
+            [self hideFeatureListView];
+        }
+        if (rec.view.tag == 2) {
+            [self hideDrawMapView];
+        }
         DLog(@"向右");
-        [self hideFeatureListView];
+       
     }else{
         DLog(@"其他方向");
     }
@@ -1136,16 +1156,6 @@
 //热点列表
 -(void)showFeatureListView{
     
-//    FeatureListViewController *vc = [FeatureListViewController new];
-//    NSMutableArray *array = [NSMutableArray array];
-//    for (int i = 0; i < _jingdianArray.count; i++) {
-//        WTPoi *poi = [_jingdianArray objectAtIndex:i];
-//        if ([poi.type isEqualToString:@"scenery_spot"]) {
-//            [array addObject:poi];
-//        }
-//    }
-//    vc.jingdianArray = array;
-    
     // 禁用 iOS7 返回手势
     if ([self.navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
         self.navigationController.interactivePopGestureRecognizer.enabled = NO;
@@ -1155,21 +1165,18 @@
         spotMaskView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, Main_Screen_Width, Main_Screen_Height)];
         spotMaskView.backgroundColor = RGBA(0, 0, 0, 0);
        
-        UIView *leftMaskView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, Main_Screen_Height)];
+        UIView *leftMaskView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, LEFT_MASK_WIDTH, Main_Screen_Height)];
+        leftMaskView.tag = 1;
         UITapGestureRecognizer *tapView = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideFeatureListView)];
         [leftMaskView addGestureRecognizer:tapView];
-        
-        
-        
         
         UISwipeGestureRecognizer *swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
         leftMaskView.userInteractionEnabled = YES;
         [leftMaskView addGestureRecognizer:swipe];
         
-        
         [spotMaskView addSubview:leftMaskView];
         
-        spotRightView = [[UIView alloc] initWithFrame:CGRectMake(Main_Screen_Width, 0, Main_Screen_Width - 100, Main_Screen_Height)];
+        spotRightView = [[UIView alloc] initWithFrame:CGRectMake(Main_Screen_Width, 0, Main_Screen_Width - LEFT_MASK_WIDTH, Main_Screen_Height)];
         spotRightView.backgroundColor = [UIColor whiteColor];
         
         UIImageView *imageview = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"listIcon3"]];
@@ -1184,7 +1191,7 @@
         [spotRightView addSubview:tableTitleLabel];
         
         
-        spotTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, Main_Screen_Width - 100, Main_Screen_Height - 64 - 40) style:UITableViewStylePlain];
+        spotTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, Main_Screen_Width - LEFT_MASK_WIDTH, Main_Screen_Height - 64 - 40) style:UITableViewStylePlain];
         spotTableView.delegate = self;
         spotTableView.dataSource = self;
         spotTableView.backgroundColor = [UIColor whiteColor];
@@ -1208,7 +1215,7 @@
     
     [UIView animateWithDuration:0.3 animations:^{
         CGRect rect = spotRightView.frame;
-        rect.origin.x = 100;
+        rect.origin.x = LEFT_MASK_WIDTH;
         spotRightView.frame = rect;
         spotMaskView.backgroundColor = RGBA(0, 0, 0, 0.7);
     }];
@@ -1235,6 +1242,125 @@
         }];
     }
 }
+
+-(void)showGround{
+//    DLog(@"%@",_mapView.overlays);
+    
+//    CLLocationCoordinate2D coors = CLLocationCoordinate2DMake(30.771156, 111.270301);
+//    ground = [BMKGroundOverlay groundOverlayWithPosition:coors
+//                                               zoomLevel:20.9 anchor:CGPointMake(0.0f,0.0f)
+//                                                    icon:[UIImage imageNamed:@"map"]];
+    //hyz 汉阳造                                               小 - 下       小 - 左
+    //    CLLocationCoordinate2D coors = CLLocationCoordinate2DMake(30.562840, 114.273150);
+    //    BMKGroundOverlay* ground = [BMKGroundOverlay groundOverlayWithPosition:coors
+    //                                                                 zoomLevel:20.9 anchor:CGPointMake(0.0f,0.0f)
+    //                                                                      icon:[UIImage imageNamed:@"hyz"]];
+    //    ground.alpha = 0.5;//透明度
+//    [_mapView addOverlay:ground];
+    
+    
+    if (![_mapView.overlays containsObject:ground]) {
+        [_mapView addOverlay:ground];
+    }
+}
+
+-(void)hideGround{
+    if ([_mapView.overlays containsObject:ground]) {
+        [_mapView removeOverlay:ground];
+    }
+}
+
+//弹出手绘地图设置
+-(void)showDrawMapView{
+    
+    // 禁用 iOS7 返回手势
+    if ([self.navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
+        self.navigationController.interactivePopGestureRecognizer.enabled = NO;
+    }
+    
+    if (drawMaskView == nil) {
+        drawMaskView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, Main_Screen_Width, Main_Screen_Height)];
+        drawMaskView.backgroundColor = RGBA(0, 0, 0, 0);
+        
+        UIView *leftMaskView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, LEFT_MASK_WIDTH, Main_Screen_Height)];
+        leftMaskView.tag = 2;
+        UITapGestureRecognizer *tapView = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideDrawMapView)];
+        [leftMaskView addGestureRecognizer:tapView];
+        
+        UISwipeGestureRecognizer *swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
+        leftMaskView.userInteractionEnabled = YES;
+        [leftMaskView addGestureRecognizer:swipe];
+        
+        [drawMaskView addSubview:leftMaskView];
+        
+        drawRightView = [[UIView alloc] initWithFrame:CGRectMake(Main_Screen_Width, 0, Main_Screen_Width - LEFT_MASK_WIDTH, Main_Screen_Height)];
+        drawRightView.backgroundColor = [UIColor whiteColor];
+        
+        UIButton *showBtn = [[UIButton alloc] initWithFrame:CGRectMake(35, 35, 66, 100)];
+        [showBtn setImage:[UIImage imageNamed:@"showDraw"] forState:UIControlStateNormal];
+//        [showBtn setImage:[UIImage imageWithColor:RGB(67, 216, 230) size:CGSizeMake(10, 10)] forState:UIControlStateHighlighted];
+        [showBtn setTitle:@"手绘地图" forState:UIControlStateNormal];
+        showBtn.titleLabel.font = SYSTEMFONT(14);
+        [showBtn setTitleColor:RGB(67, 216, 230) forState:UIControlStateHighlighted];
+        [showBtn setTitleColor:RGB(68, 68, 68) forState:UIControlStateNormal];
+        [showBtn setTitleEdgeInsets:UIEdgeInsetsMake(0,-86,-74,-19)];
+        [showBtn setImageEdgeInsets:UIEdgeInsetsMake(-34, 0, 0, 0)];
+        [showBtn addTarget:self action:@selector(showGround) forControlEvents:UIControlEventTouchUpInside];
+        
+        
+        UIButton *hideBtn = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetWidth(drawRightView.frame) - 35 - 66, 35, 66, 100)];
+        [hideBtn setImage:[UIImage imageNamed:@"hideDraw"] forState:UIControlStateNormal];
+//        [hideBtn setImage:[UIImage imageWithColor:RGB(67, 216, 230) size:CGSizeMake(67, 67)] forState:UIControlStateHighlighted];
+        [hideBtn setTitle:@"平面地图" forState:UIControlStateNormal];
+        hideBtn.titleLabel.font = SYSTEMFONT(14);
+        [hideBtn setTitleColor:RGB(67, 216, 230) forState:UIControlStateHighlighted];
+        [hideBtn setTitleColor:RGB(68, 68, 68) forState:UIControlStateNormal];
+        [hideBtn setTitleEdgeInsets:UIEdgeInsetsMake(0,-86,-74,-19)];
+        [hideBtn setImageEdgeInsets:UIEdgeInsetsMake(-34, 0, 0, 0)];
+        [hideBtn addTarget:self action:@selector(hideGround) forControlEvents:UIControlEventTouchUpInside];
+        
+        [drawRightView addSubview:showBtn];
+        [drawRightView addSubview:hideBtn];
+        
+        
+        [drawMaskView addSubview:drawRightView];
+        
+        
+    }
+    
+    
+    [self.navigationController.view addSubview:drawMaskView];
+    
+    [UIView animateWithDuration:0.3 animations:^{
+        CGRect rect = drawRightView.frame;
+        rect.origin.x = LEFT_MASK_WIDTH;
+        drawRightView.frame = rect;
+        drawMaskView.backgroundColor = RGBA(0, 0, 0, 0.7);
+    }];
+    
+}
+//隐藏手绘地图设置
+-(void)hideDrawMapView{
+    //    UITapGestureRecognizer *tap = (UITapGestureRecognizer*)sender;
+    if (drawMaskView) {
+        [UIView animateWithDuration:0.3 animations:^{
+            CGRect rect = drawRightView.frame;
+            rect.origin.x = Main_Screen_Width;
+            drawRightView.frame = rect;
+            drawMaskView.backgroundColor = RGBA(0, 0, 0, 0);
+        } completion:^(BOOL finished) {
+            if (finished) {
+                [drawMaskView removeFromSuperview];
+                
+                // 开启
+                if ([self.navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
+                    self.navigationController.interactivePopGestureRecognizer.enabled = YES;
+                }
+            }
+        }];
+    }
+}
+
 
 #pragma mark - UITableViewDataSource
 
