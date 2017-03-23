@@ -394,11 +394,19 @@
     
 //    [_mapView setCenterCoordinate:coors];
     
-    //小 - 下       小 - 左
-    CLLocationCoordinate2D coors = CLLocationCoordinate2DMake(30.771626, 111.270551);
-    ground = [BMKGroundOverlay groundOverlayWithPosition:coors
-                                               zoomLevel:20.9 anchor:CGPointMake(0.0f,0.0f)
-                                                    icon:[UIImage imageNamed:@"map"]];
+    //三游洞 //小 - 下       小 - 左
+//    CLLocationCoordinate2D coors = CLLocationCoordinate2DMake(30.771626, 111.270551);
+//    ground = [BMKGroundOverlay groundOverlayWithPosition:coors
+//                                               zoomLevel:20.9 anchor:CGPointMake(0.0f,0.0f)
+//                                                    icon:[UIImage imageNamed:@"map"]];
+    
+    //hyz 汉阳造                                               小 - 下       小 - 左
+    CLLocationCoordinate2D coors = CLLocationCoordinate2DMake(30.563350, 114.273250);
+    ground = [BMKGroundOverlay groundOverlayWithPosition:coors zoomLevel:20.9 anchor:CGPointMake(0.0f,0.0f)
+                                                                      icon:[UIImage imageNamed:@"hyz"]];
+    
+    
+//    ground.alpha = 0.5;
     [_mapView addOverlay:ground];
 }
 
