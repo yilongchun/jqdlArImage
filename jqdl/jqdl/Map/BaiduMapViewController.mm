@@ -23,8 +23,9 @@
 #import "UILabel+SetLabelSpace.h"
 #import "Player.h"
 //#import "CalloutMapAnnotation.h"
-#import "CallOutAnnotationView.h"
+//#import "CallOutAnnotationView.h"
 #import "UIImage+Color.h"
+
 
 #define MYBUNDLE_NAME @ "mapapi.bundle"
 #define MYBUNDLE_PATH [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: MYBUNDLE_NAME]
@@ -93,7 +94,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
-//    [self checkNetState];
+    [self checkNetState];
 //    [self downloadFile];
     
     self.view.backgroundColor = [UIColor whiteColor];
@@ -394,20 +395,25 @@
     
 //    [_mapView setCenterCoordinate:coors];
     
-    //三游洞 //小 - 下       小 - 左
-//    CLLocationCoordinate2D coors = CLLocationCoordinate2DMake(30.771626, 111.270551);
-//    ground = [BMKGroundOverlay groundOverlayWithPosition:coors
-//                                               zoomLevel:20.9 anchor:CGPointMake(0.0f,0.0f)
-//                                                    icon:[UIImage imageNamed:@"map"]];
+    if ([self.jingquType isEqualToString:@"1"]) {
+        //三游洞 //小 - 下       小 - 左
+        CLLocationCoordinate2D coors = CLLocationCoordinate2DMake(30.771626, 111.270551);
+        ground = [BMKGroundOverlay groundOverlayWithPosition:coors
+                                                   zoomLevel:20.9 anchor:CGPointMake(0.0f,0.0f)
+                                                        icon:[UIImage imageNamed:@"map"]];
+        
+        //    //hyz 汉阳造                                               小 - 下       小 - 左
+        //    //30.563350, 114.273250 30.562840, 114.273150
+        //    CLLocationCoordinate2D coors = CLLocationCoordinate2DMake(30.563350, 114.273250);
+        //    ground = [BMKGroundOverlay groundOverlayWithPosition:coors zoomLevel:20.9 anchor:CGPointMake(0.0f,0.0f)
+        //                                                                      icon:[UIImage imageNamed:@"hyz"]];
+        
+        
+        //    ground.alpha = 0.5;
+        [_mapView addOverlay:ground];
+    }
     
-    //hyz 汉阳造                                               小 - 下       小 - 左
-    CLLocationCoordinate2D coors = CLLocationCoordinate2DMake(30.563350, 114.273250);
-    ground = [BMKGroundOverlay groundOverlayWithPosition:coors zoomLevel:20.9 anchor:CGPointMake(0.0f,0.0f)
-                                                                      icon:[UIImage imageNamed:@"hyz"]];
-    
-    
-//    ground.alpha = 0.5;
-    [_mapView addOverlay:ground];
+
 }
 
 
@@ -874,12 +880,30 @@
         //AFNetworkReachabilityStatusNotReachable     = 0,   未连接
         //AFNetworkReachabilityStatusReachableViaWWAN = 1,   3G
         //AFNetworkReachabilityStatusReachableViaWiFi = 2,   无线连接
-        NSLog(@"%ld", (long)status);
+        
+        if (status == AFNetworkReachabilityStatusUnknown) {
+            NSLog(@"当前网络未知");
+        }else if (status == AFNetworkReachabilityStatusNotReachable){
+            NSLog(@"当前网络未连接");
+        }else if (status == AFNetworkReachabilityStatusReachableViaWWAN){
+            NSLog(@"当前网络3G");
+        }else if (status == AFNetworkReachabilityStatusReachableViaWiFi){
+            NSLog(@"当前网络WiFi");
+        }
     }];
 }
 
 -(void)btnClick:(UIButton *)btn{
-    DLog(@"%ld",btn.tag);
+    if (btn.tag == 1) {//线路
+//        [self onClickWalkSearch];
+    }else if (btn.tag == 2){//语音
+        
+    }else if (btn.tag == 3){//vr
+        
+    }else if (btn.tag == 4){//图片
+        
+    }
+    
 }
 
 //kvo观察者触发的方法
@@ -1265,11 +1289,13 @@
     //                                                                      icon:[UIImage imageNamed:@"hyz"]];
     //    ground.alpha = 0.5;//透明度
 //    [_mapView addOverlay:ground];
-    
-    
-    if (![_mapView.overlays containsObject:ground]) {
-        [_mapView addOverlay:ground];
+    if ([self.jingquType isEqualToString:@"1"]) {
+        if (![_mapView.overlays containsObject:ground]) {
+            [_mapView addOverlay:ground];
+        }
     }
+    
+    
 }
 
 -(void)hideGround{
@@ -1645,6 +1671,23 @@
 
 - (void)mapView:(BMKMapView *)mapView onClickedMapBlank:(CLLocationCoordinate2D)coordinate{
     DLog(@"%f %f",coordinate.latitude,coordinate.longitude);
+    
+    NSArray* array = [NSArray arrayWithArray:_mapView.annotations];
+    //起点 终点 节点
+    [array enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([obj isKindOfClass:[RouteAnnotation class]]) {
+            [_mapView removeAnnotation:obj];
+        }
+    }];
+    
+    //    [_mapView removeAnnotations:array];
+    array = [NSArray arrayWithArray:_mapView.overlays];
+    //线路
+    [array enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([obj isKindOfClass:[BMKPolyline class]]) {
+            [_mapView removeOverlay:obj];
+        }
+    }];
 }
 
 -(void)mapView:(BMKMapView *)mapView didDeselectAnnotationView:(BMKAnnotationView *)view{
@@ -1687,11 +1730,12 @@
         
 ////        DLog(@"%@",annotation.title);
 //        
-//        CLLocationCoordinate2D coors;
-//        coors.latitude = annotation.coordinate.latitude;
-//        coors.longitude = annotation.coordinate.longitude;
-//        end2d = coors;
-//        
+        
+        
+        end2d = CLLocationCoordinate2DMake(annotation.coordinate.latitude, annotation.coordinate.longitude);
+        
+        DLog(@"%@\t%f %f\t%f %f",[annotation.poi objectForKey:@"name"],start2d.latitude,start2d.longitude,end2d.latitude,end2d.longitude);
+//
 ////        DLog(@"%f %f",annotation.coordinate.latitude,annotation.coordinate.longitude);
 //        
 //        UIView *v = [[UIView alloc] initWithFrame:CGRectMake(0, -60, 100, 50)];
@@ -1898,6 +1942,7 @@
     NSArray* array = [NSArray arrayWithArray:_mapView.annotations];
     
     
+    //起点 终点 节点
     [array enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         if ([obj isKindOfClass:[RouteAnnotation class]]) {
             [_mapView removeAnnotation:obj];
@@ -1906,7 +1951,7 @@
     
 //    [_mapView removeAnnotations:array];
     array = [NSArray arrayWithArray:_mapView.overlays];
-    
+    //线路
     [array enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         if ([obj isKindOfClass:[BMKPolyline class]]) {
             [_mapView removeOverlay:obj];

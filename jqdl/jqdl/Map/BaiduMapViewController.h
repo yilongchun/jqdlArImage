@@ -14,5 +14,6 @@
 
 @property(strong,nonatomic) NSArray *jingdianArray;
 @property(strong,nonatomic) NSString *name;
+@property(strong,nonatomic) NSString *jingquType;
 
 @end

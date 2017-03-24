@@ -455,6 +455,7 @@
 		444D77C71E037A180040F0A7 /* UIViewController+JZExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 444D77C01E037A180040F0A7 /* UIViewController+JZExtension.m */; };
 		444D77C91E0389830040F0A7 /* BaiduMapAPI_Base.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 444D77C81E0389830040F0A7 /* BaiduMapAPI_Base.framework */; };
 		444D77D91E038DD90040F0A7 /* BaiduMapAPI_Map.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 444D77D81E038DD90040F0A7 /* BaiduMapAPI_Map.framework */; };
+		444E61BA1E84E887008C494E /* MyView2.m in Sources */ = {isa = PBXBuildFile; fileRef = 444E61B91E84E887008C494E /* MyView2.m */; };
 		445C4A781E1DECF800A5B375 /* TrackerResultViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 445C4A761E1DECF800A5B375 /* TrackerResultViewController.m */; };
 		445C4A791E1DECF800A5B375 /* TrackerResultViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 445C4A771E1DECF800A5B375 /* TrackerResultViewController.xib */; };
 		445C4A7B1E1DF3B800A5B375 /* timg.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 445C4A7A1E1DF3B800A5B375 /* timg.jpeg */; };
@@ -1413,6 +1414,8 @@
 		444D77C01E037A180040F0A7 /* UIViewController+JZExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+JZExtension.m"; sourceTree = "<group>"; };
 		444D77C81E0389830040F0A7 /* BaiduMapAPI_Base.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BaiduMapAPI_Base.framework; path = ThiredPartyLib/BaiduMap/BaiduMapAPI_Base.framework; sourceTree = "<group>"; };
 		444D77D81E038DD90040F0A7 /* BaiduMapAPI_Map.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BaiduMapAPI_Map.framework; path = ThiredPartyLib/BaiduMap/BaiduMapAPI_Map.framework; sourceTree = "<group>"; };
+		444E61B81E84E887008C494E /* MyView2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyView2.h; sourceTree = "<group>"; };
+		444E61B91E84E887008C494E /* MyView2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyView2.m; sourceTree = "<group>"; };
 		445C4A751E1DECF800A5B375 /* TrackerResultViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackerResultViewController.h; sourceTree = "<group>"; };
 		445C4A761E1DECF800A5B375 /* TrackerResultViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrackerResultViewController.m; sourceTree = "<group>"; };
 		445C4A771E1DECF800A5B375 /* TrackerResultViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TrackerResultViewController.xib; sourceTree = "<group>"; };
@@ -3401,6 +3404,8 @@
 				44B290DF1E82272E00D5324D /* CalloutMapAnnotation.m */,
 				44B290E01E82272E00D5324D /* MyPointAnnotation.h */,
 				44B290E11E82272E00D5324D /* MyPointAnnotation.m */,
+				444E61B81E84E887008C494E /* MyView2.h */,
+				444E61B91E84E887008C494E /* MyView2.m */,
 			);
 			path = Map;
 			sourceTree = "<group>";
@@ -3870,6 +3875,7 @@
 				44117A311C11763E0071E1C0 /* ZXCode39Writer.m in Sources */,
 				441179D11C11763E0071E1C0 /* ZXImage.m in Sources */,
 				44003D311BFB270700CB747A /* MainTabBarController.m in Sources */,
+				444E61BA1E84E887008C494E /* MyView2.m in Sources */,
 				441179E91C11763E0071E1C0 /* ZXBinaryBitmap.m in Sources */,
 				440E7FA21E1B6EE400B5277E /* MyView.m in Sources */,
 				440E7F461E1B36D600B5277E /* NSObject+Property.m in Sources */,
