@@ -16,9 +16,10 @@
 #import "LCActionSheet.h"
 
 
-@interface DetailViewController ()<LCActionSheetDelegate>{
+@interface DetailViewController ()<LCActionSheetDelegate,FSPCMAudioStreamDelegate>{
     UIButton *jieshuoBtn;
     NSArray *maps;
+    Player *player;
 }
 
 @end
@@ -29,7 +30,10 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
-
+    if (player == nil) {
+        player = [Player sharedManager];
+        player.delegate = self;
+    }
     
     if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_6_1) {
         //        self.edgesForExtendedLayout = UIRectEdgeNone;
@@ -187,30 +191,30 @@
 
 //语音播放
 -(void)playVoice{
-    if ([[Player sharedManager] isPlaying]) {
-        NSString *playingUrlStr = [[[Player sharedManager] url] absoluteString];
+    if ([player isPlaying]) {
+        NSString *playingUrlStr = [[player url] absoluteString];
         NSString *path = [NSString stringWithFormat:@"%@",[_poi objectForKey:@"voice"]];
         if ([playingUrlStr isEqualToString:path]) {//当前播放的就是该景点的语音 停止播放
             [jieshuoBtn setImage:[UIImage imageNamed:@"ypjs"] forState:UIControlStateNormal];
-            [[Player sharedManager] stop];
+            [player stop];
             DLog(@"停止播放");
         }else{//不是该景点的 重新播放            
-            [[Player sharedManager] stop];
+            [player stop];
             [jieshuoBtn setImage:[UIImage imageNamed:@"ztbf"] forState:UIControlStateNormal];
             NSURL *url=[NSURL URLWithString:path];
-            [[Player sharedManager] setUrl:url];
-            [[Player sharedManager] play];
+            [player setUrl:url];
+            [player play];
             DLog(@"停止播放 重新播放");
         }
     }else{
         DLog(@"播放");
-        [[Player sharedManager] stop];
+        [player stop];
         [jieshuoBtn setImage:[UIImage imageNamed:@"ztbf"] forState:UIControlStateNormal];
         NSString *path = [NSString stringWithFormat:@"%@",[_poi objectForKey:@"voice"]];
         DLog(@"%@",path);
         NSURL *url=[NSURL URLWithString:path];
-        [[Player sharedManager] setUrl:url];
-        [[Player sharedManager] play];
+        [player setUrl:url];
+        [player play];
     }
 }
 
@@ -227,6 +231,16 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - FSPCMAudioStreamDelegate
+
+- (void)audioStream:(FSAudioStream *)audioStream samplesAvailable:(const int16_t *)samples count:(NSUInteger)count{
+    DLog(@"position:%f minutes:%d second:%d minutes:%d second:%d",audioStream.currentTimePlayed.position,audioStream.currentTimePlayed.minute,audioStream.currentTimePlayed.second,audioStream.duration.minute,audioStream.duration.second);
+    
+    
+    
+    
 }
 
 #pragma mark - LCActionSheet Delegate

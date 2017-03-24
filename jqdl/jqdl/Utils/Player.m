@@ -29,5 +29,4 @@ static Player *__helper = nil;
     return __helper;
 }
 
-
 @end
