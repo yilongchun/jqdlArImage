@@ -446,6 +446,7 @@
 		44435E231E4B032C00F9C84A /* UITextView+PlaceHolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 44435E221E4B032C00F9C84A /* UITextView+PlaceHolder.m */; };
 		4444EFA41E456C7200E72B41 /* UserCenterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4444EFA21E456C7200E72B41 /* UserCenterViewController.m */; };
 		4444EFA51E456C7200E72B41 /* UserCenterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4444EFA31E456C7200E72B41 /* UserCenterViewController.xib */; };
+		444C436B1E8A10C7008CF2C6 /* MyMapImgBtn.m in Sources */ = {isa = PBXBuildFile; fileRef = 444C436A1E8A10C7008CF2C6 /* MyMapImgBtn.m */; };
 		444D77C11E037A180040F0A7 /* _JZNavigationInteractiveTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 444D77B41E037A180040F0A7 /* _JZNavigationInteractiveTransition.m */; };
 		444D77C21E037A180040F0A7 /* _JZValue.m in Sources */ = {isa = PBXBuildFile; fileRef = 444D77B61E037A180040F0A7 /* _JZValue.m */; };
 		444D77C31E037A180040F0A7 /* NSNumber+JZExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 444D77B81E037A180040F0A7 /* NSNumber+JZExtension.m */; };
@@ -1396,6 +1397,8 @@
 		4444EFA11E456C7200E72B41 /* UserCenterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserCenterViewController.h; sourceTree = "<group>"; };
 		4444EFA21E456C7200E72B41 /* UserCenterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserCenterViewController.m; sourceTree = "<group>"; };
 		4444EFA31E456C7200E72B41 /* UserCenterViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserCenterViewController.xib; sourceTree = "<group>"; };
+		444C43691E8A10C7008CF2C6 /* MyMapImgBtn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyMapImgBtn.h; sourceTree = "<group>"; };
+		444C436A1E8A10C7008CF2C6 /* MyMapImgBtn.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyMapImgBtn.m; sourceTree = "<group>"; };
 		444D77B01E037A180040F0A7 /* JZNavigationExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JZNavigationExtension.h; sourceTree = "<group>"; };
 		444D77B21E037A180040F0A7 /* _JZ-objc-internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "_JZ-objc-internal.h"; sourceTree = "<group>"; };
 		444D77B31E037A180040F0A7 /* _JZNavigationInteractiveTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _JZNavigationInteractiveTransition.h; sourceTree = "<group>"; };
@@ -3406,6 +3409,8 @@
 				44B290E11E82272E00D5324D /* MyPointAnnotation.m */,
 				444E61B81E84E887008C494E /* MyView2.h */,
 				444E61B91E84E887008C494E /* MyView2.m */,
+				444C43691E8A10C7008CF2C6 /* MyMapImgBtn.h */,
+				444C436A1E8A10C7008CF2C6 /* MyMapImgBtn.m */,
 			);
 			path = Map;
 			sourceTree = "<group>";
@@ -4108,6 +4113,7 @@
 				441179B91C11763E0071E1C0 /* ZXISBNParsedResult.m in Sources */,
 				44117A5C1C11763E0071E1C0 /* ZXPDF417Reader.m in Sources */,
 				441179E81C11763E0071E1C0 /* ZXBinarizer.m in Sources */,
+				444C436B1E8A10C7008CF2C6 /* MyMapImgBtn.m in Sources */,
 				4411797C1C11763E0071E1C0 /* audio_stream.cpp in Sources */,
 				4411799B1C11763E0071E1C0 /* AVCamUtilities.m in Sources */,
 				44621B8E1E1200E700EB3AFC /* AFURLRequestSerialization.m in Sources */,

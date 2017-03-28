@@ -21,10 +21,10 @@ static Player *__helper = nil;
         __helper.onFailure=^(FSAudioStreamError error,NSString *description){
             NSLog(@"播放过程中发生错误，错误信息：%@",description);
         };
-        __helper.onCompletion=^(){
-            NSLog(@"播放完成!");
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"playVoiceEnd" object:nil];
-        };
+//        __helper.onCompletion=^(){
+//            NSLog(@"播放完成!");
+//            [[NSNotificationCenter defaultCenter] postNotificationName:@"playVoiceEnd" object:nil];
+//        };
     });
     return __helper;
 }

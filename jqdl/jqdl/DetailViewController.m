@@ -17,9 +17,14 @@
 
 
 @interface DetailViewController ()<LCActionSheetDelegate,FSPCMAudioStreamDelegate>{
-    UIButton *jieshuoBtn;
+//    UIButton *jieshuoBtn;
     NSArray *maps;
     Player *player;
+//    UIProgressView *progress;
+    UISlider *slider;
+    UILabel *startLabel;
+    UILabel *timeLabel;
+    UIButton *playBtn;
 }
 
 @end
@@ -34,6 +39,12 @@
         player = [Player sharedManager];
         player.delegate = self;
     }
+    
+    player.onCompletion=^(){
+        NSLog(@"播放完成!");
+        [self playVoiceEnd];
+//        [[NSNotificationCenter defaultCenter] postNotificationName:@"playVoiceEnd" object:nil];
+    };
     
     if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_6_1) {
         //        self.edgesForExtendedLayout = UIRectEdgeNone;
@@ -76,26 +87,71 @@
         }
     }
     
-    
     BMAdScrollView *adView = [[BMAdScrollView alloc] initWithFrame:CGRectMake(0, 0, Main_Screen_Width, 250) images:arr titles:strArr];
     [_myScrollView addSubview:adView];
     //标题
     NSString *slogan = [[_poi objectForKey:@"name"] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     UILabel *titleLabel = [UILabel new];
-    CGRect titleRect = CGRectMake(15, 210, Main_Screen_Width - 50, 30);
+    CGRect titleRect = CGRectMake(20, 210 - 17 - 20, Main_Screen_Width - 50, 30);
     [titleLabel setFrame:titleRect];
     titleLabel.backgroundColor =[UIColor clearColor];
     titleLabel.text = slogan;
     titleLabel.font = [UIFont systemFontOfSize:17];
     titleLabel.textColor=[UIColor whiteColor];
     [_myScrollView addSubview:titleLabel];
-    //解说按钮
-    jieshuoBtn = [[UIButton alloc] initWithFrame:CGRectMake(25, CGRectGetMaxY(adView.frame) + 10, 88, 25)];
-    [jieshuoBtn setImage:[UIImage imageNamed:@"ypjs"] forState:UIControlStateNormal];
-    [jieshuoBtn addTarget:self action:@selector(playVoice) forControlEvents:UIControlEventTouchUpInside];
-    [_myScrollView addSubview:jieshuoBtn];
+    
+    
+    UIImageView *jTypeImage = [[UIImageView alloc] initWithFrame:CGRectMake(20, 250 - 19 - 17, 52, 17)];
+    jTypeImage.image = [UIImage imageNamed:@"jType1"];
+    [_myScrollView addSubview:jTypeImage];
+    
+    
+//    //解说按钮
+//    jieshuoBtn = [[UIButton alloc] initWithFrame:CGRectMake(25, CGRectGetMaxY(adView.frame) + 10, 88, 25)];
+//    [jieshuoBtn setImage:[UIImage imageNamed:@"ypjs"] forState:UIControlStateNormal];
+//    [jieshuoBtn addTarget:self action:@selector(playVoice) forControlEvents:UIControlEventTouchUpInside];
+//    [_myScrollView addSubview:jieshuoBtn];
+//    
+//    progress= [[UIProgressView alloc] initWithFrame:CGRectMake(25, CGRectGetMaxY(jieshuoBtn.frame) + 12, Main_Screen_Width - 50, 38)];
+//    [progress setProgressViewStyle:UIProgressViewStyleDefault];
+//    [_myScrollView addSubview:progress];
+    
+    UILabel *playTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(18, CGRectGetMaxY(adView.frame) + 16, 0, 0)];
+    playTitleLabel.font = BOLDSYSTEMFONT(14);
+    playTitleLabel.textColor = RGB(51, 51, 51);
+    playTitleLabel.text = @"语音导览";
+    [playTitleLabel sizeToFit];
+    [_myScrollView addSubview:playTitleLabel];
+    
+    //播放
+    playBtn = [[UIButton alloc] initWithFrame:CGRectMake(18, CGRectGetMaxY(playTitleLabel.frame) + 16, 40, 40)];
+    [playBtn setImage:[UIImage imageNamed:@"playStart"] forState:UIControlStateNormal];
+    [playBtn addTarget:self action:@selector(playVoice) forControlEvents:UIControlEventTouchUpInside];
+    [_myScrollView addSubview:playBtn];
+    
+    UIImageView *sliderBackground = [[UIImageView alloc] initWithFrame:CGRectMake(67, CGRectGetMaxY(playTitleLabel.frame) + 16, Main_Screen_Width - 67 - 18, 40)];
+    sliderBackground.image = [UIImage imageNamed:@"sliderBroudground"];
+    slider = [[UISlider alloc] initWithFrame:CGRectMake(10, 5, CGRectGetWidth(sliderBackground.frame) - 20, CGRectGetHeight(sliderBackground.frame) - 10)];
+//    slider.userInteractionEnabled = NO;
+    slider.minimumTrackTintColor = RGB(244, 173, 0);
+    slider.maximumTrackTintColor = RGB(227, 227, 227);
+    slider.thumbTintColor = RGB(244, 173, 0);
+    [slider setThumbImage:[UIImage imageNamed:@"sliderImage"] forState:UIControlStateNormal];
+    [sliderBackground addSubview:slider];
+    
+    startLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, CGRectGetHeight(sliderBackground.frame) - 15, 34, 15)];
+    startLabel.font = SYSTEMFONT(10);
+    startLabel.textColor = RGB(189, 189, 189);
+    [sliderBackground addSubview:startLabel];
+    
+    timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetWidth(sliderBackground.frame) - 35, CGRectGetHeight(sliderBackground.frame) - 15, 34, 15)];
+    timeLabel.font = SYSTEMFONT(10);
+    timeLabel.textColor = RGB(189, 189, 189);
+    [sliderBackground addSubview:timeLabel];
+    [_myScrollView addSubview:sliderBackground];
+    
     //文本介绍
-    UILabel *contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(25, CGRectGetMaxY(jieshuoBtn.frame) + 12, Main_Screen_Width - 50, 10)];
+    UILabel *contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(25, CGRectGetMaxY(playBtn.frame) + 20, Main_Screen_Width - 50, 10)];
     contentLabel.numberOfLines = 0;
     contentLabel.font = [UIFont systemFontOfSize:14];
     contentLabel.textColor = RGB(135, 135, 135);
@@ -116,11 +172,11 @@
     UILabel *addressLabel = [[UILabel alloc] initWithFrame:CGRectMake(25, CGRectGetMaxY(line.frame) + 16, 0, 0)];
     addressLabel.font = SYSTEMFONT(14);
     addressLabel.textColor = RGB(51, 51, 51);
-    addressLabel.text = @"地址";
+    addressLabel.text = @"位置";
     [addressLabel sizeToFit];
     [_myScrollView addSubview:addressLabel];
     //地址内容
-    UILabel *addressValueLabel = [[UILabel alloc] initWithFrame:CGRectMake(25, CGRectGetMaxY(addressLabel.frame) + 8, 0, 0)];
+    UILabel *addressValueLabel = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(addressLabel.frame) + 10, CGRectGetMinY(addressLabel.frame), 0, 0)];
     addressValueLabel.font = SYSTEMFONT(14);
     addressValueLabel.textColor = RGB(135, 135, 135);
     addressValueLabel.text = [[_poi objectForKey:@"address"] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
@@ -142,16 +198,16 @@
     [_myScrollView setContentSize:CGSizeMake(Main_Screen_Width, CGRectGetMaxY(daohangBtn.frame) + 50)];
     
     //播放完成通知
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playVoiceEnd) name:@"playVoiceEnd" object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playVoiceEnd) name:@"playVoiceEnd" object:nil];
     
     //控制播放按钮
-    if ([[Player sharedManager] isPlaying]) {
-        NSString *playingUrlStr = [[[Player sharedManager] url] absoluteString];
+    if ([player isPlaying]) {
+        NSString *playingUrlStr = [[player url] absoluteString];
         NSString *path = [NSString stringWithFormat:@"%@",[_poi objectForKey:@"voice"]];
         if ([playingUrlStr isEqualToString:path]) {//当前播放的就是该景点的语音 停止播放
-            [jieshuoBtn setImage:[UIImage imageNamed:@"ztbf"] forState:UIControlStateNormal];
+            [playBtn setImage:[UIImage imageNamed:@"ztbf"] forState:UIControlStateNormal];
         }else{//不是该景点的 重新播放
-            [jieshuoBtn setImage:[UIImage imageNamed:@"ypjs"] forState:UIControlStateNormal];
+            [playBtn setImage:[UIImage imageNamed:@"playStart"] forState:UIControlStateNormal];
         }
         
     }
@@ -185,36 +241,52 @@
     [actionSheet show];
 }
 
+//播放完成
 -(void)playVoiceEnd{
-    [jieshuoBtn setImage:[UIImage imageNamed:@"ypjs"] forState:UIControlStateNormal];
+//    [jieshuoBtn setImage:[UIImage imageNamed:@"ypjs"] forState:UIControlStateNormal];
+    
+    [playBtn setImage:[UIImage imageNamed:@"playStart"] forState:UIControlStateNormal];
+    [slider setValue:0.0 animated:YES];
+    startLabel.text = @"";
 }
 
-//语音播放
+//开始播放
 -(void)playVoice{
     if ([player isPlaying]) {
         NSString *playingUrlStr = [[player url] absoluteString];
         NSString *path = [NSString stringWithFormat:@"%@",[_poi objectForKey:@"voice"]];
         if ([playingUrlStr isEqualToString:path]) {//当前播放的就是该景点的语音 停止播放
-            [jieshuoBtn setImage:[UIImage imageNamed:@"ypjs"] forState:UIControlStateNormal];
+            [playBtn setImage:[UIImage imageNamed:@"playStart"] forState:UIControlStateNormal];
             [player stop];
             DLog(@"停止播放");
         }else{//不是该景点的 重新播放            
             [player stop];
-            [jieshuoBtn setImage:[UIImage imageNamed:@"ztbf"] forState:UIControlStateNormal];
+            [playBtn setImage:[UIImage imageNamed:@"ztbf"] forState:UIControlStateNormal];
             NSURL *url=[NSURL URLWithString:path];
             [player setUrl:url];
             [player play];
+            
+//            FSSeekByteOffset offset;
+//            offset.position = 0.5;
+//            [player playFromOffset:offset];
+            
             DLog(@"停止播放 重新播放");
         }
     }else{
         DLog(@"播放");
         [player stop];
-        [jieshuoBtn setImage:[UIImage imageNamed:@"ztbf"] forState:UIControlStateNormal];
+        [playBtn setImage:[UIImage imageNamed:@"ztbf"] forState:UIControlStateNormal];
         NSString *path = [NSString stringWithFormat:@"%@",[_poi objectForKey:@"voice"]];
         DLog(@"%@",path);
         NSURL *url=[NSURL URLWithString:path];
         [player setUrl:url];
         [player play];
+        
+//        FSSeekByteOffset offset;
+//        offset.position = 0.5;
+//        offset.start = 500000;
+//        offset.end = 1144025;
+//        [player playFromOffset:offset];
     }
 }
 
@@ -238,8 +310,11 @@
 - (void)audioStream:(FSAudioStream *)audioStream samplesAvailable:(const int16_t *)samples count:(NSUInteger)count{
     DLog(@"position:%f minutes:%d second:%d minutes:%d second:%d",audioStream.currentTimePlayed.position,audioStream.currentTimePlayed.minute,audioStream.currentTimePlayed.second,audioStream.duration.minute,audioStream.duration.second);
     
-    
-    
+//    [progress setProgress:audioStream.currentTimePlayed.position animated:YES];
+    [slider setValue:audioStream.currentTimePlayed.position animated:YES];
+//    DLog(@"%f %llu %llu",audioStream.currentSeekByteOffset.position,audioStream.currentSeekByteOffset.start,audioStream.currentSeekByteOffset.end);
+    startLabel.text = [NSString stringWithFormat:@"%2d:%2d",audioStream.currentTimePlayed.minute,audioStream.currentTimePlayed.second];
+    timeLabel.text = [NSString stringWithFormat:@"%2d:%2d",audioStream.duration.minute,audioStream.duration.second];
     
 }
 

@@ -25,7 +25,7 @@
 //#import "CalloutMapAnnotation.h"
 //#import "CallOutAnnotationView.h"
 #import "UIImage+Color.h"
-
+#import "MyMapImgBtn.h"
 
 #define MYBUNDLE_NAME @ "mapapi.bundle"
 #define MYBUNDLE_PATH [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: MYBUNDLE_NAME]
@@ -82,6 +82,11 @@
     
     NSMutableArray *tuijianArray;//列表推荐
     NSMutableArray *otherArray;//列表其他
+    
+    UIView *imageMaskView;//图片遮罩层
+    UIScrollView *imageScrollView;//图片滚动条
+    UILabel *imagePageLabel;//图片滚动页码
+    
     
     BMKGroundOverlay* ground;
 }
@@ -901,9 +906,77 @@
     }else if (btn.tag == 3){//vr
         
     }else if (btn.tag == 4){//图片
+        MyMapImgBtn *b = (MyMapImgBtn *)btn;
+        [self showDetailImage:b.poi];
+    }
+}
+
+//快捷查看图片
+-(void)showDetailImage:(NSDictionary *)poi{
+    DLog(@"showDetailImage:%@",poi);
+    //遮罩层
+    if (imageMaskView == nil) {
+        imageMaskView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, Main_Screen_Width, Main_Screen_Height)];
+        imageMaskView.backgroundColor = RGBA(0, 0, 0, 0.7);
         
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideDetailImage)];
+        [imageMaskView addGestureRecognizer:tap];
+    }
+    //图片滚动视图
+    CGFloat width = Main_Screen_Width - 50*2;
+    CGFloat height = width * 2 / 3;
+    if (imageScrollView == nil) {
+        
+        CGRect rect = CGRectMake(50, (Main_Screen_Height - height) / 2, width, height);
+        imageScrollView = [[UIScrollView alloc] initWithFrame:rect];
+        imageScrollView.backgroundColor = [UIColor grayColor];
+        imageScrollView.tag = 2;
+        imageScrollView.delegate = self;
+        imageScrollView.pagingEnabled = YES;
+        imageScrollView.showsHorizontalScrollIndicator = NO;
+        imageScrollView.bounces = NO;
+        ViewBorderRadius(imageScrollView, 3, 2, [UIColor whiteColor]);
     }
     
+    //滚动页码
+    imagePageLabel = [[UILabel alloc] init];
+//    imagePageLabel.backgroundColor = [UIColor redColor];
+    imagePageLabel.textColor = [UIColor whiteColor];
+    imagePageLabel.font = SYSTEMFONT(9);
+    
+    NSString *images = [poi objectForKey:@"images"];
+    if (images != nil && ![images isEqualToString:@""]) {
+        NSArray *imageArr = [images componentsSeparatedByString:@","];
+        for (int i = 0; i < imageArr.count; i++) {
+            NSString *imageUrl = [imageArr objectAtIndex:i];
+            UIImageView *imageview = [[UIImageView alloc] initWithFrame:CGRectMake(i*width, 0, width, height)];
+            [imageview setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:[UIImage new]];
+            [imageScrollView addSubview:imageview];
+        }
+        [imageScrollView setContentSize:CGSizeMake(imageArr.count*width, height)];
+        imagePageLabel.text = [NSString stringWithFormat:@"%d/%lu",1,(unsigned long)imageArr.count];
+    }
+    [imagePageLabel setFrame:CGRectMake(CGRectGetMaxX(imageScrollView.frame) - 27, CGRectGetMaxY(imageScrollView.frame) - 20, 25, 18)];
+    
+    [self.view addSubview:imageMaskView];
+    [self.view addSubview:imageScrollView];
+    [self.view addSubview:imagePageLabel];
+    
+}
+
+-(void)hideDetailImage{
+    if (imageMaskView) {
+        [imageMaskView removeFromSuperview];
+        imageMaskView = nil;
+    }
+    if (imageScrollView) {
+        [imageScrollView removeFromSuperview];
+        imageScrollView = nil;
+    }
+    if (imagePageLabel) {
+        [imagePageLabel removeFromSuperview];
+        imagePageLabel = nil;
+    }
 }
 
 //kvo观察者触发的方法
@@ -1265,7 +1338,7 @@
         } completion:^(BOOL finished) {
             if (finished) {
                 [spotMaskView removeFromSuperview];
-                
+                spotMaskView = nil;
                 // 开启
                 if ([self.navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
                     self.navigationController.interactivePopGestureRecognizer.enabled = YES;
@@ -1371,7 +1444,6 @@
         drawRightView.frame = rect;
         drawMaskView.backgroundColor = RGBA(0, 0, 0, 0.7);
     }];
-    
 }
 //隐藏手绘地图设置
 -(void)hideDrawMapView{
@@ -1385,7 +1457,7 @@
         } completion:^(BOOL finished) {
             if (finished) {
                 [drawMaskView removeFromSuperview];
-                
+                drawMaskView = nil;
                 // 开启
                 if ([self.navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
                     self.navigationController.interactivePopGestureRecognizer.enabled = YES;
@@ -1619,6 +1691,19 @@
             [_mapView selectAnnotation:annotation animated:YES];
             [_mapView setCenterCoordinate:annotation.coordinate animated:YES];
         }
+    }else if (sender.tag == 2){
+        // 得到每页宽度
+        CGFloat pageWidth = sender.frame.size.width;
+        // 根据当前的x坐标和页宽度计算出当前页数
+        int currentPage = floor((sender.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
+        DLog(@"%d",currentPage);
+        
+        NSString *text = imagePageLabel.text;
+        NSRange range = [text rangeOfString:@"/"];
+        
+        NSString *s2 = [text substringFromIndex:range.location];
+        
+        imagePageLabel.text = [NSString stringWithFormat:@"%d%@",currentPage + 1,s2];
     }
     
     
@@ -1829,33 +1914,48 @@
         //点击显示图详情视图 必须MJPointAnnotation对象设置了标题和副标题
 //        view.canShowCallout=NO;
         
-        UIView *paopaoBgView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 44 * 4 + 5 * 3, 44 + 10)];
+        
+        CGFloat maxX;
+        
+        UIView *paopaoBgView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 0, 44 + 10)];
         
         UIButton *lineBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
         lineBtn.tag = 1;
         [lineBtn setImage:[UIImage imageNamed:@"mapLineBtn"] forState:UIControlStateNormal];
         [lineBtn addTarget:self action:@selector(btnClick:) forControlEvents:UIControlEventTouchUpInside];
-
-        UIButton *voiceBtn = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetMaxX(lineBtn.frame) + 5, 0, 44, 44)];
-        voiceBtn.tag = 2;
-        [voiceBtn setImage:[UIImage imageNamed:@"mapVoiceBtn"] forState:UIControlStateNormal];
-        [voiceBtn addTarget:self action:@selector(btnClick:) forControlEvents:UIControlEventTouchUpInside];
-
-        UIButton *vrBtn = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetMaxX(voiceBtn.frame) + 5, 0, 44, 44)];
+        [paopaoBgView addSubview:lineBtn];
+        maxX = CGRectGetMaxX(lineBtn.frame);
+        
+        NSString *voice = [anno.poi objectForKey:@"voice"];
+        if (voice != nil && ![voice isEqualToString:@""]) {
+            UIButton *voiceBtn = [[UIButton alloc] initWithFrame:CGRectMake(maxX + 5, 0, 44, 44)];
+            voiceBtn.tag = 2;
+            [voiceBtn setImage:[UIImage imageNamed:@"mapVoiceBtn"] forState:UIControlStateNormal];
+            [voiceBtn addTarget:self action:@selector(btnClick:) forControlEvents:UIControlEventTouchUpInside];
+            [paopaoBgView addSubview:voiceBtn];
+            maxX = CGRectGetMaxX(voiceBtn.frame);
+        }
+        
+        UIButton *vrBtn = [[UIButton alloc] initWithFrame:CGRectMake(maxX + 5, 0, 44, 44)];
         vrBtn.tag = 3;
         [vrBtn setImage:[UIImage imageNamed:@"mapVrBtn"] forState:UIControlStateNormal];
         [vrBtn addTarget:self action:@selector(btnClick:) forControlEvents:UIControlEventTouchUpInside];
-
-        UIButton *imgBtn = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetMaxX(vrBtn.frame) + 5, 0, 44, 44)];
-        imgBtn.tag = 4;
-        [imgBtn setImage:[UIImage imageNamed:@"mapImgBtn"] forState:UIControlStateNormal];
-        [imgBtn addTarget:self action:@selector(btnClick:) forControlEvents:UIControlEventTouchUpInside];
-
-        [paopaoBgView addSubview:lineBtn];
-        [paopaoBgView addSubview:voiceBtn];
         [paopaoBgView addSubview:vrBtn];
-        [paopaoBgView addSubview:imgBtn];
-
+        maxX = CGRectGetMaxX(vrBtn.frame);
+        
+        NSString *images = [anno.poi objectForKey:@"images"];
+        if (images != nil && ![images isEqualToString:@""]) {
+            MyMapImgBtn *imgBtn = [[MyMapImgBtn alloc] initWithFrame:CGRectMake(maxX + 5, 0, 44, 44)];
+            imgBtn.tag = 4;
+            [imgBtn setImage:[UIImage imageNamed:@"mapImgBtn"] forState:UIControlStateNormal];
+            [imgBtn addTarget:self action:@selector(btnClick:) forControlEvents:UIControlEventTouchUpInside];
+            imgBtn.poi = anno.poi;
+            [paopaoBgView addSubview:imgBtn];
+            maxX = CGRectGetMaxX(imgBtn.frame);
+        }
+        CGRect frame = paopaoBgView.frame;
+        frame.size.width = maxX;
+        paopaoBgView.frame = frame;
         BMKActionPaopaoView *paopaoView = [[BMKActionPaopaoView alloc]initWithCustomView:paopaoBgView];
 
         view.paopaoView = paopaoView;
