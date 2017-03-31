@@ -653,7 +653,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                 if ([[storeDic objectForKey:@"id"] isEqualToString:@"f66c0fc1f74580c525365751a9ce21b6"]) {
                     locationCoordinate = CLLocationCoordinate2DMake(myLocation.coordinate.latitude + WT_RANDOM(-0.001, 0.001), myLocation.coordinate.longitude + WT_RANDOM(-0.01, 0.01));
                 }else{
-                    locationCoordinate = CLLocationCoordinate2DMake(myLocation.coordinate.latitude + 0.2, myLocation.coordinate.longitude + 0.2);
+                    locationCoordinate = CLLocationCoordinate2DMake(myLocation.coordinate.latitude + 0.3, myLocation.coordinate.longitude + 0.3);
                 }
                 
                 //景区中心点

@@ -33,8 +33,8 @@
 #define MYBUNDLE [NSBundle bundleWithPath: MYBUNDLE_PATH]
 
 #define WT_RANDOM(startValue, endValue) ((((float) (arc4random() % ((unsigned)RAND_MAX + 1)) / RAND_MAX) * (endValue - startValue)) + startValue)
-//弹出视图左侧间隔
-#define LEFT_MASK_WIDTH 120
+////弹出视图左侧间隔
+//#define LEFT_MASK_WIDTH 120
 
 @interface RouteAnnotation : BMKPointAnnotation
 {
@@ -422,11 +422,11 @@
                                                    zoomLevel:20.9 anchor:CGPointMake(0.0f,0.0f)
                                                         icon:[UIImage imageNamed:@"map"]];
         
-        //    //hyz 汉阳造                                               小 - 下       小 - 左
-        //    //30.563350, 114.273250 30.562840, 114.273150
-        //    CLLocationCoordinate2D coors = CLLocationCoordinate2DMake(30.563350, 114.273250);
-        //    ground = [BMKGroundOverlay groundOverlayWithPosition:coors zoomLevel:20.9 anchor:CGPointMake(0.0f,0.0f)
-        //                                                                      icon:[UIImage imageNamed:@"hyz"]];
+//        //hyz 汉阳造                                               小 - 下       小 - 左
+//        //30.563350, 114.273250 30.562840, 114.273150
+//        CLLocationCoordinate2D coors = CLLocationCoordinate2DMake(30.563350, 114.273250);
+//        ground = [BMKGroundOverlay groundOverlayWithPosition:coors zoomLevel:20.9 anchor:CGPointMake(0.0f,0.0f)
+//                                                                          icon:[UIImage imageNamed:@"hyz"]];
         
         
         //    ground.alpha = 0.5;
@@ -480,9 +480,14 @@
 
 //显示分类按钮
 -(void)showTypeView{
+    CGRect frame1 = CGRectMake(CGRectGetMinX(typeBtn.frame), CGRectGetMinY(typeBtn.frame) - 10, CGRectGetWidth(typeBtn.frame), 0);
+    CGRect frame2 = CGRectMake(CGRectGetMinX(typeBtn.frame), CGRectGetMinY(typeBtn.frame) - 260, CGRectGetWidth(typeBtn.frame), 250);
     if (typeView == nil) {
-        typeView = [[MyView2 alloc] initWithFrame:CGRectMake(CGRectGetMinX(typeBtn.frame), CGRectGetMinY(typeBtn.frame) - 260, CGRectGetWidth(typeBtn.frame), 250)];
+        
+        
+        typeView = [[MyView2 alloc] initWithFrame:frame1];
         typeView.backgroundColor = [UIColor clearColor];
+        typeView.clipsToBounds = YES;
         
         UIButton *btn0 = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 70, 30)];
         [btn0 setImage:[UIImage imageNamed:@"typeBtn0"] forState:UIControlStateNormal];
@@ -589,9 +594,22 @@
         btn7.layer.mask = maskLayer;
         
         [self.view addSubview:typeView];
+        
+        [UIView animateWithDuration:0.15 animations:^{
+            typeView.frame = frame2;
+        }];
     }else{
-        [typeView removeFromSuperview];
-        typeView = nil;
+        
+        [UIView animateWithDuration:0.15 animations:^{
+            typeView.frame = frame1;
+        } completion:^(BOOL finished) {
+            if (finished) {
+                [typeView removeFromSuperview];
+                typeView = nil;
+            }
+        }];
+        
+        
     }
 }
 
@@ -657,10 +675,13 @@
 //        btn.selected = YES;
 //        oldBtn = btn;
 //    }
+    
+    if (btn.tag == 0) {
+        [typeBtn setImage:[UIImage imageNamed:@"typeBtn0"] forState:UIControlStateNormal];
+    }else{
+        [typeBtn setImage:btn.currentImage forState:UIControlStateNormal];
+    }
    
-    [typeBtn setImage:btn.currentImage forState:UIControlStateNormal];
-    
-    
     [self showTypeView];
     
     
@@ -866,9 +887,9 @@
     }
     x-=10;
     [sv setContentSize:CGSizeMake(x, 108)];
-    if (annotations.count > 0) {
-        [_mapView selectAnnotation:annotations[0] animated:YES];
-    }
+//    if (annotations.count > 0) {
+//        [_mapView selectAnnotation:annotations[0] animated:YES];
+//    }
    
 //    [typeScrollView scrollRectToVisible:btn.frame animated:YES];
     
@@ -1454,7 +1475,7 @@
         spotMaskView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, Main_Screen_Width, Main_Screen_Height)];
         spotMaskView.backgroundColor = RGBA(0, 0, 0, 0);
        
-        UIView *leftMaskView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, LEFT_MASK_WIDTH, Main_Screen_Height)];
+        UIView *leftMaskView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, Main_Screen_Width - 240, Main_Screen_Height)];
         leftMaskView.tag = 1;
         UITapGestureRecognizer *tapView = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideFeatureListView)];
         [leftMaskView addGestureRecognizer:tapView];
@@ -1465,8 +1486,13 @@
         
         [spotMaskView addSubview:leftMaskView];
         
-        spotRightView = [[UIView alloc] initWithFrame:CGRectMake(Main_Screen_Width, 0, Main_Screen_Width - LEFT_MASK_WIDTH, Main_Screen_Height)];
+        spotRightView = [[UIView alloc] initWithFrame:CGRectMake(Main_Screen_Width, 0, 240, Main_Screen_Height)];
         spotRightView.backgroundColor = [UIColor whiteColor];
+        spotRightView.tag = 1;
+        
+        UISwipeGestureRecognizer *swipe2 = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
+        spotRightView.userInteractionEnabled = YES;
+        [spotRightView addGestureRecognizer:swipe2];
         
         UIImageView *imageview = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"listIcon3"]];
         [imageview setFrame:CGRectMake(14, 34, imageview.frame.size.width, imageview.frame.size.height)];
@@ -1480,7 +1506,7 @@
         [spotRightView addSubview:tableTitleLabel];
         
         
-        spotTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, Main_Screen_Width - LEFT_MASK_WIDTH, Main_Screen_Height - 64 - 40) style:UITableViewStylePlain];
+        spotTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, CGRectGetWidth(spotRightView.frame), Main_Screen_Height - 64 - 40) style:UITableViewStylePlain];
         spotTableView.delegate = self;
         spotTableView.dataSource = self;
         spotTableView.backgroundColor = [UIColor whiteColor];
@@ -1504,9 +1530,9 @@
     
     [UIView animateWithDuration:0.3 animations:^{
         CGRect rect = spotRightView.frame;
-        rect.origin.x = LEFT_MASK_WIDTH;
+        rect.origin.x = Main_Screen_Width - 240;
         spotRightView.frame = rect;
-        spotMaskView.backgroundColor = RGBA(0, 0, 0, 0.7);
+        spotMaskView.backgroundColor = RGBA(0, 0, 0, 0.8);
     }];
     
 }
@@ -1585,7 +1611,7 @@
         drawMaskView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, Main_Screen_Width, Main_Screen_Height)];
         drawMaskView.backgroundColor = RGBA(0, 0, 0, 0);
         
-        UIView *leftMaskView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, LEFT_MASK_WIDTH, Main_Screen_Height)];
+        UIView *leftMaskView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, Main_Screen_Width - 240, Main_Screen_Height)];
         leftMaskView.tag = 2;
         UITapGestureRecognizer *tapView = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideDrawMapView)];
         [leftMaskView addGestureRecognizer:tapView];
@@ -1596,8 +1622,13 @@
         
         [drawMaskView addSubview:leftMaskView];
         
-        drawRightView = [[UIView alloc] initWithFrame:CGRectMake(Main_Screen_Width, 0, Main_Screen_Width - LEFT_MASK_WIDTH, Main_Screen_Height)];
+        drawRightView = [[UIView alloc] initWithFrame:CGRectMake(Main_Screen_Width, 0, 240, Main_Screen_Height)];
         drawRightView.backgroundColor = [UIColor whiteColor];
+        drawRightView.tag = 2;
+        
+        UISwipeGestureRecognizer *swipe2 = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
+        drawRightView.userInteractionEnabled = YES;
+        [drawRightView addGestureRecognizer:swipe2];
         
         UIButton *showBtn = [[UIButton alloc] initWithFrame:CGRectMake(35, 35, 66, 100)];
         [showBtn setImage:[UIImage imageNamed:@"showDraw"] forState:UIControlStateNormal];
@@ -1643,9 +1674,9 @@
     
     [UIView animateWithDuration:0.3 animations:^{
         CGRect rect = drawRightView.frame;
-        rect.origin.x = LEFT_MASK_WIDTH;
+        rect.origin.x = Main_Screen_Width - drawRightView.frame.size.width;
         drawRightView.frame = rect;
-        drawMaskView.backgroundColor = RGBA(0, 0, 0, 0.7);
+        drawMaskView.backgroundColor = RGBA(0, 0, 0, 0.8);
     }];
 }
 //隐藏手绘地图设置
