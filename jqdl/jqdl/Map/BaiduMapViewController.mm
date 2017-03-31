@@ -26,6 +26,7 @@
 //#import "CallOutAnnotationView.h"
 #import "UIImage+Color.h"
 #import "MyMapImgBtn.h"
+#import "MyView2.h"
 
 #define MYBUNDLE_NAME @ "mapapi.bundle"
 #define MYBUNDLE_PATH [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: MYBUNDLE_NAME]
@@ -64,9 +65,12 @@
     
     NSMutableArray *annotations;
     UIScrollView *sv;
-    UIScrollView *typeScrollView;
-    UIButton *oldBtn;
+//    UIScrollView *typeScrollView;
+//    UIButton *oldBtn;
     UIButton *oldPlayBtn;
+    
+    MyView2 *typeView;//筛选分类
+    UIButton *typeBtn;//分类按钮
     
     NSURLSessionDownloadTask *_downloadTask;
     
@@ -87,8 +91,13 @@
     UIScrollView *imageScrollView;//图片滚动条
     UILabel *imagePageLabel;//图片滚动页码
     
+    BOOL showJd;
+    MyView *jdCardView;
+    UIButton *locationBtn;
     
     BMKGroundOverlay* ground;
+    BOOL showGroud;
+    UIButton *oldGroudBtn;
 }
 
 @end
@@ -152,7 +161,7 @@
     [_locService startUserLocationService];
     
     //定位按钮
-    UIButton *locationBtn = [[UIButton alloc] initWithFrame:CGRectMake(14, _mapView.frame.size.height - 108 - 15 - 15 - 44, 44, 44)];
+    locationBtn = [[UIButton alloc] initWithFrame:CGRectMake(14, _mapView.frame.size.height - 108 - 15 - 15 - 44, 44, 44)];
     [locationBtn setImage:[UIImage imageNamed:@"location"] forState:UIControlStateNormal];
     [locationBtn addTarget:self action:@selector(location) forControlEvents:UIControlEventTouchUpInside];
     [_mapView addSubview:locationBtn];
@@ -186,39 +195,43 @@
     
     
 
-    //添加景点分类选择
-    CGFloat typeWidth = 76;
-    CGFloat typeHeight = 38;
-    CGFloat typeSpace = 12;
-    typeScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(CGRectGetMaxX(locationBtn.frame), CGRectGetMinY(locationBtn.frame)+64+3, Main_Screen_Width - CGRectGetMaxX(locationBtn.frame) - typeSpace, typeHeight)];
-//    typeScrollView.backgroundColor = [UIColor grayColor];
-    typeScrollView.showsHorizontalScrollIndicator = NO;
-    [typeScrollView setContentSize:CGSizeMake(8 * (typeWidth + typeSpace), typeHeight)];
-    typeScrollView.tag = 2;
+//    //添加景点分类选择
+//    CGFloat typeWidth = 76;
+//    CGFloat typeHeight = 38;
+//    CGFloat typeSpace = 12;
+//    typeScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(CGRectGetMaxX(locationBtn.frame), CGRectGetMinY(locationBtn.frame)+64+3, Main_Screen_Width - CGRectGetMaxX(locationBtn.frame) - typeSpace, typeHeight)];
+////    typeScrollView.backgroundColor = [UIColor grayColor];
+//    typeScrollView.showsHorizontalScrollIndicator = NO;
+//    [typeScrollView setContentSize:CGSizeMake(8 * (typeWidth + typeSpace), typeHeight)];
+//    typeScrollView.tag = 2;
+//    
+//    CGFloat typeX = 12;
+//    for (int i = 0 ; i < 8; i++) {
+//        UIButton *type1Btn = [[UIButton alloc] initWithFrame:CGRectMake(typeX, 0, typeWidth, typeHeight)];
+//        
+//        NSString *name = [NSString stringWithFormat:@"type%d",i+1];
+//        NSString *nameH = [NSString stringWithFormat:@"type%dH",i+1];
+//        type1Btn.tag = i;
+//        [type1Btn setImage:[UIImage imageNamed:name] forState:UIControlStateNormal];
+//        [type1Btn setImage:[UIImage imageNamed:nameH] forState:UIControlStateSelected];
+////        [type1Btn setImage:[UIImage imageNamed:@"type1H"] forState:UIControlStateHighlighted];
+//        [type1Btn addTarget:self action:@selector(typeClick:) forControlEvents:UIControlEventTouchUpInside];
+//        [typeScrollView addSubview:type1Btn];
+//        typeX += typeWidth + typeSpace;
+//        if (i == 0) {
+//            type1Btn.selected = YES;
+//            oldBtn = type1Btn;
+//        }
+//    }
+//    [self.view addSubview:typeScrollView];
     
-    CGFloat typeX = 12;
-    for (int i = 0 ; i < 8; i++) {
-        UIButton *type1Btn = [[UIButton alloc] initWithFrame:CGRectMake(typeX, 0, typeWidth, typeHeight)];
-        
-        NSString *name = [NSString stringWithFormat:@"type%d",i+1];
-        NSString *nameH = [NSString stringWithFormat:@"type%dH",i+1];
-        type1Btn.tag = i;
-        [type1Btn setImage:[UIImage imageNamed:name] forState:UIControlStateNormal];
-        [type1Btn setImage:[UIImage imageNamed:nameH] forState:UIControlStateSelected];
-//        [type1Btn setImage:[UIImage imageNamed:@"type1H"] forState:UIControlStateHighlighted];
-        [type1Btn addTarget:self action:@selector(typeClick:) forControlEvents:UIControlEventTouchUpInside];
-        [typeScrollView addSubview:type1Btn];
-        typeX += typeWidth + typeSpace;
-        if (i == 0) {
-            type1Btn.selected = YES;
-            oldBtn = type1Btn;
-        }
-    }
-    [self.view addSubview:typeScrollView];
-    
-    
-    
-    
+    //添加筛选分类
+    typeBtn = [[UIButton alloc] initWithFrame:CGRectMake(Main_Screen_Width - 16 - 70, Main_Screen_Height - 15 - 108 - 15 - 30, 70, 30)];
+    [typeBtn setImage:[UIImage imageNamed:@"typeBtn0"] forState:UIControlStateNormal];
+    [typeBtn setBackgroundImage:[UIImage imageWithColor:[UIColor whiteColor] size:CGSizeMake(70, 30)] forState:UIControlStateNormal];
+    ViewBorderRadius(typeBtn, 4, 0, [UIColor whiteColor]);
+    [typeBtn addTarget:self action:@selector(showTypeView) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:typeBtn];
     
     //添加景点标注
     annotations = [NSMutableArray array];
@@ -268,7 +281,7 @@
     }
     
     //添加底部景点卡片
-    MyView *view = [[MyView alloc] initWithFrame:CGRectMake(0, Main_Screen_Height - 15 - 108, Main_Screen_Width, 108)];
+    jdCardView = [[MyView alloc] initWithFrame:CGRectMake(0, Main_Screen_Height - 15 - 108, Main_Screen_Width, 108)];
     sv = [[UIScrollView alloc] initWithFrame:CGRectMake(10, 0, Main_Screen_Width - 30, 108)];
     sv.tag = 1;
     sv.delegate = self;
@@ -347,13 +360,15 @@
     }
     x-=10;
     [sv setContentSize:CGSizeMake(x, 108)];
-    [view addSubview:sv];
+    [jdCardView addSubview:sv];
     
-    [self.view addSubview:view];
+    [self.view addSubview:jdCardView];
     
-    if (annotations.count > 0) {
-        [_mapView selectAnnotation:annotations[0] animated:YES];
-    }
+//    if (annotations.count > 0) {
+//        [_mapView selectAnnotation:annotations[0] animated:YES];
+//    }
+    
+    [self setJdScrollViewShowHidden];
     
     //播放完成通知
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playVoiceEnd) name:@"playVoiceEnd" object:nil];
@@ -416,6 +431,7 @@
         
         //    ground.alpha = 0.5;
         [_mapView addOverlay:ground];
+        showGroud = YES;
     }
     
 
@@ -462,23 +478,193 @@
     _mapView.zoomLevel = _mapView.zoomLevel - 0.3;
 }
 
+//显示分类按钮
+-(void)showTypeView{
+    if (typeView == nil) {
+        typeView = [[MyView2 alloc] initWithFrame:CGRectMake(CGRectGetMinX(typeBtn.frame), CGRectGetMinY(typeBtn.frame) - 260, CGRectGetWidth(typeBtn.frame), 250)];
+        typeView.backgroundColor = [UIColor clearColor];
+        
+        UIButton *btn0 = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 70, 30)];
+        [btn0 setImage:[UIImage imageNamed:@"typeBtn0"] forState:UIControlStateNormal];
+        [btn0 setBackgroundImage:[UIImage imageWithColor:[UIColor whiteColor] size:CGSizeMake(70, 30)] forState:UIControlStateNormal];
+        //        ViewBorderRadius(typeBtn, 4, 0, [UIColor whiteColor]);
+        btn0.tag = 0;
+        [btn0 addTarget:self action:@selector(typeClick:) forControlEvents:UIControlEventTouchUpInside];
+        [typeView addSubview:btn0];
+        
+        UIRectCorner corners = UIRectCornerTopLeft | UIRectCornerTopRight;
+        UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:btn0.bounds
+                                                       byRoundingCorners:corners
+                                                             cornerRadii:CGSizeMake(4, 4)];
+        CAShapeLayer *maskLayer = [CAShapeLayer layer];
+        maskLayer.frame = btn0.bounds;
+        maskLayer.path = maskPath.CGPath;
+        btn0.layer.mask = maskLayer;
+        
+        UILabel *line = [[UILabel alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(btn0.frame), CGRectGetWidth(typeBtn.frame), 0.5)];
+        line.backgroundColor = RGB(240, 240, 240);
+        [typeView addSubview:line];
+        
+        UIButton *btn1 = [[UIButton alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(line.frame), 70, 30)];
+        [btn1 setImage:[UIImage imageNamed:@"typeBtn1"] forState:UIControlStateNormal];
+        [btn1 setBackgroundImage:[UIImage imageWithColor:[UIColor whiteColor] size:CGSizeMake(70, 30)] forState:UIControlStateNormal];
+//        ViewBorderRadius(typeBtn, 4, 0, [UIColor whiteColor]);
+        btn1.tag = 1;
+        [btn1 addTarget:self action:@selector(typeClick:) forControlEvents:UIControlEventTouchUpInside];
+        [typeView addSubview:btn1];
+        
+        line = [[UILabel alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(btn1.frame), CGRectGetWidth(typeBtn.frame), 0.5)];
+        line.backgroundColor = RGB(240, 240, 240);
+        [typeView addSubview:line];
+        
+        UIButton *btn2 = [[UIButton alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(line.frame), 70, 30)];
+        [btn2 setImage:[UIImage imageNamed:@"typeBtn3"] forState:UIControlStateNormal];
+        [btn2 setBackgroundImage:[UIImage imageWithColor:[UIColor whiteColor] size:CGSizeMake(70, 30)] forState:UIControlStateNormal];
+        btn2.tag = 2;
+        [btn2 addTarget:self action:@selector(typeClick:) forControlEvents:UIControlEventTouchUpInside];
+        [typeView addSubview:btn2];
+        
+        line = [[UILabel alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(btn2.frame), CGRectGetWidth(typeBtn.frame), 0.5)];
+        line.backgroundColor = RGB(240, 240, 240);
+        [typeView addSubview:line];
+        
+        UIButton *btn3 = [[UIButton alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(line.frame), 70, 30)];
+        [btn3 setImage:[UIImage imageNamed:@"typeBtn2"] forState:UIControlStateNormal];
+        [btn3 setBackgroundImage:[UIImage imageWithColor:[UIColor whiteColor] size:CGSizeMake(70, 30)] forState:UIControlStateNormal];
+        btn3.tag = 3;
+        [btn3 addTarget:self action:@selector(typeClick:) forControlEvents:UIControlEventTouchUpInside];
+        [typeView addSubview:btn3];
+        
+        line = [[UILabel alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(btn3.frame), CGRectGetWidth(typeBtn.frame), 0.5)];
+        line.backgroundColor = RGB(240, 240, 240);
+        [typeView addSubview:line];
+        
+        UIButton *btn4 = [[UIButton alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(line.frame), 70, 30)];
+        [btn4 setImage:[UIImage imageNamed:@"typeBtn4"] forState:UIControlStateNormal];
+        [btn4 setBackgroundImage:[UIImage imageWithColor:[UIColor whiteColor] size:CGSizeMake(70, 30)] forState:UIControlStateNormal];
+        btn4.tag = 4;
+        [btn4 addTarget:self action:@selector(typeClick:) forControlEvents:UIControlEventTouchUpInside];
+        [typeView addSubview:btn4];
+        
+        line = [[UILabel alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(btn4.frame), CGRectGetWidth(typeBtn.frame), 0.5)];
+        line.backgroundColor = RGB(240, 240, 240);
+        [typeView addSubview:line];
+        
+        UIButton *btn5 = [[UIButton alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(line.frame), 70, 30)];
+        [btn5 setImage:[UIImage imageNamed:@"typeBtn5"] forState:UIControlStateNormal];
+        [btn5 setBackgroundImage:[UIImage imageWithColor:[UIColor whiteColor] size:CGSizeMake(70, 30)] forState:UIControlStateNormal];
+        btn5.tag = 5;
+        [btn5 addTarget:self action:@selector(typeClick:) forControlEvents:UIControlEventTouchUpInside];
+        [typeView addSubview:btn5];
+        
+        line = [[UILabel alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(btn5.frame), CGRectGetWidth(typeBtn.frame), 0.5)];
+        line.backgroundColor = RGB(240, 240, 240);
+        [typeView addSubview:line];
+        
+        UIButton *btn6 = [[UIButton alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(line.frame), 70, 30)];
+        [btn6 setImage:[UIImage imageNamed:@"typeBtn6"] forState:UIControlStateNormal];
+        [btn6 setBackgroundImage:[UIImage imageWithColor:[UIColor whiteColor] size:CGSizeMake(70, 30)] forState:UIControlStateNormal];
+        btn6.tag = 6;
+        [btn6 addTarget:self action:@selector(typeClick:) forControlEvents:UIControlEventTouchUpInside];
+        [typeView addSubview:btn6];
+        
+        line = [[UILabel alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(btn6.frame), CGRectGetWidth(typeBtn.frame), 0.5)];
+        line.backgroundColor = RGB(240, 240, 240);
+        [typeView addSubview:line];
+        
+        UIButton *btn7 = [[UIButton alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(line.frame), 70, 30)];
+        [btn7 setImage:[UIImage imageNamed:@"typeBtn7"] forState:UIControlStateNormal];
+        [btn7 setBackgroundImage:[UIImage imageWithColor:[UIColor whiteColor] size:CGSizeMake(70, 30)] forState:UIControlStateNormal];
+        btn7.tag = 7;
+        [btn7 addTarget:self action:@selector(typeClick:) forControlEvents:UIControlEventTouchUpInside];
+        [typeView addSubview:btn7];
+        
+        corners = UIRectCornerBottomLeft | UIRectCornerBottomRight;
+        maskPath = [UIBezierPath bezierPathWithRoundedRect:btn7.bounds
+                                                       byRoundingCorners:corners
+                                                             cornerRadii:CGSizeMake(4, 4)];
+        maskLayer = [CAShapeLayer layer];
+        maskLayer.frame = btn7.bounds;
+        maskLayer.path = maskPath.CGPath;
+        btn7.layer.mask = maskLayer;
+        
+        [self.view addSubview:typeView];
+    }else{
+        [typeView removeFromSuperview];
+        typeView = nil;
+    }
+}
+
+-(void)setJdScrollViewShowHidden{
+    if (showJd) {
+        CGRect rect = jdCardView.frame;
+        rect.origin.y = Main_Screen_Height - 15 - 108;
+        
+        CGRect locationRect = locationBtn.frame;
+        locationRect.origin.y = _mapView.frame.size.height - 108 - 15 - 15 - 44;
+        
+        CGRect typeBtnRect = typeBtn.frame;
+        typeBtnRect.origin.y = Main_Screen_Height - 15 - 108 - 15 - 30;
+        
+//        CGRect typeViewRect;
+//        if (typeView) {
+//            typeViewRect = typeView.frame;
+//            typeBtnRect.origin.y = typeBtnRect.origin.y - 260;
+//        }
+        
+        [UIView animateWithDuration:0.15 animations:^{
+            jdCardView.frame = rect;
+            locationBtn.frame = locationRect;
+            typeBtn.frame = typeBtnRect;
+//            if (typeView) {
+//                typeView.frame = typeViewRect;
+//            }
+            
+        }];
+    }else{
+        CGRect rect = jdCardView.frame;
+        rect.origin.y = Main_Screen_Height + 15;
+        
+        CGRect locationRect = locationBtn.frame;
+        locationRect.origin.y = _mapView.frame.size.height - 15 - 44;
+        
+        CGRect typeBtnRect = typeBtn.frame;
+        typeBtnRect.origin.y = Main_Screen_Height - 15 - 30;
+        
+//        CGRect typeViewRect;
+//        if (typeView) {
+//            typeViewRect = typeView.frame;
+//            typeBtnRect.origin.y = typeBtnRect.origin.y - 260;
+//        }
+        
+        [UIView animateWithDuration:0.15 animations:^{
+            jdCardView.frame = rect;
+            locationBtn.frame = locationRect;
+            typeBtn.frame = typeBtnRect;
+            
+//            if (typeView) {
+//                typeView.frame = typeViewRect;
+//            }
+        }];
+    }
+}
 
 //景点分类按钮点击
 -(void)typeClick:(UIButton *)btn{
     
-    oldBtn.selected = NO;
-    if (!btn.selected) {
-        btn.selected = YES;
-        oldBtn = btn;
-    }
+//    oldBtn.selected = NO;
+//    if (!btn.selected) {
+//        btn.selected = YES;
+//        oldBtn = btn;
+//    }
+   
+    [typeBtn setImage:btn.currentImage forState:UIControlStateNormal];
     
     
+    [self showTypeView];
     
     
 //    [sv scrollRectToVisible:btn.frame animated:YES];
-    
-    
-    
     
     [_mapView removeAnnotations:annotations];
     
@@ -491,68 +677,66 @@
         NSDictionary *poi = [_jingdianArray objectAtIndex:i];
         NSString *type = [poi objectForKey:@"type"];
         
-        if (btn.selected) {
+        if (btn.tag == 0) {//全部
             
-            if (btn.tag == 0) {//全部
-                
-            }else if (btn.tag == 1){//景点
-                if(![type isEqualToString:@"scenery_spot"]){
-                    continue;
-                }
-            }else if (btn.tag == 2){//游乐
-                if(![type isEqualToString:@"recreational_facility"]){
-                    continue;
-                }
-            }else if (btn.tag == 3){//美食
-                if(![type isEqualToString:@"food"]){
-                    continue;
-                }
-            }else if (btn.tag == 4){//商铺
-                if(![type isEqualToString:@"shop"]){
-                    continue;
-                }
-            }else if (btn.tag == 5){//公厕
-                if(![type isEqualToString:@"toilet"]){
-                    continue;
-                }
-            }else if (btn.tag == 6){//出入口
-                if(![type isEqualToString:@"entrance"]){
-                    continue;
-                }
-            }else if (btn.tag == 7){//服务点
-                if(![type isEqualToString:@"service_point"]){
-                    continue;
-                }
+        }else if (btn.tag == 1){//景点
+            if(![type isEqualToString:@"scenery_spot"]){
+                continue;
             }
-            
-            //添加PointAnnotation
-            MyPointAnnotation* annotation = [[MyPointAnnotation alloc]init];
-            CLLocationCoordinate2D coor = CLLocationCoordinate2DMake([[poi objectForKey:@"latitude"] floatValue], [[poi objectForKey:@"longitude"] floatValue]);
-            DLog(@"GPS > 百度坐标 转换前 %f %f",coor.longitude,coor.latitude);
-            NSDictionary* testdic = BMKConvertBaiduCoorFrom(coor,BMK_COORDTYPE_GPS);
-            CLLocationCoordinate2D locationCoordinate = BMKCoorDictionaryDecode(testdic);
-            DLog(@"GPS > 百度坐标 转换后 %f %f",locationCoordinate.longitude,locationCoordinate.latitude);
-            
-            
-//            CLLocationCoordinate2D coor = poi.location.coordinate;
-            annotation.coordinate = locationCoordinate;
-            annotation.title = [poi objectForKey:@"name"];
-            annotation.poi = poi;
-            annotation.index = index;
-            [_mapView addAnnotation:annotation];
-            [annotations addObject:annotation];
-            
-            
-            //数据筛选分类
-            if([[poi objectForKey:@"type"] isEqualToString:@"scenery_spot"]){//景点
-                [tuijianArray addObject:poi];
-            }else{
-                [otherArray addObject:poi];
+        }else if (btn.tag == 2){//游乐
+            if(![type isEqualToString:@"recreational_facility"]){
+                continue;
             }
-            
-            
-            index++;
+        }else if (btn.tag == 3){//美食
+            if(![type isEqualToString:@"food"]){
+                continue;
+            }
+        }else if (btn.tag == 4){//商铺
+            if(![type isEqualToString:@"shop"]){
+                continue;
+            }
+        }else if (btn.tag == 5){//公厕
+            if(![type isEqualToString:@"toilet"]){
+                continue;
+            }
+        }else if (btn.tag == 6){//出入口
+            if(![type isEqualToString:@"entrance"]){
+                continue;
+            }
+        }else if (btn.tag == 7){//服务点
+            if(![type isEqualToString:@"service_point"]){
+                continue;
+            }
         }
+        
+        //添加PointAnnotation
+        MyPointAnnotation* annotation = [[MyPointAnnotation alloc]init];
+        CLLocationCoordinate2D coor = CLLocationCoordinate2DMake([[poi objectForKey:@"latitude"] floatValue], [[poi objectForKey:@"longitude"] floatValue]);
+        DLog(@"GPS > 百度坐标 转换前 %f %f",coor.longitude,coor.latitude);
+        NSDictionary* testdic = BMKConvertBaiduCoorFrom(coor,BMK_COORDTYPE_GPS);
+        CLLocationCoordinate2D locationCoordinate = BMKCoorDictionaryDecode(testdic);
+        DLog(@"GPS > 百度坐标 转换后 %f %f",locationCoordinate.longitude,locationCoordinate.latitude);
+        
+        
+//            CLLocationCoordinate2D coor = poi.location.coordinate;
+        annotation.coordinate = locationCoordinate;
+        annotation.title = [poi objectForKey:@"name"];
+        annotation.poi = poi;
+        annotation.index = index;
+        [_mapView addAnnotation:annotation];
+        [annotations addObject:annotation];
+        
+        
+        //数据筛选分类
+        if([[poi objectForKey:@"type"] isEqualToString:@"scenery_spot"]){//景点
+            [tuijianArray addObject:poi];
+        }else{
+            [otherArray addObject:poi];
+        }
+        
+        
+        index++;
+        
     }
     
     if (spotTableView) {
@@ -573,113 +757,110 @@
     for (int i = 0; i < _jingdianArray.count; i++) {
         NSDictionary *poi = [_jingdianArray objectAtIndex:i];
         NSString *type = [poi objectForKey:@"type"];
-        
-        if (btn.selected) {
             
+        if (btn.tag == 0) {//全部
             
-            if (btn.tag == 0) {//全部
-                
-            }else if (btn.tag == 1){//景点
-                if(![type isEqualToString:@"scenery_spot"]){
-                    continue;
-                }
-            }else if (btn.tag == 2){//游乐
-                if(![type isEqualToString:@"recreational_facility"]){
-                    continue;
-                }
-            }else if (btn.tag == 3){//美食
-                if(![type isEqualToString:@"food"]){
-                    continue;
-                }
-            }else if (btn.tag == 4){//商铺
-                if(![type isEqualToString:@"shop"]){
-                    continue;
-                }
-            }else if (btn.tag == 5){//公厕
-                if(![type isEqualToString:@"toilet"]){
-                    continue;
-                }
-            }else if (btn.tag == 6){//出入口
-                if(![type isEqualToString:@"entrance"]){
-                    continue;
-                }
-            }else if (btn.tag == 7){//服务点
-                if(![type isEqualToString:@"service_point"]){
-                    continue;
-                }
+        }else if (btn.tag == 1){//景点
+            if(![type isEqualToString:@"scenery_spot"]){
+                continue;
             }
-            
-            UIView *v = [[UIView alloc] initWithFrame:CGRectMake(x, 0, Main_Screen_Width - 40, 108)];
-            
-            
-            v.backgroundColor = [UIColor whiteColor];
-            ViewBorderRadius(v, 5, 1, RGBA(0, 0, 0, 0.15));
-            //图片
-            UIImageView *imageview = [[UIImageView alloc] initWithFrame:CGRectMake(12, 12, 108 - 12 * 2, 108 - 12 * 2)];
-            imageview.tag = seq;
-            
-            NSString *description = [poi objectForKey:@"description"];
-            if (![description isEqualToString:@""]) {
-                imageview.userInteractionEnabled = YES;
-                UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toDetail:)];
-                [imageview addGestureRecognizer:tap];
+        }else if (btn.tag == 2){//游乐
+            if(![type isEqualToString:@"recreational_facility"]){
+                continue;
             }
-            
-            
-            
-            //        imageview.backgroundColor = [UIColor lightGrayColor];
-            
-            [imageview setImageWithURL:[NSURL URLWithString:[poi objectForKey:@"image"]] placeholderImage:[UIImage imageNamed:@"flat"]];
-            
-            ViewBorderRadius(imageview, 2, 0, [UIColor whiteColor]);
-            [v addSubview:imageview];
-            //文字
-            UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(imageview.frame) + 12, 12, 0, 0)];
-            label.font = BOLDSYSTEMFONT(14);
-            label.textColor = RGB(102, 102, 102);
-            label.text = [NSString stringWithFormat:@"%d.%@",seq+1,[poi objectForKey:@"name"]];
-            [label sizeToFit];
-            [v addSubview:label];
-            //描述
-            UILabel *desLabel = [[UILabel alloc] initWithFrame:CGRectMake(label.frame.origin.x, CGRectGetMaxY(label.frame), CGRectGetWidth(v.frame) - label.frame.origin.x - 10, 108 - CGRectGetMaxY(label.frame) - 31)];
-            desLabel.font = SYSTEMFONT(12);
-            desLabel.textColor = RGB(151, 151, 151);
-            desLabel.numberOfLines = 0;
-            desLabel.text = [poi objectForKey:@"description"];
-            //        desLabel.backgroundColor = [UIColor grayColor];
-            [UILabel setLabelSpace:desLabel withValue:[poi objectForKey:@"description"] withFont:desLabel.font];
-            [v addSubview:desLabel];
-            
-            
-            
-            //        BMKMapPoint point1 = BMKMapPointForCoordinate(poi.location.coordinate);
-            //
-            //        BMKMapPoint point2 = BMKMapPointForCoordinate(CLLocationCoordinate2DMake(, ));
-            //
-            //        CLLocationDistance distance = BMKMetersBetweenMapPoints(point1,point2);
-            
-            NSString *voice = [poi objectForKey:@"voice"];
-            if (![voice isEqualToString:@""]) {
-                UIButton *playBtn = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetWidth(v.frame) - 56, CGRectGetHeight(v.frame) - 28, 46, 18)];
-                playBtn.tag = seq;
-                playBtn.titleLabel.font = SYSTEMFONT(10);
-                [playBtn addTarget:self action:@selector(playVoice:) forControlEvents:UIControlEventTouchUpInside];
-                //        [playBtn setTitle:@"播放" forState:UIControlStateNormal];
-                //        [playBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-                
-                [playBtn setImage:[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
-                
-                //        playBtn.backgroundColor = RGB(255, 192, 20);
-                [v addSubview:playBtn];
+        }else if (btn.tag == 3){//美食
+            if(![type isEqualToString:@"food"]){
+                continue;
             }
-            
-            
-            
-            
-            [sv addSubview:v];
-            x += CGRectGetWidth(v.frame) + 10;
-            seq++;
+        }else if (btn.tag == 4){//商铺
+            if(![type isEqualToString:@"shop"]){
+                continue;
+            }
+        }else if (btn.tag == 5){//公厕
+            if(![type isEqualToString:@"toilet"]){
+                continue;
+            }
+        }else if (btn.tag == 6){//出入口
+            if(![type isEqualToString:@"entrance"]){
+                continue;
+            }
+        }else if (btn.tag == 7){//服务点
+            if(![type isEqualToString:@"service_point"]){
+                continue;
+            }
         }
+        
+        UIView *v = [[UIView alloc] initWithFrame:CGRectMake(x, 0, Main_Screen_Width - 40, 108)];
+        
+        
+        v.backgroundColor = [UIColor whiteColor];
+        ViewBorderRadius(v, 5, 1, RGBA(0, 0, 0, 0.15));
+        //图片
+        UIImageView *imageview = [[UIImageView alloc] initWithFrame:CGRectMake(12, 12, 108 - 12 * 2, 108 - 12 * 2)];
+        imageview.tag = seq;
+        
+        NSString *description = [poi objectForKey:@"description"];
+        if (![description isEqualToString:@""]) {
+            imageview.userInteractionEnabled = YES;
+            UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toDetail:)];
+            [imageview addGestureRecognizer:tap];
+        }
+        
+        
+        
+        //        imageview.backgroundColor = [UIColor lightGrayColor];
+        
+        [imageview setImageWithURL:[NSURL URLWithString:[poi objectForKey:@"image"]] placeholderImage:[UIImage imageNamed:@"flat"]];
+        
+        ViewBorderRadius(imageview, 2, 0, [UIColor whiteColor]);
+        [v addSubview:imageview];
+        //文字
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(imageview.frame) + 12, 12, 0, 0)];
+        label.font = BOLDSYSTEMFONT(14);
+        label.textColor = RGB(102, 102, 102);
+        label.text = [NSString stringWithFormat:@"%d.%@",seq+1,[poi objectForKey:@"name"]];
+        [label sizeToFit];
+        [v addSubview:label];
+        //描述
+        UILabel *desLabel = [[UILabel alloc] initWithFrame:CGRectMake(label.frame.origin.x, CGRectGetMaxY(label.frame), CGRectGetWidth(v.frame) - label.frame.origin.x - 10, 108 - CGRectGetMaxY(label.frame) - 31)];
+        desLabel.font = SYSTEMFONT(12);
+        desLabel.textColor = RGB(151, 151, 151);
+        desLabel.numberOfLines = 0;
+        desLabel.text = [poi objectForKey:@"description"];
+        //        desLabel.backgroundColor = [UIColor grayColor];
+        [UILabel setLabelSpace:desLabel withValue:[poi objectForKey:@"description"] withFont:desLabel.font];
+        [v addSubview:desLabel];
+        
+        
+        
+        //        BMKMapPoint point1 = BMKMapPointForCoordinate(poi.location.coordinate);
+        //
+        //        BMKMapPoint point2 = BMKMapPointForCoordinate(CLLocationCoordinate2DMake(, ));
+        //
+        //        CLLocationDistance distance = BMKMetersBetweenMapPoints(point1,point2);
+        
+        NSString *voice = [poi objectForKey:@"voice"];
+        if (![voice isEqualToString:@""]) {
+            UIButton *playBtn = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetWidth(v.frame) - 56, CGRectGetHeight(v.frame) - 28, 46, 18)];
+            playBtn.tag = seq;
+            playBtn.titleLabel.font = SYSTEMFONT(10);
+            [playBtn addTarget:self action:@selector(playVoice:) forControlEvents:UIControlEventTouchUpInside];
+            //        [playBtn setTitle:@"播放" forState:UIControlStateNormal];
+            //        [playBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            
+            [playBtn setImage:[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
+            
+            //        playBtn.backgroundColor = RGB(255, 192, 20);
+            [v addSubview:playBtn];
+        }
+        
+        
+        
+        
+        [sv addSubview:v];
+        x += CGRectGetWidth(v.frame) + 10;
+        seq++;
+        
         
         
     }
@@ -691,18 +872,13 @@
    
 //    [typeScrollView scrollRectToVisible:btn.frame animated:YES];
     
-    if (btn.frame.origin.x >= 100) {
-        [typeScrollView setContentOffset:CGPointMake(btn.frame.origin.x - 100, 0) animated:YES];
-    }
-    
-    
-    
-    
-    
+//    if (btn.frame.origin.x >= 100) {
+//        [typeScrollView setContentOffset:CGPointMake(btn.frame.origin.x - 100, 0) animated:YES];
+//    }
 }
-
+//添加放大缩小按钮
 -(void)setZoomBtn{
-    UIView *zoomView = [[UIView alloc] initWithFrame:CGRectMake(Main_Screen_Width - 28 - 15, CGRectGetHeight(_mapView.frame)/2 - 28, 28, 57)];
+    UIView *zoomView = [[UIView alloc] initWithFrame:CGRectMake(Main_Screen_Width - 28 - 15, CGRectGetHeight(_mapView.frame)/2 - 28 - 32, 28, 57)];
     zoomView.backgroundColor = [UIColor whiteColor];
     ViewBorderRadius(zoomView, 3, 0, [UIColor whiteColor]);
     
@@ -951,6 +1127,10 @@
             NSString *imageUrl = [imageArr objectAtIndex:i];
             UIImageView *imageview = [[UIImageView alloc] initWithFrame:CGRectMake(i*width, 0, width, height)];
             [imageview setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:[UIImage new]];
+            imageview.tag = i;
+            imageview.userInteractionEnabled = YES;
+            UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showAllImage:)];
+            [imageview addGestureRecognizer:tap];
             [imageScrollView addSubview:imageview];
         }
         [imageScrollView setContentSize:CGSizeMake(imageArr.count*width, height)];
@@ -963,7 +1143,7 @@
     [self.view addSubview:imagePageLabel];
     
 }
-
+//隐藏图片
 -(void)hideDetailImage{
     if (imageMaskView) {
         [imageMaskView removeFromSuperview];
@@ -977,6 +1157,10 @@
         [imagePageLabel removeFromSuperview];
         imagePageLabel = nil;
     }
+}
+
+-(void)showAllImage:(UIGestureRecognizer *)recog{
+    
 }
 
 //kvo观察者触发的方法
@@ -1348,7 +1532,7 @@
     }
 }
 
--(void)showGround{
+-(void)showGround:(UIButton *)btn{
 //    DLog(@"%@",_mapView.overlays);
     
 //    CLLocationCoordinate2D coors = CLLocationCoordinate2DMake(30.771156, 111.270301);
@@ -1365,15 +1549,27 @@
     if ([self.jingquType isEqualToString:@"1"]) {
         if (![_mapView.overlays containsObject:ground]) {
             [_mapView addOverlay:ground];
+            showGroud = YES;
+            if (oldGroudBtn && oldGroudBtn != btn) {
+                oldGroudBtn.selected = NO;
+            }
+            oldGroudBtn = btn;
+            btn.selected = YES;
         }
     }
     
     
 }
 
--(void)hideGround{
+-(void)hideGround:(UIButton *)btn{
     if ([_mapView.overlays containsObject:ground]) {
         [_mapView removeOverlay:ground];
+        showGroud = NO;
+        if (oldGroudBtn && oldGroudBtn != btn) {
+            oldGroudBtn.selected = NO;
+        }
+        oldGroudBtn = btn;
+        btn.selected = YES;
     }
 }
 
@@ -1405,30 +1601,37 @@
         
         UIButton *showBtn = [[UIButton alloc] initWithFrame:CGRectMake(35, 35, 66, 100)];
         [showBtn setImage:[UIImage imageNamed:@"showDraw"] forState:UIControlStateNormal];
-//        [showBtn setImage:[UIImage imageWithColor:RGB(67, 216, 230) size:CGSizeMake(10, 10)] forState:UIControlStateHighlighted];
+        [showBtn setImage:[UIImage imageNamed:@"showDrawSelected"] forState:UIControlStateSelected];
         [showBtn setTitle:@"手绘地图" forState:UIControlStateNormal];
         showBtn.titleLabel.font = SYSTEMFONT(14);
-        [showBtn setTitleColor:RGB(67, 216, 230) forState:UIControlStateHighlighted];
+        [showBtn setTitleColor:RGB(67, 216, 230) forState:UIControlStateSelected];
         [showBtn setTitleColor:RGB(68, 68, 68) forState:UIControlStateNormal];
         [showBtn setTitleEdgeInsets:UIEdgeInsetsMake(0,-86,-74,-19)];
         [showBtn setImageEdgeInsets:UIEdgeInsetsMake(-34, 0, 0, 0)];
-        [showBtn addTarget:self action:@selector(showGround) forControlEvents:UIControlEventTouchUpInside];
+        [showBtn addTarget:self action:@selector(showGround:) forControlEvents:UIControlEventTouchUpInside];
         
         
         UIButton *hideBtn = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetWidth(drawRightView.frame) - 35 - 66, 35, 66, 100)];
         [hideBtn setImage:[UIImage imageNamed:@"hideDraw"] forState:UIControlStateNormal];
-//        [hideBtn setImage:[UIImage imageWithColor:RGB(67, 216, 230) size:CGSizeMake(67, 67)] forState:UIControlStateHighlighted];
+        [hideBtn setImage:[UIImage imageNamed:@"hideDrawSelected"] forState:UIControlStateSelected];
         [hideBtn setTitle:@"平面地图" forState:UIControlStateNormal];
         hideBtn.titleLabel.font = SYSTEMFONT(14);
-        [hideBtn setTitleColor:RGB(67, 216, 230) forState:UIControlStateHighlighted];
+        [hideBtn setTitleColor:RGB(67, 216, 230) forState:UIControlStateSelected];
         [hideBtn setTitleColor:RGB(68, 68, 68) forState:UIControlStateNormal];
         [hideBtn setTitleEdgeInsets:UIEdgeInsetsMake(0,-86,-74,-19)];
         [hideBtn setImageEdgeInsets:UIEdgeInsetsMake(-34, 0, 0, 0)];
-        [hideBtn addTarget:self action:@selector(hideGround) forControlEvents:UIControlEventTouchUpInside];
+        [hideBtn addTarget:self action:@selector(hideGround:) forControlEvents:UIControlEventTouchUpInside];
         
         [drawRightView addSubview:showBtn];
         [drawRightView addSubview:hideBtn];
         
+        if (showGroud) {
+            showBtn.selected = YES;
+            oldGroudBtn = showBtn;
+        }else{
+            hideBtn.selected = YES;
+            oldGroudBtn = hideBtn;
+        }
         
         [drawMaskView addSubview:drawRightView];
         
@@ -1757,6 +1960,12 @@
 - (void)mapView:(BMKMapView *)mapView onClickedMapBlank:(CLLocationCoordinate2D)coordinate{
     DLog(@"%f %f",coordinate.latitude,coordinate.longitude);
     
+    showJd = NO;
+    [self setJdScrollViewShowHidden];
+    if (typeView) {
+        [self showTypeView];
+    }
+    
     NSArray* array = [NSArray arrayWithArray:_mapView.annotations];
     //起点 终点 节点
     [array enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -1786,6 +1995,10 @@
 
 - (void)mapView:(BMKMapView *)mapView didSelectAnnotationView:(BMKAnnotationView *)view{
     if ([view.annotation isKindOfClass:[MyPointAnnotation class]]) {
+        
+        
+        showJd = YES;
+        [self setJdScrollViewShowHidden];
 //        DLog(@"%@",view);
 //        DLog(@"%@",view.annotation);
         MyPointAnnotation *annotation = (MyPointAnnotation *)view.annotation;
@@ -1915,16 +2128,16 @@
 //        view.canShowCallout=NO;
         
         
-        CGFloat maxX;
+        CGFloat maxX = 0;
         
         UIView *paopaoBgView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 0, 44 + 10)];
         
-        UIButton *lineBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
-        lineBtn.tag = 1;
-        [lineBtn setImage:[UIImage imageNamed:@"mapLineBtn"] forState:UIControlStateNormal];
-        [lineBtn addTarget:self action:@selector(btnClick:) forControlEvents:UIControlEventTouchUpInside];
-        [paopaoBgView addSubview:lineBtn];
-        maxX = CGRectGetMaxX(lineBtn.frame);
+//        UIButton *lineBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
+//        lineBtn.tag = 1;
+//        [lineBtn setImage:[UIImage imageNamed:@"mapLineBtn"] forState:UIControlStateNormal];
+//        [lineBtn addTarget:self action:@selector(btnClick:) forControlEvents:UIControlEventTouchUpInside];
+//        [paopaoBgView addSubview:lineBtn];
+//        maxX = CGRectGetMaxX(lineBtn.frame);
         
         NSString *voice = [anno.poi objectForKey:@"voice"];
         if (voice != nil && ![voice isEqualToString:@""]) {

@@ -7,7 +7,7 @@
 //
 
 #import "MyView2.h"
-#define Arror_height 6
+#define Arror_height 10
 
 @implementation MyView2
 
@@ -15,7 +15,7 @@
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGContextSetLineWidth(context, 2.0);//设置线宽
     CGContextSetFillColorWithColor(context, [UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0 alpha:1.0].CGColor);//设置颜色
-    [self getDrawPath2:context];
+    [self getDrawPath:context];
     CGContextFillPath(context);//填充
     //阴影
     self.layer.shadowColor = [[UIColor blackColor] CGColor];
@@ -26,7 +26,7 @@
 //底部中间尖头
 - (void)getDrawPath:(CGContextRef)context{
     CGRect rrect = self.bounds;
-    CGFloat radius = 6.0;
+    CGFloat radius = 4.0;
     CGFloat minx = CGRectGetMinX(rrect),//0
     midx = CGRectGetMidX(rrect),//50
     maxx = CGRectGetMaxX(rrect);//100
