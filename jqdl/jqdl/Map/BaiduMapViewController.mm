@@ -71,6 +71,7 @@
     
     MyView2 *typeView;//筛选分类
     UIButton *typeBtn;//分类按钮
+    NSInteger typeIndex;//分类
     
     NSURLSessionDownloadTask *_downloadTask;
     
@@ -232,6 +233,7 @@
     ViewBorderRadius(typeBtn, 4, 0, [UIColor whiteColor]);
     [typeBtn addTarget:self action:@selector(showTypeView) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:typeBtn];
+    typeIndex = 0;
     
     //添加景点标注
     annotations = [NSMutableArray array];
@@ -676,13 +678,18 @@
 //        oldBtn = btn;
 //    }
     
-    if (btn.tag == 0) {
+    if (btn.tag == 0 || btn.tag == -1) {
+        typeIndex = 0;
         [typeBtn setImage:[UIImage imageNamed:@"typeBtn0"] forState:UIControlStateNormal];
     }else{
+        typeIndex = btn.tag;
         [typeBtn setImage:btn.currentImage forState:UIControlStateNormal];
     }
-   
-    [self showTypeView];
+    
+    if (btn.tag != -1) {
+        [self showTypeView];
+    }
+    
     
     
 //    [sv scrollRectToVisible:btn.frame animated:YES];
@@ -1506,7 +1513,20 @@
         [spotRightView addSubview:tableTitleLabel];
         
         
-        spotTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, CGRectGetWidth(spotRightView.frame), Main_Screen_Height - 64 - 40) style:UITableViewStylePlain];
+        if (typeIndex == 0) {
+            spotTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, CGRectGetWidth(spotRightView.frame), Main_Screen_Height - 64) style:UITableViewStylePlain];
+        }else{
+            spotTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, CGRectGetWidth(spotRightView.frame), Main_Screen_Height - 64 - 40) style:UITableViewStylePlain];
+            
+            UIButton *clearTypeBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(spotTableView.frame), CGRectGetWidth(spotTableView.frame), 40)];
+            [clearTypeBtn setTitle:@"重置筛选" forState:UIControlStateNormal];
+            [clearTypeBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            [clearTypeBtn setBackgroundImage:[UIImage imageWithColor:RGB(66, 216, 230) size:CGSizeMake(10, 10)] forState:UIControlStateNormal];
+            clearTypeBtn.titleLabel.font = SYSTEMFONT(15);
+            clearTypeBtn.tag = -1;
+            [clearTypeBtn addTarget:self action:@selector(typeClick:) forControlEvents:UIControlEventTouchUpInside];
+            [spotRightView addSubview:clearTypeBtn];
+        }
         spotTableView.delegate = self;
         spotTableView.dataSource = self;
         spotTableView.backgroundColor = [UIColor whiteColor];
@@ -1515,14 +1535,6 @@
         
         [spotMaskView addSubview:spotRightView];
         
-        UIButton *clearTypeBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(spotTableView.frame), CGRectGetWidth(spotTableView.frame), 40)];
-        [clearTypeBtn setTitle:@"重置筛选" forState:UIControlStateNormal];
-        [clearTypeBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [clearTypeBtn setBackgroundImage:[UIImage imageWithColor:RGB(66, 216, 230) size:CGSizeMake(10, 10)] forState:UIControlStateNormal];
-        clearTypeBtn.titleLabel.font = SYSTEMFONT(15);
-        clearTypeBtn.tag = 0;
-        [clearTypeBtn addTarget:self action:@selector(typeClick:) forControlEvents:UIControlEventTouchUpInside];
-        [spotRightView addSubview:clearTypeBtn];
     }
     
     
@@ -1709,7 +1721,12 @@
 //}
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 2;
+    if (typeIndex == 0) {
+        return 2;
+    }else{
+        return 1;
+    }
+    
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -1875,29 +1892,57 @@
 }
 
 - (nullable UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
-    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, Main_Screen_Width - 100, 24)];
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 240, 24)];
     view.backgroundColor = RGB(242, 242, 242);
     
-    if (section == 0) {
-        UIImageView *imageview = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"star"]];
-        [imageview setFrame:CGRectMake(15, 7, imageview.frame.size.width, imageview.frame.size.height)];
-        [view addSubview:imageview];
+    if (typeIndex == 0) {
+        if (section == 0) {
+            UIImageView *imageview = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"star"]];
+            [imageview setFrame:CGRectMake(15, 7, imageview.frame.size.width, imageview.frame.size.height)];
+            [view addSubview:imageview];
+            
+            UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(imageview.frame) + 6, 0, 100, 24)];
+            label.text = @"推荐";
+            label.textColor = RGB(135, 135, 135);
+            label.font = SYSTEMFONT(12);
+            [view addSubview:label];
+        }
+        if (section == 1) {
+            UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(15, 0, 100, 24)];
+            label.text = @"其他";
+            label.textColor = RGB(135, 135, 135);
+            label.font = SYSTEMFONT(12);
+            [view addSubview:label];
+        }
+    }else{
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(15, 0, 50, 24)];
+        label.text = @"筛选结果";
+        label.textColor = RGB(135, 135, 135);
+        label.font = SYSTEMFONT(12);
+        [view addSubview:label];
         
-        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(imageview.frame) + 6, 0, 100, 24)];
-        label.text = @"推荐";
-        label.textColor = RGB(135, 135, 135);
-        label.font = SYSTEMFONT(12);
-        [view addSubview:label];
+        UILabel *label2 = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(label.frame), 0, CGRectGetWidth(view.frame) - CGRectGetMaxX(label.frame) - 15, 24)];
+        if (typeIndex == 1){//景点
+            label2.text = @"景点";
+        }else if (typeIndex == 2){//游乐
+            label2.text = @"游乐";
+        }else if (typeIndex == 3){//美食
+            label2.text = @"美食";
+        }else if (typeIndex == 4){//商铺
+            label2.text = @"商铺";
+        }else if (typeIndex == 5){//公厕
+            label2.text = @"公厕";
+        }else if (typeIndex == 6){//出入口
+            label2.text = @"出入口";
+        }else if (typeIndex == 7){//服务点
+            label2.text = @"服务点";
+        }
+        label2.textColor = RGB(160, 160, 160);
+        label2.font = SYSTEMFONT(12);
+        label2.textAlignment = NSTextAlignmentRight;
+//        label2.backgroundColor = [UIColor lightGrayColor];
+        [view addSubview:label2];
     }
-    if (section == 1) {
-        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(15, 0, 100, 24)];
-        label.text = @"其他";
-        label.textColor = RGB(135, 135, 135);
-        label.font = SYSTEMFONT(12);
-        [view addSubview:label];
-    }
-    
-    
     return view;
 }
 
