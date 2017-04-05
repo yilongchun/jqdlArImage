@@ -27,6 +27,7 @@
 #import "UIImage+Color.h"
 #import "MyMapImgBtn.h"
 #import "MyView2.h"
+#import "WebViewController.h"
 
 #define MYBUNDLE_NAME @ "mapapi.bundle"
 #define MYBUNDLE_PATH [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: MYBUNDLE_NAME]
@@ -339,22 +340,37 @@
 //        
 //        CLLocationDistance distance = BMKMetersBetweenMapPoints(point1,point2);
         
-        NSString *voice = [poi objectForKey:@"voice"];
-        if (![voice isEqualToString:@""]) {
-            UIButton *playBtn = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetWidth(v.frame) - 56, CGRectGetHeight(v.frame) - 28, 46, 18)];
-            playBtn.tag = i;
-            playBtn.titleLabel.font = SYSTEMFONT(10);
-            [playBtn addTarget:self action:@selector(playVoice:) forControlEvents:UIControlEventTouchUpInside];
-            //        [playBtn setTitle:@"播放" forState:UIControlStateNormal];
-            //        [playBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-            
-            [playBtn setImage:[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
-            
-            //        playBtn.backgroundColor = RGB(255, 192, 20);
-            [v addSubview:playBtn];
-        }
+//        NSString *voice = [poi objectForKey:@"voice"];
+//        if (![voice isEqualToString:@""]) {
+//            UIButton *playBtn = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetWidth(v.frame) - 56, CGRectGetHeight(v.frame) - 28, 46, 18)];
+//            playBtn.tag = i;
+//            playBtn.titleLabel.font = SYSTEMFONT(10);
+//            [playBtn addTarget:self action:@selector(playVoice:) forControlEvents:UIControlEventTouchUpInside];
+//            //        [playBtn setTitle:@"播放" forState:UIControlStateNormal];
+//            //        [playBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+//            
+//            [playBtn setImage:[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
+//            
+//            //        playBtn.backgroundColor = RGB(255, 192, 20);
+//            [v addSubview:playBtn];
+//        }
         
-        
+//        CLLocationCoordinate2D coo = CLLocationCoordinate2DMake([[poi objectForKey:@"latitude"] floatValue], [[poi objectForKey:@"longitude"] floatValue]);
+//        NSDictionary* testdic = BMKConvertBaiduCoorFrom(coo,BMK_COORDTYPE_GPS);
+//        CLLocationCoordinate2D coor = BMKCoorDictionaryDecode(testdic);
+//        
+//        BMKMapPoint point1 = BMKMapPointForCoordinate(coor);
+//        BMKMapPoint point2 = BMKMapPointForCoordinate(start2d);
+//        CLLocationDistance distance = BMKMetersBetweenMapPoints(point1,point2);
+//        
+//        if (distance > 999) {
+//            NSString *dis = [NSString stringWithFormat:@"%.2fkm",distance/1000];
+//            DLog(@"%@ %@",[poi objectForKey:@"name"],dis);
+//           
+//        }else{
+//            NSString *dis = [NSString stringWithFormat:@"%.fm",distance];
+//            DLog(@"%@ %@",[poi objectForKey:@"name"],dis);
+//        }
         
         
         [sv addSubview:v];
@@ -1108,7 +1124,13 @@
     }else if (btn.tag == 2){//语音
         
     }else if (btn.tag == 3){//vr
+        UIBarButtonItem *backItem=[[UIBarButtonItem alloc] init];
+        UIImage *backImage = [UIImage imageNamed:@"navi_back2"];
+        [backItem setBackButtonBackgroundImage:[backImage resizableImageWithCapInsets:UIEdgeInsetsMake(0, backImage.size.width, 0, 0)] forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];//更改背景图片
+        self.navigationItem.backBarButtonItem = backItem;
         
+        WebViewController *vc = [[WebViewController alloc] init];
+        [self.navigationController pushViewController:vc animated:YES];
     }else if (btn.tag == 4){//图片
         MyMapImgBtn *b = (MyMapImgBtn *)btn;
         [self showDetailImage:b.poi];
@@ -2002,7 +2024,7 @@
 //处理位置坐标更新
 - (void)didUpdateBMKUserLocation:(BMKUserLocation *)userLocation
 {
-    NSLog(@"didUpdateUserLocation lat %f,long %f",userLocation.location.coordinate.latitude,userLocation.location.coordinate.longitude);
+//    NSLog(@"didUpdateUserLocation lat %f,long %f",userLocation.location.coordinate.latitude,userLocation.location.coordinate.longitude);
     
     [_mapView updateLocationData:userLocation];
     start2d = userLocation.location.coordinate;

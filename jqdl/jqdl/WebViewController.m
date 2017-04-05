@@ -18,7 +18,12 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
-    self.title = @"全景导览";
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
+    titleLabel.font = BOLDSYSTEMFONT(17);
+    titleLabel.textColor = [UIColor blackColor];
+    titleLabel.textAlignment = NSTextAlignmentCenter;
+    titleLabel.text = @"全景导览";
+    self.navigationItem.titleView = titleLabel;
     
     [self.myWebView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://cs.jimiec.com/index.php?a=s&s=case&id=8604&from=singlemessage&isappinstalled=0&WebShieldDRSessionVerify=2aZ5sWcMjiclaDeWzLv4"]]];
 }
