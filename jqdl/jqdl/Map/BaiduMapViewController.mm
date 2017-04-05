@@ -28,6 +28,8 @@
 #import "MyMapImgBtn.h"
 #import "MyView2.h"
 #import "WebViewController.h"
+#import "PhotoViewController.h"
+#import "MyImageView.h"
 
 #define MYBUNDLE_NAME @ "mapapi.bundle"
 #define MYBUNDLE_PATH [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: MYBUNDLE_NAME]
@@ -92,6 +94,7 @@
     UIView *imageMaskView;//图片遮罩层
     UIScrollView *imageScrollView;//图片滚动条
     UILabel *imagePageLabel;//图片滚动页码
+    NSArray *currentImages;//快捷查看图片数组
     
     BOOL showJd;
     MyView *jdCardView;
@@ -1143,7 +1146,7 @@
     //遮罩层
     if (imageMaskView == nil) {
         imageMaskView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, Main_Screen_Width, Main_Screen_Height)];
-        imageMaskView.backgroundColor = RGBA(0, 0, 0, 0.7);
+        imageMaskView.backgroundColor = RGBA(0, 0, 0, 0.0);
         
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideDetailImage)];
         [imageMaskView addGestureRecognizer:tap];
@@ -1173,11 +1176,13 @@
     NSString *images = [poi objectForKey:@"images"];
     if (images != nil && ![images isEqualToString:@""]) {
         NSArray *imageArr = [images componentsSeparatedByString:@","];
+        currentImages = imageArr;
         for (int i = 0; i < imageArr.count; i++) {
             NSString *imageUrl = [imageArr objectAtIndex:i];
-            UIImageView *imageview = [[UIImageView alloc] initWithFrame:CGRectMake(i*width, 0, width, height)];
+            MyImageView *imageview = [[MyImageView alloc] initWithFrame:CGRectMake(i*width, 0, width, height)];
             [imageview setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:[UIImage new]];
             imageview.tag = i;
+            imageview.poi = poi;
             imageview.userInteractionEnabled = YES;
             UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showAllImage:)];
             [imageview addGestureRecognizer:tap];
@@ -1185,6 +1190,8 @@
         }
         [imageScrollView setContentSize:CGSizeMake(imageArr.count*width, height)];
         imagePageLabel.text = [NSString stringWithFormat:@"%d/%lu",1,(unsigned long)imageArr.count];
+    }else{
+        currentImages = nil;
     }
     [imagePageLabel setFrame:CGRectMake(CGRectGetMaxX(imageScrollView.frame) - 27, CGRectGetMaxY(imageScrollView.frame) - 20, 25, 18)];
     
@@ -1209,8 +1216,14 @@
     }
 }
 
+//进入图片浏览器查看
 -(void)showAllImage:(UIGestureRecognizer *)recog{
+    MyImageView *imageview = (MyImageView *)recog.view;
     
+    PhotoViewController *vc = [[PhotoViewController alloc] init];
+    vc.images = currentImages;
+    vc.name = [imageview.poi objectForKey:@"name"];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 //kvo观察者触发的方法

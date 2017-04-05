@@ -482,6 +482,9 @@
 		44621BB11E125ECA00EB3AFC /* BaiduMapAPI_Search.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44621BB01E125EC900EB3AFC /* BaiduMapAPI_Search.framework */; };
 		44621BB31E12607900EB3AFC /* BaiduMapAPI_Utils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44621BB21E12607900EB3AFC /* BaiduMapAPI_Utils.framework */; };
 		44621BB71E12666600EB3AFC /* UIImage+Rotate.m in Sources */ = {isa = PBXBuildFile; fileRef = 44621BB61E12666600EB3AFC /* UIImage+Rotate.m */; };
+		4464FD631E947F47007D93EE /* PhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4464FD611E947F47007D93EE /* PhotoViewController.m */; };
+		4464FD641E947F47007D93EE /* PhotoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4464FD621E947F47007D93EE /* PhotoViewController.xib */; };
+		4464FD671E94BB1E007D93EE /* MyImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4464FD661E94BB1E007D93EE /* MyImageView.m */; };
 		448738D01E03C16000E5862C /* BaiduMapAPI_Location.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 448738CF1E03C16000E5862C /* BaiduMapAPI_Location.framework */; };
 		44988C1A1C04575400D5C59C /* btnCheck.png in Resources */ = {isa = PBXBuildFile; fileRef = 44988C141C04575400D5C59C /* btnCheck.png */; };
 		44988C1B1C04575400D5C59C /* btnCheck@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44988C151C04575400D5C59C /* btnCheck@2x.png */; };
@@ -1469,6 +1472,11 @@
 		44621BB51E12666600EB3AFC /* UIImage+Rotate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Rotate.h"; sourceTree = "<group>"; };
 		44621BB61E12666600EB3AFC /* UIImage+Rotate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Rotate.m"; sourceTree = "<group>"; };
 		4464FCE21BFEB56C0015320B /* jqdl.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = jqdl.pch; sourceTree = "<group>"; };
+		4464FD601E947F47007D93EE /* PhotoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoViewController.h; sourceTree = "<group>"; };
+		4464FD611E947F47007D93EE /* PhotoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoViewController.m; sourceTree = "<group>"; };
+		4464FD621E947F47007D93EE /* PhotoViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PhotoViewController.xib; sourceTree = "<group>"; };
+		4464FD651E94BB1E007D93EE /* MyImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyImageView.h; sourceTree = "<group>"; };
+		4464FD661E94BB1E007D93EE /* MyImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyImageView.m; sourceTree = "<group>"; };
 		448738CF1E03C16000E5862C /* BaiduMapAPI_Location.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BaiduMapAPI_Location.framework; path = ThiredPartyLib/BaiduMap/BaiduMapAPI_Location.framework; sourceTree = "<group>"; };
 		44988C141C04575400D5C59C /* btnCheck.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btnCheck.png; sourceTree = "<group>"; };
 		44988C151C04575400D5C59C /* btnCheck@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btnCheck@2x.png"; sourceTree = "<group>"; };
@@ -3411,6 +3419,11 @@
 				444E61B91E84E887008C494E /* MyView2.m */,
 				444C43691E8A10C7008CF2C6 /* MyMapImgBtn.h */,
 				444C436A1E8A10C7008CF2C6 /* MyMapImgBtn.m */,
+				4464FD601E947F47007D93EE /* PhotoViewController.h */,
+				4464FD611E947F47007D93EE /* PhotoViewController.m */,
+				4464FD621E947F47007D93EE /* PhotoViewController.xib */,
+				4464FD651E94BB1E007D93EE /* MyImageView.h */,
+				4464FD661E94BB1E007D93EE /* MyImageView.m */,
 			);
 			path = Map;
 			sourceTree = "<group>";
@@ -3670,6 +3683,7 @@
 				44435E1F1E4AFC1E00F9C84A /* FeedbackViewController.xib in Resources */,
 				44988C1A1C04575400D5C59C /* btnCheck.png in Resources */,
 				4437FEF41E48542500B8A084 /* status-bar-pattern-black.png in Resources */,
+				4464FD641E947F47007D93EE /* PhotoViewController.xib in Resources */,
 				44435E191E4ACE5F00F9C84A /* AccountViewController.xib in Resources */,
 				443DA7CC1E08C1130014C9B8 /* MoreFunctionViewController.xib in Resources */,
 			);
@@ -3920,6 +3934,7 @@
 				44117A5A1C11763E0071E1C0 /* ZXPDF417HighLevelEncoder.m in Sources */,
 				440E7F391E1B36D600B5277E /* NSDictionary+Category.m in Sources */,
 				440E7F441E1B36D600B5277E /* NSObject+AssociatedObject.m in Sources */,
+				4464FD671E94BB1E007D93EE /* MyImageView.m in Sources */,
 				44117A0C1C11763E0071E1C0 /* ZXMaxiCodeReader.m in Sources */,
 				44117A5B1C11763E0071E1C0 /* ZXPDF417Common.m in Sources */,
 				441179C41C11763E0071E1C0 /* ZXTelResultParser.m in Sources */,
@@ -3945,6 +3960,7 @@
 				44117A211C11763E0071E1C0 /* ZXRSSExpandedGeneralAppIdDecoder.m in Sources */,
 				441179C81C11763E0071E1C0 /* ZXURLTOResultParser.m in Sources */,
 				441179AB1C11763E0071E1C0 /* ZXAbstractDoCoMoResultParser.m in Sources */,
+				4464FD631E947F47007D93EE /* PhotoViewController.m in Sources */,
 				441179D31C11763E0071E1C0 /* ZXMonochromeRectangleDetector.m in Sources */,
 				44117A4A1C11763E0071E1C0 /* ZXPDF417BarcodeValue.m in Sources */,
 				441179F91C11763E0071E1C0 /* ZXDataMatrixVersion.m in Sources */,
@@ -4296,6 +4312,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.yczoi.qlxing;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -4333,6 +4350,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.yczoi.qlxing;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};

@@ -14,9 +14,9 @@
 #import <MapKit/MapKit.h>
 #import "Util.h"
 #import "LCActionSheet.h"
+#import "PhotoViewController.h"
 
-
-@interface DetailViewController ()<LCActionSheetDelegate,FSPCMAudioStreamDelegate>{
+@interface DetailViewController ()<LCActionSheetDelegate,FSPCMAudioStreamDelegate,ImageClickEventDelegate>{
 //    UIButton *jieshuoBtn;
     NSArray *maps;
     Player *player;
@@ -40,9 +40,10 @@
         player.delegate = self;
     }
     
+    __block id _self = self;
     player.onCompletion=^(){
         NSLog(@"播放完成!");
-        [self playVoiceEnd];
+        [_self playVoiceEnd];
 //        [[NSNotificationCenter defaultCenter] postNotificationName:@"playVoiceEnd" object:nil];
     };
     
@@ -88,6 +89,7 @@
     }
     
     BMAdScrollView *adView = [[BMAdScrollView alloc] initWithFrame:CGRectMake(0, 0, Main_Screen_Width, 250) images:arr titles:strArr];
+    adView.delegate = self;
     [_myScrollView addSubview:adView];
     //标题
     NSString *slogan = [[_poi objectForKey:@"name"] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
@@ -340,6 +342,19 @@
         NSDictionary *dic = maps[buttonIndex-2];
         NSString *urlString = dic[@"url"];
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlString]];
+    }
+}
+
+#pragma mark - ImageClickEventDelegate
+
+-(void)imageClickAt:(NSInteger)vid{
+    NSString *imageStr = [_poi objectForKey:@"images"];
+    if (imageStr != nil) {
+        NSArray *images = [imageStr componentsSeparatedByString:@","];
+        PhotoViewController *vc = [[PhotoViewController alloc] init];
+        vc.images = images;
+        vc.name = [_poi objectForKey:@"name"];
+        [self.navigationController pushViewController:vc animated:YES];
     }
 }
 
