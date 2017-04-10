@@ -30,6 +30,10 @@
 #import "WebViewController.h"
 #import "PhotoViewController.h"
 #import "MyImageView.h"
+#import "UIImage+Color.h"
+#import "CircleView.h"
+#import "PlayButton.h"
+#import "MapPopBtn.h"
 
 #define MYBUNDLE_NAME @ "mapapi.bundle"
 #define MYBUNDLE_PATH [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: MYBUNDLE_NAME]
@@ -56,7 +60,7 @@
 @end
 
 
-@interface BaiduMapViewController ()<BMKMapViewDelegate,BMKLocationServiceDelegate,BMKRouteSearchDelegate,UIScrollViewDelegate,UITableViewDelegate,UITableViewDataSource>{
+@interface BaiduMapViewController ()<BMKMapViewDelegate,BMKLocationServiceDelegate,BMKRouteSearchDelegate,FSPCMAudioStreamDelegate,UIScrollViewDelegate,UITableViewDelegate,UITableViewDataSource>{
     BMKMapView* _mapView;
     BMKLocationService *_locService;
     BMKRouteSearch* _routesearch;
@@ -103,6 +107,11 @@
     BMKGroundOverlay* ground;
     BOOL showGroud;
     UIButton *oldGroudBtn;
+    
+    CircleView *playBtn;
+//    PlayButton *playBtn;
+    Player *player;
+    UIView *rightPlayView;
 }
 
 @end
@@ -112,6 +121,17 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    
+    if (player == nil) {
+        player = [Player sharedManager];
+        player.delegate = self;
+    }
+    
+    __block id _self = self;
+    player.onCompletion=^(){
+        NSLog(@"baiduMapViewController播放完成!");
+        [_self playVoiceEnd];
+    };
     
     [self checkNetState];
 //    [self downloadFile];
@@ -509,6 +529,7 @@
         typeView = [[MyView2 alloc] initWithFrame:frame1];
         typeView.backgroundColor = [UIColor clearColor];
         typeView.clipsToBounds = YES;
+        typeView.layer.masksToBounds = YES;
         
         UIButton *btn0 = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 70, 30)];
         [btn0 setImage:[UIImage imageNamed:@"typeBtn0"] forState:UIControlStateNormal];
@@ -886,20 +907,20 @@
         //
         //        CLLocationDistance distance = BMKMetersBetweenMapPoints(point1,point2);
         
-        NSString *voice = [poi objectForKey:@"voice"];
-        if (![voice isEqualToString:@""]) {
-            UIButton *playBtn = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetWidth(v.frame) - 56, CGRectGetHeight(v.frame) - 28, 46, 18)];
-            playBtn.tag = seq;
-            playBtn.titleLabel.font = SYSTEMFONT(10);
-            [playBtn addTarget:self action:@selector(playVoice:) forControlEvents:UIControlEventTouchUpInside];
-            //        [playBtn setTitle:@"播放" forState:UIControlStateNormal];
-            //        [playBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-            
-            [playBtn setImage:[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
-            
-            //        playBtn.backgroundColor = RGB(255, 192, 20);
-            [v addSubview:playBtn];
-        }
+//        NSString *voice = [poi objectForKey:@"voice"];
+//        if (![voice isEqualToString:@""]) {
+//            UIButton *playBtn = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetWidth(v.frame) - 56, CGRectGetHeight(v.frame) - 28, 46, 18)];
+//            playBtn.tag = seq;
+//            playBtn.titleLabel.font = SYSTEMFONT(10);
+//            [playBtn addTarget:self action:@selector(playVoice:) forControlEvents:UIControlEventTouchUpInside];
+//            //        [playBtn setTitle:@"播放" forState:UIControlStateNormal];
+//            //        [playBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+//            
+//            [playBtn setImage:[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
+//            
+//            //        playBtn.backgroundColor = RGB(255, 192, 20);
+//            [v addSubview:playBtn];
+//        }
         
         
         
@@ -959,7 +980,7 @@
     MyPointAnnotation *anno = annotations[btn.tag];
     NSString *voice = [anno.poi objectForKey:@"voice"];
     
-    if ([[Player sharedManager] isPlaying]) {//当前正在播放
+    if ([player isPlaying]) {//当前正在播放
         NSString *playingUrlStr = [[[Player sharedManager] url] absoluteString];
         NSString *path = [NSString stringWithFormat:@"%@%@",@"",voice];
         if ([playingUrlStr isEqualToString:path]) {//当前播放的就是该景点的语音 停止播放
@@ -994,10 +1015,17 @@
 
 //播放结束
 -(void)playVoiceEnd{
-    if (oldPlayBtn) {
-//        [oldPlayBtn setTitle:@"播放" forState:UIControlStateNormal];
-        [oldPlayBtn setImage:[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
-        oldPlayBtn = nil;
+//    if (oldPlayBtn) {
+////        [oldPlayBtn setTitle:@"播放" forState:UIControlStateNormal];
+//        [oldPlayBtn setImage:[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
+//        oldPlayBtn = nil;
+//    }
+    
+    if (playBtn) {
+//        [playBtn setProgress:1 animated:NO];
+        [playBtn setProgress:0 animated:YES];
+        [playBtn setImage:[UIImage imageNamed:@"play"]];
+        [self hidePlayView];
     }
 }
 
@@ -1075,6 +1103,15 @@
 -(void)viewDidAppear:(BOOL)animated{
     
     [super viewDidAppear:animated];
+    if (player) {
+        player.delegate = self;
+        
+        __block id _self = self;
+        player.onCompletion=^(){
+            NSLog(@"baiduMapViewController播放完成!");
+            [_self playVoiceEnd];
+        };
+    }
 //    if (!locationFlag2) {
 //        locationFlag2 = !locationFlag2;
 //        [self location];//定位
@@ -1125,6 +1162,41 @@
     if (btn.tag == 1) {//线路
 //        [self onClickWalkSearch];
     }else if (btn.tag == 2){//语音
+        [self showPlayBtn];
+        
+        
+        MapPopBtn *popbtn = (MapPopBtn *)btn;
+        
+        NSString *voice = [popbtn.poi objectForKey:@"voice"];
+        NSString *path = [NSString stringWithFormat:@"%@%@",@"",voice];
+        if ([player isPlaying]) {//当前正在播放
+            NSString *playingUrlStr = [[player url] absoluteString];
+            
+            if ([playingUrlStr isEqualToString:path]) {//当前播放的就是该景点的语音 停止播放
+
+            }else{//不是该景点的 重新播放
+                [player stop];//先停止播放
+//                [playBtn setTitle:@"暂停" forState:UIControlStateNormal];
+                
+                [playBtn setImage:[UIImage imageNamed:@"pause"]];
+                
+                [player setUrl:[NSURL URLWithString:path]];
+                [player play];
+            }
+        }else{//当前没有播放
+            [player stop];
+            [player setUrl:[NSURL URLWithString:path]];
+            [player play];
+            
+            if (![player isPlaying]) {
+                [player pause];
+            }
+            
+//            [playBtn setTitle:@"暂停" forState:UIControlStateNormal];
+            [playBtn setImage:[UIImage imageNamed:@"pause"]];
+        }
+        
+        
         
     }else if (btn.tag == 3){//vr
         UIBarButtonItem *backItem=[[UIBarButtonItem alloc] init];
@@ -1137,6 +1209,133 @@
     }else if (btn.tag == 4){//图片
         MyMapImgBtn *b = (MyMapImgBtn *)btn;
         [self showDetailImage:b.poi];
+    }
+}
+
+-(void)play{
+    [player pause];
+    
+    if ([player isPlaying]) {
+        DLog(@"播放");
+        [playBtn setImage:[UIImage imageNamed:@"pause"]];
+        [[rightPlayView subviews] enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if (obj.tag == 999) {
+                UILabel *stateLabel = (UILabel *)obj;
+                stateLabel.text = @"暂停播放";
+            }
+        }];
+    }else{
+        DLog(@"暂停");
+        [playBtn setImage:[UIImage imageNamed:@"play"]];
+        [[rightPlayView subviews] enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if (obj.tag == 999) {
+                UILabel *stateLabel = (UILabel *)obj;
+                stateLabel.text = @"继续播放";
+            }
+        }];
+    }
+}
+
+//播放语音
+-(void)showPlayBtn{
+    
+    CGRect showFrame = CGRectMake(Main_Screen_Width - 90, CGRectGetMinY(typeBtn.frame) - 24 - 40, 90, 40);
+    CGRect hideFrame = CGRectMake(Main_Screen_Width, CGRectGetMinY(typeBtn.frame) - 24 - 40, 90, 40);
+    
+    if (rightPlayView == nil) {
+        rightPlayView = [[UIView alloc] initWithFrame:showFrame];
+        rightPlayView.backgroundColor = [UIColor whiteColor];
+        [self.view addSubview:rightPlayView];
+        
+        UIRectCorner corners = UIRectCornerTopLeft | UIRectCornerBottomLeft;
+        UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:rightPlayView.bounds
+                                                       byRoundingCorners:corners
+                                                             cornerRadii:CGSizeMake(rightPlayView.frame.size.width/2, rightPlayView.frame.size.width/2)];
+        CAShapeLayer *maskLayer = [CAShapeLayer layer];
+        maskLayer.frame = rightPlayView.bounds;
+        maskLayer.path = maskPath.CGPath;
+        rightPlayView.layer.mask = maskLayer;
+        
+        UISwipeGestureRecognizer *swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
+        rightPlayView.tag = 3;
+        rightPlayView.userInteractionEnabled = YES;
+        [rightPlayView addGestureRecognizer:swipe];
+        
+        UILabel *stateLabel = [[UILabel alloc] initWithFrame:CGRectMake(40, 10, 50, 20)];
+        stateLabel.tag = 999;
+        stateLabel.textColor = RGB(153, 153, 153);
+        stateLabel.font = SYSTEMFONT(11);
+        
+        stateLabel.text = @"暂停播放";
+        if (player) {
+            if ([player isPlaying]) {
+                stateLabel.text = @"暂停播放";
+            }
+        }
+        
+        
+        [rightPlayView addSubview:stateLabel];
+    }
+    
+    
+//    //阴影
+//    rightPlayView.layer.shadowColor = [[UIColor blackColor] CGColor];
+//    rightPlayView.layer.shadowOpacity = 1.0;
+//    rightPlayView.layer.shadowOffset = CGSizeMake(0.0f, 0.0f);
+    
+    
+    
+//    CircleView *playView = [[CircleView alloc] initWithFrame:CGRectMake(5, 5, 30, 30)];
+//    playView.backgroundColor = [UIColor whiteColor];
+//    [rightPlayView addSubview:playView];
+    
+    if (playBtn == nil) {
+        playBtn = [[CircleView alloc] initWithFrame:CGRectMake(4, 4, 32, 32)];
+        playBtn.backgroundColor = RGB(255, 235, 168);
+        ViewBorderRadius(playBtn, 16, 0, [UIColor whiteColor]);
+//        playBtn = [[PlayButton alloc] initWithFrame:CGRectMake(5, 5, 30, 30)];
+//        [playBtn setBackgroundImage:[UIImage imageWithColor:RGB(255, 235, 168) size:CGSizeMake(10, 10)] forState:UIControlStateNormal];
+        [rightPlayView addSubview:playBtn];
+//        [playBtn addTarget:self action:@selector(play) forControlEvents:UIControlEventTouchUpInside];
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(play)];
+        playBtn.userInteractionEnabled = YES;
+        [playBtn addGestureRecognizer:tap];
+        
+        if (player) {
+            if ([player isPlaying]) {
+                [playBtn setImage:[UIImage imageNamed:@"pause"]];
+            }else{
+                [playBtn setImage:[UIImage imageNamed:@"play"]];
+            }
+        }
+        
+//        [playBtn setBackgroundImage:[UIImage imageNamed:@"pause"] forState:UIControlStateNormal];
+//        [playBtn setImage:[UIImage imageNamed:@"pause"] forState:UIControlStateNormal];
+    }
+    
+    
+    //[playBtn setProgress:0.5 animated:NO];
+    
+    
+    if (rightPlayView.frame.origin.x ==  Main_Screen_Width) {
+        rightPlayView.frame = hideFrame;
+        
+        [UIView animateWithDuration:0.3 animations:^{
+            rightPlayView.frame = showFrame;
+        } completion:^(BOOL finished) {
+        }];
+    }
+    
+    
+}
+
+-(void)hidePlayView{
+    if (rightPlayView) {
+        CGRect hideFrame = CGRectMake(Main_Screen_Width, CGRectGetMinY(typeBtn.frame) - 24 - 40, 90, 40);
+        [UIView animateWithDuration:0.3 animations:^{
+            rightPlayView.frame = hideFrame;
+        } completion:^(BOOL finished) {
+        }];
     }
 }
 
@@ -1496,6 +1695,9 @@
         if (rec.view.tag == 2) {
             [self hideDrawMapView];
         }
+        if (rec.view.tag == 3) {
+            [self hidePlayView];
+        }
         DLog(@"向右");
        
     }else{
@@ -1747,7 +1949,14 @@
         }];
     }
 }
+#pragma mark - FSPCMAudioStreamDelegate
 
+- (void)audioStream:(FSAudioStream *)audioStream samplesAvailable:(const int16_t *)samples count:(NSUInteger)count{
+    DLog(@"position:%f minutes:%d second:%d minutes:%d second:%d",audioStream.currentTimePlayed.position,audioStream.currentTimePlayed.minute,audioStream.currentTimePlayed.second,audioStream.duration.minute,audioStream.duration.second);
+    if (playBtn) {
+        [playBtn setProgress:audioStream.currentTimePlayed.position animated:NO];
+    }
+}
 
 #pragma mark - UITableViewDataSource
 
@@ -2252,8 +2461,9 @@
         
         NSString *voice = [anno.poi objectForKey:@"voice"];
         if (voice != nil && ![voice isEqualToString:@""]) {
-            UIButton *voiceBtn = [[UIButton alloc] initWithFrame:CGRectMake(maxX + 5, 0, 44, 44)];
+            MapPopBtn *voiceBtn = [[MapPopBtn alloc] initWithFrame:CGRectMake(maxX + 5, 0, 44, 44)];
             voiceBtn.tag = 2;
+            voiceBtn.poi = anno.poi;
             [voiceBtn setImage:[UIImage imageNamed:@"mapVoiceBtn"] forState:UIControlStateNormal];
             [voiceBtn addTarget:self action:@selector(btnClick:) forControlEvents:UIControlEventTouchUpInside];
             [paopaoBgView addSubview:voiceBtn];

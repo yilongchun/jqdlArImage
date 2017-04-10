@@ -18,9 +18,9 @@
     [self getDrawPath:context];
     CGContextFillPath(context);//填充
     //阴影
-    self.layer.shadowColor = [RGBA(0, 0, 0, 0.2) CGColor];
-    self.layer.shadowOpacity = 1.0;
-    self.layer.shadowOffset = CGSizeMake(0.0f, 0.0f);
+//    self.layer.shadowColor = [RGBA(0, 0, 0, 0.2) CGColor];
+//    self.layer.shadowOpacity = 1.0;
+//    self.layer.shadowOffset = CGSizeMake(0.0f, 0.0f);
 }
 
 //底部中间尖头

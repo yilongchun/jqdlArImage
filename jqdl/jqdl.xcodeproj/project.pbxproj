@@ -412,6 +412,8 @@
 		442ED7D91DB9A7D10058DD4C /* ArchitectWorld in Resources */ = {isa = PBXBuildFile; fileRef = 442ED7D81DB9A7D10058DD4C /* ArchitectWorld */; };
 		442ED7DB1DB9A9340058DD4C /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 442ED7DA1DB9A9340058DD4C /* MediaPlayer.framework */; };
 		4434AEC11E1CAA490014BE2D /* UIImage+Color.m in Sources */ = {isa = PBXBuildFile; fileRef = 4434AEC01E1CAA490014BE2D /* UIImage+Color.m */; };
+		443795F61E973D47002FE378 /* PlayButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 443795F51E973D47002FE378 /* PlayButton.m */; };
+		443795F91E97417C002FE378 /* MapPopBtn.m in Sources */ = {isa = PBXBuildFile; fileRef = 443795F81E97417C002FE378 /* MapPopBtn.m */; };
 		4437FEB21E480A5F00B8A084 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4437FEB41E480A5F00B8A084 /* Localizable.strings */; };
 		4437FED41E48212F00B8A084 /* AboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4437FECB1E48212F00B8A084 /* AboutViewController.m */; };
 		4437FED51E48212F00B8A084 /* AboutViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4437FECC1E48212F00B8A084 /* AboutViewController.xib */; };
@@ -485,6 +487,7 @@
 		4464FD631E947F47007D93EE /* PhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4464FD611E947F47007D93EE /* PhotoViewController.m */; };
 		4464FD641E947F47007D93EE /* PhotoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4464FD621E947F47007D93EE /* PhotoViewController.xib */; };
 		4464FD671E94BB1E007D93EE /* MyImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4464FD661E94BB1E007D93EE /* MyImageView.m */; };
+		4464FD6A1E94E8F9007D93EE /* CircleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4464FD691E94E8F9007D93EE /* CircleView.m */; };
 		448738D01E03C16000E5862C /* BaiduMapAPI_Location.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 448738CF1E03C16000E5862C /* BaiduMapAPI_Location.framework */; };
 		44988C1A1C04575400D5C59C /* btnCheck.png in Resources */ = {isa = PBXBuildFile; fileRef = 44988C141C04575400D5C59C /* btnCheck.png */; };
 		44988C1B1C04575400D5C59C /* btnCheck@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44988C151C04575400D5C59C /* btnCheck@2x.png */; };
@@ -1354,6 +1357,10 @@
 		442ED7DA1DB9A9340058DD4C /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		4434AEBF1E1CAA490014BE2D /* UIImage+Color.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Color.h"; sourceTree = "<group>"; };
 		4434AEC01E1CAA490014BE2D /* UIImage+Color.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Color.m"; sourceTree = "<group>"; };
+		443795F41E973D47002FE378 /* PlayButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayButton.h; sourceTree = "<group>"; };
+		443795F51E973D47002FE378 /* PlayButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayButton.m; sourceTree = "<group>"; };
+		443795F71E97417C002FE378 /* MapPopBtn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapPopBtn.h; sourceTree = "<group>"; };
+		443795F81E97417C002FE378 /* MapPopBtn.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapPopBtn.m; sourceTree = "<group>"; };
 		4437FEB31E480A5F00B8A084 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		4437FEB51E480A6300B8A084 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		4437FECA1E48212F00B8A084 /* AboutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AboutViewController.h; sourceTree = "<group>"; };
@@ -1477,6 +1484,8 @@
 		4464FD621E947F47007D93EE /* PhotoViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PhotoViewController.xib; sourceTree = "<group>"; };
 		4464FD651E94BB1E007D93EE /* MyImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyImageView.h; sourceTree = "<group>"; };
 		4464FD661E94BB1E007D93EE /* MyImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyImageView.m; sourceTree = "<group>"; };
+		4464FD681E94E8F9007D93EE /* CircleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CircleView.h; sourceTree = "<group>"; };
+		4464FD691E94E8F9007D93EE /* CircleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CircleView.m; sourceTree = "<group>"; };
 		448738CF1E03C16000E5862C /* BaiduMapAPI_Location.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BaiduMapAPI_Location.framework; path = ThiredPartyLib/BaiduMap/BaiduMapAPI_Location.framework; sourceTree = "<group>"; };
 		44988C141C04575400D5C59C /* btnCheck.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btnCheck.png; sourceTree = "<group>"; };
 		44988C151C04575400D5C59C /* btnCheck@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btnCheck@2x.png"; sourceTree = "<group>"; };
@@ -3424,6 +3433,12 @@
 				4464FD621E947F47007D93EE /* PhotoViewController.xib */,
 				4464FD651E94BB1E007D93EE /* MyImageView.h */,
 				4464FD661E94BB1E007D93EE /* MyImageView.m */,
+				4464FD681E94E8F9007D93EE /* CircleView.h */,
+				4464FD691E94E8F9007D93EE /* CircleView.m */,
+				443795F41E973D47002FE378 /* PlayButton.h */,
+				443795F51E973D47002FE378 /* PlayButton.m */,
+				443795F71E97417C002FE378 /* MapPopBtn.h */,
+				443795F81E97417C002FE378 /* MapPopBtn.m */,
 			);
 			path = Map;
 			sourceTree = "<group>";
@@ -3868,6 +3883,7 @@
 				4424D6591E2726A500245B43 /* MASConstraint.m in Sources */,
 				44117A371C11763E0071E1C0 /* ZXEANManufacturerOrgSupport.m in Sources */,
 				444D77C31E037A180040F0A7 /* NSNumber+JZExtension.m in Sources */,
+				4464FD6A1E94E8F9007D93EE /* CircleView.m in Sources */,
 				44117A381C11763E0071E1C0 /* ZXITFReader.m in Sources */,
 				440E7F8C1E1B49EE00B5277E /* IQUIViewController+Additions.m in Sources */,
 				440E7F891E1B49EE00B5277E /* IQUIScrollView+Additions.m in Sources */,
@@ -3960,6 +3976,7 @@
 				44117A211C11763E0071E1C0 /* ZXRSSExpandedGeneralAppIdDecoder.m in Sources */,
 				441179C81C11763E0071E1C0 /* ZXURLTOResultParser.m in Sources */,
 				441179AB1C11763E0071E1C0 /* ZXAbstractDoCoMoResultParser.m in Sources */,
+				443795F61E973D47002FE378 /* PlayButton.m in Sources */,
 				4464FD631E947F47007D93EE /* PhotoViewController.m in Sources */,
 				441179D31C11763E0071E1C0 /* ZXMonochromeRectangleDetector.m in Sources */,
 				44117A4A1C11763E0071E1C0 /* ZXPDF417BarcodeValue.m in Sources */,
@@ -4019,6 +4036,7 @@
 				441179A71C11763E0071E1C0 /* ZXAztecToken.m in Sources */,
 				440E7F3D1E1B36D600B5277E /* NSException+Trace.m in Sources */,
 				44117A091C11763E0071E1C0 /* ZXMaxiCodeBitMatrixParser.m in Sources */,
+				443795F91E97417C002FE378 /* MapPopBtn.m in Sources */,
 				44117A2F1C11763E0071E1C0 /* ZXCode128Writer.m in Sources */,
 				440E7F321E1B36D600B5277E /* NSBundle+AppIcon.m in Sources */,
 				44988C1C1C04575400D5C59C /* HUD.m in Sources */,

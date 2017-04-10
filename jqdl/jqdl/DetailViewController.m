@@ -42,7 +42,7 @@
     
     __block id _self = self;
     player.onCompletion=^(){
-        NSLog(@"播放完成!");
+        NSLog(@"detialViewController 播放完成!");
         [_self playVoiceEnd];
 //        [[NSNotificationCenter defaultCenter] postNotificationName:@"playVoiceEnd" object:nil];
     };
@@ -211,7 +211,6 @@
         }else{//不是该景点的 重新播放
             [playBtn setImage:[UIImage imageNamed:@"playStart"] forState:UIControlStateNormal];
         }
-        
     }
 }
 
@@ -299,6 +298,8 @@
 
 -(void)viewDidDisappear:(BOOL)animated{
     [super viewDidDisappear:animated];
+    player.delegate = nil;
+    player = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"playVoiceEnd" object:nil];
 }
 
