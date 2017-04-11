@@ -87,6 +87,8 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     
     NSMutableArray *poiArray;
     
+    NSString *currentStoreId;//当前进入的景区id
+    
 }
 
 @property (strong, nonatomic) NSDate *lastPlaySoundDate;
@@ -650,7 +652,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                 
                 //f66c0fc1f74580c525365751a9ce21b6 三游洞
                 //0070c1938cc15df1d5b891b5adbb7d8b 汉阳造
-                if ([[storeDic objectForKey:@"id"] isEqualToString:@"f66c0fc1f74580c525365751a9ce21b6"]) {
+                if ([[storeDic objectForKey:@"id"] isEqualToString:@"0070c1938cc15df1d5b891b5adbb7d8b"]) {
                     locationCoordinate = CLLocationCoordinate2DMake(myLocation.coordinate.latitude + WT_RANDOM(-0.001, 0.001), myLocation.coordinate.longitude + WT_RANDOM(-0.01, 0.01));
                 }else{
                     locationCoordinate = CLLocationCoordinate2DMake(myLocation.coordinate.latitude + 0.3, myLocation.coordinate.longitude + 0.3);
@@ -751,6 +753,8 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
 
 //加载景点列表
 -(void)loadSpots:(NSString *)storeId{
+    
+    currentStoreId = storeId;
     DLog(@"loadSpots");
     [self showHudInView:self.view];
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
@@ -1674,6 +1678,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     vc.name = titleLabel.text;
     vc.jingdianArray = poiArray;
     vc.jingquType = jingquType;
+    vc.storeId = currentStoreId;
     [self.navigationController pushViewController:vc animated:YES];
 }
 

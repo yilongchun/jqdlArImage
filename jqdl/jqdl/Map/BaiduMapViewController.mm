@@ -457,11 +457,36 @@
 //    [_mapView setCenterCoordinate:coors];
     
     if ([self.jingquType isEqualToString:@"1"]) {
-        //三游洞 //小 - 下       小 - 左
-        CLLocationCoordinate2D coors = CLLocationCoordinate2DMake(30.771626, 111.270551);
-        ground = [BMKGroundOverlay groundOverlayWithPosition:coors
-                                                   zoomLevel:20.9 anchor:CGPointMake(0.0f,0.0f)
-                                                        icon:[UIImage imageNamed:@"map"]];
+        //小 - 下       小 - 左
+        
+        
+        //三游洞
+        if ([_storeId isEqualToString:@"f66c0fc1f74580c525365751a9ce21b6"]) {
+            CLLocationCoordinate2D coors = CLLocationCoordinate2DMake(30.771626, 111.270551);
+            if (IS_IPHONE6P) {
+                coors = CLLocationCoordinate2DMake(30.771626, 111.270551);
+            }else if (IS_IPHONE6){
+                coors = CLLocationCoordinate2DMake(30.771366, 111.270581);
+            }
+            
+            ground = [BMKGroundOverlay groundOverlayWithPosition:coors
+                                                       zoomLevel:20.9 anchor:CGPointMake(0.0f,0.0f)
+                                                            icon:[UIImage imageNamed:@"map"]];
+        }
+        
+        //汉阳造
+        if ([_storeId isEqualToString:@"0070c1938cc15df1d5b891b5adbb7d8b"]) {
+            CLLocationCoordinate2D coors = CLLocationCoordinate2DMake(30.563350, 114.273250);
+            if (IS_IPHONE6P) {
+                coors = CLLocationCoordinate2DMake(30.563340, 114.273250);
+            }else if (IS_IPHONE6){
+                coors = CLLocationCoordinate2DMake(30.562980, 114.273280);
+            }
+            ground = [BMKGroundOverlay groundOverlayWithPosition:coors zoomLevel:20.9 anchor:CGPointMake(0.0f,0.0f)
+                                                            icon:[UIImage imageNamed:@"hyz"]];
+        }
+        
+        
         
 //        //hyz 汉阳造                                               小 - 下       小 - 左
 //        //30.563350, 114.273250 30.562840, 114.273150
@@ -470,7 +495,7 @@
 //                                                                          icon:[UIImage imageNamed:@"hyz"]];
         
         
-        //    ground.alpha = 0.5;
+//            ground.alpha = 0.5;
         [_mapView addOverlay:ground];
         showGroud = YES;
     }
@@ -1182,6 +1207,13 @@
                 
                 [player setUrl:[NSURL URLWithString:path]];
                 [player play];
+                
+                [[rightPlayView subviews] enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    if (obj.tag == 999) {
+                        UILabel *stateLabel = (UILabel *)obj;
+                        stateLabel.text = @"暂停播放";
+                    }
+                }];
             }
         }else{//当前没有播放
             [player stop];
@@ -1194,6 +1226,12 @@
             
 //            [playBtn setTitle:@"暂停" forState:UIControlStateNormal];
             [playBtn setImage:[UIImage imageNamed:@"pause"]];
+            [[rightPlayView subviews] enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                if (obj.tag == 999) {
+                    UILabel *stateLabel = (UILabel *)obj;
+                    stateLabel.text = @"暂停播放";
+                }
+            }];
         }
         
         
