@@ -35,10 +35,10 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
-    if (player == nil) {
-        player = [Player sharedManager];
-        player.delegate = self;
-    }
+    
+    player = [Player sharedManager];
+    player.delegate = self;
+    
     
     __block id _self = self;
     player.onCompletion=^(){

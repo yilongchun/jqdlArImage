@@ -112,6 +112,7 @@
 //    PlayButton *playBtn;
     Player *player;
     UIView *rightPlayView;
+    BOOL showPlayBtn;
 }
 
 @end
@@ -156,12 +157,20 @@
     UIButton *listBtn = [[UIButton alloc] initWithFrame:CGRectMake(Main_Screen_Width - 12 - 30, 12 + 64, 30, 30)];
     [listBtn setImage:[UIImage imageNamed:@"listIcon2"] forState:UIControlStateNormal];
     [listBtn addTarget:self action:@selector(showFeatureListView) forControlEvents:UIControlEventTouchUpInside];
+    
+    listBtn.layer.shadowColor = RGBA(0, 0, 0, 0.3).CGColor;
+    listBtn.layer.shadowOpacity = 1;
+    listBtn.layer.shadowOffset = CGSizeMake(0.0f, 0.0f);
+    
     [self.view addSubview:listBtn];
     
     //手绘地图设置
     UIButton *showShouhuiBtn = [[UIButton alloc] initWithFrame:CGRectMake(Main_Screen_Width - 12 - 30, CGRectGetMaxY(listBtn.frame) + 12, 30, 30)];
     [showShouhuiBtn setImage:[UIImage imageNamed:@"showShouhui"] forState:UIControlStateNormal];
     [showShouhuiBtn addTarget:self action:@selector(showDrawMapView) forControlEvents:UIControlEventTouchUpInside];
+    showShouhuiBtn.layer.shadowColor = RGBA(0, 0, 0, 0.3).CGColor;
+    showShouhuiBtn.layer.shadowOpacity = 1;
+    showShouhuiBtn.layer.shadowOffset = CGSizeMake(0.0f, 0.0f);
     [self.view addSubview:showShouhuiBtn];
     
     
@@ -187,11 +196,18 @@
     [_mapView setZoomLevel:20.9];
     
     //添加筛选分类
-    typeBtn = [[UIButton alloc] initWithFrame:CGRectMake(Main_Screen_Width - 16 - 70, Main_Screen_Height - 15 - 108 - 15 - 30, 70, 30)];
+    typeBtn = [[UIButton alloc] initWithFrame:CGRectMake(Main_Screen_Width - 16 - 70, Main_Screen_Height - 15 - 108 - 15 - 5 - 30, 70, 30)];
     [typeBtn setImage:[UIImage imageNamed:@"typeBtn0"] forState:UIControlStateNormal];
-    [typeBtn setBackgroundImage:[UIImage imageWithColor:[UIColor whiteColor] size:CGSizeMake(70, 30)] forState:UIControlStateNormal];
-    ViewBorderRadius(typeBtn, 4, 0, [UIColor whiteColor]);
+//    [typeBtn setBackgroundImage:[UIImage imageWithColor:[UIColor whiteColor] size:CGSizeMake(1, 1)] forState:UIControlStateNormal];
+    [typeBtn setBackgroundImage:[UIImage imageNamed:@"btnBg"] forState:UIControlStateNormal];
+//    ViewBorderRadius(typeBtn, 4, 0, [UIColor whiteColor]);
     [typeBtn addTarget:self action:@selector(showTypeView) forControlEvents:UIControlEventTouchUpInside];
+    
+    
+//    typeBtn.layer.cornerRadius = 4;
+    typeBtn.layer.shadowColor = RGBA(0, 0, 0, 0.3).CGColor;
+    typeBtn.layer.shadowOpacity = 1;
+    typeBtn.layer.shadowOffset = CGSizeMake(0, 0);
     [self.view addSubview:typeBtn];
     typeIndex = 0;
     
@@ -255,6 +271,11 @@
             imageview.userInteractionEnabled = YES;
             UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toDetail:)];
             [imageview addGestureRecognizer:tap];
+            
+            v.userInteractionEnabled = YES;
+            v.tag = i;
+            UITapGestureRecognizer *tap2 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toDetail:)];
+            [v addGestureRecognizer:tap2];
         }
         
         [imageview setImageWithURL:[NSURL URLWithString:[poi objectForKey:@"image"]] placeholderImage:[UIImage imageNamed:@"flat"]];
@@ -420,10 +441,14 @@
     if (typeView == nil) {
         
         
-        typeView = [[MyView2 alloc] initWithFrame:frame1];
+        typeView = [[MyView2 alloc] initWithFrame:frame2];
         typeView.backgroundColor = [UIColor clearColor];
-        typeView.clipsToBounds = YES;
-        typeView.layer.masksToBounds = YES;
+//        typeView.clipsToBounds = YES;
+//        typeView.layer.masksToBounds = YES;
+        
+        typeView.layer.shadowColor = RGBA(0, 0, 0, 0.3).CGColor;
+        typeView.layer.shadowOpacity = 1;
+        typeView.layer.shadowOffset = CGSizeMake(0, 0);
         
         UIButton *btn0 = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 70, 30)];
         [btn0 setImage:[UIImage imageNamed:@"typeBtn0"] forState:UIControlStateNormal];
@@ -531,13 +556,17 @@
         
         [self.view addSubview:typeView];
         
+        typeView.layer.position = CGPointMake(typeView.layer.position.x, typeView.layer.position.y + typeView.frame.size.height * 0.5);
+        typeView.layer.anchorPoint = CGPointMake(0.5, 1);
+        typeView.transform = CGAffineTransformMakeScale(0.001,0.001);
         [UIView animateWithDuration:0.15 animations:^{
-            typeView.frame = frame2;
+            typeView.transform = CGAffineTransformMakeScale(1,1);
+//            typeView.frame = frame2;
         }];
     }else{
         
         [UIView animateWithDuration:0.15 animations:^{
-            typeView.frame = frame1;
+            typeView.transform = CGAffineTransformMakeScale(0.001,0.001);
         } completion:^(BOOL finished) {
             if (finished) {
                 [typeView removeFromSuperview];
@@ -560,18 +589,21 @@
         locationRect.origin.y = _mapView.frame.size.height - 108 - 15 - 15 - 44;
         //分类按钮
         CGRect typeBtnRect = typeBtn.frame;
-        typeBtnRect.origin.y = Main_Screen_Height - 15 - 108 - 15 - 30;
+        typeBtnRect.origin.y = Main_Screen_Height - 15 - 108 - 15 - 5 - 30;
         //播放按钮
         CGRect playRect = rightPlayView.frame;
         playRect.origin.y = typeBtnRect.origin.y - 60;
+        playRect.origin.x = Main_Screen_Width - 87;
 
         
         [UIView animateWithDuration:0.15 animations:^{
             jdCardView.frame = rect;
             locationBtn.frame = locationRect;
             typeBtn.frame = typeBtnRect;
-
-            rightPlayView.frame = playRect;
+            
+            if (showPlayBtn) {
+                rightPlayView.frame = playRect;
+            }
         }];
     }else{
         CGRect rect = jdCardView.frame;
@@ -581,17 +613,20 @@
         locationRect.origin.y = _mapView.frame.size.height - 15 - 44;
         
         CGRect typeBtnRect = typeBtn.frame;
-        typeBtnRect.origin.y = Main_Screen_Height - 15 - 30;
+        typeBtnRect.origin.y = Main_Screen_Height - 15 - 5 - 30;
         
         CGRect playRect = rightPlayView.frame;
         playRect.origin.y = typeBtnRect.origin.y - 60;
+        playRect.origin.x = Main_Screen_Width - 36;
         
         [UIView animateWithDuration:0.15 animations:^{
             jdCardView.frame = rect;
             locationBtn.frame = locationRect;
             typeBtn.frame = typeBtnRect;
             
-            rightPlayView.frame = playRect;
+            if (showPlayBtn) {
+                rightPlayView.frame = playRect;
+            }
         }];
     }
 }
@@ -831,7 +866,7 @@
 -(void)setZoomBtn{
     UIView *zoomView = [[UIView alloc] initWithFrame:CGRectMake(Main_Screen_Width - 28 - 15, CGRectGetHeight(_mapView.frame)/2 - 28 - 32, 28, 57)];
     zoomView.backgroundColor = [UIColor whiteColor];
-    ViewBorderRadius(zoomView, 3, 0, [UIColor whiteColor]);
+//    ViewBorderRadius(zoomView, 3, 0, [UIColor whiteColor]);
     
     UIButton *zoomOutBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 28, 28)];
     [zoomOutBtn setImage:[UIImage imageNamed:@"zoomOut"] forState:UIControlStateNormal];
@@ -846,6 +881,11 @@
     [zoomInBtn setImage:[UIImage imageNamed:@"zoomIn"] forState:UIControlStateNormal];
     [zoomInBtn addTarget:self action:@selector(zoomOut) forControlEvents:UIControlEventTouchUpInside];
     [zoomView addSubview:zoomInBtn];
+    
+    zoomView.layer.cornerRadius = 3;
+    zoomView.layer.shadowColor = RGBA(0, 0, 0, 0.3).CGColor;
+    zoomView.layer.shadowOpacity = 1;
+    zoomView.layer.shadowOffset = CGSizeMake(0.0f, 0.0f);
     
     [_mapView addSubview:zoomView];
 }
@@ -1045,6 +1085,9 @@
     if (btn.tag == 1) {//线路
 //        [self onClickWalkSearch];
     }else if (btn.tag == 2){//语音
+        
+        showPlayBtn = YES;
+        
         [self showPlayBtn];
         
         
@@ -1135,24 +1178,35 @@
 //播放语音
 -(void)showPlayBtn{
     
-    CGRect showFrame = CGRectMake(Main_Screen_Width - 90, CGRectGetMinY(typeBtn.frame) - 60, 90, 40);
-    CGRect hideFrame = CGRectMake(Main_Screen_Width, CGRectGetMinY(typeBtn.frame) - 60, 90, 40);
+    CGRect showFrame = CGRectMake(Main_Screen_Width - 87, CGRectGetMinY(typeBtn.frame) - 60, 87, 36);
+    CGRect hideFrame = CGRectMake(Main_Screen_Width, CGRectGetMinY(typeBtn.frame) - 60, 87, 36);
     
     if (rightPlayView == nil) {
-        rightPlayView = [[UIView alloc] initWithFrame:showFrame];
-        rightPlayView.backgroundColor = [UIColor whiteColor];
+        rightPlayView = [[UIView alloc] initWithFrame:hideFrame];
+        
+        UIImageView *playViewImage = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, rightPlayView.frame.size.width, rightPlayView.frame.size.height)];
+        playViewImage.image = [UIImage imageNamed:@"playViewBg"];
+        [rightPlayView addSubview:playViewImage];
+        
+//        rightPlayView.backgroundColor = [UIColor whiteColor];
         [self.view addSubview:rightPlayView];
         
-        UIRectCorner corners = UIRectCornerTopLeft | UIRectCornerBottomLeft;
-        UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:rightPlayView.bounds
-                                                       byRoundingCorners:corners
-                                                             cornerRadii:CGSizeMake(rightPlayView.frame.size.width/2, rightPlayView.frame.size.width/2)];
-        CAShapeLayer *maskLayer = [CAShapeLayer layer];
-        maskLayer.frame = rightPlayView.bounds;
-        maskLayer.path = maskPath.CGPath;
-        rightPlayView.layer.mask = maskLayer;
+//        UIRectCorner corners = UIRectCornerTopLeft | UIRectCornerBottomLeft;
+//        UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:rightPlayView.bounds
+//                                                       byRoundingCorners:corners
+//                                                             cornerRadii:CGSizeMake(rightPlayView.frame.size.width/2, rightPlayView.frame.size.width/2)];
+//        CAShapeLayer *maskLayer = [CAShapeLayer layer];
+//        maskLayer.frame = rightPlayView.bounds;
+//        maskLayer.path = maskPath.CGPath;
+//        
+//        rightPlayView.layer.mask = maskLayer;
         
+       
         
+        //阴影
+        rightPlayView.layer.shadowColor = RGBA(0, 0, 0, 0.3).CGColor;
+        rightPlayView.layer.shadowOpacity = 1.0;
+        rightPlayView.layer.shadowOffset = CGSizeMake(0.0f, 0.0f);
         
         UISwipeGestureRecognizer *swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
         swipe.direction=UISwipeGestureRecognizerDirectionRight;//|UISwipeGestureRecognizerDirectionLeft|UISwipeGestureRecognizerDirectionDown|UISwipeGestureRecognizerDirectionUp;
@@ -1170,7 +1224,7 @@
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(play)];
         [rightPlayView addGestureRecognizer:tap];
         
-        UILabel *stateLabel = [[UILabel alloc] initWithFrame:CGRectMake(40, 10, 50, 20)];
+        UILabel *stateLabel = [[UILabel alloc] initWithFrame:CGRectMake(38, 8, 50, 20)];
         stateLabel.tag = 999;
         stateLabel.textColor = RGB(153, 153, 153);
         stateLabel.font = SYSTEMFONT(11);
@@ -1187,10 +1241,7 @@
     }
     
     
-//    //阴影
-//    rightPlayView.layer.shadowColor = [[UIColor blackColor] CGColor];
-//    rightPlayView.layer.shadowOpacity = 1.0;
-//    rightPlayView.layer.shadowOffset = CGSizeMake(0.0f, 0.0f);
+
     
     
     
@@ -1199,9 +1250,9 @@
 //    [rightPlayView addSubview:playView];
     
     if (playBtn == nil) {
-        playBtn = [[CircleView alloc] initWithFrame:CGRectMake(4, 4, 32, 32)];
+        playBtn = [[CircleView alloc] initWithFrame:CGRectMake(3, 3, 30, 30)];
         playBtn.backgroundColor = RGB(255, 235, 168);
-        ViewBorderRadius(playBtn, 16, 0, [UIColor whiteColor]);
+        ViewRadius(playBtn, 15);
 //        playBtn = [[PlayButton alloc] initWithFrame:CGRectMake(5, 5, 30, 30)];
 //        [playBtn setBackgroundImage:[UIImage imageWithColor:RGB(255, 235, 168) size:CGSizeMake(10, 10)] forState:UIControlStateNormal];
         [rightPlayView addSubview:playBtn];
@@ -1240,7 +1291,7 @@
 
 -(void)hidePlayView{
     if (rightPlayView) {
-        CGRect hideFrame = CGRectMake(Main_Screen_Width, CGRectGetMinY(typeBtn.frame) - 60, 90, 40);
+        CGRect hideFrame = CGRectMake(Main_Screen_Width, CGRectGetMinY(typeBtn.frame) - 60, 87, 36);
         [UIView animateWithDuration:0.3 animations:^{
             rightPlayView.frame = hideFrame;
         } completion:^(BOOL finished) {
@@ -1606,6 +1657,7 @@
             [self hideDrawMapView];
         }
         if (rec.view.tag == 3) {
+            showPlayBtn = NO;
             [self hidePlayView];
         }
         DLog(@"向右");

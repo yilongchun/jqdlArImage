@@ -45,8 +45,6 @@ var World = {
     // called to inject new POI data
     loadJingquPoisFromJsonData: function loadJingquPoisFromJsonDataFn(poiData) {
         
-        
-        
         if (World.currentMarker) {
             World.currentMarker.setDeselected(World.currentMarker);
             World.isClickDetailImage = false;
@@ -64,7 +62,7 @@ var World = {
         //        AR.context.scene.cullingDistance = 10000;
         
         
-        AR.logger.debug("versionNumber:" + AR.context.versionNumber);
+        AR.logger.debug("wikitude sdk versionNumber:" + AR.context.versionNumber);
         
         
         AR.context.scene.minScalingDistance = 22;
