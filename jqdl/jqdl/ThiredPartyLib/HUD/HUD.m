@@ -110,7 +110,8 @@ static UIView* lastViewWithHUD = nil;
 
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:targetView animated:YES];
 	if (str!=nil) {
-        hud.labelText = str;
+        hud.label.text = str;
+//        hud.labelText = str;
     }
     
     return hud;
@@ -122,7 +123,8 @@ static UIView* lastViewWithHUD = nil;
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     hud.customView = [[UIView alloc] initWithFrame:CGRectMake(0,0,37,37)];
     hud.mode = MBProgressHUDModeText;// MBProgressHUDModeDeterminate;
-    [hud hide:YES afterDelay:seconds];
+    [hud hideAnimated:YES afterDelay:seconds];
+//    [hud hide:YES afterDelay:seconds];
     return hud;
 }
 
@@ -144,8 +146,10 @@ static UIView* lastViewWithHUD = nil;
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:targetView animated:YES];
     
     //set the text
-    hud.labelText = titleText;
-    hud.detailsLabelText = text;
+//    hud.labelText = titleText;
+    hud.label.text = titleText;
+//    hud.detailsLabelText = text;
+    hud.detailsLabel.text = text;
     
     DLog(@"HUD:%@", text);
     
@@ -189,7 +193,8 @@ static UIView* lastViewWithHUD = nil;
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:targetView animated:YES];
     
     //set the text
-    hud.labelText = str;
+//    hud.labelText = str;
+    hud.label.text = str;
 
     hud.mode = MBProgressHUDModeDeterminate;
     hud.progress = progress;

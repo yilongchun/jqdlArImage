@@ -122,10 +122,9 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
-    if (player == nil) {
-        player = [Player sharedManager];
-        player.delegate = self;
-    }
+    //初始化音频播放
+    player = [Player sharedManager];
+    player.delegate = self;
     
     __block id _self = self;
     player.onCompletion=^(){
@@ -148,15 +147,6 @@
     self.jz_navigationBarBackgroundAlpha = 1.f;
     self.jz_wantsNavigationBarVisible = YES;
     
-    //右上角按钮
-//    UIImage *image = [[UIImage imageNamed:@"listIcon"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-//    UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithImage:image style:UIBarButtonItemStyleDone target:self action:@selector(tableStyle)];
-//    self.navigationItem.rightBarButtonItem = rightItem;
-    
-    
-    
-    
-    
     //添加地图
     _mapView = [[BMKMapView alloc]initWithFrame:CGRectMake(0, 64, Main_Screen_Width, Main_Screen_Height - 64)];
     [_mapView setZoomLevel:13];
@@ -175,7 +165,7 @@
     [self.view addSubview:showShouhuiBtn];
     
     
-    
+    //路线检索
     _routesearch = [[BMKRouteSearch alloc]init];
     _locService = [[BMKLocationService alloc]init];
     
@@ -194,61 +184,7 @@
     //添加放大缩小按钮
     [self setZoomBtn];
 
-    //添加手绘地图
-//    BMKCoordinateBounds bounds;
-     // 左边的上大 下小   右边的左小 右大
-//    bounds.northEast = CLLocationCoordinate2DMake(30.772352, 111.275587);
-//    bounds.southWest = CLLocationCoordinate2DMake(30.770019, 111.270812);
-//    BMKGroundOverlay* ground = [BMKGroundOverlay groundOverlayWithBounds:bounds icon:[UIImage imageNamed:@"map"]];
-    
-    
-    //map 三游洞 30.771156, 111.270301
-//    CLLocationCoordinate2D coors = CLLocationCoordinate2DMake(30.771156, 111.270301);
-//    ground = [BMKGroundOverlay groundOverlayWithPosition:coors
-//                                                                 zoomLevel:20.9 anchor:CGPointMake(0.0f,0.0f)
-//                                                                      icon:[UIImage imageNamed:@"map"]];
-//    //hyz 汉阳造                                               小 - 下       小 - 左
-////    CLLocationCoordinate2D coors = CLLocationCoordinate2DMake(30.562840, 114.273150);
-////    BMKGroundOverlay* ground = [BMKGroundOverlay groundOverlayWithPosition:coors
-////                                                                 zoomLevel:20.9 anchor:CGPointMake(0.0f,0.0f)
-////                                                                      icon:[UIImage imageNamed:@"hyz"]];
-////    ground.alpha = 0.5;//透明度
-//    [_mapView addOverlay:ground];
     [_mapView setZoomLevel:20.9];
-    
-    
-    
-    
-
-//    //添加景点分类选择
-//    CGFloat typeWidth = 76;
-//    CGFloat typeHeight = 38;
-//    CGFloat typeSpace = 12;
-//    typeScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(CGRectGetMaxX(locationBtn.frame), CGRectGetMinY(locationBtn.frame)+64+3, Main_Screen_Width - CGRectGetMaxX(locationBtn.frame) - typeSpace, typeHeight)];
-////    typeScrollView.backgroundColor = [UIColor grayColor];
-//    typeScrollView.showsHorizontalScrollIndicator = NO;
-//    [typeScrollView setContentSize:CGSizeMake(8 * (typeWidth + typeSpace), typeHeight)];
-//    typeScrollView.tag = 2;
-//    
-//    CGFloat typeX = 12;
-//    for (int i = 0 ; i < 8; i++) {
-//        UIButton *type1Btn = [[UIButton alloc] initWithFrame:CGRectMake(typeX, 0, typeWidth, typeHeight)];
-//        
-//        NSString *name = [NSString stringWithFormat:@"type%d",i+1];
-//        NSString *nameH = [NSString stringWithFormat:@"type%dH",i+1];
-//        type1Btn.tag = i;
-//        [type1Btn setImage:[UIImage imageNamed:name] forState:UIControlStateNormal];
-//        [type1Btn setImage:[UIImage imageNamed:nameH] forState:UIControlStateSelected];
-////        [type1Btn setImage:[UIImage imageNamed:@"type1H"] forState:UIControlStateHighlighted];
-//        [type1Btn addTarget:self action:@selector(typeClick:) forControlEvents:UIControlEventTouchUpInside];
-//        [typeScrollView addSubview:type1Btn];
-//        typeX += typeWidth + typeSpace;
-//        if (i == 0) {
-//            type1Btn.selected = YES;
-//            oldBtn = type1Btn;
-//        }
-//    }
-//    [self.view addSubview:typeScrollView];
     
     //添加筛选分类
     typeBtn = [[UIButton alloc] initWithFrame:CGRectMake(Main_Screen_Width - 16 - 70, Main_Screen_Height - 15 - 108 - 15 - 30, 70, 30)];
@@ -275,28 +211,15 @@
             [otherArray addObject:poi];
         }
         
-        
         //添加PointAnnotation
         MyPointAnnotation* annotation = [[MyPointAnnotation alloc]init];
-        
-        
         
 //        CLLocationCoordinate2D coor = CLLocationCoordinate2DMake(poi.location.coordinate.latitude + 0.00347516, poi.location.coordinate.longitude + 0.01223381);
         CLLocationCoordinate2D coo = CLLocationCoordinate2DMake([[poi objectForKey:@"latitude"] floatValue], [[poi objectForKey:@"longitude"] floatValue]);
         
         NSDictionary* testdic = BMKConvertBaiduCoorFrom(coo,BMK_COORDTYPE_GPS);
         CLLocationCoordinate2D coor = BMKCoorDictionaryDecode(testdic);
-//        NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-//        [dic setObject:[NSNumber numberWithFloat:poi.location.coordinate.latitude] forKey:@"latitude"];
-//        [dic setObject:[NSNumber numberWithFloat:poi.location.coordinate.longitude] forKey:@"longitude"];
-//        [dic setObject:[NSNumber numberWithFloat:poi.location.altitude] forKey:@"altitude"];
-//        [dic setObject:poi.name forKey:@"name"];
-//        [dic setObject:poi.detailedDescription forKey:@"description"];
-//        [dic setObject:poi.image forKey:@"image"];
-//        [dic setObject:poi.images forKey:@"images"];
-//        [dic setObject:poi.voice forKey:@"voice"];
-//        [dic setObject:poi.address forKey:@"address"];
-//        [dic setObject:poi.type forKey:@"type"];
+
         annotation.coordinate = coor;
         annotation.title = [poi objectForKey:@"name"];
         annotation.poi = poi;
@@ -351,50 +274,8 @@
         desLabel.textColor = RGB(151, 151, 151);
         desLabel.numberOfLines = 0;
         desLabel.text = [poi objectForKey:@"description"];
-//        desLabel.backgroundColor = [UIColor grayColor];
         [UILabel setLabelSpace:desLabel withValue:[poi objectForKey:@"description"] withFont:desLabel.font];
         [v addSubview:desLabel];
-        
-        
-        
-//        BMKMapPoint point1 = BMKMapPointForCoordinate(poi.location.coordinate);
-//        
-//        BMKMapPoint point2 = BMKMapPointForCoordinate(CLLocationCoordinate2DMake(, ));
-//        
-//        CLLocationDistance distance = BMKMetersBetweenMapPoints(point1,point2);
-        
-//        NSString *voice = [poi objectForKey:@"voice"];
-//        if (![voice isEqualToString:@""]) {
-//            UIButton *playBtn = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetWidth(v.frame) - 56, CGRectGetHeight(v.frame) - 28, 46, 18)];
-//            playBtn.tag = i;
-//            playBtn.titleLabel.font = SYSTEMFONT(10);
-//            [playBtn addTarget:self action:@selector(playVoice:) forControlEvents:UIControlEventTouchUpInside];
-//            //        [playBtn setTitle:@"播放" forState:UIControlStateNormal];
-//            //        [playBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-//            
-//            [playBtn setImage:[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
-//            
-//            //        playBtn.backgroundColor = RGB(255, 192, 20);
-//            [v addSubview:playBtn];
-//        }
-        
-//        CLLocationCoordinate2D coo = CLLocationCoordinate2DMake([[poi objectForKey:@"latitude"] floatValue], [[poi objectForKey:@"longitude"] floatValue]);
-//        NSDictionary* testdic = BMKConvertBaiduCoorFrom(coo,BMK_COORDTYPE_GPS);
-//        CLLocationCoordinate2D coor = BMKCoorDictionaryDecode(testdic);
-//        
-//        BMKMapPoint point1 = BMKMapPointForCoordinate(coor);
-//        BMKMapPoint point2 = BMKMapPointForCoordinate(start2d);
-//        CLLocationDistance distance = BMKMetersBetweenMapPoints(point1,point2);
-//        
-//        if (distance > 999) {
-//            NSString *dis = [NSString stringWithFormat:@"%.2fkm",distance/1000];
-//            DLog(@"%@ %@",[poi objectForKey:@"name"],dis);
-//           
-//        }else{
-//            NSString *dis = [NSString stringWithFormat:@"%.fm",distance];
-//            DLog(@"%@ %@",[poi objectForKey:@"name"],dis);
-//        }
-        
         
         [sv addSubview:v];
         x += CGRectGetWidth(v.frame) + 10;
@@ -405,6 +286,7 @@
     
     [self.view addSubview:jdCardView];
     
+    //默认选中第一个卡片
 //    if (annotations.count > 0) {
 //        [_mapView selectAnnotation:annotations[0] animated:YES];
 //    }
@@ -456,6 +338,7 @@
     
 //    [_mapView setCenterCoordinate:coors];
     
+    //景区模式默认添加手绘地图
     if ([self.jingquType isEqualToString:@"1"]) {
         //小 - 下       小 - 左
         
@@ -485,28 +368,16 @@
             ground = [BMKGroundOverlay groundOverlayWithPosition:coors zoomLevel:20.9 anchor:CGPointMake(0.0f,0.0f)
                                                             icon:[UIImage imageNamed:@"hyz"]];
         }
-        
-        
-        
-//        //hyz 汉阳造                                               小 - 下       小 - 左
-//        //30.563350, 114.273250 30.562840, 114.273150
-//        CLLocationCoordinate2D coors = CLLocationCoordinate2DMake(30.563350, 114.273250);
-//        ground = [BMKGroundOverlay groundOverlayWithPosition:coors zoomLevel:20.9 anchor:CGPointMake(0.0f,0.0f)
-//                                                                          icon:[UIImage imageNamed:@"hyz"]];
-        
-        
 //            ground.alpha = 0.5;
-        [_mapView addOverlay:ground];
-        showGroud = YES;
+        if (ground) {
+            [_mapView addOverlay:ground];
+            showGroud = YES;
+        }
     }
-    
-
 }
 
-
+//自动调整地图级别
 -(void)mapViewFit{
-    
-    
     if (annotations.count < 1) {
         return;
     }
@@ -514,8 +385,6 @@
     MyPointAnnotation* annotation = annotations[0];
     
     BMKMapPoint pt = BMKMapPointForCoordinate(annotation.coordinate);
-    
-    
     
     double ltX = pt.x;
     double rbX = pt.x;
@@ -680,31 +549,29 @@
     }
 }
 
+//设置 景点卡片 定位 分类 隐藏显示
 -(void)setJdScrollViewShowHidden{
     if (showJd) {
+        //景点卡片
         CGRect rect = jdCardView.frame;
         rect.origin.y = Main_Screen_Height - 15 - 108;
-        
+        //定位
         CGRect locationRect = locationBtn.frame;
         locationRect.origin.y = _mapView.frame.size.height - 108 - 15 - 15 - 44;
-        
+        //分类按钮
         CGRect typeBtnRect = typeBtn.frame;
         typeBtnRect.origin.y = Main_Screen_Height - 15 - 108 - 15 - 30;
-        
-//        CGRect typeViewRect;
-//        if (typeView) {
-//            typeViewRect = typeView.frame;
-//            typeBtnRect.origin.y = typeBtnRect.origin.y - 260;
-//        }
+        //播放按钮
+        CGRect playRect = rightPlayView.frame;
+        playRect.origin.y = typeBtnRect.origin.y - 60;
+
         
         [UIView animateWithDuration:0.15 animations:^{
             jdCardView.frame = rect;
             locationBtn.frame = locationRect;
             typeBtn.frame = typeBtnRect;
-//            if (typeView) {
-//                typeView.frame = typeViewRect;
-//            }
-            
+
+            rightPlayView.frame = playRect;
         }];
     }else{
         CGRect rect = jdCardView.frame;
@@ -716,20 +583,15 @@
         CGRect typeBtnRect = typeBtn.frame;
         typeBtnRect.origin.y = Main_Screen_Height - 15 - 30;
         
-//        CGRect typeViewRect;
-//        if (typeView) {
-//            typeViewRect = typeView.frame;
-//            typeBtnRect.origin.y = typeBtnRect.origin.y - 260;
-//        }
+        CGRect playRect = rightPlayView.frame;
+        playRect.origin.y = typeBtnRect.origin.y - 60;
         
         [UIView animateWithDuration:0.15 animations:^{
             jdCardView.frame = rect;
             locationBtn.frame = locationRect;
             typeBtn.frame = typeBtnRect;
             
-//            if (typeView) {
-//                typeView.frame = typeViewRect;
-//            }
+            rightPlayView.frame = playRect;
         }];
     }
 }
@@ -805,10 +667,10 @@
         //添加PointAnnotation
         MyPointAnnotation* annotation = [[MyPointAnnotation alloc]init];
         CLLocationCoordinate2D coor = CLLocationCoordinate2DMake([[poi objectForKey:@"latitude"] floatValue], [[poi objectForKey:@"longitude"] floatValue]);
-        DLog(@"GPS > 百度坐标 转换前 %f %f",coor.longitude,coor.latitude);
+//        DLog(@"GPS > 百度坐标 转换前 %f %f",coor.longitude,coor.latitude);
         NSDictionary* testdic = BMKConvertBaiduCoorFrom(coor,BMK_COORDTYPE_GPS);
         CLLocationCoordinate2D locationCoordinate = BMKCoorDictionaryDecode(testdic);
-        DLog(@"GPS > 百度坐标 转换后 %f %f",locationCoordinate.longitude,locationCoordinate.latitude);
+//        DLog(@"GPS > 百度坐标 转换后 %f %f",locationCoordinate.longitude,locationCoordinate.latitude);
         
         
 //            CLLocationCoordinate2D coor = poi.location.coordinate;
@@ -836,11 +698,7 @@
         [spotTableView reloadData];
     }
     
-    
-    
-    
     //添加底部景点卡片
-    
     [sv.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         [obj removeFromSuperview];
     }];
@@ -905,7 +763,7 @@
         
         [imageview setImageWithURL:[NSURL URLWithString:[poi objectForKey:@"image"]] placeholderImage:[UIImage imageNamed:@"flat"]];
         
-        ViewBorderRadius(imageview, 2, 0, [UIColor whiteColor]);
+        ViewRadius(imageview, 2);
         [v addSubview:imageview];
         //文字
         UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(imageview.frame) + 12, 12, 0, 0)];
@@ -1277,8 +1135,8 @@
 //播放语音
 -(void)showPlayBtn{
     
-    CGRect showFrame = CGRectMake(Main_Screen_Width - 90, CGRectGetMinY(typeBtn.frame) - 24 - 40, 90, 40);
-    CGRect hideFrame = CGRectMake(Main_Screen_Width, CGRectGetMinY(typeBtn.frame) - 24 - 40, 90, 40);
+    CGRect showFrame = CGRectMake(Main_Screen_Width - 90, CGRectGetMinY(typeBtn.frame) - 60, 90, 40);
+    CGRect hideFrame = CGRectMake(Main_Screen_Width, CGRectGetMinY(typeBtn.frame) - 60, 90, 40);
     
     if (rightPlayView == nil) {
         rightPlayView = [[UIView alloc] initWithFrame:showFrame];
@@ -1294,10 +1152,23 @@
         maskLayer.path = maskPath.CGPath;
         rightPlayView.layer.mask = maskLayer;
         
+        
+        
         UISwipeGestureRecognizer *swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
+        swipe.direction=UISwipeGestureRecognizerDirectionRight;//|UISwipeGestureRecognizerDirectionLeft|UISwipeGestureRecognizerDirectionDown|UISwipeGestureRecognizerDirectionUp;
         rightPlayView.tag = 3;
         rightPlayView.userInteractionEnabled = YES;
         [rightPlayView addGestureRecognizer:swipe];
+        
+        UISwipeGestureRecognizer *swipe2 = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
+        swipe2.direction=UISwipeGestureRecognizerDirectionLeft;//|UISwipeGestureRecognizerDirectionLeft|UISwipeGestureRecognizerDirectionDown|UISwipeGestureRecognizerDirectionUp;
+        rightPlayView.tag = 3;
+        rightPlayView.userInteractionEnabled = YES;
+        [rightPlayView addGestureRecognizer:swipe2];
+        
+        
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(play)];
+        [rightPlayView addGestureRecognizer:tap];
         
         UILabel *stateLabel = [[UILabel alloc] initWithFrame:CGRectMake(40, 10, 50, 20)];
         stateLabel.tag = 999;
@@ -1335,9 +1206,9 @@
 //        [playBtn setBackgroundImage:[UIImage imageWithColor:RGB(255, 235, 168) size:CGSizeMake(10, 10)] forState:UIControlStateNormal];
         [rightPlayView addSubview:playBtn];
 //        [playBtn addTarget:self action:@selector(play) forControlEvents:UIControlEventTouchUpInside];
-        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(play)];
-        playBtn.userInteractionEnabled = YES;
-        [playBtn addGestureRecognizer:tap];
+//        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(play)];
+//        playBtn.userInteractionEnabled = YES;
+//        [playBtn addGestureRecognizer:tap];
         
         if (player) {
             if ([player isPlaying]) {
@@ -1369,7 +1240,7 @@
 
 -(void)hidePlayView{
     if (rightPlayView) {
-        CGRect hideFrame = CGRectMake(Main_Screen_Width, CGRectGetMinY(typeBtn.frame) - 24 - 40, 90, 40);
+        CGRect hideFrame = CGRectMake(Main_Screen_Width, CGRectGetMinY(typeBtn.frame) - 60, 90, 40);
         [UIView animateWithDuration:0.3 animations:^{
             rightPlayView.frame = hideFrame;
         } completion:^(BOOL finished) {
@@ -1383,7 +1254,7 @@
     //遮罩层
     if (imageMaskView == nil) {
         imageMaskView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, Main_Screen_Width, Main_Screen_Height)];
-        imageMaskView.backgroundColor = RGBA(0, 0, 0, 0.0);
+        imageMaskView.backgroundColor = RGBA(0, 0, 0, 0.5);
         
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideDetailImage)];
         [imageMaskView addGestureRecognizer:tap];
@@ -1726,6 +1597,7 @@
 
 - (void) handlePan: (UISwipeGestureRecognizer *)rec{
     
+    
     if(rec.direction == UISwipeGestureRecognizerDirectionRight){
         if (rec.view.tag == 1) {
             [self hideFeatureListView];
@@ -1738,11 +1610,14 @@
         }
         DLog(@"向右");
        
+    }else if (rec.direction == UISwipeGestureRecognizerDirectionLeft){
+        if (rec.view.tag == 3) {
+            DLog(@"向左划 进入详情");
+        }
     }else{
         DLog(@"其他方向");
     }
-//    rec.view.center = CGPointMake(rec.view.center.x + point.x, rec.view.center.y + point.y);
-//    [rec setTranslation:CGPointMake(0, 0) inView:self.view];
+
 }
 
 //热点列表
@@ -1868,6 +1743,7 @@
             }
             oldGroudBtn = btn;
             btn.selected = YES;
+            [self showHintInView:self.navigationController.view hint:@"显示手绘地图"];
         }
     }
     
@@ -1883,6 +1759,7 @@
         }
         oldGroudBtn = btn;
         btn.selected = YES;
+        [self showHintInView:self.navigationController.view hint:@"隐藏手绘地图"];
     }
 }
 
@@ -2079,8 +1956,6 @@
             NSString *dis = [NSString stringWithFormat:@"%.fm",distance];
             cell.detailTextLabel.text = dis;
         }
-        
-        DLog(@"%f\t%@",distance,[poi objectForKey:@"name"]);
     }else if (indexPath.section == 1){
         NSDictionary *poi = [otherArray objectAtIndex:indexPath.row];
         NSString *type = [poi objectForKey:@"type"];
@@ -2124,11 +1999,7 @@
             NSString *dis = [NSString stringWithFormat:@"%.fm",distance];
             cell.detailTextLabel.text = dis;
         }
-        
-        DLog(@"%f\t%@",distance,[poi objectForKey:@"name"]);
     }
-    
-    
     return cell;
 }
 

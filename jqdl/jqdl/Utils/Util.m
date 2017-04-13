@@ -22,7 +22,7 @@
 
 +(float)folderSizeAtPath:(NSString *)path{
     NSFileManager *fileManager=[NSFileManager defaultManager];
-    float folderSize;
+    float folderSize = 0;
     if ([fileManager fileExistsAtPath:path]) {
         NSArray *childerFiles=[fileManager subpathsAtPath:path];
         DLog(@"folderSizeAtPath 文件数 ：%lu",(unsigned long)[childerFiles count]);
@@ -154,10 +154,10 @@
         baiduMapDic[@"title"] = @"百度地图";
         
         
-        NSDictionary* testdic = BMKConvertBaiduCoorFrom(endLocation,BMK_COORDTYPE_GPS);
-        CLLocationCoordinate2D locationCoordinate = BMKCoorDictionaryDecode(testdic);
+//        NSDictionary* testdic = BMKConvertBaiduCoorFrom(endLocation,BMK_COORDTYPE_GPS);
+//        endLocation = BMKCoorDictionaryDecode(testdic);
         
-        NSString *urlString = [[NSString stringWithFormat:@"baidumap://map/direction?origin={{我的位置}}&destination=latlng:%f,%f|name=北京&mode=driving&coord_type=gcj02",locationCoordinate.latitude,locationCoordinate.longitude] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        NSString *urlString = [[NSString stringWithFormat:@"baidumap://map/direction?origin={{我的位置}}&destination=latlng:%f,%f&mode=driving&coord_type=gcj02",endLocation.latitude,endLocation.longitude] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         baiduMapDic[@"url"] = urlString;
         [maps addObject:baiduMapDic];
     }

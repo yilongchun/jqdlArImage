@@ -638,9 +638,6 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                     }
                 }
                 
-                
-                
-                
                 //随机坐标
                 //                CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake(myLocation.coordinate.latitude + WT_RANDOM(-0.1, 0.1), myLocation.coordinate.longitude + WT_RANDOM(-0.1, 0.1));
                 
@@ -652,7 +649,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                 
                 //f66c0fc1f74580c525365751a9ce21b6 三游洞
                 //0070c1938cc15df1d5b891b5adbb7d8b 汉阳造
-                if ([[storeDic objectForKey:@"id"] isEqualToString:@"0070c1938cc15df1d5b891b5adbb7d8b"]) {
+                if ([[storeDic objectForKey:@"id"] isEqualToString:@"f66c0fc1f74580c525365751a9ce21b6"]) {
                     locationCoordinate = CLLocationCoordinate2DMake(myLocation.coordinate.latitude + WT_RANDOM(-0.001, 0.001), myLocation.coordinate.longitude + WT_RANDOM(-0.01, 0.01));
                 }else{
                     locationCoordinate = CLLocationCoordinate2DMake(myLocation.coordinate.latitude + 0.3, myLocation.coordinate.longitude + 0.3);
