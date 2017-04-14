@@ -34,6 +34,7 @@
 #import "CircleView.h"
 #import "PlayButton.h"
 #import "MapPopBtn.h"
+#import "MapSpotTableViewCell.h"
 
 #define MYBUNDLE_NAME @ "mapapi.bundle"
 #define MYBUNDLE_PATH [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: MYBUNDLE_NAME]
@@ -436,7 +437,7 @@
 
 //显示分类按钮
 -(void)showTypeView{
-    CGRect frame1 = CGRectMake(CGRectGetMinX(typeBtn.frame), CGRectGetMinY(typeBtn.frame) - 10, CGRectGetWidth(typeBtn.frame), 0);
+//    CGRect frame1 = CGRectMake(CGRectGetMinX(typeBtn.frame), CGRectGetMinY(typeBtn.frame) - 10, CGRectGetWidth(typeBtn.frame), 0);
     CGRect frame2 = CGRectMake(CGRectGetMinX(typeBtn.frame), CGRectGetMinY(typeBtn.frame) - 260, CGRectGetWidth(typeBtn.frame), 250);
     if (typeView == nil) {
         
@@ -559,13 +560,16 @@
         typeView.layer.position = CGPointMake(typeView.layer.position.x, typeView.layer.position.y + typeView.frame.size.height * 0.5);
         typeView.layer.anchorPoint = CGPointMake(0.5, 1);
         typeView.transform = CGAffineTransformMakeScale(0.001,0.001);
+        typeView.alpha = 0;
         [UIView animateWithDuration:0.15 animations:^{
+            typeView.alpha = 1;
             typeView.transform = CGAffineTransformMakeScale(1,1);
 //            typeView.frame = frame2;
         }];
     }else{
         
         [UIView animateWithDuration:0.15 animations:^{
+            typeView.alpha = 0;
             typeView.transform = CGAffineTransformMakeScale(0.001,0.001);
         } completion:^(BOOL finished) {
             if (finished) {
@@ -790,6 +794,11 @@
             imageview.userInteractionEnabled = YES;
             UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toDetail:)];
             [imageview addGestureRecognizer:tap];
+            
+            v.userInteractionEnabled = YES;
+            v.tag = i;
+            UITapGestureRecognizer *tap2 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toDetail:)];
+            [v addGestureRecognizer:tap2];
         }
         
         
@@ -945,6 +954,7 @@
 //    }
     
     if (playBtn) {
+        showPlayBtn = NO;
 //        [playBtn setProgress:1 animated:NO];
         [playBtn setProgress:0 animated:YES];
         [playBtn setImage:[UIImage imageNamed:@"play"]];
@@ -1956,41 +1966,47 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    static NSString *CellIdentifier = @"cell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    static NSString *CellIdentifier = @"mapSpotTableViewCell";
+    MapSpotTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
-        cell.textLabel.font = SYSTEMFONT(15);
-        cell.detailTextLabel.font = SYSTEMFONT(13);
+        cell= (MapSpotTableViewCell *)[[[NSBundle  mainBundle]  loadNibNamed:@"MapSpotTableViewCell" owner:self options:nil]  lastObject];
     }
+    
+//    static NSString *CellIdentifier = @"cell";
+//    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+//    if (cell == nil) {
+//        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
+//        cell.textLabel.font = SYSTEMFONT(15);
+//        cell.detailTextLabel.font = SYSTEMFONT(13);
+//    }
     
     if (indexPath.section == 0) {
         NSDictionary *poi = [tuijianArray objectAtIndex:indexPath.row];
         NSString *type = [poi objectForKey:@"type"];
         if([type isEqualToString:@"scenery_spot"]){//景点
-            cell.imageView.image = [UIImage imageNamed:@"greenPoint3"];
+            cell.leftImageView.image = [UIImage imageNamed:@"greenPoint3"];
         }else if([type isEqualToString:@"recreational_facility"]){//游乐
-            cell.imageView.image = [UIImage imageNamed:@"bluePoint3"];
+            cell.leftImageView.image = [UIImage imageNamed:@"bluePoint3"];
         }
         else if([type isEqualToString:@"food"]){//美食
-            cell.imageView.image = [UIImage imageNamed:@"yellowPoint2"];
+            cell.leftImageView.image = [UIImage imageNamed:@"yellowPoint2"];
         }
         else if([type isEqualToString:@"shop"]){//商铺
-            cell.imageView.image = [UIImage imageNamed:@"purplePoint3"];
+            cell.leftImageView.image = [UIImage imageNamed:@"purplePoint3"];
         }
         else if([type isEqualToString:@"toilet"]){//公厕
-            cell.imageView.image = [UIImage imageNamed:@"brownPoint2"];
+            cell.leftImageView.image = [UIImage imageNamed:@"brownPoint2"];
         }
         else if([type isEqualToString:@"entrance"]){//出入口
-            cell.imageView.image = [UIImage imageNamed:@"linghtGreenPonit3"];
+            cell.leftImageView.image = [UIImage imageNamed:@"linghtGreenPonit3"];
         }
         else if([type isEqualToString:@"service_point"]){//服务点
-            cell.imageView.image = [UIImage imageNamed:@"redPoint2"];
+            cell.leftImageView.image = [UIImage imageNamed:@"redPoint2"];
         }
         else {
-            cell.imageView.image = [UIImage imageNamed:@"greenPoint3"];
+            cell.leftImageView.image = [UIImage imageNamed:@"greenPoint3"];
         }
-        cell.textLabel.text = [poi objectForKey:@"name"];
+        cell.spotTitleLabel.text = [poi objectForKey:@"name"];
         
         
         CLLocationCoordinate2D coo = CLLocationCoordinate2DMake([[poi objectForKey:@"latitude"] floatValue], [[poi objectForKey:@"longitude"] floatValue]);
@@ -2003,38 +2019,38 @@
         
         if (distance > 999) {
             NSString *dis = [NSString stringWithFormat:@"%.2fkm",distance/1000];
-            cell.detailTextLabel.text = dis;
+            cell.distanceLabel.text = dis;
         }else{
             NSString *dis = [NSString stringWithFormat:@"%.fm",distance];
-            cell.detailTextLabel.text = dis;
+            cell.distanceLabel.text = dis;
         }
     }else if (indexPath.section == 1){
         NSDictionary *poi = [otherArray objectAtIndex:indexPath.row];
         NSString *type = [poi objectForKey:@"type"];
         if([type isEqualToString:@"scenery_spot"]){//景点
-            cell.imageView.image = [UIImage imageNamed:@"greenPoint3"];
+            cell.leftImageView.image = [UIImage imageNamed:@"greenPoint3"];
         }else if([type isEqualToString:@"recreational_facility"]){//游乐
-            cell.imageView.image = [UIImage imageNamed:@"bluePoint3"];
+            cell.leftImageView.image = [UIImage imageNamed:@"bluePoint3"];
         }
         else if([type isEqualToString:@"food"]){//美食
-            cell.imageView.image = [UIImage imageNamed:@"yellowPoint2"];
+            cell.leftImageView.image = [UIImage imageNamed:@"yellowPoint2"];
         }
         else if([type isEqualToString:@"shop"]){//商铺
-            cell.imageView.image = [UIImage imageNamed:@"purplePoint3"];
+            cell.leftImageView.image = [UIImage imageNamed:@"purplePoint3"];
         }
         else if([type isEqualToString:@"toilet"]){//公厕
-            cell.imageView.image = [UIImage imageNamed:@"brownPoint2"];
+            cell.leftImageView.image = [UIImage imageNamed:@"brownPoint2"];
         }
         else if([type isEqualToString:@"entrance"]){//出入口
-            cell.imageView.image = [UIImage imageNamed:@"linghtGreenPonit3"];
+            cell.leftImageView.image = [UIImage imageNamed:@"linghtGreenPonit3"];
         }
         else if([type isEqualToString:@"service_point"]){//服务点
-            cell.imageView.image = [UIImage imageNamed:@"redPoint2"];
+            cell.leftImageView.image = [UIImage imageNamed:@"redPoint2"];
         }
         else {
-            cell.imageView.image = [UIImage imageNamed:@"greenPoint3"];
+            cell.leftImageView.image = [UIImage imageNamed:@"greenPoint3"];
         }
-        cell.textLabel.text = [poi objectForKey:@"name"];
+        cell.spotTitleLabel.text = [poi objectForKey:@"name"];
         
         CLLocationCoordinate2D coo = CLLocationCoordinate2DMake([[poi objectForKey:@"latitude"] floatValue], [[poi objectForKey:@"longitude"] floatValue]);
         NSDictionary* testdic = BMKConvertBaiduCoorFrom(coo,BMK_COORDTYPE_GPS);
@@ -2046,10 +2062,10 @@
         
         if (distance > 999) {
             NSString *dis = [NSString stringWithFormat:@"%.2fkm",distance/1000];
-            cell.detailTextLabel.text = dis;
+            cell.distanceLabel.text = dis;
         }else{
             NSString *dis = [NSString stringWithFormat:@"%.fm",distance];
-            cell.detailTextLabel.text = dis;
+            cell.distanceLabel.text = dis;
         }
     }
     return cell;

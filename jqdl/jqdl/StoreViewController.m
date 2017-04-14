@@ -14,11 +14,16 @@
 #import <MapKit/MapKit.h>
 #import "Util.h"
 #import "LCActionSheet.h"
+#import "Player.h"
 
-
-@interface StoreViewController ()<LCActionSheetDelegate>{
+@interface StoreViewController ()<LCActionSheetDelegate,FSPCMAudioStreamDelegate>{
     UIButton *jieshuoBtn;
     NSArray *maps;
+    Player *player;
+    UISlider *slider;
+    UILabel *startLabel;
+    UILabel *timeLabel;
+    UIButton *playBtn;
 }
 
 @end
@@ -28,6 +33,17 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    
+    player = [Player sharedManager];
+    player.delegate = self;
+    
+    
+    __block id _self = self;
+    player.onCompletion=^(){
+        NSLog(@"detialViewController 播放完成!");
+        [_self playVoiceEnd];
+        //        [[NSNotificationCenter defaultCenter] postNotificationName:@"playVoiceEnd" object:nil];
+    };
     
     if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_6_1) {
         //        self.edgesForExtendedLayout = UIRectEdgeNone;
@@ -79,13 +95,50 @@
     titleLabel.font = [UIFont systemFontOfSize:17];
     titleLabel.textColor=[UIColor whiteColor];
     [_myScrollView addSubview:titleLabel];
-    //解说按钮
-    jieshuoBtn = [[UIButton alloc] initWithFrame:CGRectMake(25, CGRectGetMaxY(adView.frame) + 10, 88, 25)];
-    [jieshuoBtn setImage:[UIImage imageNamed:@"ypjs"] forState:UIControlStateNormal];
-    [jieshuoBtn addTarget:self action:@selector(playVoice) forControlEvents:UIControlEventTouchUpInside];
-    [_myScrollView addSubview:jieshuoBtn];
+//    //解说按钮
+//    jieshuoBtn = [[UIButton alloc] initWithFrame:CGRectMake(25, CGRectGetMaxY(adView.frame) + 10, 88, 25)];
+//    [jieshuoBtn setImage:[UIImage imageNamed:@"ypjs"] forState:UIControlStateNormal];
+//    [jieshuoBtn addTarget:self action:@selector(playVoice) forControlEvents:UIControlEventTouchUpInside];
+//    [_myScrollView addSubview:jieshuoBtn];
+    
+    
+    UILabel *playTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(18, CGRectGetMaxY(adView.frame) + 16, 0, 0)];
+    playTitleLabel.font = BOLDSYSTEMFONT(14);
+    playTitleLabel.textColor = RGB(51, 51, 51);
+    playTitleLabel.text = @"语音导览";
+    [playTitleLabel sizeToFit];
+    [_myScrollView addSubview:playTitleLabel];
+    
+    //播放
+    playBtn = [[UIButton alloc] initWithFrame:CGRectMake(18, CGRectGetMaxY(playTitleLabel.frame) + 16, 40, 40)];
+    [playBtn setImage:[UIImage imageNamed:@"playStart"] forState:UIControlStateNormal];
+    [playBtn addTarget:self action:@selector(playVoice) forControlEvents:UIControlEventTouchUpInside];
+    [_myScrollView addSubview:playBtn];
+    
+    UIImageView *sliderBackground = [[UIImageView alloc] initWithFrame:CGRectMake(67, CGRectGetMaxY(playTitleLabel.frame) + 16, Main_Screen_Width - 67 - 18, 40)];
+    sliderBackground.image = [UIImage imageNamed:@"sliderBroudground"];
+    slider = [[UISlider alloc] initWithFrame:CGRectMake(10, 5, CGRectGetWidth(sliderBackground.frame) - 20, CGRectGetHeight(sliderBackground.frame) - 10)];
+    //    slider.userInteractionEnabled = NO;
+    slider.minimumTrackTintColor = RGB(244, 173, 0);
+    slider.maximumTrackTintColor = RGB(227, 227, 227);
+    slider.thumbTintColor = RGB(244, 173, 0);
+    [slider setThumbImage:[UIImage imageNamed:@"sliderImage"] forState:UIControlStateNormal];
+    [sliderBackground addSubview:slider];
+    
+    startLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, CGRectGetHeight(sliderBackground.frame) - 15, 34, 15)];
+    startLabel.font = SYSTEMFONT(10);
+    startLabel.textColor = RGB(189, 189, 189);
+    [sliderBackground addSubview:startLabel];
+    
+    timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetWidth(sliderBackground.frame) - 35, CGRectGetHeight(sliderBackground.frame) - 15, 34, 15)];
+    timeLabel.font = SYSTEMFONT(10);
+    timeLabel.textColor = RGB(189, 189, 189);
+    [sliderBackground addSubview:timeLabel];
+    [_myScrollView addSubview:sliderBackground];
+    
+    
     //文本介绍
-    UILabel *contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(25, CGRectGetMaxY(jieshuoBtn.frame) + 12, Main_Screen_Width - 50, 10)];
+    UILabel *contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(25, CGRectGetMaxY(playBtn.frame) + 20, Main_Screen_Width - 50, 10)];
     contentLabel.numberOfLines = 0;
     contentLabel.font = [UIFont systemFontOfSize:14];
     contentLabel.textColor = RGB(135, 135, 135);

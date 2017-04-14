@@ -411,6 +411,8 @@
 		442ED7D71DB9A78F0058DD4C /* DetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 442ED7D51DB9A78F0058DD4C /* DetailViewController.xib */; };
 		442ED7D91DB9A7D10058DD4C /* ArchitectWorld in Resources */ = {isa = PBXBuildFile; fileRef = 442ED7D81DB9A7D10058DD4C /* ArchitectWorld */; };
 		442ED7DB1DB9A9340058DD4C /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 442ED7DA1DB9A9340058DD4C /* MediaPlayer.framework */; };
+		4432F7621EA05EEF0040B20D /* MapSpotTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4432F7601EA05EEF0040B20D /* MapSpotTableViewCell.m */; };
+		4432F7631EA05EEF0040B20D /* MapSpotTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4432F7611EA05EEF0040B20D /* MapSpotTableViewCell.xib */; };
 		4434AEC11E1CAA490014BE2D /* UIImage+Color.m in Sources */ = {isa = PBXBuildFile; fileRef = 4434AEC01E1CAA490014BE2D /* UIImage+Color.m */; };
 		443795F61E973D47002FE378 /* PlayButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 443795F51E973D47002FE378 /* PlayButton.m */; };
 		443795F91E97417C002FE378 /* MapPopBtn.m in Sources */ = {isa = PBXBuildFile; fileRef = 443795F81E97417C002FE378 /* MapPopBtn.m */; };
@@ -1355,6 +1357,9 @@
 		442ED7D51DB9A78F0058DD4C /* DetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DetailViewController.xib; sourceTree = "<group>"; };
 		442ED7D81DB9A7D10058DD4C /* ArchitectWorld */ = {isa = PBXFileReference; lastKnownFileType = folder; name = ArchitectWorld; path = jqdl/ArchitectWorld; sourceTree = "<group>"; };
 		442ED7DA1DB9A9340058DD4C /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
+		4432F75F1EA05EEF0040B20D /* MapSpotTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapSpotTableViewCell.h; sourceTree = "<group>"; };
+		4432F7601EA05EEF0040B20D /* MapSpotTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapSpotTableViewCell.m; sourceTree = "<group>"; };
+		4432F7611EA05EEF0040B20D /* MapSpotTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MapSpotTableViewCell.xib; sourceTree = "<group>"; };
 		4434AEBF1E1CAA490014BE2D /* UIImage+Color.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Color.h"; sourceTree = "<group>"; };
 		4434AEC01E1CAA490014BE2D /* UIImage+Color.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Color.m"; sourceTree = "<group>"; };
 		443795F41E973D47002FE378 /* PlayButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayButton.h; sourceTree = "<group>"; };
@@ -3439,6 +3444,9 @@
 				443795F51E973D47002FE378 /* PlayButton.m */,
 				443795F71E97417C002FE378 /* MapPopBtn.h */,
 				443795F81E97417C002FE378 /* MapPopBtn.m */,
+				4432F75F1EA05EEF0040B20D /* MapSpotTableViewCell.h */,
+				4432F7601EA05EEF0040B20D /* MapSpotTableViewCell.m */,
+				4432F7611EA05EEF0040B20D /* MapSpotTableViewCell.xib */,
 			);
 			path = Map;
 			sourceTree = "<group>";
@@ -3663,6 +3671,7 @@
 				4437FEF71E48542500B8A084 /* status-bar-pattern-black@3x.png in Resources */,
 				442ED7D91DB9A7D10058DD4C /* ArchitectWorld in Resources */,
 				44D4E80D1E5FD36E005E6137 /* WebViewController.xib in Resources */,
+				4432F7631EA05EEF0040B20D /* MapSpotTableViewCell.xib in Resources */,
 				440E7ED21E1B367C00B5277E /* ForgetPwdViewController.xib in Resources */,
 				4437FED91E48212F00B8A084 /* SettingViewController.xib in Resources */,
 				4444EFA51E456C7200E72B41 /* UserCenterViewController.xib in Resources */,
@@ -3976,6 +3985,7 @@
 				44117A211C11763E0071E1C0 /* ZXRSSExpandedGeneralAppIdDecoder.m in Sources */,
 				441179C81C11763E0071E1C0 /* ZXURLTOResultParser.m in Sources */,
 				441179AB1C11763E0071E1C0 /* ZXAbstractDoCoMoResultParser.m in Sources */,
+				4432F7621EA05EEF0040B20D /* MapSpotTableViewCell.m in Sources */,
 				443795F61E973D47002FE378 /* PlayButton.m in Sources */,
 				4464FD631E947F47007D93EE /* PhotoViewController.m in Sources */,
 				441179D31C11763E0071E1C0 /* ZXMonochromeRectangleDetector.m in Sources */,
