@@ -375,6 +375,7 @@
 		44117AC61C1184CF0071E1C0 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 44117AC51C1184CF0071E1C0 /* libxml2.tbd */; };
 		44217BB51E2EF94B008699C1 /* StoreViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44217BB31E2EF94B008699C1 /* StoreViewController.m */; };
 		44217BB61E2EF94B008699C1 /* StoreViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44217BB41E2EF94B008699C1 /* StoreViewController.xib */; };
+		442355DB1EA5EE730035C7D2 /* AudioGuideView.m in Sources */ = {isa = PBXBuildFile; fileRef = 442355DA1EA5EE730035C7D2 /* AudioGuideView.m */; };
 		4424D63A1E27254800245B43 /* LCActionSheet.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4424D6331E27254800245B43 /* LCActionSheet.bundle */; };
 		4424D63B1E27254800245B43 /* LCActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 4424D6351E27254800245B43 /* LCActionSheet.m */; };
 		4424D63C1E27254800245B43 /* LCActionSheetCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4424D6371E27254800245B43 /* LCActionSheetCell.m */; };
@@ -1294,6 +1295,8 @@
 		44217BB21E2EF94B008699C1 /* StoreViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StoreViewController.h; sourceTree = "<group>"; };
 		44217BB31E2EF94B008699C1 /* StoreViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StoreViewController.m; sourceTree = "<group>"; };
 		44217BB41E2EF94B008699C1 /* StoreViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = StoreViewController.xib; sourceTree = "<group>"; };
+		442355D91EA5EE730035C7D2 /* AudioGuideView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioGuideView.h; sourceTree = "<group>"; };
+		442355DA1EA5EE730035C7D2 /* AudioGuideView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioGuideView.m; sourceTree = "<group>"; };
 		4424D6331E27254800245B43 /* LCActionSheet.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = LCActionSheet.bundle; sourceTree = "<group>"; };
 		4424D6341E27254800245B43 /* LCActionSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LCActionSheet.h; sourceTree = "<group>"; };
 		4424D6351E27254800245B43 /* LCActionSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LCActionSheet.m; sourceTree = "<group>"; };
@@ -3431,6 +3434,8 @@
 				44B290E11E82272E00D5324D /* MyPointAnnotation.m */,
 				444E61B81E84E887008C494E /* MyView2.h */,
 				444E61B91E84E887008C494E /* MyView2.m */,
+				442355D91EA5EE730035C7D2 /* AudioGuideView.h */,
+				442355DA1EA5EE730035C7D2 /* AudioGuideView.m */,
 				444C43691E8A10C7008CF2C6 /* MyMapImgBtn.h */,
 				444C436A1E8A10C7008CF2C6 /* MyMapImgBtn.m */,
 				4464FD601E947F47007D93EE /* PhotoViewController.h */,
@@ -4068,6 +4073,7 @@
 				441179C31C11763E0071E1C0 /* ZXTelParsedResult.m in Sources */,
 				44117A481C11763E0071E1C0 /* ZXPDF417ECErrorCorrection.m in Sources */,
 				4411797D1C11763E0071E1C0 /* caching_stream.cpp in Sources */,
+				442355DB1EA5EE730035C7D2 /* AudioGuideView.m in Sources */,
 				44621BAB1E12029500EB3AFC /* UIWebView+AFNetworking.m in Sources */,
 				442ED7C61DB9A72E0058DD4C /* ViewController.m in Sources */,
 				440E7F601E1B371E00B5277E /* UIViewController+Visible.m in Sources */,

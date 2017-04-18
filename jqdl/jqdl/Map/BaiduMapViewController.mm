@@ -36,6 +36,7 @@
 #import "MapPopBtn.h"
 #import "MapSpotTableViewCell.h"
 #import "NSObject+Blocks.h"
+#import "AudioGuideView.h"
 
 #define MYBUNDLE_NAME @ "mapapi.bundle"
 #define MYBUNDLE_PATH [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: MYBUNDLE_NAME]
@@ -1124,6 +1125,7 @@
 
 -(void)viewDidDisappear:(BOOL)animated{
     [super viewDidDisappear:animated];
+    player.delegate = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"playVoiceEnd" object:nil];
 }
 
@@ -1162,15 +1164,47 @@
     }];
 }
 
+//第一次点击播放 显示引导
+-(void)showFirstPlayGuide{
+    if(![[NSUserDefaults standardUserDefaults] boolForKey:@"firstPlay"]){
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"firstPlay"];
+        UIView *maskView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, Main_Screen_Width, Main_Screen_Height)];
+        maskView.userInteractionEnabled = YES;
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideAudioGuideView:)];
+        [maskView addGestureRecognizer:tap];
+        AudioGuideView *guide = [[AudioGuideView alloc] initWithFrame:CGRectMake(Main_Screen_Width - 232, CGRectGetMidY(rightPlayView.frame) - 100, 222, 65)];
+        guide.backgroundColor = [UIColor clearColor];
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 10, CGRectGetWidth(guide.frame) - 20, 0)];
+        label.numberOfLines = 0;
+        label.font = SYSTEMFONT(12);
+        label.textColor = [UIColor whiteColor];
+        label.text = @"语音解说会自动收展到屏幕侧边,向右滑动它关闭,向左滑动它进入详情页";
+        CGFloat height = [UILabel getSpaceLabelHeight:label.text withFont:label.font withWidth:CGRectGetWidth(label.frame)];
+        CGRect rect = label.frame;
+        rect.size.height = height;
+        [label setFrame:rect];
+        [UILabel setLabelSpace:label withValue:label.text withFont:label.font];
+        [guide addSubview:label];
+        [maskView addSubview:guide];
+        [self.view addSubview:maskView];
+    }
+}
+
+-(void)hideAudioGuideView:(UITapGestureRecognizer *)sender{
+    [sender.view removeFromSuperview];
+}
+
 -(void)btnClick:(UIButton *)btn{
     if (btn.tag == 1) {//线路
 //        [self onClickWalkSearch];
     }else if (btn.tag == 2){//语音
         
+        
         showPlayBtn = 1;
         
         [self showPlayBtn];
         
+        [self showFirstPlayGuide];
         
         MapPopBtn *popbtn = (MapPopBtn *)btn;
         
