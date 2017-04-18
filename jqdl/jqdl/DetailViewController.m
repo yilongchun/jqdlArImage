@@ -10,7 +10,7 @@
 #import "BMAdScrollView.h"
 #import "JZNavigationExtension.h"
 #import "UILabel+SetLabelSpace.h"
-#import "Player.h"
+
 #import <MapKit/MapKit.h>
 #import "Util.h"
 #import "LCActionSheet.h"
@@ -25,11 +25,14 @@
     UILabel *startLabel;
     UILabel *timeLabel;
     UIButton *playBtn;
+    
+    
 }
 
 @end
 
 @implementation DetailViewController
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -37,15 +40,10 @@
     
     
     player = [Player sharedManager];
-    player.delegate = self;
     
     
-    __block id _self = self;
-    player.onCompletion=^(){
-        NSLog(@"detialViewController 播放完成!");
-        [_self playVoiceEnd];
-//        [[NSNotificationCenter defaultCenter] postNotificationName:@"playVoiceEnd" object:nil];
-    };
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playVoiceEnd) name:@"playVoiceEnd" object:nil];
+    
     
     if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_6_1) {
         //        self.edgesForExtendedLayout = UIRectEdgeNone;
@@ -144,6 +142,7 @@
     startLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, CGRectGetHeight(sliderBackground.frame) - 15, 34, 15)];
     startLabel.font = SYSTEMFONT(10);
     startLabel.textColor = RGB(189, 189, 189);
+    startLabel.text = @"00:00";
     [sliderBackground addSubview:startLabel];
     
     timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetWidth(sliderBackground.frame) - 35, CGRectGetHeight(sliderBackground.frame) - 15, 34, 15)];
@@ -198,20 +197,45 @@
     [_myScrollView addSubview:daohangBtn];
     
     [_myScrollView setContentSize:CGSizeMake(Main_Screen_Width, CGRectGetMaxY(daohangBtn.frame) + 50)];
+
     
-    //播放完成通知
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playVoiceEnd) name:@"playVoiceEnd" object:nil];
-    
-    //控制播放按钮
-    if ([player isPlaying]) {
+    if (player.audioState == kFsAudioStreamPlaying) {
         NSString *playingUrlStr = [[player url] absoluteString];
         NSString *path = [NSString stringWithFormat:@"%@",[_poi objectForKey:@"voice"]];
         if ([playingUrlStr isEqualToString:path]) {//当前播放的就是该景点的语音 停止播放
+            DLog(@"播放的地址一致");
+            player.delegate = self;
             [playBtn setImage:[UIImage imageNamed:@"ztbf"] forState:UIControlStateNormal];
         }else{//不是该景点的 重新播放
+            DLog(@"播放的地址不一致");
             [playBtn setImage:[UIImage imageNamed:@"playStart"] forState:UIControlStateNormal];
         }
+    }else if (player.audioState == kFsAudioStreamStopped){
+        
+    }else if (player.audioState == kFsAudioStreamPaused){
+        [playBtn setImage:[UIImage imageNamed:@"play2"] forState:UIControlStateNormal];
     }
+    
+    
+    
+//    //控制播放按钮
+//    if ([player isPlaying]) {
+//        DLog(@"当前正在播放");
+//        NSString *playingUrlStr = [[player url] absoluteString];
+//        NSString *path = [NSString stringWithFormat:@"%@",[_poi objectForKey:@"voice"]];
+//        if ([playingUrlStr isEqualToString:path]) {//当前播放的就是该景点的语音 停止播放
+//            DLog(@"播放的地址一致");
+//            player.delegate = self;
+//            [playBtn setImage:[UIImage imageNamed:@"ztbf"] forState:UIControlStateNormal];
+//        }else{//不是该景点的 重新播放
+//            DLog(@"播放的地址不一致");
+//            [playBtn setImage:[UIImage imageNamed:@"playStart"] forState:UIControlStateNormal];
+//        }
+//    }
+//    
+//    if (player.audioState == kFsAudioStreamPaused) {
+//        [playBtn setImage:[UIImage imageNamed:@"play2"] forState:UIControlStateNormal];
+//    }
 }
 
 -(void)daohang{
@@ -245,43 +269,134 @@
 //播放完成
 -(void)playVoiceEnd{
 //    [jieshuoBtn setImage:[UIImage imageNamed:@"ypjs"] forState:UIControlStateNormal];
-    
+    [player setUrl:nil];
     [playBtn setImage:[UIImage imageNamed:@"playStart"] forState:UIControlStateNormal];
     [slider setValue:0.0 animated:YES];
-    startLabel.text = @"";
+    startLabel.text = @"00:00";
 }
 
 //开始播放
 -(void)playVoice{
-    if ([player isPlaying]) {
+    
+    DLog(@"playVoice audioState %d",player.audioState);
+    
+    
+    
+    player.delegate = self;
+    if (player.audioState == kFsAudioStreamPlaying) {
         NSString *playingUrlStr = [[player url] absoluteString];
         NSString *path = [NSString stringWithFormat:@"%@",[_poi objectForKey:@"voice"]];
-        if ([playingUrlStr isEqualToString:path]) {//当前播放的就是该景点的语音 停止播放
-            [playBtn setImage:[UIImage imageNamed:@"playStart"] forState:UIControlStateNormal];
-            [player stop];
-            DLog(@"停止播放");
-        }else{//不是该景点的 重新播放            
+        if (![playingUrlStr isEqualToString:path]) {
             [player stop];
             [playBtn setImage:[UIImage imageNamed:@"ztbf"] forState:UIControlStateNormal];
+            NSString *path = [NSString stringWithFormat:@"%@",[_poi objectForKey:@"voice"]];
             NSURL *url=[NSURL URLWithString:path];
             [player setUrl:url];
             [player play];
+        }else{
+            [player pause];
+            if ([player isPlaying]) {
+                DLog(@"isPlaying");
+                [playBtn setImage:[UIImage imageNamed:@"ztbf"] forState:UIControlStateNormal];
+            }else{
+                DLog(@"notPlaying");
+                [playBtn setImage:[UIImage imageNamed:@"play2"] forState:UIControlStateNormal];
+            }
+//            player.audioState = kFsAudioStreamPaused;
+        }
+    }else if (player.audioState == kFsAudioStreamStopped || player.audioState == kFsAudioStreamRetrievingURL){
+        [playBtn setImage:[UIImage imageNamed:@"ztbf"] forState:UIControlStateNormal];
+        NSString *path = [NSString stringWithFormat:@"%@",[_poi objectForKey:@"voice"]];
+        NSURL *url=[NSURL URLWithString:path];
+        [player setUrl:url];
+        [player play];
+    }else if (player.audioState == kFsAudioStreamPaused){
+        [player pause];
+        
+        if ([player isPlaying]) {
+            DLog(@"isPlaying");
+            [playBtn setImage:[UIImage imageNamed:@"ztbf"] forState:UIControlStateNormal];
+        }else{
+            DLog(@"notPlaying");
+            [playBtn setImage:[UIImage imageNamed:@"play2"] forState:UIControlStateNormal];
+        }
+    }
+    
+    
+//    NSString *playingUrlStr = [[player url] absoluteString];
+//    NSString *path = [NSString stringWithFormat:@"%@",[_poi objectForKey:@"voice"]];
+//    if (![playingUrlStr isEqualToString:path]) {
+//        [player stop];
+//        [playBtn setImage:[UIImage imageNamed:@"ztbf"] forState:UIControlStateNormal];
+//        NSString *path = [NSString stringWithFormat:@"%@",[_poi objectForKey:@"voice"]];
+//        NSURL *url=[NSURL URLWithString:path];
+//        [player setUrl:url];
+//        [player play];
+//        player.delegate = self;
+//    }else{
+//        [player pause];
+//        
+//        if ([player isPlaying]) {
+//            DLog(@"isPlaying");
+//            [playBtn setImage:[UIImage imageNamed:@"ztbf"] forState:UIControlStateNormal];
+//        }else{
+//            DLog(@"notPlaying");
+//            [playBtn setImage:[UIImage imageNamed:@"play2"] forState:UIControlStateNormal];
+//        }
+//    }
+    
+    
+    
+    
+    
+    
+//    [player pause];
+//    
+//    if ([player isPlaying]) {
+//        DLog(@"isPlaying");
+//    }else{
+//        DLog(@"notPlaying");
+//    }
+    
+    
+    if ([player isPlaying]) {
+//        NSString *playingUrlStr = [[player url] absoluteString];
+//        NSString *path = [NSString stringWithFormat:@"%@",[_poi objectForKey:@"voice"]];
+//        if ([playingUrlStr isEqualToString:path]) {//当前播放的就是该景点的语音 停止播放
+//            
+//            [player pause];
+//
+//            if ([player isPlaying]) {
+//                DLog(@"isPlaying");
+//                [playBtn setImage:[UIImage imageNamed:@"ztbf"] forState:UIControlStateNormal];
+//            }else{
+//                DLog(@"notPlaying");
+//                [playBtn setImage:[UIImage imageNamed:@"play2"] forState:UIControlStateNormal];
+//            }
+        
+//            [playBtn setImage:[UIImage imageNamed:@"ztbf"] forState:UIControlStateNormal];
+//        }else{//不是该景点的 重新播放
+//            [player stop];
+//            [playBtn setImage:[UIImage imageNamed:@"ztbf"] forState:UIControlStateNormal];
+//            NSURL *url=[NSURL URLWithString:path];
+//            [player setUrl:url];
+//            [player play];
             
 //            FSSeekByteOffset offset;
 //            offset.position = 0.5;
 //            [player playFromOffset:offset];
             
-            DLog(@"停止播放 重新播放");
-        }
+//            DLog(@"停止播放 重新播放");
+//        }
     }else{
-        DLog(@"播放");
-        [player stop];
-        [playBtn setImage:[UIImage imageNamed:@"ztbf"] forState:UIControlStateNormal];
-        NSString *path = [NSString stringWithFormat:@"%@",[_poi objectForKey:@"voice"]];
-        DLog(@"%@",path);
-        NSURL *url=[NSURL URLWithString:path];
-        [player setUrl:url];
-        [player play];
+//        DLog(@"播放");
+//        [player stop];
+//        [playBtn setImage:[UIImage imageNamed:@"ztbf"] forState:UIControlStateNormal];
+//        NSString *path = [NSString stringWithFormat:@"%@",[_poi objectForKey:@"voice"]];
+//        DLog(@"%@",path);
+//        NSURL *url=[NSURL URLWithString:path];
+//        [player setUrl:url];
+//        [player play];
         
 //        FSSeekByteOffset offset;
 //        offset.position = 0.5;
@@ -298,14 +413,13 @@
 
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
-    if (player) {
-        player.delegate = self;
-    }
 }
 
 -(void)viewDidDisappear:(BOOL)animated{
     [super viewDidDisappear:animated];
+    
     player.delegate = nil;
+    player = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"playVoiceEnd" object:nil];
 }
 
@@ -317,13 +431,16 @@
 #pragma mark - FSPCMAudioStreamDelegate
 
 - (void)audioStream:(FSAudioStream *)audioStream samplesAvailable:(const int16_t *)samples count:(NSUInteger)count{
-    DLog(@"position:%f minutes:%d second:%d minutes:%d second:%d",audioStream.currentTimePlayed.position,audioStream.currentTimePlayed.minute,audioStream.currentTimePlayed.second,audioStream.duration.minute,audioStream.duration.second);
+//    DLog(@"position:%f minutes:%d second:%d minutes:%d second:%d",audioStream.currentTimePlayed.position,audioStream.currentTimePlayed.minute,audioStream.currentTimePlayed.second,audioStream.duration.minute,audioStream.duration.second);
     
 //    [progress setProgress:audioStream.currentTimePlayed.position animated:YES];
     [slider setValue:audioStream.currentTimePlayed.position animated:YES];
 //    DLog(@"%f %llu %llu",audioStream.currentSeekByteOffset.position,audioStream.currentSeekByteOffset.start,audioStream.currentSeekByteOffset.end);
-    startLabel.text = [NSString stringWithFormat:@"%2d:%2d",audioStream.currentTimePlayed.minute,audioStream.currentTimePlayed.second];
-    timeLabel.text = [NSString stringWithFormat:@"%2d:%2d",audioStream.duration.minute,audioStream.duration.second];
+    
+   
+    
+    startLabel.text = [NSString stringWithFormat:@"%02d:%02d",audioStream.currentTimePlayed.minute,audioStream.currentTimePlayed.second];
+    timeLabel.text = [NSString stringWithFormat:@"%02d:%02d",audioStream.duration.minute,audioStream.duration.second];
     
 }
 

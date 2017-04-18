@@ -35,6 +35,7 @@
 #import "PlayButton.h"
 #import "MapPopBtn.h"
 #import "MapSpotTableViewCell.h"
+#import "NSObject+Blocks.h"
 
 #define MYBUNDLE_NAME @ "mapapi.bundle"
 #define MYBUNDLE_PATH [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: MYBUNDLE_NAME]
@@ -61,7 +62,7 @@
 @end
 
 
-@interface BaiduMapViewController ()<BMKMapViewDelegate,BMKLocationServiceDelegate,BMKRouteSearchDelegate,FSPCMAudioStreamDelegate,UIScrollViewDelegate,UITableViewDelegate,UITableViewDataSource>{
+@interface BaiduMapViewController ()<BMKMapViewDelegate,BMKLocationServiceDelegate,BMKRouteSearchDelegate,FSPCMAudioStreamDelegate,UIScrollViewDelegate,UITableViewDelegate,UITableViewDataSource,UISearchBarDelegate>{
     BMKMapView* _mapView;
     BMKLocationService *_locService;
     BMKRouteSearch* _routesearch;
@@ -113,7 +114,10 @@
 //    PlayButton *playBtn;
     Player *player;
     UIView *rightPlayView;
-    BOOL showPlayBtn;
+    int showPlayBtn;//0不现实 1全部显示 2显示一半
+    UISearchBar *searchBar;
+    
+    
 }
 
 @end
@@ -128,14 +132,11 @@
     player = [Player sharedManager];
     player.delegate = self;
     
-    __block id _self = self;
-    player.onCompletion=^(){
-        NSLog(@"baiduMapViewController播放完成!");
-        [_self playVoiceEnd];
-    };
     
     [self checkNetState];
 //    [self downloadFile];
+    
+    self.automaticallyAdjustsScrollViewInsets = NO;
     
     self.view.backgroundColor = [UIColor whiteColor];
     
@@ -159,7 +160,7 @@
     [listBtn setImage:[UIImage imageNamed:@"listIcon2"] forState:UIControlStateNormal];
     [listBtn addTarget:self action:@selector(showFeatureListView) forControlEvents:UIControlEventTouchUpInside];
     
-    listBtn.layer.shadowColor = RGBA(0, 0, 0, 0.3).CGColor;
+    listBtn.layer.shadowColor = RGBA(0, 0, 0, 0.1).CGColor;
     listBtn.layer.shadowOpacity = 1;
     listBtn.layer.shadowOffset = CGSizeMake(0.0f, 0.0f);
     
@@ -169,7 +170,7 @@
     UIButton *showShouhuiBtn = [[UIButton alloc] initWithFrame:CGRectMake(Main_Screen_Width - 12 - 30, CGRectGetMaxY(listBtn.frame) + 12, 30, 30)];
     [showShouhuiBtn setImage:[UIImage imageNamed:@"showShouhui"] forState:UIControlStateNormal];
     [showShouhuiBtn addTarget:self action:@selector(showDrawMapView) forControlEvents:UIControlEventTouchUpInside];
-    showShouhuiBtn.layer.shadowColor = RGBA(0, 0, 0, 0.3).CGColor;
+    showShouhuiBtn.layer.shadowColor = RGBA(0, 0, 0, 0.1).CGColor;
     showShouhuiBtn.layer.shadowOpacity = 1;
     showShouhuiBtn.layer.shadowOffset = CGSizeMake(0.0f, 0.0f);
     [self.view addSubview:showShouhuiBtn];
@@ -206,7 +207,7 @@
     
     
 //    typeBtn.layer.cornerRadius = 4;
-    typeBtn.layer.shadowColor = RGBA(0, 0, 0, 0.3).CGColor;
+    typeBtn.layer.shadowColor = RGBA(0, 0, 0, 0.1).CGColor;
     typeBtn.layer.shadowOpacity = 1;
     typeBtn.layer.shadowOffset = CGSizeMake(0, 0);
     [self.view addSubview:typeBtn];
@@ -317,8 +318,6 @@
     
     //播放完成通知
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playVoiceEnd) name:@"playVoiceEnd" object:nil];
-    
-    
     [self mapViewFit];
     
     //    //计算距离
@@ -398,6 +397,8 @@
     }
 }
 
+
+
 //自动调整地图级别
 -(void)mapViewFit{
     if (annotations.count < 1) {
@@ -447,12 +448,12 @@
 //        typeView.clipsToBounds = YES;
 //        typeView.layer.masksToBounds = YES;
         
-        typeView.layer.shadowColor = RGBA(0, 0, 0, 0.3).CGColor;
+        typeView.layer.shadowColor = RGBA(0, 0, 0, 0.1).CGColor;
         typeView.layer.shadowOpacity = 1;
         typeView.layer.shadowOffset = CGSizeMake(0, 0);
         
         UIButton *btn0 = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 70, 30)];
-        [btn0 setImage:[UIImage imageNamed:@"typeBtn0"] forState:UIControlStateNormal];
+        [btn0 setImage:[UIImage imageNamed:@"typeBtn0_1"] forState:UIControlStateNormal];
         [btn0 setBackgroundImage:[UIImage imageWithColor:[UIColor whiteColor] size:CGSizeMake(70, 30)] forState:UIControlStateNormal];
         //        ViewBorderRadius(typeBtn, 4, 0, [UIColor whiteColor]);
         btn0.tag = 0;
@@ -473,7 +474,7 @@
         [typeView addSubview:line];
         
         UIButton *btn1 = [[UIButton alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(line.frame), 70, 30)];
-        [btn1 setImage:[UIImage imageNamed:@"typeBtn1"] forState:UIControlStateNormal];
+        [btn1 setImage:[UIImage imageNamed:@"typeBtn1_1"] forState:UIControlStateNormal];
         [btn1 setBackgroundImage:[UIImage imageWithColor:[UIColor whiteColor] size:CGSizeMake(70, 30)] forState:UIControlStateNormal];
 //        ViewBorderRadius(typeBtn, 4, 0, [UIColor whiteColor]);
         btn1.tag = 1;
@@ -485,7 +486,7 @@
         [typeView addSubview:line];
         
         UIButton *btn2 = [[UIButton alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(line.frame), 70, 30)];
-        [btn2 setImage:[UIImage imageNamed:@"typeBtn3"] forState:UIControlStateNormal];
+        [btn2 setImage:[UIImage imageNamed:@"typeBtn2_1"] forState:UIControlStateNormal];
         [btn2 setBackgroundImage:[UIImage imageWithColor:[UIColor whiteColor] size:CGSizeMake(70, 30)] forState:UIControlStateNormal];
         btn2.tag = 2;
         [btn2 addTarget:self action:@selector(typeClick:) forControlEvents:UIControlEventTouchUpInside];
@@ -496,7 +497,7 @@
         [typeView addSubview:line];
         
         UIButton *btn3 = [[UIButton alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(line.frame), 70, 30)];
-        [btn3 setImage:[UIImage imageNamed:@"typeBtn2"] forState:UIControlStateNormal];
+        [btn3 setImage:[UIImage imageNamed:@"typeBtn3_1"] forState:UIControlStateNormal];
         [btn3 setBackgroundImage:[UIImage imageWithColor:[UIColor whiteColor] size:CGSizeMake(70, 30)] forState:UIControlStateNormal];
         btn3.tag = 3;
         [btn3 addTarget:self action:@selector(typeClick:) forControlEvents:UIControlEventTouchUpInside];
@@ -507,7 +508,7 @@
         [typeView addSubview:line];
         
         UIButton *btn4 = [[UIButton alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(line.frame), 70, 30)];
-        [btn4 setImage:[UIImage imageNamed:@"typeBtn4"] forState:UIControlStateNormal];
+        [btn4 setImage:[UIImage imageNamed:@"typeBtn4_1"] forState:UIControlStateNormal];
         [btn4 setBackgroundImage:[UIImage imageWithColor:[UIColor whiteColor] size:CGSizeMake(70, 30)] forState:UIControlStateNormal];
         btn4.tag = 4;
         [btn4 addTarget:self action:@selector(typeClick:) forControlEvents:UIControlEventTouchUpInside];
@@ -518,7 +519,7 @@
         [typeView addSubview:line];
         
         UIButton *btn5 = [[UIButton alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(line.frame), 70, 30)];
-        [btn5 setImage:[UIImage imageNamed:@"typeBtn5"] forState:UIControlStateNormal];
+        [btn5 setImage:[UIImage imageNamed:@"typeBtn5_1"] forState:UIControlStateNormal];
         [btn5 setBackgroundImage:[UIImage imageWithColor:[UIColor whiteColor] size:CGSizeMake(70, 30)] forState:UIControlStateNormal];
         btn5.tag = 5;
         [btn5 addTarget:self action:@selector(typeClick:) forControlEvents:UIControlEventTouchUpInside];
@@ -529,7 +530,7 @@
         [typeView addSubview:line];
         
         UIButton *btn6 = [[UIButton alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(line.frame), 70, 30)];
-        [btn6 setImage:[UIImage imageNamed:@"typeBtn6"] forState:UIControlStateNormal];
+        [btn6 setImage:[UIImage imageNamed:@"typeBtn6_1"] forState:UIControlStateNormal];
         [btn6 setBackgroundImage:[UIImage imageWithColor:[UIColor whiteColor] size:CGSizeMake(70, 30)] forState:UIControlStateNormal];
         btn6.tag = 6;
         [btn6 addTarget:self action:@selector(typeClick:) forControlEvents:UIControlEventTouchUpInside];
@@ -540,7 +541,7 @@
         [typeView addSubview:line];
         
         UIButton *btn7 = [[UIButton alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(line.frame), 70, 30)];
-        [btn7 setImage:[UIImage imageNamed:@"typeBtn7"] forState:UIControlStateNormal];
+        [btn7 setImage:[UIImage imageNamed:@"typeBtn7_1"] forState:UIControlStateNormal];
         [btn7 setBackgroundImage:[UIImage imageWithColor:[UIColor whiteColor] size:CGSizeMake(70, 30)] forState:UIControlStateNormal];
         btn7.tag = 7;
         [btn7 addTarget:self action:@selector(typeClick:) forControlEvents:UIControlEventTouchUpInside];
@@ -584,6 +585,7 @@
 
 //设置 景点卡片 定位 分类 隐藏显示
 -(void)setJdScrollViewShowHidden{
+    
     if (showJd) {
         //景点卡片
         CGRect rect = jdCardView.frame;
@@ -597,7 +599,7 @@
         //播放按钮
         CGRect playRect = rightPlayView.frame;
         playRect.origin.y = typeBtnRect.origin.y - 60;
-        playRect.origin.x = Main_Screen_Width - 87;
+//        playRect.origin.x = Main_Screen_Width - 87;
 
         
         [UIView animateWithDuration:0.15 animations:^{
@@ -605,11 +607,12 @@
             locationBtn.frame = locationRect;
             typeBtn.frame = typeBtnRect;
             
-            if (showPlayBtn) {
+            if (showPlayBtn != 0) {
                 rightPlayView.frame = playRect;
             }
         }];
     }else{
+        showPlayBtn = 2;
         CGRect rect = jdCardView.frame;
         rect.origin.y = Main_Screen_Height + 15;
         
@@ -628,12 +631,28 @@
             locationBtn.frame = locationRect;
             typeBtn.frame = typeBtnRect;
             
-            if (showPlayBtn) {
+            if (showPlayBtn != 0) {
                 rightPlayView.frame = playRect;
             }
         }];
     }
 }
+
+-(void)setPlayBtnStatus{
+    
+    CGRect playRect = rightPlayView.frame;
+    if (showPlayBtn == 1) {
+        playRect.origin.x = Main_Screen_Width - 87;
+    }else if (showPlayBtn == 2){
+        playRect.origin.x = Main_Screen_Width - 36;
+    }else if (showPlayBtn == 0){
+        playRect.origin.x = Main_Screen_Width;
+    }
+    [UIView animateWithDuration:0.15 animations:^{
+        rightPlayView.frame = playRect;
+    }];
+}
+
 
 //景点分类按钮点击
 -(void)typeClick:(UIButton *)btn{
@@ -644,12 +663,46 @@
 //        oldBtn = btn;
 //    }
     
-    if (btn.tag == 0 || btn.tag == -1) {
+    if (btn.tag == -1) {
+        [btn removeFromSuperview];
+        if (spotTableView) {
+            CGRect rect = spotTableView.frame;
+            rect.size.height = Main_Screen_Height - 64 - 45;
+            spotTableView.frame = rect;
+        }
         typeIndex = 0;
         [typeBtn setImage:[UIImage imageNamed:@"typeBtn0"] forState:UIControlStateNormal];
     }else{
         typeIndex = btn.tag;
-        [typeBtn setImage:btn.currentImage forState:UIControlStateNormal];
+        switch (typeIndex) {
+            case 0:
+                [typeBtn setImage:[UIImage imageNamed:@"typeBtn0"] forState:UIControlStateNormal];
+                break;
+            case 1:
+                [typeBtn setImage:[UIImage imageNamed:@"typeBtn1"] forState:UIControlStateNormal];
+                break;
+            case 2:
+                [typeBtn setImage:[UIImage imageNamed:@"typeBtn2"] forState:UIControlStateNormal];
+                break;
+            case 3:
+                [typeBtn setImage:[UIImage imageNamed:@"typeBtn3"] forState:UIControlStateNormal];
+                break;
+            case 4:
+                [typeBtn setImage:[UIImage imageNamed:@"typeBtn4"] forState:UIControlStateNormal];
+                break;
+            case 5:
+                [typeBtn setImage:[UIImage imageNamed:@"typeBtn5"] forState:UIControlStateNormal];
+                break;
+            case 6:
+                [typeBtn setImage:[UIImage imageNamed:@"typeBtn6"] forState:UIControlStateNormal];
+                break;
+            case 7:
+                [typeBtn setImage:[UIImage imageNamed:@"typeBtn7"] forState:UIControlStateNormal];
+                break;
+            default:
+                break;
+        }
+        
     }
     
     if (btn.tag != -1) {
@@ -677,12 +730,12 @@
             if(![type isEqualToString:@"scenery_spot"]){
                 continue;
             }
-        }else if (btn.tag == 2){//游乐
-            if(![type isEqualToString:@"recreational_facility"]){
+        }else if (btn.tag == 2){//美食
+            if(![type isEqualToString:@"food"]){
                 continue;
             }
-        }else if (btn.tag == 3){//美食
-            if(![type isEqualToString:@"food"]){
+        }else if (btn.tag == 3){//游乐
+            if(![type isEqualToString:@"recreational_facility"]){
                 continue;
             }
         }else if (btn.tag == 4){//商铺
@@ -754,12 +807,12 @@
             if(![type isEqualToString:@"scenery_spot"]){
                 continue;
             }
-        }else if (btn.tag == 2){//游乐
-            if(![type isEqualToString:@"recreational_facility"]){
+        }else if (btn.tag == 2){//美食
+            if(![type isEqualToString:@"food"]){
                 continue;
             }
-        }else if (btn.tag == 3){//美食
-            if(![type isEqualToString:@"food"]){
+        }else if (btn.tag == 3){//游乐
+            if(![type isEqualToString:@"recreational_facility"]){
                 continue;
             }
         }else if (btn.tag == 4){//商铺
@@ -892,7 +945,7 @@
     [zoomView addSubview:zoomInBtn];
     
     zoomView.layer.cornerRadius = 3;
-    zoomView.layer.shadowColor = RGBA(0, 0, 0, 0.3).CGColor;
+    zoomView.layer.shadowColor = RGBA(0, 0, 0, 0.1).CGColor;
     zoomView.layer.shadowOpacity = 1;
     zoomView.layer.shadowOffset = CGSizeMake(0.0f, 0.0f);
     
@@ -954,7 +1007,7 @@
 //    }
     
     if (playBtn) {
-        showPlayBtn = NO;
+        showPlayBtn = 0;
 //        [playBtn setProgress:1 animated:NO];
         [playBtn setProgress:0 animated:YES];
         [playBtn setImage:[UIImage imageNamed:@"play"]];
@@ -1039,11 +1092,29 @@
     if (player) {
         player.delegate = self;
         
-        __block id _self = self;
-        player.onCompletion=^(){
-            NSLog(@"baiduMapViewController播放完成!");
-            [_self playVoiceEnd];
-        };
+        DLog(@"viewDidAppear audioState %d",player.audioState);
+        
+        if (player.audioState == kFsAudioStreamPlaying) {
+            [playBtn setImage:[UIImage imageNamed:@"pause"]];
+        }else if (player.audioState == kFsAudioStreamStopped){
+            [playBtn setImage:[UIImage imageNamed:@"play"]];
+            showPlayBtn = 0;
+            [self setPlayBtnStatus];
+            
+        }else if (player.audioState == kFsAudioStreamPaused){
+            [playBtn setImage:[UIImage imageNamed:@"play"]];
+            showPlayBtn = 2;
+            [self setPlayBtnStatus];
+        }
+        
+//        if (![player isPlaying]) {
+//            DLog(@"当前没有播放");
+//            [playBtn setImage:[UIImage imageNamed:@"play"]];
+//            showPlayBtn = 0;
+//            [self setPlayBtnStatus];
+//        }
+        
+
     }
 //    if (!locationFlag2) {
 //        locationFlag2 = !locationFlag2;
@@ -1096,7 +1167,7 @@
 //        [self onClickWalkSearch];
     }else if (btn.tag == 2){//语音
         
-        showPlayBtn = YES;
+        showPlayBtn = 1;
         
         [self showPlayBtn];
         
@@ -1145,7 +1216,12 @@
             }];
         }
         
-        
+        [self performBlock:^{
+            if (showPlayBtn != 0) {
+                showPlayBtn = 2;
+                [self setPlayBtnStatus];
+            }
+        } afterDelay:5];
         
     }else if (btn.tag == 3){//vr
         UIBarButtonItem *backItem=[[UIBarButtonItem alloc] init];
@@ -1162,10 +1238,27 @@
 }
 
 -(void)play{
-    [player pause];
     
-    if ([player isPlaying]) {
-        DLog(@"播放");
+    
+    showPlayBtn = 1;
+    [self setPlayBtnStatus];
+    
+    
+    if (player.audioState == kFsAudioStreamPlaying) {
+        [player pause];
+        if (player.audioState == kFsAudioStreamPlaying) {
+            [playBtn setImage:[UIImage imageNamed:@"play"]];
+            [[rightPlayView subviews] enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                if (obj.tag == 999) {
+                    UILabel *stateLabel = (UILabel *)obj;
+                    stateLabel.text = @"继续播放";
+                }
+            }];
+        }
+    }else if (player.audioState == kFsAudioStreamStopped){
+        
+    }else if (player.audioState == kFsAudioStreamPaused){
+        [player pause];
         [playBtn setImage:[UIImage imageNamed:@"pause"]];
         [[rightPlayView subviews] enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             if (obj.tag == 999) {
@@ -1173,16 +1266,16 @@
                 stateLabel.text = @"暂停播放";
             }
         }];
-    }else{
-        DLog(@"暂停");
-        [playBtn setImage:[UIImage imageNamed:@"play"]];
-        [[rightPlayView subviews] enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            if (obj.tag == 999) {
-                UILabel *stateLabel = (UILabel *)obj;
-                stateLabel.text = @"继续播放";
-            }
-        }];
     }
+    
+    [self performBlock:^{
+        if (showPlayBtn != 0) {
+            showPlayBtn = 2;
+            [self setPlayBtnStatus];
+        }
+        
+    } afterDelay:5];
+    
 }
 
 //播放语音
@@ -1214,7 +1307,7 @@
        
         
         //阴影
-        rightPlayView.layer.shadowColor = RGBA(0, 0, 0, 0.3).CGColor;
+        rightPlayView.layer.shadowColor = RGBA(0, 0, 0, 0.1).CGColor;
         rightPlayView.layer.shadowOpacity = 1.0;
         rightPlayView.layer.shadowOffset = CGSizeMake(0.0f, 0.0f);
         
@@ -1305,6 +1398,9 @@
         [UIView animateWithDuration:0.3 animations:^{
             rightPlayView.frame = hideFrame;
         } completion:^(BOOL finished) {
+            if (finished) {
+                [player stop];
+            }
         }];
     }
 }
@@ -1667,14 +1763,20 @@
             [self hideDrawMapView];
         }
         if (rec.view.tag == 3) {
-            showPlayBtn = NO;
+            showPlayBtn = 0;
             [self hidePlayView];
+            DLog(@"隐藏按钮 停止播放");
         }
-        DLog(@"向右");
-       
     }else if (rec.direction == UISwipeGestureRecognizerDirectionLeft){
         if (rec.view.tag == 3) {
-            DLog(@"向左划 进入详情");
+            if (showPlayBtn == 2) {
+                showPlayBtn = 1;
+                [self setPlayBtnStatus];
+                DLog(@"向左划 显示全部按钮");
+            }
+            if (showPlayBtn == 1) {
+                DLog(@"向左划 进入详情");
+            }
         }
     }else{
         DLog(@"其他方向");
@@ -1693,7 +1795,7 @@
     if (spotMaskView == nil) {
         spotMaskView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, Main_Screen_Width, Main_Screen_Height)];
         spotMaskView.backgroundColor = RGBA(0, 0, 0, 0);
-       
+        
         UIView *leftMaskView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, Main_Screen_Width - 240, Main_Screen_Height)];
         leftMaskView.tag = 1;
         UITapGestureRecognizer *tapView = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideFeatureListView)];
@@ -1724,11 +1826,23 @@
         [tableTitleLabel sizeToFit];
         [spotRightView addSubview:tableTitleLabel];
         
+        if (searchBar == nil) {
+            searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(5, CGRectGetMaxY(tableTitleLabel.frame) + 10, CGRectGetWidth(spotRightView.frame) - 10, 35)];
+            searchBar.searchBarStyle = UISearchBarStyleMinimal;
+            searchBar.placeholder = @"搜索景区内景点、热点...";
+        
+            UITextField * searchField = [searchBar valueForKey:@"_searchField"];
+            [searchField setValue:[UIFont systemFontOfSize:14] forKeyPath:@"_placeholderLabel.font"];
+            
+            searchBar.delegate = self;
+        }
+        
+        [spotRightView addSubview:searchBar];
         
         if (typeIndex == 0) {
-            spotTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, CGRectGetWidth(spotRightView.frame), Main_Screen_Height - 64) style:UITableViewStylePlain];
+            spotTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(searchBar.frame) + 10, CGRectGetWidth(spotRightView.frame), Main_Screen_Height - CGRectGetMaxY(searchBar.frame) - 10) style:UITableViewStylePlain];
         }else{
-            spotTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, CGRectGetWidth(spotRightView.frame), Main_Screen_Height - 64 - 40) style:UITableViewStylePlain];
+            spotTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(searchBar.frame) + 10, CGRectGetWidth(spotRightView.frame), Main_Screen_Height - CGRectGetMaxY(searchBar.frame) - 10 - 40) style:UITableViewStylePlain];
             
             UIButton *clearTypeBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(spotTableView.frame), CGRectGetWidth(spotTableView.frame), 40)];
             [clearTypeBtn setTitle:@"重置筛选" forState:UIControlStateNormal];
@@ -1929,7 +2043,7 @@
 #pragma mark - FSPCMAudioStreamDelegate
 
 - (void)audioStream:(FSAudioStream *)audioStream samplesAvailable:(const int16_t *)samples count:(NSUInteger)count{
-    DLog(@"position:%f minutes:%d second:%d minutes:%d second:%d",audioStream.currentTimePlayed.position,audioStream.currentTimePlayed.minute,audioStream.currentTimePlayed.second,audioStream.duration.minute,audioStream.duration.second);
+//    DLog(@"position:%f minutes:%d second:%d minutes:%d second:%d",audioStream.currentTimePlayed.position,audioStream.currentTimePlayed.minute,audioStream.currentTimePlayed.second,audioStream.duration.minute,audioStream.duration.second);
     if (playBtn) {
         [playBtn setProgress:audioStream.currentTimePlayed.position animated:NO];
     }
@@ -1947,7 +2061,6 @@
     }else{
         return 1;
     }
-    
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -2145,10 +2258,10 @@
         UILabel *label2 = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(label.frame), 0, CGRectGetWidth(view.frame) - CGRectGetMaxX(label.frame) - 15, 24)];
         if (typeIndex == 1){//景点
             label2.text = @"景点";
-        }else if (typeIndex == 2){//游乐
-            label2.text = @"游乐";
-        }else if (typeIndex == 3){//美食
+        }else if (typeIndex == 2){//美食
             label2.text = @"美食";
+        }else if (typeIndex == 3){//游乐
+            label2.text = @"游乐";
         }else if (typeIndex == 4){//商铺
             label2.text = @"商铺";
         }else if (typeIndex == 5){//公厕
@@ -2628,7 +2741,73 @@
     }
 }
 
-#pragma mark -
+#pragma mark - UISearchBarDelegate
+
+- (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar{
+    DLog(@"searchBarShouldBeginEditing");
+    [searchBar setShowsCancelButton:YES animated:YES];
+    return YES;
+}
+
+- (BOOL)searchBarShouldEndEditing:(UISearchBar *)searchBar{
+    DLog(@"searchBarShouldEndEditing");
+    [searchBar setShowsCancelButton:NO animated:YES];
+    return YES;
+}
+
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar{
+    DLog(@"搜索");
+    [searchBar resignFirstResponder];
+    
+    [tuijianArray removeAllObjects];
+    [otherArray removeAllObjects];
+    
+    //添加景点标注
+    for (int i = 0; i < _jingdianArray.count; i++) {
+        NSDictionary *poi = [_jingdianArray objectAtIndex:i];
+        
+        //数据筛选分类
+        if([[poi objectForKey:@"type"] isEqualToString:@"scenery_spot"]){//景点
+            if ([[poi objectForKey:@"name"] rangeOfString:searchBar.text].location != NSNotFound) {
+                [tuijianArray addObject:poi];
+            }
+        }else{
+            if ([[poi objectForKey:@"name"] rangeOfString:searchBar.text].location != NSNotFound) {
+                [otherArray addObject:poi];
+            }
+        }
+    }
+    
+    if (spotTableView) {
+        [spotTableView reloadData];
+    }
+}
+
+- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar{
+    [searchBar resignFirstResponder];
+    
+    if ([searchBar.text isEqualToString:@""]) {
+        DLog(@"还原");
+        [tuijianArray removeAllObjects];
+        [otherArray removeAllObjects];
+        
+        //添加景点标注
+        for (int i = 0; i < _jingdianArray.count; i++) {
+            NSDictionary *poi = [_jingdianArray objectAtIndex:i];
+            
+            //数据筛选分类
+            if([[poi objectForKey:@"type"] isEqualToString:@"scenery_spot"]){//景点
+                [tuijianArray addObject:poi];
+            }else{
+                [otherArray addObject:poi];
+            }
+        }
+        
+        if (spotTableView) {
+            [spotTableView reloadData];
+        }
+    }
+}
 
 
 

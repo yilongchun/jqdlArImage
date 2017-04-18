@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "WTPoi.h"
+#import "Player.h"
 
 @interface DetailViewController : UIViewController
 

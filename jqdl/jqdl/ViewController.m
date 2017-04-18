@@ -593,7 +593,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     
     [poiArray removeAllObjects];
     
-    NSString *url = [NSString stringWithFormat:@"%@%@",kDlHost,@"/stores"];
+    NSString *url = [NSString stringWithFormat:@"%@%@%@",kHost,kVERSION,@"/stores"];
     [manager GET:url parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
         
         
@@ -761,7 +761,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     [poiManager removeAllPois];
     [poiArray removeAllObjects];
     
-    NSString *url = [NSString stringWithFormat:@"%@%@%@%@",kDlHost,@"/stores/",storeId,@"/spots"];
+    NSString *url = [NSString stringWithFormat:@"%@%@%@%@%@",kHost,kVERSION,@"/stores/",storeId,@"/spots"];
     [manager GET:url parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
         
         

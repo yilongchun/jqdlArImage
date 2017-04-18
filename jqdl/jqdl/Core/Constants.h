@@ -16,6 +16,9 @@ typedef NS_ENUM(NSInteger, ResultCodeType){
     ResultCodeFail = 502//操作失败
 };
 
+#define DEFAULT_TEXT_COLOR RGB(20,205,222)
+#define DEFAULT_BACKGROUND_COLOR RGB(66,216,230)
+
 //已登录用户
 #define LOGINED_USER @"loginedUser"
 //用户信息
@@ -33,9 +36,11 @@ typedef NS_ENUM(NSInteger, ResultCodeType){
 /***************** API ***************/
 
 //测试服务器
-#define kDlHost @"https://api.qlxing.com/v2"
+#define kHost @"https://api.qlxing.com"
 //正式服务器
-//#define kDlHost @"https://api.zlyun168.com/v2"
+//#define kHost @"https://api.zlyun168.com/v2"
+
+#define kVERSION @"/v2"
 
 //获取七牛上传token
 #define API_QINIU_UPTOKEN @"/third_party/qiniu/uptoken"

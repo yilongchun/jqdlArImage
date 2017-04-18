@@ -124,7 +124,7 @@
     //    [parameters setObject:_nickname.text forKey:@""];
     
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
-    NSString *url = [NSString stringWithFormat:@"%@%@",kDlHost,API_AUTH_RESETPWD];
+    NSString *url = [NSString stringWithFormat:@"%@%@%@",kHost,kVERSION,API_AUTH_RESETPWD];
     
     
     [manager POST:url parameters:parameters
@@ -211,7 +211,7 @@
     [parameters setObject:_account.text forKey:@"phone"];
     [parameters setObject:@"1" forKey:@"type"];
     
-    NSString *url = [NSString stringWithFormat:@"%@%@",kDlHost,API_AUTH_CODE_RESETPWD];
+    NSString *url = [NSString stringWithFormat:@"%@%@%@",kHost,kVERSION,API_AUTH_CODE_RESETPWD];
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     
     [manager POST:url parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {

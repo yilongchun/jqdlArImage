@@ -41,7 +41,7 @@
 //分享
 -(void)share{
     NSString *textToShare = self.categoryList.name;
-    UIImage *imageToShare = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",kDlHost,self.categoryList.image]]]];
+    UIImage *imageToShare = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@",kHost,kVERSION,self.categoryList.image]]]];
     NSURL *urlToShare = [NSURL URLWithString:@"wwww.xxxx.com"];
     NSMutableArray *activityItems =[NSMutableArray array];
     [activityItems addObject:textToShare];
@@ -67,7 +67,7 @@
             if ([arr count] > 0) {
                 NSDictionary *info = [arr objectAtIndex:0];
                 
-                UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",kDlHost,[info objectForKey:@"image"]]]]];
+                UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@",kHost,kVERSION,[info objectForKey:@"image"]]]]];
                 
                 DLog(@"%f %f",image.size.height,image.size.width);
                 

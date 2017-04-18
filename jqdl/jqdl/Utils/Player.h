@@ -13,4 +13,6 @@
 
 +(instancetype)sharedManager;
 
+@property FSAudioStreamState audioState;
+
 @end

@@ -143,7 +143,7 @@
     [parameters setObject:_nickname.text forKey:@"username"];
     
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
-    NSString *url = [NSString stringWithFormat:@"%@%@",kDlHost,API_AUTH_REGISTER];
+    NSString *url = [NSString stringWithFormat:@"%@%@%@",kHost,kVERSION,API_AUTH_REGISTER];
     [manager POST:url parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
         [self hideHud];
         DLog(@"%@",responseObject);
@@ -220,7 +220,7 @@
     [parameters setObject:_account.text forKey:@"phone"];
     [parameters setObject:@"1" forKey:@"type"];
     
-    NSString *url = [NSString stringWithFormat:@"%@%@",kDlHost,API_AUTH_CODE_REGISTER];
+    NSString *url = [NSString stringWithFormat:@"%@%@%@",kHost,kVERSION,API_AUTH_CODE_REGISTER];
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     [manager POST:url parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
         [self hideHud];

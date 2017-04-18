@@ -161,7 +161,7 @@
     
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     
-    NSString *url = [NSString stringWithFormat:@"%@%@",kDlHost,API_QINIU_UPTOKEN];
+    NSString *url = [NSString stringWithFormat:@"%@%@%@",kHost,kVERSION,API_QINIU_UPTOKEN];
     
     NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
     NSDictionary *loginedUser = [ud objectForKey:LOGINED_USER];
@@ -321,7 +321,7 @@
     
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     
-    NSString *url = [NSString stringWithFormat:@"%@%@",kDlHost,API_USERS_CURRENT];
+    NSString *url = [NSString stringWithFormat:@"%@%@%@",kHost,kVERSION,API_USERS_CURRENT];
     
     NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
     NSDictionary *loginedUser = [ud objectForKey:LOGINED_USER];
