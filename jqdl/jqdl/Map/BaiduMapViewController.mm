@@ -118,7 +118,7 @@
     int showPlayBtn;//0不现实 1全部显示 2显示一半
     UISearchBar *searchBar;
     
-    
+    NSDictionary *currentPlayedPoi;
 }
 
 @end
@@ -1207,7 +1207,7 @@
         [self showFirstPlayGuide];
         
         MapPopBtn *popbtn = (MapPopBtn *)btn;
-        
+        currentPlayedPoi = popbtn.poi;
         NSString *voice = [popbtn.poi objectForKey:@"voice"];
         NSString *path = [NSString stringWithFormat:@"%@%@",@"",voice];
         if ([player isPlaying]) {//当前正在播放
@@ -1792,11 +1792,9 @@
     if(rec.direction == UISwipeGestureRecognizerDirectionRight){
         if (rec.view.tag == 1) {
             [self hideFeatureListView];
-        }
-        if (rec.view.tag == 2) {
+        }else if (rec.view.tag == 2) {
             [self hideDrawMapView];
-        }
-        if (rec.view.tag == 3) {
+        }else if (rec.view.tag == 3) {
             showPlayBtn = 0;
             [self hidePlayView];
             DLog(@"隐藏按钮 停止播放");
@@ -1807,9 +1805,11 @@
                 showPlayBtn = 1;
                 [self setPlayBtnStatus];
                 DLog(@"向左划 显示全部按钮");
-            }
-            if (showPlayBtn == 1) {
+            }else if (showPlayBtn == 1) {
                 DLog(@"向左划 进入详情");
+                DetailViewController *vc = [[DetailViewController alloc] init];
+                vc.poi = currentPlayedPoi;
+                [self.navigationController pushViewController:vc animated:YES];
             }
         }
     }else{
