@@ -286,8 +286,11 @@
     [parameters setObject:_account.text forKey:@"phone"];
     [parameters setObject:@"1" forKey:@"type"];
     
+    
+    
     NSString *url = [NSString stringWithFormat:@"%@%@%@",kHost,kVERSION,API_AUTH_CODE_LOGIN];
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+    manager.requestSerializer = [AFJSONRequestSerializer serializer];
     [manager POST:url parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
         [self hideHud];
         [self showHintInView:self.view hint:@"验证码发送成功"];
