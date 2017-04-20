@@ -665,6 +665,7 @@
 //    }
     
     if (btn.tag == -1) {
+        [self showHintInView:self.view hint:@"显示景区内全部热点"];
         [btn removeFromSuperview];
         if (spotTableView) {
             CGRect rect = spotTableView.frame;
@@ -1250,12 +1251,17 @@
             }];
         }
         
-        [self performBlock:^{
-            if (showPlayBtn != 0) {
-                showPlayBtn = 2;
-                [self setPlayBtnStatus];
-            }
-        } afterDelay:5];
+//        [self performBlock:^{
+//            if (showPlayBtn != 0) {
+//                showPlayBtn = 2;
+//                [self setPlayBtnStatus];
+//            }
+//        } afterDelay:5];
+        
+        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(hidePlayBtn) object:nil];
+        [self performSelector:@selector(hidePlayBtn) withObject:nil afterDelay:5];
+        
+       
         
     }else if (btn.tag == 3){//vr
         UIBarButtonItem *backItem=[[UIBarButtonItem alloc] init];
@@ -1268,6 +1274,15 @@
     }else if (btn.tag == 4){//图片
         MyMapImgBtn *b = (MyMapImgBtn *)btn;
         [self showDetailImage:b.poi];
+    }
+}
+
+//延迟执行 隐藏一半播放按钮
+-(void)hidePlayBtn{
+    
+    if (showPlayBtn != 0) {
+        showPlayBtn = 2;
+        [self setPlayBtnStatus];
     }
 }
 
@@ -1302,13 +1317,16 @@
         }];
     }
     
-    [self performBlock:^{
-        if (showPlayBtn != 0) {
-            showPlayBtn = 2;
-            [self setPlayBtnStatus];
-        }
-        
-    } afterDelay:5];
+//    [self performBlock:^{
+//        if (showPlayBtn != 0) {
+//            showPlayBtn = 2;
+//            [self setPlayBtnStatus];
+//        }
+//        
+//    } afterDelay:5];
+    
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(hidePlayBtn) object:nil];
+    [self performSelector:@selector(hidePlayBtn) withObject:nil afterDelay:5];
     
 }
 
