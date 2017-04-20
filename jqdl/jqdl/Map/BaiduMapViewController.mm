@@ -116,7 +116,7 @@
     Player *player;
     UIView *rightPlayView;
     int showPlayBtn;//0不现实 1全部显示 2显示一半
-    UISearchBar *searchBar;
+    UISearchBar *_searchBar;
     
     NSDictionary *currentPlayedPoi;
 }
@@ -997,7 +997,6 @@
         [btn setImage:[UIImage imageNamed:@"playEnd"] forState:UIControlStateNormal];
         oldPlayBtn = btn;
     }
-    
 }
 
 //播放结束
@@ -1019,6 +1018,13 @@
 
 //景点详情
 -(void)toDetail:(UITapGestureRecognizer *)sender{
+    
+    UIBarButtonItem *backItem=[[UIBarButtonItem alloc] init];
+    UIImage *backImage = [UIImage imageNamed:@"navi_back2"];
+    [backItem setBackButtonBackgroundImage:[backImage resizableImageWithCapInsets:UIEdgeInsetsMake(0, backImage.size.width, 0, 0)] forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];//更改背景图片
+    self.navigationItem.backBarButtonItem = backItem;
+    
+    
     DLog(@"%@",sender);
     DetailViewController *vc = [[DetailViewController alloc] init];
     MyPointAnnotation *anno = annotations[sender.view.tag];
@@ -1543,70 +1549,70 @@
     [self.navigationController pushViewController:vc animated:YES];
 }
 
-//kvo观察者触发的方法
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary*)change context:(void *)context {
-    NSLog(@"keypath:%@,object:%@,change:%@",keyPath,object,change);
-    //获取 进度变化
-    float chanagefl = [[object valueForKeyPath:keyPath] floatValue];
-//    _progressView.progress = chanagefl; //开始不能体现变化,是因为下载的过程是异步的,不能实时的获取值的变化.所以利用多线程的知识解决问题
-    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-        DLog(@"chanagefl:%f",chanagefl);
-//        _progressView.progress = chanagefl;
-    }];
-}
-
--(void)downloadFile{
-    //远程地址
-    NSURL *URL = [NSURL URLWithString:@"http://www.baidu.com/img/bdlogo.png"];
-    //默认配置
-    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
-    //AFN3.0+基于封住URLSession的句柄
-    AFURLSessionManager *manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:configuration];
-    //下载进度
-    NSProgress *downloadProgress = nil;
-    //请求
-    NSURLRequest *request = [NSURLRequest requestWithURL:URL];
-    _downloadTask = [manager downloadTaskWithRequest:request progress:&downloadProgress destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
-//        NSString *cachesPath = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject];
-//        DLog(@"cachesPath:%@",cachesPath);
-        NSString *path_sandox = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
-        DLog(@"path_sandox:%@",path_sandox);
-        NSString *path = [path_sandox stringByAppendingPathComponent:response.suggestedFilename];
-        DLog(@"path:%@",path);
-        return [NSURL fileURLWithPath:path];
-    } completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
-        DLog(@"completionHandler");
-    }];
-    //监控下载进度
-    [downloadProgress addObserver:self forKeyPath:@"fractionCompleted" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:nil];
-    [_downloadTask resume];//开始下载
-//    [_downloadTask suspend];//暂停下载
-    
-    
-//    NSString *savedPath = [NSHomeDirectory() stringByAppendingString:@"/Documents/bdlogo2.png"];
-//    AFHTTPRequestSerializer *serializer = [AFHTTPRequestSerializer serializer];
-//    NSMutableURLRequest *request =[serializer requestWithMethod:@"POST" URLString:@"http://www.baidu.com/img/bdlogo.png" parameters:nil error:nil];
-//    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc]initWithRequest:request];
-//    [operation setOutputStream:[NSOutputStream outputStreamToFileAtPath:savedPath append:NO]];
-//    [operation setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
-//        float p = (float)totalBytesRead / totalBytesExpectedToRead;
-//        DLog(@"%f",p);
+////kvo观察者触发的方法
+//- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary*)change context:(void *)context {
+//    NSLog(@"keypath:%@,object:%@,change:%@",keyPath,object,change);
+//    //获取 进度变化
+//    float chanagefl = [[object valueForKeyPath:keyPath] floatValue];
+////    _progressView.progress = chanagefl; //开始不能体现变化,是因为下载的过程是异步的,不能实时的获取值的变化.所以利用多线程的知识解决问题
+//    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+//        DLog(@"chanagefl:%f",chanagefl);
+////        _progressView.progress = chanagefl;
 //    }];
-//    
-//    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-//        DLog(@"下载完成");
-//    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-//        DLog(@"下载失败");
+//}
+//
+//-(void)downloadFile{
+//    //远程地址
+//    NSURL *URL = [NSURL URLWithString:@"http://www.baidu.com/img/bdlogo.png"];
+//    //默认配置
+//    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+//    //AFN3.0+基于封住URLSession的句柄
+//    AFURLSessionManager *manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:configuration];
+//    //下载进度
+//    NSProgress *downloadProgress = nil;
+//    //请求
+//    NSURLRequest *request = [NSURLRequest requestWithURL:URL];
+//    _downloadTask = [manager downloadTaskWithRequest:request progress:&downloadProgress destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
+////        NSString *cachesPath = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject];
+////        DLog(@"cachesPath:%@",cachesPath);
+//        NSString *path_sandox = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
+//        DLog(@"path_sandox:%@",path_sandox);
+//        NSString *path = [path_sandox stringByAppendingPathComponent:response.suggestedFilename];
+//        DLog(@"path:%@",path);
+//        return [NSURL fileURLWithPath:path];
+//    } completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
+//        DLog(@"completionHandler");
 //    }];
+//    //监控下载进度
+//    [downloadProgress addObserver:self forKeyPath:@"fractionCompleted" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:nil];
+//    [_downloadTask resume];//开始下载
+////    [_downloadTask suspend];//暂停下载
 //    
-//    [operation start];
-    
-    
-
-    
-    
-    
-}
+//    
+////    NSString *savedPath = [NSHomeDirectory() stringByAppendingString:@"/Documents/bdlogo2.png"];
+////    AFHTTPRequestSerializer *serializer = [AFHTTPRequestSerializer serializer];
+////    NSMutableURLRequest *request =[serializer requestWithMethod:@"POST" URLString:@"http://www.baidu.com/img/bdlogo.png" parameters:nil error:nil];
+////    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc]initWithRequest:request];
+////    [operation setOutputStream:[NSOutputStream outputStreamToFileAtPath:savedPath append:NO]];
+////    [operation setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
+////        float p = (float)totalBytesRead / totalBytesExpectedToRead;
+////        DLog(@"%f",p);
+////    }];
+////    
+////    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+////        DLog(@"下载完成");
+////    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+////        DLog(@"下载失败");
+////    }];
+////    
+////    [operation start];
+//    
+//    
+//
+//    
+//    
+//    
+//}
 
 //根据polyline设置地图范围
 - (void)mapViewFitPolyLine:(BMKPolyline *) polyLine {
@@ -1878,23 +1884,23 @@
         [tableTitleLabel sizeToFit];
         [spotRightView addSubview:tableTitleLabel];
         
-        if (searchBar == nil) {
-            searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(5, CGRectGetMaxY(tableTitleLabel.frame) + 10, CGRectGetWidth(spotRightView.frame) - 10, 35)];
-            searchBar.searchBarStyle = UISearchBarStyleMinimal;
-            searchBar.placeholder = @"搜索景区内景点、热点...";
+        if (_searchBar == nil) {
+            _searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(5, CGRectGetMaxY(tableTitleLabel.frame) + 10, CGRectGetWidth(spotRightView.frame) - 10, 35)];
+            _searchBar.searchBarStyle = UISearchBarStyleMinimal;
+            _searchBar.placeholder = @"搜索景区内景点、热点...";
         
-            UITextField * searchField = [searchBar valueForKey:@"_searchField"];
+            UITextField * searchField = [_searchBar valueForKey:@"_searchField"];
             [searchField setValue:[UIFont systemFontOfSize:14] forKeyPath:@"_placeholderLabel.font"];
             
-            searchBar.delegate = self;
+            _searchBar.delegate = self;
         }
         
-        [spotRightView addSubview:searchBar];
+        [spotRightView addSubview:_searchBar];
         
         if (typeIndex == 0) {
-            spotTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(searchBar.frame) + 10, CGRectGetWidth(spotRightView.frame), Main_Screen_Height - CGRectGetMaxY(searchBar.frame) - 10) style:UITableViewStylePlain];
+            spotTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(_searchBar.frame) + 10, CGRectGetWidth(spotRightView.frame), Main_Screen_Height - CGRectGetMaxY(_searchBar.frame) - 10) style:UITableViewStylePlain];
         }else{
-            spotTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(searchBar.frame) + 10, CGRectGetWidth(spotRightView.frame), Main_Screen_Height - CGRectGetMaxY(searchBar.frame) - 10 - 40) style:UITableViewStylePlain];
+            spotTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(_searchBar.frame) + 10, CGRectGetWidth(spotRightView.frame), Main_Screen_Height - CGRectGetMaxY(_searchBar.frame) - 10 - 40) style:UITableViewStylePlain];
             
             UIButton *clearTypeBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(spotTableView.frame), CGRectGetWidth(spotTableView.frame), 40)];
             [clearTypeBtn setTitle:@"重置筛选" forState:UIControlStateNormal];

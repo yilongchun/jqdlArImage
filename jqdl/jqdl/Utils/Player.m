@@ -66,9 +66,6 @@ static Player *__helper = nil;
                     break;
             }
             
-            
-            
-            
         };
         __helper.onFailure=^(FSAudioStreamError error,NSString *description){
             NSLog(@"播放过程中发生错误，错误信息：%@",description);
