@@ -26,7 +26,7 @@
     UILabel *timeLabel;
     UIButton *playBtn;
     
-    
+    BOOL currentPlay;
     BOOL dragFlag;
     UInt64 end;
 }
@@ -42,7 +42,7 @@
     
     
     player = [Player sharedManager];
-    
+    player.delegate = self;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playVoiceEnd) name:@"playVoiceEnd" object:nil];
     
@@ -239,7 +239,7 @@
         NSString *path = [NSString stringWithFormat:@"%@",[_poi objectForKey:@"voice"]];
         if ([playingUrlStr isEqualToString:path]) {//当前播放的就是该景点的语音 停止播放
             DLog(@"播放的地址一致");
-            player.delegate = self;
+            currentPlay = YES;
             [playBtn setImage:[UIImage imageNamed:@"ztbf"] forState:UIControlStateNormal];
         }else{//不是该景点的 重新播放
             DLog(@"播放的地址不一致");
@@ -314,7 +314,7 @@
     
     
     
-    player.delegate = self;
+    currentPlay = YES;
     if (player.audioState == kFsAudioStreamPlaying) {
         NSString *playingUrlStr = [[player url] absoluteString];
         NSString *path = [NSString stringWithFormat:@"%@",[_poi objectForKey:@"voice"]];
@@ -407,6 +407,7 @@
 
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
+    player.delegate = self;
 }
 
 -(void)viewDidDisappear:(BOOL)animated{
@@ -425,10 +426,12 @@
 #pragma mark - FSPCMAudioStreamDelegate
 
 - (void)audioStream:(FSAudioStream *)audioStream samplesAvailable:(const int16_t *)samples count:(NSUInteger)count{
-//    DLog(@"position:%f minutes:%d second:%d minutes:%d second:%d",audioStream.currentTimePlayed.position,audioStream.currentTimePlayed.minute,audioStream.currentTimePlayed.second,audioStream.duration.minute,audioStream.duration.second);
-    //    DLog(@"%f %llu %llu",audioStream.currentSeekByteOffset.position,audioStream.currentSeekByteOffset.start,audioStream.currentSeekByteOffset.end);
+    DLog(@"position:%f minutes:%d second:%d minutes:%d second:%d",audioStream.currentTimePlayed.position,audioStream.currentTimePlayed.minute,audioStream.currentTimePlayed.second,audioStream.duration.minute,audioStream.duration.second);
+    DLog(@"%f %llu %llu",audioStream.currentSeekByteOffset.position,audioStream.currentSeekByteOffset.start,audioStream.currentSeekByteOffset.end);
 //    [progress setProgress:audioStream.currentTimePlayed.position animated:YES];
-    if (!dragFlag) {
+    
+    if (!dragFlag && currentPlay) {
+        
         [slider setValue:audioStream.currentTimePlayed.position animated:YES];
     }
     
@@ -445,6 +448,8 @@
 
 - (void)actionSheet:(LCActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     NSLog(@"clickedButtonAtIndex: %d", (int)buttonIndex);
+    
+    
     if (buttonIndex == 0) {//取消
         
     }

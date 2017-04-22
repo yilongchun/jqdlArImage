@@ -487,6 +487,11 @@
 		44621BB11E125ECA00EB3AFC /* BaiduMapAPI_Search.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44621BB01E125EC900EB3AFC /* BaiduMapAPI_Search.framework */; };
 		44621BB31E12607900EB3AFC /* BaiduMapAPI_Utils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44621BB21E12607900EB3AFC /* BaiduMapAPI_Utils.framework */; };
 		44621BB71E12666600EB3AFC /* UIImage+Rotate.m in Sources */ = {isa = PBXBuildFile; fileRef = 44621BB61E12666600EB3AFC /* UIImage+Rotate.m */; };
+		44646ECC1EAAF2FF00F91802 /* YWRectAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 44646ECB1EAAF2FF00F91802 /* YWRectAnnotationView.m */; };
+		44646ED61EAB0BF800F91802 /* BMKClusterAlgorithm.m in Sources */ = {isa = PBXBuildFile; fileRef = 44646ECF1EAB0BF800F91802 /* BMKClusterAlgorithm.m */; };
+		44646ED71EAB0BF800F91802 /* BMKClusterItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 44646ED11EAB0BF800F91802 /* BMKClusterItem.m */; };
+		44646ED81EAB0BF800F91802 /* BMKClusterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 44646ED31EAB0BF800F91802 /* BMKClusterManager.m */; };
+		44646ED91EAB0BF800F91802 /* BMKClusterQuadtree.m in Sources */ = {isa = PBXBuildFile; fileRef = 44646ED51EAB0BF800F91802 /* BMKClusterQuadtree.m */; };
 		4464FD631E947F47007D93EE /* PhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4464FD611E947F47007D93EE /* PhotoViewController.m */; };
 		4464FD641E947F47007D93EE /* PhotoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4464FD621E947F47007D93EE /* PhotoViewController.xib */; };
 		4464FD671E94BB1E007D93EE /* MyImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4464FD661E94BB1E007D93EE /* MyImageView.m */; };
@@ -1486,6 +1491,16 @@
 		44621BB21E12607900EB3AFC /* BaiduMapAPI_Utils.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BaiduMapAPI_Utils.framework; path = ThiredPartyLib/BaiduMap/BaiduMapAPI_Utils.framework; sourceTree = "<group>"; };
 		44621BB51E12666600EB3AFC /* UIImage+Rotate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Rotate.h"; sourceTree = "<group>"; };
 		44621BB61E12666600EB3AFC /* UIImage+Rotate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Rotate.m"; sourceTree = "<group>"; };
+		44646ECA1EAAF2FF00F91802 /* YWRectAnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YWRectAnnotationView.h; sourceTree = "<group>"; };
+		44646ECB1EAAF2FF00F91802 /* YWRectAnnotationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YWRectAnnotationView.m; sourceTree = "<group>"; };
+		44646ECE1EAB0BF800F91802 /* BMKClusterAlgorithm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKClusterAlgorithm.h; sourceTree = "<group>"; };
+		44646ECF1EAB0BF800F91802 /* BMKClusterAlgorithm.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BMKClusterAlgorithm.m; sourceTree = "<group>"; };
+		44646ED01EAB0BF800F91802 /* BMKClusterItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKClusterItem.h; sourceTree = "<group>"; };
+		44646ED11EAB0BF800F91802 /* BMKClusterItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BMKClusterItem.m; sourceTree = "<group>"; };
+		44646ED21EAB0BF800F91802 /* BMKClusterManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKClusterManager.h; sourceTree = "<group>"; };
+		44646ED31EAB0BF800F91802 /* BMKClusterManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BMKClusterManager.m; sourceTree = "<group>"; };
+		44646ED41EAB0BF800F91802 /* BMKClusterQuadtree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKClusterQuadtree.h; sourceTree = "<group>"; };
+		44646ED51EAB0BF800F91802 /* BMKClusterQuadtree.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BMKClusterQuadtree.m; sourceTree = "<group>"; };
 		4464FCE21BFEB56C0015320B /* jqdl.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = jqdl.pch; sourceTree = "<group>"; };
 		4464FD601E947F47007D93EE /* PhotoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoViewController.h; sourceTree = "<group>"; };
 		4464FD611E947F47007D93EE /* PhotoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoViewController.m; sourceTree = "<group>"; };
@@ -3386,6 +3401,21 @@
 			path = Custom;
 			sourceTree = "<group>";
 		};
+		44646ECD1EAB0BF800F91802 /* Cluster */ = {
+			isa = PBXGroup;
+			children = (
+				44646ECE1EAB0BF800F91802 /* BMKClusterAlgorithm.h */,
+				44646ECF1EAB0BF800F91802 /* BMKClusterAlgorithm.m */,
+				44646ED01EAB0BF800F91802 /* BMKClusterItem.h */,
+				44646ED11EAB0BF800F91802 /* BMKClusterItem.m */,
+				44646ED21EAB0BF800F91802 /* BMKClusterManager.h */,
+				44646ED31EAB0BF800F91802 /* BMKClusterManager.m */,
+				44646ED41EAB0BF800F91802 /* BMKClusterQuadtree.h */,
+				44646ED51EAB0BF800F91802 /* BMKClusterQuadtree.m */,
+			);
+			path = Cluster;
+			sourceTree = "<group>";
+		};
 		44988C121C04575400D5C59C /* ThiredPartyLib */ = {
 			isa = PBXGroup;
 			children = (
@@ -3423,6 +3453,7 @@
 		44B290D81E82272E00D5324D /* Map */ = {
 			isa = PBXGroup;
 			children = (
+				44646ECD1EAB0BF800F91802 /* Cluster */,
 				44B290D91E82272E00D5324D /* BaiduMapViewController.h */,
 				44B290DA1E82272E00D5324D /* BaiduMapViewController.mm */,
 				44B290DB1E82272E00D5324D /* BaiduMapViewController.xib */,
@@ -3432,6 +3463,8 @@
 				44B290DF1E82272E00D5324D /* CalloutMapAnnotation.m */,
 				44B290E01E82272E00D5324D /* MyPointAnnotation.h */,
 				44B290E11E82272E00D5324D /* MyPointAnnotation.m */,
+				44646ECA1EAAF2FF00F91802 /* YWRectAnnotationView.h */,
+				44646ECB1EAAF2FF00F91802 /* YWRectAnnotationView.m */,
 				444E61B81E84E887008C494E /* MyView2.h */,
 				444E61B91E84E887008C494E /* MyView2.m */,
 				442355D91EA5EE730035C7D2 /* AudioGuideView.h */,
@@ -3922,7 +3955,9 @@
 				44117A6C1C11763E0071E1C0 /* ZXQRCodeFinderPattern.m in Sources */,
 				44117AB91C11777A0071E1C0 /* AboutMeViewController.m in Sources */,
 				44117A311C11763E0071E1C0 /* ZXCode39Writer.m in Sources */,
+				44646ED81EAB0BF800F91802 /* BMKClusterManager.m in Sources */,
 				441179D11C11763E0071E1C0 /* ZXImage.m in Sources */,
+				44646ED71EAB0BF800F91802 /* BMKClusterItem.m in Sources */,
 				44003D311BFB270700CB747A /* MainTabBarController.m in Sources */,
 				444E61BA1E84E887008C494E /* MyView2.m in Sources */,
 				441179E91C11763E0071E1C0 /* ZXBinaryBitmap.m in Sources */,
@@ -3974,6 +4009,7 @@
 				44117A151C11763E0071E1C0 /* ZXAI013x0xDecoder.m in Sources */,
 				441179E71C11763E0071E1C0 /* ZXStringUtils.m in Sources */,
 				4411798E1C11763E0071E1C0 /* JSONModelClassProperty.m in Sources */,
+				44646ED61EAB0BF800F91802 /* BMKClusterAlgorithm.m in Sources */,
 				440E7F421E1B36D600B5277E /* NSManagedObjectContext+ObjectClear.m in Sources */,
 				44117A061C11763E0071E1C0 /* ZXDataMatrixX12Encoder.m in Sources */,
 				44117A8F1C11763E0071E1C0 /* UIScrollView+MJExtension.m in Sources */,
@@ -4025,6 +4061,7 @@
 				44988C1D1C04575400D5C59C /* MBProgressHUD.m in Sources */,
 				4424D6611E2726A500245B43 /* ViewController+MASAdditions.m in Sources */,
 				441179B21C11763E0071E1C0 /* ZXEmailAddressParsedResult.m in Sources */,
+				44646ECC1EAAF2FF00F91802 /* YWRectAnnotationView.m in Sources */,
 				441179861C11763E0071E1C0 /* FSCheckContentTypeRequest.m in Sources */,
 				44621B8B1E1200E700EB3AFC /* AFNetworkReachabilityManager.m in Sources */,
 				440E7F4C1E1B36D600B5277E /* NSString+HXAddtions.m in Sources */,
@@ -4119,6 +4156,7 @@
 				44117AA61C1176B20071E1C0 /* Player.m in Sources */,
 				440E7F4B1E1B36D600B5277E /* NSString+Hash.m in Sources */,
 				44117A511C11763E0071E1C0 /* ZXPDF417DetectionResultRowIndicatorColumn.m in Sources */,
+				44646ED91EAB0BF800F91802 /* BMKClusterQuadtree.m in Sources */,
 				441179F61C11763E0071E1C0 /* ZXDataMatrixDataBlock.m in Sources */,
 				441179891C11763E0071E1C0 /* FSPlaylistItem.m in Sources */,
 				44117A421C11763E0071E1C0 /* ZXUPCEANExtensionSupport.m in Sources */,

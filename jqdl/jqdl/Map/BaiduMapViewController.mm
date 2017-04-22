@@ -37,6 +37,8 @@
 #import "MapSpotTableViewCell.h"
 #import "NSObject+Blocks.h"
 #import "AudioGuideView.h"
+#import "YWRectAnnotationView.h"
+#import "BMKClusterManager.h"
 
 #define MYBUNDLE_NAME @ "mapapi.bundle"
 #define MYBUNDLE_PATH [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: MYBUNDLE_NAME]
@@ -119,6 +121,8 @@
     UISearchBar *_searchBar;
     
     NSDictionary *currentPlayedPoi;
+    
+//    BMKClusterManager *_clusterManager;//点聚合管理类
 }
 
 @end
@@ -218,6 +222,9 @@
     annotations = [NSMutableArray array];
     tuijianArray = [NSMutableArray array];
     otherArray = [NSMutableArray array];
+    
+    //初始化点聚合管理类
+//    _clusterManager = [[BMKClusterManager alloc] init];
    
     for (int i = 0; i < _jingdianArray.count; i++) {
         NSDictionary *poi = [_jingdianArray objectAtIndex:i];
@@ -246,6 +253,14 @@
         annotation.pointCalloutInfo = poi;
         [_mapView addAnnotation:annotation];
         [annotations addObject:annotation];
+        
+        
+//        //向点聚合管理类中添加标注
+//        BMKClusterItem *clusterItem = [[BMKClusterItem alloc] init];
+//        clusterItem.coor = coor;
+//        clusterItem.poi = poi;
+//        [_clusterManager addClusterItem:clusterItem];
+        
     }
     
     //添加底部景点卡片
@@ -328,13 +343,13 @@
     //    BMKMapPoint point2 = BMKMapPointForCoordinate(CLLocationCoordinate2DMake(38.915,115.404));
     //    CLLocationDistance distance = BMKMetersBetweenMapPoints(point1,point2);
     
-        //其他坐标系转为百度坐标系
-//        CLLocationCoordinate2D coor = CLLocationCoordinate2DMake(30.76888888888889, 111.26);//原始坐标
+//        //其他坐标系转为百度坐标系113.716483,30.156462
+//        CLLocationCoordinate2D coor = CLLocationCoordinate2DMake(30.156462, 113.716483);//原始坐标
 //        //转换 google地图、soso地图、aliyun地图、mapabc地图和amap地图所用坐标至百度坐标
 //        NSDictionary* testdic = BMKConvertBaiduCoorFrom(coor,BMK_COORDTYPE_GPS);
 //        //转换GPS坐标至百度坐标(加密后的坐标)
 //        testdic = BMKConvertBaiduCoorFrom(coor,BMK_COORDTYPE_GPS);
-//        NSLog(@"x=%@,y=%@",[testdic objectForKey:@"x"],[testdic objectForKey:@"y"]);
+//    
 //        //解密加密后的坐标字典
 //        CLLocationCoordinate2D baiduCoor = BMKCoorDictionaryDecode(testdic);//转换后的百度坐标
 //        NSLog(@"转换后:x=%f,y=%f",baiduCoor.latitude,baiduCoor.longitude);
@@ -615,7 +630,7 @@
             }
         }];
     }else{
-        showPlayBtn = 2;
+        
         CGRect rect = jdCardView.frame;
         rect.origin.y = Main_Screen_Height + 15;
         
@@ -627,7 +642,6 @@
         
         CGRect playRect = rightPlayView.frame;
         playRect.origin.y = typeBtnRect.origin.y - 60;
-        playRect.origin.x = Main_Screen_Width - 36;
         
         [UIView animateWithDuration:0.15 animations:^{
             jdCardView.frame = rect;
@@ -2421,10 +2435,33 @@
 
 #pragma mark - BMKMapViewDelegate
 
-- (void)mapView:(BMKMapView *)mapView regionDidChangeAnimated:(BOOL)animated
-{
-//    DLog(@"regionDidChangeAnimated");
-//    _mapView.userTrackingMode = BMKUserTrackingModeFollow;
+- (void)mapView:(BMKMapView *)mapView regionDidChangeAnimated:(BOOL)animated{
+    
+//    ///获取聚合后的标注
+//    NSArray *array = [_clusterManager getClusters:mapView.zoomLevel];
+//    
+//    NSMutableArray *clusters = [NSMutableArray array];
+//    for (BMKCluster *item in array) {
+//        
+//        BMKClusterItem *clusterItem = item.clusterItems[0];
+//        NSDictionary *poi = clusterItem.poi;
+//        //添加PointAnnotation
+//        MyPointAnnotation* annotation = [[MyPointAnnotation alloc]init];
+//        CLLocationCoordinate2D coo = CLLocationCoordinate2DMake([[poi objectForKey:@"latitude"] floatValue], [[poi objectForKey:@"longitude"] floatValue]);
+//        NSDictionary* testdic = BMKConvertBaiduCoorFrom(coo,BMK_COORDTYPE_GPS);
+//        CLLocationCoordinate2D coor = BMKCoorDictionaryDecode(testdic);
+//        
+//        annotation.coordinate = coor;
+//        annotation.title = [poi objectForKey:@"name"];
+//        annotation.poi = poi;
+//        annotation.index = 999;
+//        annotation.pointCalloutInfo = poi;
+//        
+//        [clusters addObject:annotation];
+//    }
+//    [_mapView removeAnnotations:_mapView.annotations];
+//    [_mapView addAnnotations:clusters];
+
 }
 
 - (void)mapView:(BMKMapView *)mapView onClickedMapBlank:(CLLocationCoordinate2D)coordinate{
@@ -2462,36 +2499,35 @@
 //        }
 //    }
     
-    if ([view.annotation isKindOfClass:[MyPointAnnotation class]]) {
-        [view.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            if (obj.tag == 999) {
-                UILabel *label = (UILabel *)obj;
-                label.backgroundColor = [UIColor clearColor];
-                view.backgroundColor = [UIColor clearColor];
-            }
-        }];
-    }
+//    if ([view.annotation isKindOfClass:[MyPointAnnotation class]]) {
+//        [view.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+//            if (obj.tag == 999) {
+//                UILabel *label = (UILabel *)obj;
+//                label.backgroundColor = [UIColor clearColor];
+//                view.backgroundColor = [UIColor clearColor];
+//            }
+//        }];
+//    }
 }
 
 - (void)mapView:(BMKMapView *)mapView didSelectAnnotationView:(BMKAnnotationView *)view{
     if ([view.annotation isKindOfClass:[MyPointAnnotation class]]) {
         
-        [view.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            if (obj.tag == 999) {
-                UILabel *label = (UILabel *)obj;
-                label.backgroundColor = [UIColor whiteColor];
-                view.backgroundColor = [UIColor whiteColor];
-            }
-        }];
+//        YWRectAnnotationView *v = (YWRectAnnotationView *)view;
+//        [v bringSubviewToFront:v.contentView];
+        
+        
+//        [view.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+//            if (obj.tag == 999) {
+//                view.backgroundColor = [UIColor whiteColor];
+//            }
+//        }];
         
         showJd = YES;
         [self setJdScrollViewShowHidden];
 //        DLog(@"%@",view);
 //        DLog(@"%@",view.annotation);
         MyPointAnnotation *annotation = (MyPointAnnotation *)view.annotation;
-        
-        
-        
         
 //        //如果点到了这个marker点，什么也不做
 //        if (_calloutMapAnnotation.coordinate.latitude == view.annotation.coordinate.latitude&& _calloutMapAnnotation.coordinate.longitude == view.annotation.coordinate.longitude) {
@@ -2584,47 +2620,46 @@
     }
     if ([annotation isKindOfClass:[MyPointAnnotation class]]) {
         
-        BMKAnnotationView * view = [[BMKAnnotationView alloc]initWithAnnotation:annotation reuseIdentifier:@"annotation"];
-//        view.backgroundColor = [UIColor blackColor];
-        
-        
-        
         MyPointAnnotation *anno = (MyPointAnnotation *)annotation;
         NSDictionary *poi = anno.poi;
+        
+        YWRectAnnotationView *view =(YWRectAnnotationView*)[mapView dequeueReusableAnnotationViewWithIdentifier:@"myAnnotation"];
+        if (view==nil)
+        {
+            view=[[ YWRectAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"myAnnotation"];
+        }
+        
+        
+//        BMKAnnotationView * view = [[BMKAnnotationView alloc]initWithAnnotation:annotation reuseIdentifier:@"annotation"];
+
+        UIImage *leftImage;
         NSString *type = [poi objectForKey:@"type"];
         if([type isEqualToString:@"scenery_spot"]){//景点
-            view.image=[UIImage imageNamed:@"greenPoint4"];
+            leftImage=[UIImage imageNamed:@"greenPoint4"];
         }else if([type isEqualToString:@"recreational_facility"]){//游乐
-            view.image=[UIImage imageNamed:@"bluePoint4"];
+            leftImage=[UIImage imageNamed:@"bluePoint4"];
         }
         else if([type isEqualToString:@"food"]){//美食
-            view.image=[UIImage imageNamed:@"yellowPoint4"];
+            leftImage=[UIImage imageNamed:@"yellowPoint4"];
         }
         else if([type isEqualToString:@"shop"]){//商铺
-            view.image=[UIImage imageNamed:@"purplePoint4"];
+            leftImage=[UIImage imageNamed:@"purplePoint4"];
         }
         else if([type isEqualToString:@"toilet"]){//公厕
-            view.image=[UIImage imageNamed:@"brownPoint4"];
+            leftImage=[UIImage imageNamed:@"brownPoint4"];
         }
         else if([type isEqualToString:@"entrance"]){//出入口
-            view.image=[UIImage imageNamed:@"linghtGreenPonit4"];
+            leftImage=[UIImage imageNamed:@"linghtGreenPonit4"];
         }
         else if([type isEqualToString:@"service_point"]){//服务点
-            view.image=[UIImage imageNamed:@"redPoint4"];
+            leftImage=[UIImage imageNamed:@"redPoint4"];
         }
         else {
-            view.image=[UIImage imageNamed:@"greenPoint4"];
+            leftImage=[UIImage imageNamed:@"greenPoint4"];
         }
-        //点击显示图详情视图 必须MJPointAnnotation对象设置了标题和副标题
-//        view.canShowCallout=NO;
-        
-//        UIView *rightView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 32, 41)];
-//        rightView.backgroundColor = [UIColor redColor];
-//        
-//        view.rightCalloutAccessoryView = rightView;
-        
-        
-        
+        [view setTitleText:[poi objectForKey:@"name"] leftImage:leftImage];
+//        view.image = leftImage;
+
         CGFloat maxX = 0;
         
         UIView *paopaoBgView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 0, 44 + 10)];
