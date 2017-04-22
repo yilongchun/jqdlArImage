@@ -694,13 +694,13 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
         
         
         
-        WTPoiManager *poiManager2 = objc_getAssociatedObject(self, kWTAugmentedRealityViewController_AssociatedPoiManagerKey);
-        
-        for (int i = 0; i < poiManager2.pois.count; i++) {
-            WTPoi *poi = [poiManager2.pois objectAtIndex:i];
-            
-            DLog(@"%@\t%@",poi.ids,poi.name);
-        }
+//        WTPoiManager *poiManager2 = objc_getAssociatedObject(self, kWTAugmentedRealityViewController_AssociatedPoiManagerKey);
+//        
+//        for (int i = 0; i < poiManager2.pois.count; i++) {
+//            WTPoi *poi = [poiManager2.pois objectAtIndex:i];
+//            
+//            DLog(@"%@\t%@",poi.ids,poi.name);
+//        }
         
         
         

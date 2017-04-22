@@ -99,15 +99,28 @@
     
     _titleLable.text=titleText;
     _leftImage.image = image;
+    
+    
+    
+    
+    
+    
+    
+    NSString *text = titleText;
+    UIFont *font = [UIFont systemFontOfSize: 13];
+    NSAttributedString *attributedText = [[NSAttributedString alloc] initWithString:text attributes:@{NSFontAttributeName:font}];
+    CGRect rect = [attributedText boundingRectWithSize:(CGSize){CGFLOAT_MAX, CGFLOAT_MAX}
+                                                                 options:NSStringDrawingUsesLineFragmentOrigin
+                                                                  context:nil];
+    CGSize size = rect.size;
+    
     //计算高度
-    CGFloat Width = [titleText sizeWithFont:[UIFont systemFontOfSize: 13] constrainedToSize:CGSizeMake(CGFLOAT_MAX, 21) lineBreakMode:NSLineBreakByWordWrapping].width;
+    CGFloat Width = size.width;
+//    CGFloat Width = [titleText sizeWithFont:[UIFont systemFontOfSize: 13] constrainedToSize:CGSizeMake(CGFLOAT_MAX, 21) lineBreakMode:NSLineBreakByWordWrapping].width;
     
-    
-    [_contentView setFrame:CGRectMake(0, 0, 30 + Width+5, 30)];
+    [_contentView setFrame:CGRectMake(0, 0, 30 + Width+10, 30)];
     [_leftImage setFrame:CGRectMake(2, 2, 26, 26)];
     [_titleLable setFrame:CGRectMake(30,4, Width, 22)];
-    
-    
     
 //    CGRect rect = _contentView.bounds;
 //    //创建Path

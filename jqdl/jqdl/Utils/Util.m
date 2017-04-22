@@ -54,10 +54,10 @@
 {
     //===============清除缓存==============
     NSString *cachePath = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    DLog(@"%@",cachePath);
+//    DLog(@"%@",cachePath);
     
-    float folderSize = [self folderSizeAtPath:cachePath];
-    DLog(@"大小%f",folderSize);
+//    float folderSize = [self folderSizeAtPath:cachePath];
+//    DLog(@"大小%f",folderSize);
     
     NSArray *files = [[NSFileManager defaultManager] subpathsAtPath:cachePath];
     DLog(@"removeCache 文件数 ：%lu",(unsigned long)[files count]);
