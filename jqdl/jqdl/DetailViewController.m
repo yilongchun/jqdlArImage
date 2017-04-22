@@ -434,9 +434,6 @@
         
         [slider setValue:audioStream.currentTimePlayed.position animated:YES];
     }
-    
-
-    
     end = audioStream.currentSeekByteOffset.end;
     
     startLabel.text = [NSString stringWithFormat:@"%02d:%02d",audioStream.currentTimePlayed.minute,audioStream.currentTimePlayed.second];

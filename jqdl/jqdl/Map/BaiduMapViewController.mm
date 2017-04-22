@@ -158,6 +158,7 @@
     //添加地图
     _mapView = [[BMKMapView alloc]initWithFrame:CGRectMake(0, 64, Main_Screen_Width, Main_Screen_Height - 64)];
     [_mapView setZoomLevel:13];
+    _mapView.isSelectedAnnotationViewFront = YES;
     [self.view addSubview:_mapView];
     
     //列表
