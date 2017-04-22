@@ -253,14 +253,13 @@
 }
 
 -(void)sliderTouchDown{
-    DLog(@"sliderTouchDown");
     dragFlag = YES;
 }
 
 -(void)sliderValueChanged:(UISlider *)sender{
     dragFlag = NO;
     if (end > 0) {
-        if (player.audioState == kFsAudioStreamPlaying || player.audioState == kFsAudioStreamPaused) {
+        if (player.audioState == kFsAudioStreamPlaying || player.audioState == kFsAudioStreamPaused || player.audioState == kFsAudioStreamRetryingSucceeded) {
             [player stop];
             FSSeekByteOffset offset;
             offset.position = sender.value;
@@ -337,15 +336,13 @@
             }
 //            player.audioState = kFsAudioStreamPaused;
         }
-    }else if (player.audioState == kFsAudioStreamStopped || player.audioState == kFsAudioStreamRetrievingURL){
-        [playBtn setImage:[UIImage imageNamed:@"ztbf"] forState:UIControlStateNormal];
-        NSString *path = [NSString stringWithFormat:@"%@",[_poi objectForKey:@"voice"]];
-        NSURL *url=[NSURL URLWithString:path];
-        [player setUrl:url];
-        [player play];
-        
-        
-    }else if (player.audioState == kFsAudioStreamPaused){
+    }
+//    else if (player.audioState == kFsAudioStreamStopped || player.audioState == kFsAudioStreamRetrievingURL || player.audioState == kFSAudioStreamEndOfFile || player.audioState == kFsAudioStreamFailed){
+//        
+//        
+//        
+//    }
+    else if (player.audioState == kFsAudioStreamPaused){
         [player pause];
         
         if ([player isPlaying]) {
@@ -355,6 +352,12 @@
             DLog(@"notPlaying");
             [playBtn setImage:[UIImage imageNamed:@"play2"] forState:UIControlStateNormal];
         }
+    }else{
+        [playBtn setImage:[UIImage imageNamed:@"ztbf"] forState:UIControlStateNormal];
+        NSString *path = [NSString stringWithFormat:@"%@",[_poi objectForKey:@"voice"]];
+        NSURL *url=[NSURL URLWithString:path];
+        [player setUrl:url];
+        [player play];
     }
     
     
@@ -395,52 +398,6 @@
 //        DLog(@"notPlaying");
 //    }
     
-    
-    if ([player isPlaying]) {
-//        NSString *playingUrlStr = [[player url] absoluteString];
-//        NSString *path = [NSString stringWithFormat:@"%@",[_poi objectForKey:@"voice"]];
-//        if ([playingUrlStr isEqualToString:path]) {//当前播放的就是该景点的语音 停止播放
-//            
-//            [player pause];
-//
-//            if ([player isPlaying]) {
-//                DLog(@"isPlaying");
-//                [playBtn setImage:[UIImage imageNamed:@"ztbf"] forState:UIControlStateNormal];
-//            }else{
-//                DLog(@"notPlaying");
-//                [playBtn setImage:[UIImage imageNamed:@"play2"] forState:UIControlStateNormal];
-//            }
-        
-//            [playBtn setImage:[UIImage imageNamed:@"ztbf"] forState:UIControlStateNormal];
-//        }else{//不是该景点的 重新播放
-//            [player stop];
-//            [playBtn setImage:[UIImage imageNamed:@"ztbf"] forState:UIControlStateNormal];
-//            NSURL *url=[NSURL URLWithString:path];
-//            [player setUrl:url];
-//            [player play];
-            
-//            FSSeekByteOffset offset;
-//            offset.position = 0.5;
-//            [player playFromOffset:offset];
-            
-//            DLog(@"停止播放 重新播放");
-//        }
-    }else{
-//        DLog(@"播放");
-//        [player stop];
-//        [playBtn setImage:[UIImage imageNamed:@"ztbf"] forState:UIControlStateNormal];
-//        NSString *path = [NSString stringWithFormat:@"%@",[_poi objectForKey:@"voice"]];
-//        DLog(@"%@",path);
-//        NSURL *url=[NSURL URLWithString:path];
-//        [player setUrl:url];
-//        [player play];
-        
-//        FSSeekByteOffset offset;
-//        offset.position = 0.5;
-//        offset.start = 500000;
-//        offset.end = 1144025;
-//        [player playFromOffset:offset];
-    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {

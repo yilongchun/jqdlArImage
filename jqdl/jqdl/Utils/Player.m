@@ -21,7 +21,6 @@ static Player *__helper = nil;
         __helper.onStateChange = ^(FSAudioStreamState state) {
             __helper.audioState = state;
             
-            
             switch (state) {
                 case kFsAudioStreamRetrievingURL:
                     NSLog(@"kFsAudioStreamRetrievingURL:%d",state);
@@ -41,8 +40,9 @@ static Player *__helper = nil;
                 case kFsAudioStreamSeeking:
                     NSLog(@"kFsAudioStreamSeeking:%d",state);
                     break;
-                case kFSAudioStreamEndOfFile:
+                case kFSAudioStreamEndOfFile:{
                     NSLog(@"kFSAudioStreamEndOfFile:%d",state);
+                }
                     break;
                 case kFsAudioStreamFailed:
                     NSLog(@"kFsAudioStreamFailed:%d",state);
@@ -65,7 +65,6 @@ static Player *__helper = nil;
                 default:
                     break;
             }
-            
         };
         __helper.onFailure=^(FSAudioStreamError error,NSString *description){
             NSLog(@"播放过程中发生错误，错误信息：%@",description);

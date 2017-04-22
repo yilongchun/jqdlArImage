@@ -24,6 +24,9 @@
     UILabel *startLabel;
     UILabel *timeLabel;
     UIButton *playBtn;
+    
+    BOOL dragFlag;
+    UInt64 end;
 }
 
 @end
@@ -35,15 +38,16 @@
     // Do any additional setup after loading the view from its nib.
     
     player = [Player sharedManager];
-    player.delegate = self;
     
     
-    __block id _self = self;
-    player.onCompletion=^(){
-        NSLog(@"detialViewController 播放完成!");
-        [_self playVoiceEnd];
-        //        [[NSNotificationCenter defaultCenter] postNotificationName:@"playVoiceEnd" object:nil];
-    };
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playVoiceEnd) name:@"playVoiceEnd" object:nil];
+    
+//    __block id _self = self;
+//    player.onCompletion=^(){
+//        NSLog(@"detialViewController 播放完成!");
+//        [_self playVoiceEnd];
+//        //        [[NSNotificationCenter defaultCenter] postNotificationName:@"playVoiceEnd" object:nil];
+//    };
     
     if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_6_1) {
         //        self.edgesForExtendedLayout = UIRectEdgeNone;
@@ -118,11 +122,15 @@
     UIImageView *sliderBackground = [[UIImageView alloc] initWithFrame:CGRectMake(67, CGRectGetMaxY(playTitleLabel.frame) + 16, Main_Screen_Width - 67 - 18, 40)];
     sliderBackground.image = [UIImage imageNamed:@"sliderBroudground"];
     slider = [[UISlider alloc] initWithFrame:CGRectMake(10, 5, CGRectGetWidth(sliderBackground.frame) - 20, CGRectGetHeight(sliderBackground.frame) - 10)];
-    //    slider.userInteractionEnabled = NO;
+    slider.userInteractionEnabled = YES;
     slider.minimumTrackTintColor = RGB(244, 173, 0);
     slider.maximumTrackTintColor = RGB(227, 227, 227);
     slider.thumbTintColor = RGB(244, 173, 0);
     [slider setThumbImage:[UIImage imageNamed:@"sliderImage"] forState:UIControlStateNormal];
+    [slider setThumbImage:[UIImage imageNamed:@"sliderImage"] forState:UIControlStateHighlighted];
+    [slider addTarget:self action:@selector(sliderTouchDown) forControlEvents:UIControlEventTouchDown];
+    [slider addTarget:self action:@selector(sliderValueChanged:) forControlEvents:UIControlEventTouchUpInside];
+    sliderBackground.userInteractionEnabled = YES;
     [sliderBackground addSubview:slider];
     
     startLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, CGRectGetHeight(sliderBackground.frame) - 15, 34, 15)];
@@ -211,6 +219,25 @@
     }
 }
 
+-(void)sliderTouchDown{
+    dragFlag = YES;
+}
+
+-(void)sliderValueChanged:(UISlider *)sender{
+    dragFlag = NO;
+    if (end > 0) {
+        if (player.audioState == kFsAudioStreamPlaying || player.audioState == kFsAudioStreamPaused) {
+            [player stop];
+            FSSeekByteOffset offset;
+            offset.position = sender.value;
+            offset.start = sender.value * end;
+            offset.end = end;
+            [player playFromOffset:offset];
+        }
+    }
+}
+
+
 -(void)daohang{
     
     
@@ -240,35 +267,54 @@
 }
 
 -(void)playVoiceEnd{
-    [jieshuoBtn setImage:[UIImage imageNamed:@"ypjs"] forState:UIControlStateNormal];
+    [player setUrl:nil];
+    [playBtn setImage:[UIImage imageNamed:@"playStart"] forState:UIControlStateNormal];
+    [slider setValue:0.0 animated:YES];
+    startLabel.text = @"00:00";
 }
 
 //语音播放
 -(void)playVoice{
-    if ([[Player sharedManager] isPlaying]) {
-        NSString *playingUrlStr = [[[Player sharedManager] url] absoluteString];
+    player.delegate = self;
+    if (player.audioState == kFsAudioStreamPlaying) {
+        NSString *playingUrlStr = [[player url] absoluteString];
         NSString *path = [NSString stringWithFormat:@"%@",[_poi objectForKey:@"voice"]];
-        if ([playingUrlStr isEqualToString:path]) {//当前播放的就是该景点的语音 停止播放
-            [jieshuoBtn setImage:[UIImage imageNamed:@"ypjs"] forState:UIControlStateNormal];
-            [[Player sharedManager] stop];
-            DLog(@"停止播放");
-        }else{//不是该景点的 重新播放
-            [[Player sharedManager] stop];
-            [jieshuoBtn setImage:[UIImage imageNamed:@"ztbf"] forState:UIControlStateNormal];
+        if (![playingUrlStr isEqualToString:path]) {
+            [player stop];
+            [playBtn setImage:[UIImage imageNamed:@"ztbf"] forState:UIControlStateNormal];
+            NSString *path = [NSString stringWithFormat:@"%@",[_poi objectForKey:@"voice"]];
             NSURL *url=[NSURL URLWithString:path];
-            [[Player sharedManager] setUrl:url];
-            [[Player sharedManager] play];
-            DLog(@"停止播放 重新播放");
+            [player setUrl:url];
+            [player play];
+        }else{
+            [player pause];
+            if ([player isPlaying]) {
+                DLog(@"isPlaying");
+                [playBtn setImage:[UIImage imageNamed:@"ztbf"] forState:UIControlStateNormal];
+            }else{
+                DLog(@"notPlaying");
+                [playBtn setImage:[UIImage imageNamed:@"play2"] forState:UIControlStateNormal];
+            }
+            //            player.audioState = kFsAudioStreamPaused;
         }
-    }else{
-        DLog(@"播放");
-        [[Player sharedManager] stop];
-        [jieshuoBtn setImage:[UIImage imageNamed:@"ztbf"] forState:UIControlStateNormal];
+    }else if (player.audioState == kFsAudioStreamStopped || player.audioState == kFsAudioStreamRetrievingURL){
+        [playBtn setImage:[UIImage imageNamed:@"ztbf"] forState:UIControlStateNormal];
         NSString *path = [NSString stringWithFormat:@"%@",[_poi objectForKey:@"voice"]];
-        DLog(@"%@",path);
         NSURL *url=[NSURL URLWithString:path];
-        [[Player sharedManager] setUrl:url];
-        [[Player sharedManager] play];
+        [player setUrl:url];
+        [player play];
+        
+        
+    }else if (player.audioState == kFsAudioStreamPaused){
+        [player pause];
+        
+        if ([player isPlaying]) {
+            DLog(@"isPlaying");
+            [playBtn setImage:[UIImage imageNamed:@"ztbf"] forState:UIControlStateNormal];
+        }else{
+            DLog(@"notPlaying");
+            [playBtn setImage:[UIImage imageNamed:@"play2"] forState:UIControlStateNormal];
+        }
     }
 }
 
@@ -285,6 +331,25 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - FSPCMAudioStreamDelegate
+
+- (void)audioStream:(FSAudioStream *)audioStream samplesAvailable:(const int16_t *)samples count:(NSUInteger)count{
+    //    DLog(@"position:%f minutes:%d second:%d minutes:%d second:%d",audioStream.currentTimePlayed.position,audioStream.currentTimePlayed.minute,audioStream.currentTimePlayed.second,audioStream.duration.minute,audioStream.duration.second);
+    //    DLog(@"%f %llu %llu",audioStream.currentSeekByteOffset.position,audioStream.currentSeekByteOffset.start,audioStream.currentSeekByteOffset.end);
+    //    [progress setProgress:audioStream.currentTimePlayed.position animated:YES];
+    if (!dragFlag) {
+        [slider setValue:audioStream.currentTimePlayed.position animated:YES];
+    }
+    
+    
+    
+    end = audioStream.currentSeekByteOffset.end;
+    
+    startLabel.text = [NSString stringWithFormat:@"%02d:%02d",audioStream.currentTimePlayed.minute,audioStream.currentTimePlayed.second];
+    timeLabel.text = [NSString stringWithFormat:@"%02d:%02d",audioStream.duration.minute,audioStream.duration.second];
+    
 }
 
 #pragma mark - LCActionSheet Delegate

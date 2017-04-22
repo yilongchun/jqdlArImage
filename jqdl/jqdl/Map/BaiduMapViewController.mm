@@ -319,6 +319,8 @@
     
     //播放完成通知
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playVoiceEnd) name:@"playVoiceEnd" object:nil];
+    
+//    [_mapView showAnnotations:annotations animated:YES];
     [self mapViewFit];
     
     //    //计算距离
@@ -665,7 +667,7 @@
 //    }
     
     if (btn.tag == -1) {
-        [self showHintInView:self.view hint:@"显示景区内全部热点"];
+        [self showHintInView:self.navigationController.view hint:@"显示景区内全部热点"];
         [btn removeFromSuperview];
         if (spotTableView) {
             CGRect rect = spotTableView.frame;
@@ -1133,7 +1135,7 @@
 -(void)viewDidDisappear:(BOOL)animated{
     [super viewDidDisappear:animated];
     player.delegate = nil;
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"playVoiceEnd" object:nil];
+    
 }
 
 -(void)viewWillDisappear:(BOOL)animated
@@ -2459,11 +2461,28 @@
 //            _calloutMapAnnotation = nil;
 //        }
 //    }
+    
+    if ([view.annotation isKindOfClass:[MyPointAnnotation class]]) {
+        [view.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if (obj.tag == 999) {
+                UILabel *label = (UILabel *)obj;
+                label.backgroundColor = [UIColor clearColor];
+                view.backgroundColor = [UIColor clearColor];
+            }
+        }];
+    }
 }
 
 - (void)mapView:(BMKMapView *)mapView didSelectAnnotationView:(BMKAnnotationView *)view{
     if ([view.annotation isKindOfClass:[MyPointAnnotation class]]) {
         
+        [view.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if (obj.tag == 999) {
+                UILabel *label = (UILabel *)obj;
+                label.backgroundColor = [UIColor whiteColor];
+                view.backgroundColor = [UIColor whiteColor];
+            }
+        }];
         
         showJd = YES;
         [self setJdScrollViewShowHidden];
@@ -2566,6 +2585,10 @@
     if ([annotation isKindOfClass:[MyPointAnnotation class]]) {
         
         BMKAnnotationView * view = [[BMKAnnotationView alloc]initWithAnnotation:annotation reuseIdentifier:@"annotation"];
+//        view.backgroundColor = [UIColor blackColor];
+        
+        
+        
         MyPointAnnotation *anno = (MyPointAnnotation *)annotation;
         NSDictionary *poi = anno.poi;
         NSString *type = [poi objectForKey:@"type"];
@@ -2594,6 +2617,12 @@
         }
         //点击显示图详情视图 必须MJPointAnnotation对象设置了标题和副标题
 //        view.canShowCallout=NO;
+        
+//        UIView *rightView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 32, 41)];
+//        rightView.backgroundColor = [UIColor redColor];
+//        
+//        view.rightCalloutAccessoryView = rightView;
+        
         
         
         CGFloat maxX = 0;
@@ -2641,6 +2670,31 @@
         BMKActionPaopaoView *paopaoView = [[BMKActionPaopaoView alloc]initWithCustomView:paopaoBgView];
 
         view.paopaoView = paopaoView;
+        
+        
+        
+//        //加文字
+//        UILabel *spotLabel = [[UILabel alloc] initWithFrame:CGRectMake(26, 0, 0, 26)];
+//        spotLabel.tag = 999;
+//        spotLabel.text = [poi objectForKey:@"name"];
+//        spotLabel.font = SYSTEMFONT(12);
+//        [spotLabel sizeToFit];
+//        [spotLabel setFrame:CGRectMake(26, 0, CGRectGetWidth(spotLabel.frame) + 7, 26)];
+//        spotLabel.shadowColor = RGB(255, 255, 255);
+//        spotLabel.shadowOffset = CGSizeMake(1, 1);
+//        [view addSubview:spotLabel];
+//        
+//        CGRect bounds = view.bounds;
+//        bounds.size.width += CGRectGetWidth(spotLabel.frame);
+//        UIRectCorner corners = UIRectCornerAllCorners;
+//        UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:bounds
+//                                                       byRoundingCorners:corners
+//                                                             cornerRadii:CGSizeMake(view.frame.size.width/2, view.frame.size.width/2)];
+//        CAShapeLayer *maskLayer = [CAShapeLayer layer];
+//        maskLayer.frame = bounds;
+//        maskLayer.path = maskPath.CGPath;
+//        view.layer.mask = maskLayer;
+        
         return view;
         
         
