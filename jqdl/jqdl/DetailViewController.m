@@ -17,10 +17,8 @@
 #import "PhotoViewController.h"
 
 @interface DetailViewController ()<LCActionSheetDelegate,FSPCMAudioStreamDelegate,ImageClickEventDelegate>{
-//    UIButton *jieshuoBtn;
     NSArray *maps;
     Player *player;
-//    UIProgressView *progress;
     UISlider *slider;
     UILabel *startLabel;
     UILabel *timeLabel;
@@ -53,48 +51,13 @@
         self.extendedLayoutIncludesOpaqueBars = YES;
     }
     
-//    UIBarButtonItem *rightItem1 = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"shoucang"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] style:UIBarButtonItemStyleDone target:self action:@selector(shoucang)];
-//    UIBarButtonItem *rightItem2 = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"share"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] style:UIBarButtonItemStyleDone target:self action:@selector(share)];
-//    
-//    self.navigationItem.rightBarButtonItems = @[rightItem2,rightItem1];
-    
-//    self.navigationController.navigationBar.translucent = YES;
     self.jz_navigationBarBackgroundHidden = NO;
     self.jz_navigationBarTintColor = [UIColor whiteColor];
     self.jz_navigationBarBackgroundAlpha = 1.f;
         
     [self setContent];
     
-//    __weak typeof (self) weakSelf = self;
-//    if ([self respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
-//        self.navigationController.interactivePopGestureRecognizer.delegate = weakSelf;
-//    }
-    
-//    if ([self.navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
-//        self.navigationController.interactivePopGestureRecognizer.enabled = NO;
-//    }
-    
 }
-
-//-(void)shoucang{
-//    
-//}
-//
-//-(void)share{
-//    
-//}
-
-//-(BOOL)gestureRecognizer:(UIGestureRecognizer*)gestureRecognizer shouldReceiveTouch:(UITouch*)touch {
-//    
-//    if([touch.view isKindOfClass:[UISlider class]]){
-//        DLog(@"NO");
-//        return NO;
-//    
-//    }else{
-//        DLog(@"YES");
-//        return YES;
-//    }
-//}
 
 //设置内容
 -(void)setContent{
@@ -115,15 +78,7 @@
     [_myScrollView addSubview:adView];
 //    //标题
     NSString *slogan = [[_poi objectForKey:@"name"] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-//    UILabel *titleLabel = [UILabel new];
-//    CGRect titleRect = CGRectMake(20, 210 - 17 - 20, Main_Screen_Width - 50, 30);
-//    [titleLabel setFrame:titleRect];
-//    titleLabel.backgroundColor =[UIColor clearColor];
-//    titleLabel.text = slogan;
-//    titleLabel.font = [UIFont systemFontOfSize:17];
-//    titleLabel.textColor=[UIColor whiteColor];
-//    [_myScrollView addSubview:titleLabel];
-    
+
     UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
     titleLabel.font = BOLDSYSTEMFONT(17);
     titleLabel.textColor = [UIColor blackColor];
@@ -309,11 +264,6 @@
 
 //开始播放
 -(void)playVoice{
-    
-    DLog(@"playVoice audioState %d",player.audioState);
-    
-    
-    
     currentPlay = YES;
     if (player.audioState == kFsAudioStreamPlaying) {
         NSString *playingUrlStr = [[player url] absoluteString];
@@ -334,14 +284,8 @@
                 DLog(@"notPlaying");
                 [playBtn setImage:[UIImage imageNamed:@"play2"] forState:UIControlStateNormal];
             }
-//            player.audioState = kFsAudioStreamPaused;
         }
     }
-//    else if (player.audioState == kFsAudioStreamStopped || player.audioState == kFsAudioStreamRetrievingURL || player.audioState == kFSAudioStreamEndOfFile || player.audioState == kFsAudioStreamFailed){
-//        
-//        
-//        
-//    }
     else if (player.audioState == kFsAudioStreamPaused){
         [player pause];
         
@@ -359,44 +303,6 @@
         [player setUrl:url];
         [player play];
     }
-    
-    
-    
-    
-//    NSString *playingUrlStr = [[player url] absoluteString];
-//    NSString *path = [NSString stringWithFormat:@"%@",[_poi objectForKey:@"voice"]];
-//    if (![playingUrlStr isEqualToString:path]) {
-//        [player stop];
-//        [playBtn setImage:[UIImage imageNamed:@"ztbf"] forState:UIControlStateNormal];
-//        NSString *path = [NSString stringWithFormat:@"%@",[_poi objectForKey:@"voice"]];
-//        NSURL *url=[NSURL URLWithString:path];
-//        [player setUrl:url];
-//        [player play];
-//        player.delegate = self;
-//    }else{
-//        [player pause];
-//        
-//        if ([player isPlaying]) {
-//            DLog(@"isPlaying");
-//            [playBtn setImage:[UIImage imageNamed:@"ztbf"] forState:UIControlStateNormal];
-//        }else{
-//            DLog(@"notPlaying");
-//            [playBtn setImage:[UIImage imageNamed:@"play2"] forState:UIControlStateNormal];
-//        }
-//    }
-    
-    
-    
-    
-    
-    
-//    [player pause];
-//    
-//    if ([player isPlaying]) {
-//        DLog(@"isPlaying");
-//    }else{
-//        DLog(@"notPlaying");
-//    }
     
 }
 

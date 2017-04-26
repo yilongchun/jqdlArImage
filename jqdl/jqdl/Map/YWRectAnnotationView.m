@@ -7,13 +7,14 @@
 //
 
 #import "YWRectAnnotationView.h"
-
+#import "THLabel.h"
 
 
 @interface YWRectAnnotationView()
 {
+    UIImage                      *leftImage;
     UIImageView                     *_leftImage;
-    UILabel                     *_titleLable;
+    THLabel                     *_titleLable;
     UIView                      *_contentView;
 }
 @end
@@ -36,6 +37,7 @@
     if (selected)
     {
         [_contentView setBackgroundColor:[ UIColor whiteColor]];
+        _leftImage.image = _leftHighlightImage;
 //        [_contentView bringSubviewToFront:_leftImage];
 //        [_contentView bringSubviewToFront:_titleLable];
 //        [self bringSubviewToFront:_contentView];
@@ -64,6 +66,7 @@
     }
     else
     {
+        _leftImage.image = leftImage;
         [_contentView setBackgroundColor:[ UIColor clearColor]];
 //        [_CalloutView removeFromSuperview];
     }
@@ -81,12 +84,19 @@
     _contentView=contentView;
     
     UIImageView *imageview = [[UIImageView alloc] init];
+    [imageview setContentMode:UIViewContentModeCenter];
     _leftImage = imageview;
     [contentView addSubview:imageview];
     
-    UILabel *lable=[[ UILabel alloc] init];
+    THLabel *lable=[[ THLabel alloc] init];
     lable.textColor=[ UIColor blackColor];
+    lable.strokeColor = [UIColor whiteColor];
+    lable.strokeSize = 1.0;
     lable.font=[ UIFont systemFontOfSize:13];
+    
+    
+    
+    
     _titleLable=lable;
     [contentView addSubview:lable];
     [self addSubview:contentView];
@@ -98,12 +108,9 @@
 -(void)setTitleText:(NSString *)titleText leftImage:(UIImage *)image{
     
     _titleLable.text=titleText;
+    
     _leftImage.image = image;
-    
-    
-    
-    
-    
+    leftImage = image;
     
     
     NSString *text = titleText;
@@ -120,7 +127,7 @@
     
     [_contentView setFrame:CGRectMake(0, 0, 30 + Width+10, 30)];
     [_leftImage setFrame:CGRectMake(2, 2, 26, 26)];
-    [_titleLable setFrame:CGRectMake(30,4, Width, 22)];
+    [_titleLable setFrame:CGRectMake(30,4, Width + 3, 22)];
     
 //    CGRect rect = _contentView.bounds;
 //    //创建Path

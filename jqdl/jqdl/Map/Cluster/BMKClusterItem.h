@@ -11,6 +11,8 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
+#import "MyPointAnnotation.h"
+
 /**
  * 表示一个标注
  */
@@ -19,6 +21,7 @@
 ///经纬度，初始化后，不可修改
 @property (nonatomic, assign) CLLocationCoordinate2D coor;
 @property (nonatomic, assign) NSDictionary *poi;
+@property (nonatomic, assign) MyPointAnnotation *annotation;
 
 @end
 

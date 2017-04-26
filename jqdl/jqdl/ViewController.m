@@ -596,8 +596,6 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     NSString *url = [NSString stringWithFormat:@"%@%@%@",kHost,kVERSION,@"/stores"];
     [manager GET:url parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
         
-        
-        
         NSDictionary *dic= [NSDictionary dictionaryWithDictionary:responseObject];
         NSArray *data = [dic objectForKey:@"data"];
         

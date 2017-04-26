@@ -15,9 +15,9 @@
 #import "Util.h"
 #import "LCActionSheet.h"
 #import "Player.h"
+#import "PhotoViewController.h"
 
-@interface StoreViewController ()<LCActionSheetDelegate,FSPCMAudioStreamDelegate>{
-    UIButton *jieshuoBtn;
+@interface StoreViewController ()<LCActionSheetDelegate,FSPCMAudioStreamDelegate,ImageClickEventDelegate>{
     NSArray *maps;
     Player *player;
     UISlider *slider;
@@ -25,6 +25,7 @@
     UILabel *timeLabel;
     UIButton *playBtn;
     
+    BOOL currentPlay;
     BOOL dragFlag;
     UInt64 end;
 }
@@ -38,16 +39,9 @@
     // Do any additional setup after loading the view from its nib.
     
     player = [Player sharedManager];
-    
+    player.delegate = self;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playVoiceEnd) name:@"playVoiceEnd" object:nil];
-    
-//    __block id _self = self;
-//    player.onCompletion=^(){
-//        NSLog(@"detialViewController 播放完成!");
-//        [_self playVoiceEnd];
-//        //        [[NSNotificationCenter defaultCenter] postNotificationName:@"playVoiceEnd" object:nil];
-//    };
     
     if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_6_1) {
         //        self.edgesForExtendedLayout = UIRectEdgeNone;
@@ -55,26 +49,12 @@
         self.extendedLayoutIncludesOpaqueBars = YES;
     }
     
-//    UIBarButtonItem *rightItem1 = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"shoucang"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] style:UIBarButtonItemStyleDone target:self action:@selector(shoucang)];
-//    UIBarButtonItem *rightItem2 = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"share"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] style:UIBarButtonItemStyleDone target:self action:@selector(share)];
-//    
-//    self.navigationItem.rightBarButtonItems = @[rightItem2,rightItem1];
-    
-    self.navigationController.navigationBar.translucent = YES;
-    self.jz_navigationBarBackgroundHidden = YES;
+    self.jz_navigationBarBackgroundHidden = NO;
     self.jz_navigationBarTintColor = [UIColor whiteColor];
-    self.jz_navigationBarBackgroundAlpha = 0.f;
+    self.jz_navigationBarBackgroundAlpha = 1.f;
     
     [self setContent];
 }
-
-//-(void)shoucang{
-//    
-//}
-//
-//-(void)share{
-//    
-//}
 
 //设置内容
 -(void)setContent{
@@ -87,23 +67,18 @@
         [strArr addObject:@"1"];
     }
     
-    BMAdScrollView *adView = [[BMAdScrollView alloc] initWithFrame:CGRectMake(0, 0, Main_Screen_Width, 250) images:arr titles:strArr];
+    BMAdScrollView *adView = [[BMAdScrollView alloc] initWithFrame:CGRectMake(0, 64, Main_Screen_Width, 250) images:arr titles:strArr];
+    adView.delegate = self;
     [_myScrollView addSubview:adView];
     //标题
     NSString *slogan = [[_poi objectForKey:@"name"] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    UILabel *titleLabel = [UILabel new];
-    CGRect titleRect = CGRectMake(15, 210, Main_Screen_Width - 50, 30);
-    [titleLabel setFrame:titleRect];
-    titleLabel.backgroundColor =[UIColor clearColor];
+    
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
+    titleLabel.font = BOLDSYSTEMFONT(17);
+    titleLabel.textColor = [UIColor blackColor];
+    titleLabel.textAlignment = NSTextAlignmentCenter;
     titleLabel.text = slogan;
-    titleLabel.font = [UIFont systemFontOfSize:17];
-    titleLabel.textColor=[UIColor whiteColor];
-    [_myScrollView addSubview:titleLabel];
-//    //解说按钮
-//    jieshuoBtn = [[UIButton alloc] initWithFrame:CGRectMake(25, CGRectGetMaxY(adView.frame) + 10, 88, 25)];
-//    [jieshuoBtn setImage:[UIImage imageNamed:@"ypjs"] forState:UIControlStateNormal];
-//    [jieshuoBtn addTarget:self action:@selector(playVoice) forControlEvents:UIControlEventTouchUpInside];
-//    [_myScrollView addSubview:jieshuoBtn];
+    self.navigationItem.titleView = titleLabel;
     
     
     UILabel *playTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(18, CGRectGetMaxY(adView.frame) + 16, 0, 0)];
@@ -206,16 +181,21 @@
     //播放完成通知
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playVoiceEnd) name:@"playVoiceEnd" object:nil];
     
-    //控制播放按钮
-    if ([[Player sharedManager] isPlaying]) {
-        NSString *playingUrlStr = [[[Player sharedManager] url] absoluteString];
+    if (player.audioState == kFsAudioStreamPlaying) {
+        NSString *playingUrlStr = [[player url] absoluteString];
         NSString *path = [NSString stringWithFormat:@"%@",[_poi objectForKey:@"voice"]];
         if ([playingUrlStr isEqualToString:path]) {//当前播放的就是该景点的语音 停止播放
-            [jieshuoBtn setImage:[UIImage imageNamed:@"ztbf"] forState:UIControlStateNormal];
+            DLog(@"播放的地址一致");
+            currentPlay = YES;
+            [playBtn setImage:[UIImage imageNamed:@"ztbf"] forState:UIControlStateNormal];
         }else{//不是该景点的 重新播放
-            [jieshuoBtn setImage:[UIImage imageNamed:@"ypjs"] forState:UIControlStateNormal];
+            DLog(@"播放的地址不一致");
+            [playBtn setImage:[UIImage imageNamed:@"playStart"] forState:UIControlStateNormal];
         }
+    }else if (player.audioState == kFsAudioStreamStopped){
         
+    }else if (player.audioState == kFsAudioStreamPaused){
+        [playBtn setImage:[UIImage imageNamed:@"play2"] forState:UIControlStateNormal];
     }
 }
 
@@ -226,7 +206,7 @@
 -(void)sliderValueChanged:(UISlider *)sender{
     dragFlag = NO;
     if (end > 0) {
-        if (player.audioState == kFsAudioStreamPlaying || player.audioState == kFsAudioStreamPaused) {
+        if (player.audioState == kFsAudioStreamPlaying || player.audioState == kFsAudioStreamPaused || player.audioState == kFsAudioStreamRetryingSucceeded) {
             [player stop];
             FSSeekByteOffset offset;
             offset.position = sender.value;
@@ -275,7 +255,7 @@
 
 //语音播放
 -(void)playVoice{
-    player.delegate = self;
+    currentPlay = YES;
     if (player.audioState == kFsAudioStreamPlaying) {
         NSString *playingUrlStr = [[player url] absoluteString];
         NSString *path = [NSString stringWithFormat:@"%@",[_poi objectForKey:@"voice"]];
@@ -295,17 +275,9 @@
                 DLog(@"notPlaying");
                 [playBtn setImage:[UIImage imageNamed:@"play2"] forState:UIControlStateNormal];
             }
-            //            player.audioState = kFsAudioStreamPaused;
         }
-    }else if (player.audioState == kFsAudioStreamStopped || player.audioState == kFsAudioStreamRetrievingURL){
-        [playBtn setImage:[UIImage imageNamed:@"ztbf"] forState:UIControlStateNormal];
-        NSString *path = [NSString stringWithFormat:@"%@",[_poi objectForKey:@"voice"]];
-        NSURL *url=[NSURL URLWithString:path];
-        [player setUrl:url];
-        [player play];
-        
-        
-    }else if (player.audioState == kFsAudioStreamPaused){
+    }
+    else if (player.audioState == kFsAudioStreamPaused){
         [player pause];
         
         if ([player isPlaying]) {
@@ -315,16 +287,30 @@
             DLog(@"notPlaying");
             [playBtn setImage:[UIImage imageNamed:@"play2"] forState:UIControlStateNormal];
         }
+    }else{
+        [playBtn setImage:[UIImage imageNamed:@"ztbf"] forState:UIControlStateNormal];
+        NSString *path = [NSString stringWithFormat:@"%@",[_poi objectForKey:@"voice"]];
+        NSURL *url=[NSURL URLWithString:path];
+        [player setUrl:url];
+        [player play];
     }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
+}
+
+-(void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    player.delegate = self;
 }
 
 -(void)viewDidDisappear:(BOOL)animated{
     [super viewDidDisappear:animated];
+    
+    player.delegate = nil;
+    player = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"playVoiceEnd" object:nil];
 }
 
@@ -339,12 +325,9 @@
     //    DLog(@"position:%f minutes:%d second:%d minutes:%d second:%d",audioStream.currentTimePlayed.position,audioStream.currentTimePlayed.minute,audioStream.currentTimePlayed.second,audioStream.duration.minute,audioStream.duration.second);
     //    DLog(@"%f %llu %llu",audioStream.currentSeekByteOffset.position,audioStream.currentSeekByteOffset.start,audioStream.currentSeekByteOffset.end);
     //    [progress setProgress:audioStream.currentTimePlayed.position animated:YES];
-    if (!dragFlag) {
+    if (!dragFlag && currentPlay) {
         [slider setValue:audioStream.currentTimePlayed.position animated:YES];
     }
-    
-    
-    
     end = audioStream.currentSeekByteOffset.end;
     
     startLabel.text = [NSString stringWithFormat:@"%02d:%02d",audioStream.currentTimePlayed.minute,audioStream.currentTimePlayed.second];
@@ -374,6 +357,19 @@
         NSDictionary *dic = maps[buttonIndex-2];
         NSString *urlString = dic[@"url"];
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlString]];
+    }
+}
+
+#pragma mark - ImageClickEventDelegate
+
+-(void)imageClickAt:(NSInteger)vid{
+    NSString *imageStr = [_poi objectForKey:@"images"];
+    if (imageStr != nil) {
+        NSArray *images = [imageStr componentsSeparatedByString:@","];
+        PhotoViewController *vc = [[PhotoViewController alloc] init];
+        vc.images = images;
+        vc.name = [_poi objectForKey:@"name"];
+        [self.navigationController pushViewController:vc animated:YES];
     }
 }
 @end

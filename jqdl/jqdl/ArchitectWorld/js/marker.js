@@ -55,7 +55,7 @@ function Marker(poiData) {
         typeImage = "assets/service_point.png";
     }else if(poiData.type == "shop"){//商铺
         typeImage = "assets/shop.png";
-    }else if(poiData.type == "toilet"){//公厕
+    }else if(poiData.type == "toilet" || poiData.type == "washroom"){//公厕
         typeImage = "assets/toilet.png";
     }else{
         typeImage = "assets/scenery_spot.png";

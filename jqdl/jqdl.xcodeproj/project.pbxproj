@@ -465,6 +465,8 @@
 		445C4A781E1DECF800A5B375 /* TrackerResultViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 445C4A761E1DECF800A5B375 /* TrackerResultViewController.m */; };
 		445C4A791E1DECF800A5B375 /* TrackerResultViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 445C4A771E1DECF800A5B375 /* TrackerResultViewController.xib */; };
 		445C4A7B1E1DF3B800A5B375 /* timg.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 445C4A7A1E1DF3B800A5B375 /* timg.jpeg */; };
+		446208B91EAEFFC700177D06 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 446208B61EAEFFC700177D06 /* Info.plist */; };
+		446208BA1EAEFFC700177D06 /* THLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 446208B81EAEFFC700177D06 /* THLabel.m */; };
 		44621B561E11FFA300EB3AFC /* BMAdScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 44621B551E11FFA300EB3AFC /* BMAdScrollView.m */; };
 		44621B881E1200E700EB3AFC /* AFHTTPRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 44621B761E1200E700EB3AFC /* AFHTTPRequestOperation.m */; };
 		44621B891E1200E700EB3AFC /* AFHTTPRequestOperationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 44621B781E1200E700EB3AFC /* AFHTTPRequestOperationManager.m */; };
@@ -1446,6 +1448,9 @@
 		445C4A761E1DECF800A5B375 /* TrackerResultViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrackerResultViewController.m; sourceTree = "<group>"; };
 		445C4A771E1DECF800A5B375 /* TrackerResultViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TrackerResultViewController.xib; sourceTree = "<group>"; };
 		445C4A7A1E1DF3B800A5B375 /* timg.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = timg.jpeg; sourceTree = "<group>"; };
+		446208B61EAEFFC700177D06 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		446208B71EAEFFC700177D06 /* THLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = THLabel.h; sourceTree = "<group>"; };
+		446208B81EAEFFC700177D06 /* THLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = THLabel.m; sourceTree = "<group>"; };
 		44621B541E11FFA300EB3AFC /* BMAdScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMAdScrollView.h; sourceTree = "<group>"; };
 		44621B551E11FFA300EB3AFC /* BMAdScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BMAdScrollView.m; sourceTree = "<group>"; };
 		44621B751E1200E700EB3AFC /* AFHTTPRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPRequestOperation.h; sourceTree = "<group>"; };
@@ -3349,6 +3354,16 @@
 			path = Private;
 			sourceTree = "<group>";
 		};
+		446208B51EAEFFC700177D06 /* THLabel */ = {
+			isa = PBXGroup;
+			children = (
+				446208B61EAEFFC700177D06 /* Info.plist */,
+				446208B71EAEFFC700177D06 /* THLabel.h */,
+				446208B81EAEFFC700177D06 /* THLabel.m */,
+			);
+			path = THLabel;
+			sourceTree = "<group>";
+		};
 		44621B531E11FFA300EB3AFC /* BMAdScrollView */ = {
 			isa = PBXGroup;
 			children = (
@@ -3419,6 +3434,7 @@
 		44988C121C04575400D5C59C /* ThiredPartyLib */ = {
 			isa = PBXGroup;
 			children = (
+				446208B51EAEFFC700177D06 /* THLabel */,
 				4437FEE51E48542400B8A084 /* BWStatusBarOverlay */,
 				4424D63E1E2726A500245B43 /* Masonry */,
 				4424D6321E27254700245B43 /* LCActionSheet */,
@@ -3715,6 +3731,7 @@
 				4444EFA51E456C7200E72B41 /* UserCenterViewController.xib in Resources */,
 				44F6146C1E1F92BB00482D23 /* FeatureListViewController.xib in Resources */,
 				44F029DD1C1E569D00EF9218 /* Feature2ViewController.xib in Resources */,
+				446208B91EAEFFC700177D06 /* Info.plist in Resources */,
 				44003D091BFB24ED00CB747A /* Assets.xcassets in Resources */,
 				4437FEF91E48542500B8A084 /* status-bar-pattern-default@2x.jpg in Resources */,
 				441179961C11763E0071E1C0 /* CodeScan.bundle in Resources */,
@@ -3920,6 +3937,7 @@
 				441179A61C11763E0071E1C0 /* ZXAztecState.m in Sources */,
 				440E7F361E1B36D600B5277E /* NSDate+TimeAgo.m in Sources */,
 				441179BC1C11763E0071E1C0 /* ZXProductParsedResult.m in Sources */,
+				446208BA1EAEFFC700177D06 /* THLabel.m in Sources */,
 				4411799E1C11763E0071E1C0 /* LBXScanWrapper.m in Sources */,
 				44270F031E164F1B00561C69 /* FeatureTableViewCell.m in Sources */,
 				44117A3D1C11763E0071E1C0 /* ZXOneDReader.m in Sources */,

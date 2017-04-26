@@ -39,6 +39,7 @@
 #import "AudioGuideView.h"
 #import "YWRectAnnotationView.h"
 #import "BMKClusterManager.h"
+#import "StoreViewController.h"
 
 #define MYBUNDLE_NAME @ "mapapi.bundle"
 #define MYBUNDLE_PATH [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: MYBUNDLE_NAME]
@@ -122,7 +123,8 @@
     
     NSDictionary *currentPlayedPoi;
     
-//    BMKClusterManager *_clusterManager;//点聚合管理类
+    BMKClusterManager *_clusterManager;//点聚合管理类
+    YWRectAnnotationView *selectedAnnotationView;//当前选中的view
 }
 
 @end
@@ -159,13 +161,13 @@
     _mapView = [[BMKMapView alloc]initWithFrame:CGRectMake(0, 64, Main_Screen_Width, Main_Screen_Height - 64)];
     [_mapView setZoomLevel:13];
     _mapView.isSelectedAnnotationViewFront = YES;
+//    _mapView.showMapPoi = NO;
     [self.view addSubview:_mapView];
     
     //列表
     UIButton *listBtn = [[UIButton alloc] initWithFrame:CGRectMake(Main_Screen_Width - 12 - 30, 12 + 64, 30, 30)];
     [listBtn setImage:[UIImage imageNamed:@"listIcon2"] forState:UIControlStateNormal];
     [listBtn addTarget:self action:@selector(showFeatureListView) forControlEvents:UIControlEventTouchUpInside];
-    
     listBtn.layer.shadowColor = RGBA(0, 0, 0, 0.1).CGColor;
     listBtn.layer.shadowOpacity = 1;
     listBtn.layer.shadowOffset = CGSizeMake(0.0f, 0.0f);
@@ -225,18 +227,13 @@
     otherArray = [NSMutableArray array];
     
     //初始化点聚合管理类
-//    _clusterManager = [[BMKClusterManager alloc] init];
+    _clusterManager = [[BMKClusterManager alloc] init];
    
     for (int i = 0; i < _jingdianArray.count; i++) {
         NSDictionary *poi = [_jingdianArray objectAtIndex:i];
         
         
-        //数据筛选分类
-        if([[poi objectForKey:@"type"] isEqualToString:@"scenery_spot"]){//景点
-            [tuijianArray addObject:poi];
-        }else{
-            [otherArray addObject:poi];
-        }
+        
         
         //添加PointAnnotation
         MyPointAnnotation* annotation = [[MyPointAnnotation alloc]init];
@@ -255,12 +252,20 @@
         [_mapView addAnnotation:annotation];
         [annotations addObject:annotation];
         
+        //数据筛选分类
+        if([[poi objectForKey:@"type"] isEqualToString:@"scenery_spot"]){//景点
+            [tuijianArray addObject:annotation];
+        }else{
+            [otherArray addObject:annotation];
+        }
         
-//        //向点聚合管理类中添加标注
-//        BMKClusterItem *clusterItem = [[BMKClusterItem alloc] init];
-//        clusterItem.coor = coor;
-//        clusterItem.poi = poi;
-//        [_clusterManager addClusterItem:clusterItem];
+        
+        //向点聚合管理类中添加标注
+        BMKClusterItem *clusterItem = [[BMKClusterItem alloc] init];
+        clusterItem.coor = coor;
+        clusterItem.poi = poi;
+        clusterItem.annotation = annotation;
+        [_clusterManager addClusterItem:clusterItem];
         
     }
     
@@ -344,6 +349,22 @@
     //    BMKMapPoint point2 = BMKMapPointForCoordinate(CLLocationCoordinate2DMake(38.915,115.404));
     //    CLLocationDistance distance = BMKMetersBetweenMapPoints(point1,point2);
     
+    
+    
+    
+    
+    
+    
+//    [self convertBaiduCoor:30.156462 lng:113.716483 des:@"大门口"];
+//    [self convertBaiduCoor:30.154898 lng:113.713231 des:@"科普宣教中心"];
+//    [self convertBaiduCoor:30.155467 lng:113.716117 des:@"公园主码头"];
+//    [self convertBaiduCoor:30.142199 lng:113.730229 des:@"公园小码头"];
+//    [self convertBaiduCoor:30.142930 lng:113.730162 des:@"关山监测站"];
+//    [self convertBaiduCoor:30.142983 lng:113.730231 des:@"观鸟台"];
+//    [self convertBaiduCoor:30.142602 lng:113.730151 des:@"步栈道"];
+//    [self convertBaiduCoor:30.155022 lng:113.713428 des:@"停车场"];
+//    [self convertBaiduCoor:30.155123 lng:113.713329 des:@"厕所"];
+    
 //        //其他坐标系转为百度坐标系113.716483,30.156462
 //        CLLocationCoordinate2D coor = CLLocationCoordinate2DMake(30.156462, 113.716483);//原始坐标
 //        //转换 google地图、soso地图、aliyun地图、mapabc地图和amap地图所用坐标至百度坐标
@@ -416,7 +437,17 @@
     }
 }
 
-
+//转换为百度坐标
+-(void)convertBaiduCoor:(CLLocationDegrees)lat lng:(CLLocationDegrees)lng des:(NSString *)des{
+    CLLocationCoordinate2D coor = CLLocationCoordinate2DMake(lat, lng);//原始坐标
+    //转换 google地图、soso地图、aliyun地图、mapabc地图和amap地图所用坐标至百度坐标
+    NSDictionary* testdic = BMKConvertBaiduCoorFrom(coor,BMK_COORDTYPE_GPS);
+    //转换GPS坐标至百度坐标(加密后的坐标)
+    testdic = BMKConvertBaiduCoorFrom(coor,BMK_COORDTYPE_GPS);
+    //解密加密后的坐标字典
+    CLLocationCoordinate2D baiduCoor = BMKCoorDictionaryDecode(testdic);//转换后的百度坐标
+    NSLog(@"%@ %f,%f",des,baiduCoor.longitude,baiduCoor.latitude);
+}
 
 //自动调整地图级别
 -(void)mapViewFit{
@@ -733,6 +764,7 @@
 //    [sv scrollRectToVisible:btn.frame animated:YES];
     
     [_mapView removeAnnotations:annotations];
+    [_clusterManager clearClusterItems];
     
     annotations = [NSMutableArray array];
     [tuijianArray removeAllObjects];
@@ -762,7 +794,7 @@
                 continue;
             }
         }else if (btn.tag == 5){//公厕
-            if(![type isEqualToString:@"toilet"]){
+            if(![type isEqualToString:@"toilet"] && ![type isEqualToString:@"washroom"]){
                 continue;
             }
         }else if (btn.tag == 6){//出入口
@@ -792,12 +824,19 @@
         [_mapView addAnnotation:annotation];
         [annotations addObject:annotation];
         
+        //向点聚合管理类中添加标注
+        BMKClusterItem *clusterItem = [[BMKClusterItem alloc] init];
+        clusterItem.coor = coor;
+        clusterItem.poi = poi;
+        clusterItem.annotation = annotation;
+        [_clusterManager addClusterItem:clusterItem];
+        
         
         //数据筛选分类
         if([[poi objectForKey:@"type"] isEqualToString:@"scenery_spot"]){//景点
-            [tuijianArray addObject:poi];
+            [tuijianArray addObject:annotation];
         }else{
-            [otherArray addObject:poi];
+            [otherArray addObject:annotation];
         }
         
         
@@ -839,7 +878,7 @@
                 continue;
             }
         }else if (btn.tag == 5){//公厕
-            if(![type isEqualToString:@"toilet"]){
+            if(![type isEqualToString:@"toilet"] && ![type isEqualToString:@"washroom"]){
                 continue;
             }
         }else if (btn.tag == 6){//出入口
@@ -853,8 +892,6 @@
         }
         
         UIView *v = [[UIView alloc] initWithFrame:CGRectMake(x, 0, Main_Screen_Width - 40, 108)];
-        
-        
         v.backgroundColor = [UIColor whiteColor];
         ViewBorderRadius(v, 5, 1, RGBA(0, 0, 0, 0.15));
         //图片
@@ -872,13 +909,7 @@
             UITapGestureRecognizer *tap2 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toDetail:)];
             [v addGestureRecognizer:tap2];
         }
-        
-        
-        
-        //        imageview.backgroundColor = [UIColor lightGrayColor];
-        
         [imageview setImageWithURL:[NSURL URLWithString:[poi objectForKey:@"image"]] placeholderImage:[UIImage imageNamed:@"flat"]];
-        
         ViewRadius(imageview, 2);
         [v addSubview:imageview];
         //文字
@@ -894,42 +925,12 @@
         desLabel.textColor = RGB(151, 151, 151);
         desLabel.numberOfLines = 0;
         desLabel.text = [poi objectForKey:@"description"];
-        //        desLabel.backgroundColor = [UIColor grayColor];
         [UILabel setLabelSpace:desLabel withValue:[poi objectForKey:@"description"] withFont:desLabel.font];
         [v addSubview:desLabel];
-        
-        
-        
-        //        BMKMapPoint point1 = BMKMapPointForCoordinate(poi.location.coordinate);
-        //
-        //        BMKMapPoint point2 = BMKMapPointForCoordinate(CLLocationCoordinate2DMake(, ));
-        //
-        //        CLLocationDistance distance = BMKMetersBetweenMapPoints(point1,point2);
-        
-//        NSString *voice = [poi objectForKey:@"voice"];
-//        if (![voice isEqualToString:@""]) {
-//            UIButton *playBtn = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetWidth(v.frame) - 56, CGRectGetHeight(v.frame) - 28, 46, 18)];
-//            playBtn.tag = seq;
-//            playBtn.titleLabel.font = SYSTEMFONT(10);
-//            [playBtn addTarget:self action:@selector(playVoice:) forControlEvents:UIControlEventTouchUpInside];
-//            //        [playBtn setTitle:@"播放" forState:UIControlStateNormal];
-//            //        [playBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-//            
-//            [playBtn setImage:[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
-//            
-//            //        playBtn.backgroundColor = RGB(255, 192, 20);
-//            [v addSubview:playBtn];
-//        }
-        
-        
-        
         
         [sv addSubview:v];
         x += CGRectGetWidth(v.frame) + 10;
         seq++;
-        
-        
-        
     }
     x-=10;
     [sv setContentSize:CGSizeMake(x, 108)];
@@ -1041,12 +1042,20 @@
     [backItem setBackButtonBackgroundImage:[backImage resizableImageWithCapInsets:UIEdgeInsetsMake(0, backImage.size.width, 0, 0)] forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];//更改背景图片
     self.navigationItem.backBarButtonItem = backItem;
     
-    
-    DLog(@"%@",sender);
-    DetailViewController *vc = [[DetailViewController alloc] init];
     MyPointAnnotation *anno = annotations[sender.view.tag];
-    vc.poi = anno.poi;
-    [self.navigationController pushViewController:vc animated:YES];
+    NSDictionary *poi = anno.poi;
+    NSString *type = [poi objectForKey:@"type"];
+    if ([type isEqualToString:@"tourism_development"]) {//景区
+        StoreViewController *vc = [[StoreViewController alloc] init];
+        vc.poi = poi;
+        [self.navigationController pushViewController:vc animated:YES];
+    }else{//景点
+        DetailViewController *vc = [[DetailViewController alloc] init];
+        vc.poi = poi;
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+    
+    
 }
               
 - (id) processDictionaryIsNSNull:(id)obj{
@@ -1539,21 +1548,42 @@
     [self.view addSubview:imageScrollView];
     [self.view addSubview:imagePageLabel];
     
+//    imageMaskView.alpha = 0;
+//    imageScrollView.transform = CGAffineTransformMakeScale(0.1, 0.1);
+//    imagePageLabel.transform = CGAffineTransformMakeScale(0.1, 0.1);
+//    [UIView animateWithDuration:0.15 animations:^{
+//        imageMaskView.alpha = 1;
+//        imageScrollView.transform = CGAffineTransformMakeScale(1.0, 1.0);
+//        imagePageLabel.transform = CGAffineTransformMakeScale(1.0, 1.0);
+//    }];
+    
 }
 //隐藏图片
 -(void)hideDetailImage{
-    if (imageMaskView) {
-        [imageMaskView removeFromSuperview];
-        imageMaskView = nil;
-    }
-    if (imageScrollView) {
-        [imageScrollView removeFromSuperview];
-        imageScrollView = nil;
-    }
-    if (imagePageLabel) {
-        [imagePageLabel removeFromSuperview];
-        imagePageLabel = nil;
-    }
+    
+    
+//    [UIView animateWithDuration:0.15 animations:^{
+//        imageMaskView.alpha = 0;
+//        imageScrollView.transform = CGAffineTransformMakeScale(0.1, 0.1);
+//        imagePageLabel.transform = CGAffineTransformMakeScale(0.1, 0.1);
+//    } completion:^(BOOL finished) {
+//        if (finished) {
+            if (imageMaskView) {
+                [imageMaskView removeFromSuperview];
+                imageMaskView = nil;
+            }
+            if (imageScrollView) {
+                [imageScrollView removeFromSuperview];
+                imageScrollView = nil;
+            }
+            if (imagePageLabel) {
+                [imagePageLabel removeFromSuperview];
+                imagePageLabel = nil;
+            }
+//        }
+//    }];
+    
+    
 }
 
 //进入图片浏览器查看
@@ -1848,9 +1878,22 @@
                 DLog(@"向左划 显示全部按钮");
             }else if (showPlayBtn == 1) {
                 DLog(@"向左划 进入详情");
-                DetailViewController *vc = [[DetailViewController alloc] init];
-                vc.poi = currentPlayedPoi;
-                [self.navigationController pushViewController:vc animated:YES];
+                UIBarButtonItem *backItem=[[UIBarButtonItem alloc] init];
+                UIImage *backImage = [UIImage imageNamed:@"navi_back2"];
+                [backItem setBackButtonBackgroundImage:[backImage resizableImageWithCapInsets:UIEdgeInsetsMake(0, backImage.size.width, 0, 0)] forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];//更改背景图片
+                self.navigationItem.backBarButtonItem = backItem;
+                
+                NSDictionary *poi = currentPlayedPoi;
+                NSString *type = [poi objectForKey:@"type"];
+                if ([type isEqualToString:@"tourism_development"]) {//景区
+                    StoreViewController *vc = [[StoreViewController alloc] init];
+                    vc.poi = poi;
+                    [self.navigationController pushViewController:vc animated:YES];
+                }else{//景点
+                    DetailViewController *vc = [[DetailViewController alloc] init];
+                    vc.poi = poi;
+                    [self.navigationController pushViewController:vc animated:YES];
+                }
             }
         }
     }else{
@@ -2139,12 +2182,22 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (section == 0) {
-        return tuijianArray.count;
+    if (typeIndex == 0) {
+        if (section == 0) {
+            return tuijianArray.count;
+        }
+        if (section == 1) {
+            return otherArray.count;
+        }
+    }else{
+        if (typeIndex == 1) {
+            return tuijianArray.count;
+        }else{
+            return otherArray.count;
+        }
     }
-    if (section == 1) {
-        return otherArray.count;
-    }
+    
+    
     return 0;
 }
 
@@ -2160,102 +2213,200 @@
         cell= (MapSpotTableViewCell *)[[[NSBundle  mainBundle]  loadNibNamed:@"MapSpotTableViewCell" owner:self options:nil]  lastObject];
     }
     
-//    static NSString *CellIdentifier = @"cell";
-//    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-//    if (cell == nil) {
-//        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
-//        cell.textLabel.font = SYSTEMFONT(15);
-//        cell.detailTextLabel.font = SYSTEMFONT(13);
-//    }
-    
-    if (indexPath.section == 0) {
-        NSDictionary *poi = [tuijianArray objectAtIndex:indexPath.row];
-        NSString *type = [poi objectForKey:@"type"];
-        if([type isEqualToString:@"scenery_spot"]){//景点
-            cell.leftImageView.image = [UIImage imageNamed:@"greenPoint3"];
-        }else if([type isEqualToString:@"recreational_facility"]){//游乐
-            cell.leftImageView.image = [UIImage imageNamed:@"bluePoint3"];
+    if (typeIndex == 0) {
+        if (indexPath.section == 0) {
+            
+            MyPointAnnotation *annotation = [tuijianArray objectAtIndex:indexPath.row];
+            NSDictionary *poi = annotation.poi;
+            NSString *type = [poi objectForKey:@"type"];
+            if([type isEqualToString:@"scenery_spot"]){//景点
+                cell.leftImageView.image = [UIImage imageNamed:@"greenPoint3"];
+            }else if([type isEqualToString:@"recreational_facility"]){//游乐
+                cell.leftImageView.image = [UIImage imageNamed:@"bluePoint3"];
+            }
+            else if([type isEqualToString:@"food"]){//美食
+                cell.leftImageView.image = [UIImage imageNamed:@"yellowPoint3"];
+            }
+            else if([type isEqualToString:@"shop"]){//商铺
+                cell.leftImageView.image = [UIImage imageNamed:@"purplePoint3"];
+            }
+            else if([type isEqualToString:@"toilet"] || [type isEqualToString:@"washroom"]){//公厕
+                cell.leftImageView.image = [UIImage imageNamed:@"brownPoint3"];
+            }
+            else if([type isEqualToString:@"entrance"]){//出入口
+                cell.leftImageView.image = [UIImage imageNamed:@"linghtGreenPonit3"];
+            }
+            else if([type isEqualToString:@"service_point"]){//服务点
+                cell.leftImageView.image = [UIImage imageNamed:@"redPoint3"];
+            }else if([type isEqualToString:@"tourism_development"]){//景区
+                cell.leftImageView.image = [UIImage imageNamed:@"store3"];
+            }
+            else {
+                cell.leftImageView.image = [UIImage imageNamed:@"greenPoint3"];
+            }
+            cell.spotTitleLabel.text = [poi objectForKey:@"name"];
+            
+            
+            CLLocationCoordinate2D coo = CLLocationCoordinate2DMake([[poi objectForKey:@"latitude"] floatValue], [[poi objectForKey:@"longitude"] floatValue]);
+            NSDictionary* testdic = BMKConvertBaiduCoorFrom(coo,BMK_COORDTYPE_GPS);
+            CLLocationCoordinate2D coor = BMKCoorDictionaryDecode(testdic);
+            
+            BMKMapPoint point1 = BMKMapPointForCoordinate(coor);
+            BMKMapPoint point2 = BMKMapPointForCoordinate(start2d);
+            CLLocationDistance distance = BMKMetersBetweenMapPoints(point1,point2);
+            
+            if (distance > 999) {
+                NSString *dis = [NSString stringWithFormat:@"%.2fkm",distance/1000];
+                cell.distanceLabel.text = dis;
+            }else{
+                NSString *dis = [NSString stringWithFormat:@"%.fm",distance];
+                cell.distanceLabel.text = dis;
+            }
+        }else if (indexPath.section == 1){
+            MyPointAnnotation *annotation = [otherArray objectAtIndex:indexPath.row];
+            NSDictionary *poi = annotation.poi;
+            NSString *type = [poi objectForKey:@"type"];
+            if([type isEqualToString:@"scenery_spot"]){//景点
+                cell.leftImageView.image = [UIImage imageNamed:@"greenPoint3"];
+            }else if([type isEqualToString:@"recreational_facility"]){//游乐
+                cell.leftImageView.image = [UIImage imageNamed:@"bluePoint3"];
+            }
+            else if([type isEqualToString:@"food"]){//美食
+                cell.leftImageView.image = [UIImage imageNamed:@"yellowPoint3"];
+            }
+            else if([type isEqualToString:@"shop"]){//商铺
+                cell.leftImageView.image = [UIImage imageNamed:@"purplePoint3"];
+            }
+            else if([type isEqualToString:@"toilet"] || [type isEqualToString:@"washroom"]){//公厕
+                cell.leftImageView.image = [UIImage imageNamed:@"brownPoint3"];
+            }
+            else if([type isEqualToString:@"entrance"]){//出入口
+                cell.leftImageView.image = [UIImage imageNamed:@"linghtGreenPonit3"];
+            }
+            else if([type isEqualToString:@"service_point"]){//服务点
+                cell.leftImageView.image = [UIImage imageNamed:@"redPoint3"];
+            }else if([type isEqualToString:@"tourism_development"]){//景区
+                cell.leftImageView.image = [UIImage imageNamed:@"store3"];
+            }
+            else {
+                cell.leftImageView.image = [UIImage imageNamed:@"greenPoint3"];
+            }
+            cell.spotTitleLabel.text = [poi objectForKey:@"name"];
+            
+            CLLocationCoordinate2D coo = CLLocationCoordinate2DMake([[poi objectForKey:@"latitude"] floatValue], [[poi objectForKey:@"longitude"] floatValue]);
+            NSDictionary* testdic = BMKConvertBaiduCoorFrom(coo,BMK_COORDTYPE_GPS);
+            CLLocationCoordinate2D coor = BMKCoorDictionaryDecode(testdic);
+            
+            BMKMapPoint point1 = BMKMapPointForCoordinate(coor);
+            BMKMapPoint point2 = BMKMapPointForCoordinate(start2d);
+            CLLocationDistance distance = BMKMetersBetweenMapPoints(point1,point2);
+            
+            if (distance > 999) {
+                NSString *dis = [NSString stringWithFormat:@"%.2fkm",distance/1000];
+                cell.distanceLabel.text = dis;
+            }else{
+                NSString *dis = [NSString stringWithFormat:@"%.fm",distance];
+                cell.distanceLabel.text = dis;
+            }
         }
-        else if([type isEqualToString:@"food"]){//美食
-            cell.leftImageView.image = [UIImage imageNamed:@"yellowPoint2"];
-        }
-        else if([type isEqualToString:@"shop"]){//商铺
-            cell.leftImageView.image = [UIImage imageNamed:@"purplePoint3"];
-        }
-        else if([type isEqualToString:@"toilet"]){//公厕
-            cell.leftImageView.image = [UIImage imageNamed:@"brownPoint2"];
-        }
-        else if([type isEqualToString:@"entrance"]){//出入口
-            cell.leftImageView.image = [UIImage imageNamed:@"linghtGreenPonit3"];
-        }
-        else if([type isEqualToString:@"service_point"]){//服务点
-            cell.leftImageView.image = [UIImage imageNamed:@"redPoint2"];
-        }
-        else {
-            cell.leftImageView.image = [UIImage imageNamed:@"greenPoint3"];
-        }
-        cell.spotTitleLabel.text = [poi objectForKey:@"name"];
-        
-        
-        CLLocationCoordinate2D coo = CLLocationCoordinate2DMake([[poi objectForKey:@"latitude"] floatValue], [[poi objectForKey:@"longitude"] floatValue]);
-        NSDictionary* testdic = BMKConvertBaiduCoorFrom(coo,BMK_COORDTYPE_GPS);
-        CLLocationCoordinate2D coor = BMKCoorDictionaryDecode(testdic);
-        
-        BMKMapPoint point1 = BMKMapPointForCoordinate(coor);
-        BMKMapPoint point2 = BMKMapPointForCoordinate(start2d);
-        CLLocationDistance distance = BMKMetersBetweenMapPoints(point1,point2);
-        
-        if (distance > 999) {
-            NSString *dis = [NSString stringWithFormat:@"%.2fkm",distance/1000];
-            cell.distanceLabel.text = dis;
+    }else{
+        if (typeIndex == 1) {
+            MyPointAnnotation *annotation = [tuijianArray objectAtIndex:indexPath.row];
+            NSDictionary *poi = annotation.poi;
+            NSString *type = [poi objectForKey:@"type"];
+            if([type isEqualToString:@"scenery_spot"]){//景点
+                cell.leftImageView.image = [UIImage imageNamed:@"greenPoint3"];
+            }else if([type isEqualToString:@"recreational_facility"]){//游乐
+                cell.leftImageView.image = [UIImage imageNamed:@"bluePoint3"];
+            }
+            else if([type isEqualToString:@"food"]){//美食
+                cell.leftImageView.image = [UIImage imageNamed:@"yellowPoint3"];
+            }
+            else if([type isEqualToString:@"shop"]){//商铺
+                cell.leftImageView.image = [UIImage imageNamed:@"purplePoint3"];
+            }
+            else if([type isEqualToString:@"toilet"] || [type isEqualToString:@"washroom"]){//公厕
+                cell.leftImageView.image = [UIImage imageNamed:@"brownPoint3"];
+            }
+            else if([type isEqualToString:@"entrance"]){//出入口
+                cell.leftImageView.image = [UIImage imageNamed:@"linghtGreenPonit3"];
+            }
+            else if([type isEqualToString:@"service_point"]){//服务点
+                cell.leftImageView.image = [UIImage imageNamed:@"redPoint3"];
+            }else if([type isEqualToString:@"tourism_development"]){//景区
+                cell.leftImageView.image = [UIImage imageNamed:@"store3"];
+            }
+            else {
+                cell.leftImageView.image = [UIImage imageNamed:@"greenPoint3"];
+            }
+            cell.spotTitleLabel.text = [poi objectForKey:@"name"];
+            
+            
+            CLLocationCoordinate2D coo = CLLocationCoordinate2DMake([[poi objectForKey:@"latitude"] floatValue], [[poi objectForKey:@"longitude"] floatValue]);
+            NSDictionary* testdic = BMKConvertBaiduCoorFrom(coo,BMK_COORDTYPE_GPS);
+            CLLocationCoordinate2D coor = BMKCoorDictionaryDecode(testdic);
+            
+            BMKMapPoint point1 = BMKMapPointForCoordinate(coor);
+            BMKMapPoint point2 = BMKMapPointForCoordinate(start2d);
+            CLLocationDistance distance = BMKMetersBetweenMapPoints(point1,point2);
+            
+            if (distance > 999) {
+                NSString *dis = [NSString stringWithFormat:@"%.2fkm",distance/1000];
+                cell.distanceLabel.text = dis;
+            }else{
+                NSString *dis = [NSString stringWithFormat:@"%.fm",distance];
+                cell.distanceLabel.text = dis;
+            }
         }else{
-            NSString *dis = [NSString stringWithFormat:@"%.fm",distance];
-            cell.distanceLabel.text = dis;
-        }
-    }else if (indexPath.section == 1){
-        NSDictionary *poi = [otherArray objectAtIndex:indexPath.row];
-        NSString *type = [poi objectForKey:@"type"];
-        if([type isEqualToString:@"scenery_spot"]){//景点
-            cell.leftImageView.image = [UIImage imageNamed:@"greenPoint3"];
-        }else if([type isEqualToString:@"recreational_facility"]){//游乐
-            cell.leftImageView.image = [UIImage imageNamed:@"bluePoint3"];
-        }
-        else if([type isEqualToString:@"food"]){//美食
-            cell.leftImageView.image = [UIImage imageNamed:@"yellowPoint2"];
-        }
-        else if([type isEqualToString:@"shop"]){//商铺
-            cell.leftImageView.image = [UIImage imageNamed:@"purplePoint3"];
-        }
-        else if([type isEqualToString:@"toilet"]){//公厕
-            cell.leftImageView.image = [UIImage imageNamed:@"brownPoint2"];
-        }
-        else if([type isEqualToString:@"entrance"]){//出入口
-            cell.leftImageView.image = [UIImage imageNamed:@"linghtGreenPonit3"];
-        }
-        else if([type isEqualToString:@"service_point"]){//服务点
-            cell.leftImageView.image = [UIImage imageNamed:@"redPoint2"];
-        }
-        else {
-            cell.leftImageView.image = [UIImage imageNamed:@"greenPoint3"];
-        }
-        cell.spotTitleLabel.text = [poi objectForKey:@"name"];
-        
-        CLLocationCoordinate2D coo = CLLocationCoordinate2DMake([[poi objectForKey:@"latitude"] floatValue], [[poi objectForKey:@"longitude"] floatValue]);
-        NSDictionary* testdic = BMKConvertBaiduCoorFrom(coo,BMK_COORDTYPE_GPS);
-        CLLocationCoordinate2D coor = BMKCoorDictionaryDecode(testdic);
-        
-        BMKMapPoint point1 = BMKMapPointForCoordinate(coor);
-        BMKMapPoint point2 = BMKMapPointForCoordinate(start2d);
-        CLLocationDistance distance = BMKMetersBetweenMapPoints(point1,point2);
-        
-        if (distance > 999) {
-            NSString *dis = [NSString stringWithFormat:@"%.2fkm",distance/1000];
-            cell.distanceLabel.text = dis;
-        }else{
-            NSString *dis = [NSString stringWithFormat:@"%.fm",distance];
-            cell.distanceLabel.text = dis;
+            MyPointAnnotation *annotation = [otherArray objectAtIndex:indexPath.row];
+            NSDictionary *poi = annotation.poi;
+            NSString *type = [poi objectForKey:@"type"];
+            if([type isEqualToString:@"scenery_spot"]){//景点
+                cell.leftImageView.image = [UIImage imageNamed:@"greenPoint3"];
+            }else if([type isEqualToString:@"recreational_facility"]){//游乐
+                cell.leftImageView.image = [UIImage imageNamed:@"bluePoint3"];
+            }
+            else if([type isEqualToString:@"food"]){//美食
+                cell.leftImageView.image = [UIImage imageNamed:@"yellowPoint3"];
+            }
+            else if([type isEqualToString:@"shop"]){//商铺
+                cell.leftImageView.image = [UIImage imageNamed:@"purplePoint3"];
+            }
+            else if([type isEqualToString:@"toilet"] || [type isEqualToString:@"washroom"]){//公厕
+                cell.leftImageView.image = [UIImage imageNamed:@"brownPoint3"];
+            }
+            else if([type isEqualToString:@"entrance"]){//出入口
+                cell.leftImageView.image = [UIImage imageNamed:@"linghtGreenPonit3"];
+            }
+            else if([type isEqualToString:@"service_point"]){//服务点
+                cell.leftImageView.image = [UIImage imageNamed:@"redPoint3"];
+            }else if([type isEqualToString:@"tourism_development"]){//景区
+                cell.leftImageView.image = [UIImage imageNamed:@"store3"];
+            }
+            else {
+                cell.leftImageView.image = [UIImage imageNamed:@"greenPoint3"];
+            }
+            cell.spotTitleLabel.text = [poi objectForKey:@"name"];
+            
+            CLLocationCoordinate2D coo = CLLocationCoordinate2DMake([[poi objectForKey:@"latitude"] floatValue], [[poi objectForKey:@"longitude"] floatValue]);
+            NSDictionary* testdic = BMKConvertBaiduCoorFrom(coo,BMK_COORDTYPE_GPS);
+            CLLocationCoordinate2D coor = BMKCoorDictionaryDecode(testdic);
+            
+            BMKMapPoint point1 = BMKMapPointForCoordinate(coor);
+            BMKMapPoint point2 = BMKMapPointForCoordinate(start2d);
+            CLLocationDistance distance = BMKMetersBetweenMapPoints(point1,point2);
+            
+            if (distance > 999) {
+                NSString *dis = [NSString stringWithFormat:@"%.2fkm",distance/1000];
+                cell.distanceLabel.text = dis;
+            }else{
+                NSString *dis = [NSString stringWithFormat:@"%.fm",distance];
+                cell.distanceLabel.text = dis;
+            }
         }
     }
+
+    
     return cell;
 }
 
@@ -2264,35 +2415,46 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
     NSString *ids;
-    if (indexPath.section == 0) {
-        NSDictionary *poi = [tuijianArray objectAtIndex:indexPath.row];
-        DLog(@"%@\t%@",[poi objectForKey:@"ids"],[poi objectForKey:@"name"]);
-        ids = [poi objectForKey:@"ids"];
-    }else if (indexPath.section == 1){
-        NSDictionary *poi = [otherArray objectAtIndex:indexPath.row];
-        DLog(@"%@\t%@",[poi objectForKey:@"ids"],[poi objectForKey:@"name"]);
-        ids = [poi objectForKey:@"ids"];
-    }
+    MyPointAnnotation *annotation;
     
-    
-    for (int i = 0; i < annotations.count; i++) {
-        MyPointAnnotation* annotation = annotations[i];
-        NSDictionary *dic = annotation.poi;
-        NSString *ids2 = [dic objectForKey:@"ids"];
-        if ([ids2 isEqualToString:ids]) {
-            [self hideFeatureListView];
-            
-            [sv setContentOffset:CGPointMake(i * sv.frame.size.width, 0) animated:NO];
-            
-            CLLocationCoordinate2D coo = CLLocationCoordinate2DMake([[dic objectForKey:@"latitude"] floatValue], [[dic objectForKey:@"longitude"] floatValue]);
-            NSDictionary* testdic = BMKConvertBaiduCoorFrom(coo,BMK_COORDTYPE_GPS);
-            CLLocationCoordinate2D coor = BMKCoorDictionaryDecode(testdic);
-            [_mapView setCenterCoordinate:coor animated:YES];
-            
-            [_mapView selectAnnotation:annotations[i] animated:YES];
-            break;
+    if (typeIndex == 0) {
+        if (indexPath.section == 0) {
+            annotation = [tuijianArray objectAtIndex:indexPath.row];
+            NSDictionary *poi = annotation.poi;
+            DLog(@"%@\t%@",[poi objectForKey:@"ids"],[poi objectForKey:@"name"]);
+            ids = [poi objectForKey:@"ids"];
+        }else if (indexPath.section == 1){
+            annotation = [otherArray objectAtIndex:indexPath.row];
+            NSDictionary *poi = annotation.poi;
+            DLog(@"%@\t%@",[poi objectForKey:@"ids"],[poi objectForKey:@"name"]);
+            ids = [poi objectForKey:@"ids"];
+        }
+    }else{
+        if (typeIndex == 1) {
+            annotation = [tuijianArray objectAtIndex:indexPath.row];
+            NSDictionary *poi = annotation.poi;
+            DLog(@"%@\t%@",[poi objectForKey:@"ids"],[poi objectForKey:@"name"]);
+            ids = [poi objectForKey:@"ids"];
+        }else{
+            annotation = [otherArray objectAtIndex:indexPath.row];
+            NSDictionary *poi = annotation.poi;
+            DLog(@"%@\t%@",[poi objectForKey:@"ids"],[poi objectForKey:@"name"]);
+            ids = [poi objectForKey:@"ids"];
         }
     }
+    
+    [self hideFeatureListView];
+    NSUInteger index = [annotations indexOfObject:annotation];
+    [sv setContentOffset:CGPointMake(index * sv.frame.size.width, 0) animated:NO];
+    
+    if (![_mapView.annotations containsObject:annotation]) {
+        [_mapView addAnnotation:annotation];
+    }
+    
+    [_mapView selectAnnotation:annotation animated:YES];
+    [_mapView setCenterCoordinate:annotation.coordinate animated:YES];
+    
+
     
 }
 
@@ -2376,6 +2538,10 @@
         if (currentPage >= 0 & currentPage < annotations.count) {
             MyPointAnnotation* annotation = [annotations objectAtIndex:currentPage];
             
+            if (![_mapView.annotations containsObject:annotation]) {
+                [_mapView addAnnotation:annotation];
+            }
+            
             [_mapView selectAnnotation:annotation animated:YES];
             [_mapView setCenterCoordinate:annotation.coordinate animated:YES];
         }
@@ -2438,30 +2604,213 @@
 
 - (void)mapView:(BMKMapView *)mapView regionDidChangeAnimated:(BOOL)animated{
     
-//    ///获取聚合后的标注
-//    NSArray *array = [_clusterManager getClusters:mapView.zoomLevel];
+    
+    NSString *selectedId = nil;
+    if (selectedAnnotationView) {
+        MyPointAnnotation *selectedAnnotation = (MyPointAnnotation *)selectedAnnotationView.annotation;
+        NSDictionary *selectedPoi = selectedAnnotation.poi;
+        selectedId = [selectedPoi objectForKey:@"id"];
+    }
+    
+    
+    ///获取聚合后的标注
+    NSArray *array = [_clusterManager getClusters:mapView.zoomLevel];
+    
+    
+//    NSMutableArray *deleteAnno = [NSMutableArray array];
 //    
 //    NSMutableArray *clusters = [NSMutableArray array];
-//    for (BMKCluster *item in array) {
-//        
-//        BMKClusterItem *clusterItem = item.clusterItems[0];
+//    int i = 0;tteezc
+    for (BMKCluster *item in array) {
+        NSArray *clusterItems = item.clusterItems;
+        if (clusterItems.count > 1) {
+            
+            BMKClusterItem *clusterItem = item.clusterItems[0];
+            MyPointAnnotation *annotation = clusterItem.annotation;
+            if (![_mapView.annotations containsObject:annotation]) {
+                
+                
+//                NSDictionary *poi = clusterItem.poi;
+//                NSString *type = [poi objectForKey:@"type"];
+//                
+//                if (typeIndex == 0) {//全部
+//                }else if (typeIndex == 1){//景点
+//                    if(![type isEqualToString:@"scenery_spot"]){
+//                        continue;
+//                    }
+//                }else if (typeIndex == 2){//美食
+//                    if(![type isEqualToString:@"food"]){
+//                        continue;
+//                    }
+//                }else if (typeIndex == 3){//游乐
+//                    if(![type isEqualToString:@"recreational_facility"]){
+//                        continue;
+//                    }
+//                }else if (typeIndex == 4){//商铺
+//                    if(![type isEqualToString:@"shop"]){
+//                        continue;
+//                    }
+//                }else if (typeIndex == 5){//公厕
+//                    if(![type isEqualToString:@"toilet"] && ![type isEqualToString:@"washroom"]){
+//                        continue;
+//                    }
+//                }else if (typeIndex == 6){//出入口
+//                    if(![type isEqualToString:@"entrance"]){
+//                        continue;
+//                    }
+//                }else if (typeIndex == 7){//服务点
+//                    if(![type isEqualToString:@"service_point"]){
+//                        continue;
+//                    }
+//                }
+                [_mapView addAnnotation:annotation];
+            }
+            
+            for (int j = 1; j < item.clusterItems.count-1; j++) {
+                BMKClusterItem *clusterItem = item.clusterItems[j];
+                MyPointAnnotation *annotation = clusterItem.annotation;
+                if ([_mapView.annotations containsObject:annotation]) {
+                    
+                    NSDictionary *poi = clusterItem.poi;
+                    NSString *poiId = [poi objectForKey:@"id"];
+                    
+                    if (selectedId != nil && [selectedId isEqualToString:poiId]){
+                        
+                    }else{
+//                        NSDictionary *poi = clusterItem.poi;
+//                        NSString *type = [poi objectForKey:@"type"];
+//                        
+//                        if (typeIndex == 0) {//全部
+//                        }else if (typeIndex == 1){//景点
+//                            if(![type isEqualToString:@"scenery_spot"]){
+//                                continue;
+//                            }
+//                        }else if (typeIndex == 2){//美食
+//                            if(![type isEqualToString:@"food"]){
+//                                continue;
+//                            }
+//                        }else if (typeIndex == 3){//游乐
+//                            if(![type isEqualToString:@"recreational_facility"]){
+//                                continue;
+//                            }
+//                        }else if (typeIndex == 4){//商铺
+//                            if(![type isEqualToString:@"shop"]){
+//                                continue;
+//                            }
+//                        }else if (typeIndex == 5){//公厕
+//                            if(![type isEqualToString:@"toilet"] && ![type isEqualToString:@"washroom"]){
+//                                continue;
+//                            }
+//                        }else if (typeIndex == 6){//出入口
+//                            if(![type isEqualToString:@"entrance"]){
+//                                continue;
+//                            }
+//                        }else if (typeIndex == 7){//服务点
+//                            if(![type isEqualToString:@"service_point"]){
+//                                continue;
+//                            }
+//                        }
+                        
+                        [_mapView removeAnnotation:annotation];
+                    }
+                }
+            }
+        }else{
+            BMKClusterItem *clusterItem = item.clusterItems[0];
+            MyPointAnnotation *annotation = clusterItem.annotation;
+            if (![_mapView.annotations containsObject:annotation]) {
+                
+//                NSDictionary *poi = clusterItem.poi;
+//                NSString *type = [poi objectForKey:@"type"];
+//                
+//                if (typeIndex == 0) {//全部
+//                }else if (typeIndex == 1){//景点
+//                    if(![type isEqualToString:@"scenery_spot"]){
+//                        continue;
+//                    }
+//                }else if (typeIndex == 2){//美食
+//                    if(![type isEqualToString:@"food"]){
+//                        continue;
+//                    }
+//                }else if (typeIndex == 3){//游乐
+//                    if(![type isEqualToString:@"recreational_facility"]){
+//                        continue;
+//                    }
+//                }else if (typeIndex == 4){//商铺
+//                    if(![type isEqualToString:@"shop"]){
+//                        continue;
+//                    }
+//                }else if (typeIndex == 5){//公厕
+//                    if(![type isEqualToString:@"toilet"] && ![type isEqualToString:@"washroom"]){
+//                        continue;
+//                    }
+//                }else if (typeIndex == 6){//出入口
+//                    if(![type isEqualToString:@"entrance"]){
+//                        continue;
+//                    }
+//                }else if (typeIndex == 7){//服务点
+//                    if(![type isEqualToString:@"service_point"]){
+//                        continue;
+//                    }
+//                }
+                
+                [_mapView addAnnotation:annotation];
+            }
+        }
+        
+        
+        
+        
+//        for (int j = 0; j < item.clusterItems.count; j++) {
+//            BMKClusterItem *clusterItem = item.clusterItems[j];
+//            MyPointAnnotation *annotation = clusterItem.annotation;
+//            
+//            
+////            NSDictionary *poi = clusterItem.poi;
+////            NSString *poiId = [poi objectForKey:@"id"];
+////            if (selectedId != nil && [selectedId isEqualToString:poiId]){
+////                
+////            }
+//        }
+    
+//        BMKClusterItem *clusterItem = item.clusterItems[itemIndex];
 //        NSDictionary *poi = clusterItem.poi;
-//        //添加PointAnnotation
-//        MyPointAnnotation* annotation = [[MyPointAnnotation alloc]init];
-//        CLLocationCoordinate2D coo = CLLocationCoordinate2DMake([[poi objectForKey:@"latitude"] floatValue], [[poi objectForKey:@"longitude"] floatValue]);
-//        NSDictionary* testdic = BMKConvertBaiduCoorFrom(coo,BMK_COORDTYPE_GPS);
-//        CLLocationCoordinate2D coor = BMKCoorDictionaryDecode(testdic);
+//        NSString *poiId = [poi objectForKey:@"id"];
 //        
-//        annotation.coordinate = coor;
-//        annotation.title = [poi objectForKey:@"name"];
-//        annotation.poi = poi;
-//        annotation.index = 999;
-//        annotation.pointCalloutInfo = poi;
+//        if (selectedId != nil && [selectedId isEqualToString:poiId]){
+//            
+//        }else{
+//            //添加PointAnnotation
+//            MyPointAnnotation* annotation = [[MyPointAnnotation alloc]init];
+//            CLLocationCoordinate2D coo = CLLocationCoordinate2DMake([[poi objectForKey:@"latitude"] floatValue], [[poi objectForKey:@"longitude"] floatValue]);
+//            NSDictionary* testdic = BMKConvertBaiduCoorFrom(coo,BMK_COORDTYPE_GPS);
+//            CLLocationCoordinate2D coor = BMKCoorDictionaryDecode(testdic);
+//            
+//            annotation.coordinate = coor;
+//            annotation.title = [poi objectForKey:@"name"];
+//            annotation.poi = poi;
+//            annotation.index = i;
+//            annotation.pointCalloutInfo = poi;
+//            
+//            [clusters addObject:annotation];
+//            i++;
+//        }
+    }
+    
+//    NSMutableArray *deleteArray = [NSMutableArray arrayWithArray:_mapView.annotations];
+//    for (int j = 0; j < deleteArray.count; j++) {
+//        MyPointAnnotation* annotation = deleteArray[j];
+//        NSDictionary *poi = annotation.poi;
+//        NSString *poiId = [poi objectForKey:@"id"];
 //        
-//        [clusters addObject:annotation];
+//        if (selectedId != nil && [selectedId isEqualToString:poiId]){
+//            [deleteArray removeObject:annotation];
+//        }
 //    }
-//    [_mapView removeAnnotations:_mapView.annotations];
+//    
+//    [_mapView removeAnnotations:deleteArray];
 //    [_mapView addAnnotations:clusters];
+//    [_mapView selectAnnotation:selectedAnnotation animated:YES];
 
 }
 
@@ -2493,6 +2842,8 @@
 }
 
 -(void)mapView:(BMKMapView *)mapView didDeselectAnnotationView:(BMKAnnotationView *)view{
+    
+    selectedAnnotationView = nil;
 //    if (_calloutMapAnnotation&&![view isKindOfClass:[CallOutAnnotationView class]]) {
 //        if (_calloutMapAnnotation.coordinate.latitude == view.annotation.coordinate.latitude&& _calloutMapAnnotation.coordinate.longitude == view.annotation.coordinate.longitude) {
 //            [mapView removeAnnotation:_calloutMapAnnotation];
@@ -2513,6 +2864,14 @@
 
 - (void)mapView:(BMKMapView *)mapView didSelectAnnotationView:(BMKAnnotationView *)view{
     if ([view.annotation isKindOfClass:[MyPointAnnotation class]]) {
+        
+        if ([view isKindOfClass:[YWRectAnnotationView class]]) {
+            
+            selectedAnnotationView = (YWRectAnnotationView *)view;
+            
+            
+        }
+        
         
 //        YWRectAnnotationView *v = (YWRectAnnotationView *)view;
 //        [v bringSubviewToFront:v.contentView];
@@ -2634,30 +2993,43 @@
 //        BMKAnnotationView * view = [[BMKAnnotationView alloc]initWithAnnotation:annotation reuseIdentifier:@"annotation"];
 
         UIImage *leftImage;
+        UIImage *leftHighligntImage;
         NSString *type = [poi objectForKey:@"type"];
+        
         if([type isEqualToString:@"scenery_spot"]){//景点
             leftImage=[UIImage imageNamed:@"greenPoint4"];
+            leftHighligntImage = [UIImage imageNamed:@"greenPoint5"];
         }else if([type isEqualToString:@"recreational_facility"]){//游乐
             leftImage=[UIImage imageNamed:@"bluePoint4"];
+            leftHighligntImage = [UIImage imageNamed:@"bluePoint5"];
         }
         else if([type isEqualToString:@"food"]){//美食
             leftImage=[UIImage imageNamed:@"yellowPoint4"];
+            leftHighligntImage = [UIImage imageNamed:@"yellowPoint5"];
         }
         else if([type isEqualToString:@"shop"]){//商铺
             leftImage=[UIImage imageNamed:@"purplePoint4"];
+            leftHighligntImage = [UIImage imageNamed:@"purplePoint5"];
         }
-        else if([type isEqualToString:@"toilet"]){//公厕
+        else if([type isEqualToString:@"toilet"] || [type isEqualToString:@"washroom"]){//公厕
             leftImage=[UIImage imageNamed:@"brownPoint4"];
+            leftHighligntImage = [UIImage imageNamed:@"brownPoint5"];
         }
         else if([type isEqualToString:@"entrance"]){//出入口
             leftImage=[UIImage imageNamed:@"linghtGreenPonit4"];
+            leftHighligntImage = [UIImage imageNamed:@"linghtGreenPonit5"];
         }
         else if([type isEqualToString:@"service_point"]){//服务点
             leftImage=[UIImage imageNamed:@"redPoint4"];
+            leftHighligntImage = [UIImage imageNamed:@"redPoint5"];
+        }else if([type isEqualToString:@"tourism_development"]){//景区
+            leftImage=[UIImage imageNamed:@"store4"];
+            leftHighligntImage = [UIImage imageNamed:@"store5"];
         }
         else {
             leftImage=[UIImage imageNamed:@"greenPoint4"];
         }
+        view.leftHighlightImage = leftHighligntImage;
         [view setTitleText:[poi objectForKey:@"name"] leftImage:leftImage];
 //        view.image = leftImage;
 
@@ -2911,17 +3283,18 @@
     [otherArray removeAllObjects];
     
     //添加景点标注
-    for (int i = 0; i < _jingdianArray.count; i++) {
-        NSDictionary *poi = [_jingdianArray objectAtIndex:i];
+    for (int i = 0; i < annotations.count; i++) {
+        MyPointAnnotation *annotation = [annotations objectAtIndex:i];
+        NSDictionary *poi = annotation.poi;
         
         //数据筛选分类
         if([[poi objectForKey:@"type"] isEqualToString:@"scenery_spot"]){//景点
             if ([[poi objectForKey:@"name"] rangeOfString:searchBar.text].location != NSNotFound) {
-                [tuijianArray addObject:poi];
+                [tuijianArray addObject:annotation];
             }
         }else{
             if ([[poi objectForKey:@"name"] rangeOfString:searchBar.text].location != NSNotFound) {
-                [otherArray addObject:poi];
+                [otherArray addObject:annotation];
             }
         }
     }
@@ -2940,14 +3313,15 @@
         [otherArray removeAllObjects];
         
         //添加景点标注
-        for (int i = 0; i < _jingdianArray.count; i++) {
-            NSDictionary *poi = [_jingdianArray objectAtIndex:i];
+        for (int i = 0; i < annotations.count; i++) {
+            MyPointAnnotation *annotation = [annotations objectAtIndex:i];
+            NSDictionary *poi = annotation.poi;
             
             //数据筛选分类
             if([[poi objectForKey:@"type"] isEqualToString:@"scenery_spot"]){//景点
-                [tuijianArray addObject:poi];
+                [tuijianArray addObject:annotation];
             }else{
-                [otherArray addObject:poi];
+                [otherArray addObject:annotation];
             }
         }
         

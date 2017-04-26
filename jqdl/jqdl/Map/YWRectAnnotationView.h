@@ -12,6 +12,7 @@
 @interface YWRectAnnotationView : BMKAnnotationView
 
 @property(nonatomic,copy)UIImageView            *leftImage;
+@property(nonatomic,copy)UIImage            *leftHighlightImage;
 @property(nonatomic,copy)NSString           *titleText;
 @property(nonatomic,copy)UIView                 *contentView;
 
