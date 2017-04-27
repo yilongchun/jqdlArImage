@@ -435,13 +435,12 @@
         
         //仙桃沙湖公园
         if ([_storeId isEqualToString:@"2ae8798b64a81d9956396dc3b1db8463"]) {
-            CLLocationCoordinate2D coors = CLLocationCoordinate2DMake(30.174395, 113.704554);
+            CLLocationCoordinate2D coors = CLLocationCoordinate2DMake(30.178400, 113.704300);
             if (IS_IPHONE6P) {
-                coors = CLLocationCoordinate2DMake(30.174395,113.704554);
+                coors = CLLocationCoordinate2DMake(30.189760,113.704270);
             }else if (IS_IPHONE6){
                 coors = CLLocationCoordinate2DMake(30.178400,113.704300);
             }
-            
             ground = [BMKGroundOverlay groundOverlayWithPosition:coors
                                                        zoomLevel:16 anchor:CGPointMake(0.0f,0.0f)
                                                             icon:[UIImage imageNamed:@"shgy"]];
