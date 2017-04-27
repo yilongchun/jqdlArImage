@@ -16,8 +16,12 @@
 #import "LCActionSheet.h"
 #import "Player.h"
 #import "PhotoViewController.h"
+#import <BaiduMapAPI_Map/BMKMapComponent.h>
+#import "MyPointAnnotation.h"
+#import <BaiduMapAPI_Utils/BMKUtilsComponent.h>
+#import "YWRectAnnotationView.h"
 
-@interface StoreViewController ()<LCActionSheetDelegate,FSPCMAudioStreamDelegate,ImageClickEventDelegate>{
+@interface StoreViewController ()<LCActionSheetDelegate,FSPCMAudioStreamDelegate,ImageClickEventDelegate,BMKMapViewDelegate>{
     NSArray *maps;
     Player *player;
     UISlider *slider;
@@ -159,12 +163,86 @@
     [addressLabel sizeToFit];
     [_myScrollView addSubview:addressLabel];
     //地址内容
-    UILabel *addressValueLabel = [[UILabel alloc] initWithFrame:CGRectMake(25, CGRectGetMaxY(addressLabel.frame) + 8, 0, 0)];
+    UILabel *addressValueLabel = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(addressLabel.frame) + 10, CGRectGetMinY(addressLabel.frame), 0, 0)];
     addressValueLabel.font = SYSTEMFONT(14);
     addressValueLabel.textColor = RGB(135, 135, 135);
     addressValueLabel.text = [[_poi objectForKey:@"address"] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     [addressValueLabel sizeToFit];
     [_myScrollView addSubview:addressValueLabel];
+    
+    
+    
+    //地图
+    BMKMapView *map = [[BMKMapView alloc] initWithFrame:CGRectMake(25, CGRectGetMaxY(addressValueLabel.frame) + 16, Main_Screen_Width - 50, 130)];
+    map.delegate = self;
+//    map.gesturesEnabled = NO;
+    [map setZoomLevel:15];
+    [_myScrollView addSubview:map];
+    
+    //添加PointAnnotation
+    MyPointAnnotation* annotation = [[MyPointAnnotation alloc]init];
+    
+    
+    
+//    CLLocationCoordinate2D coo = CLLocationCoordinate2DMake(30.735277777777778,111.31583333333333);
+    CLLocationCoordinate2D coo = CLLocationCoordinate2DMake([[_poi objectForKey:@"latitude"] floatValue], [[_poi objectForKey:@"longitude"] floatValue]);
+    NSDictionary* testdic = BMKConvertBaiduCoorFrom(coo,BMK_COORDTYPE_GPS);
+    CLLocationCoordinate2D coor = BMKCoorDictionaryDecode(testdic);
+    
+    annotation.coordinate = coor;
+//    annotation.title = [_poi objectForKey:@"name"];
+    annotation.poi = _poi;
+    annotation.pointCalloutInfo = _poi;
+    [map addAnnotation:annotation];
+    [map selectAnnotation:annotation animated:YES];
+    [map setCenterCoordinate:coor animated:YES];
+    
+    UIButton *daohangBtn = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetWidth(map.frame)/2 - 83 - 24, CGRectGetHeight(map.frame)/2-17, 83, 34)];
+    [daohangBtn setImage:[UIImage imageNamed:@"daohang2"] forState:UIControlStateNormal];
+    [daohangBtn addTarget:self action:@selector(daohang) forControlEvents:UIControlEventTouchUpInside];
+    [map addSubview:daohangBtn];
+    
+    
+//    line = [[UILabel alloc] initWithFrame:CGRectMake(25, CGRectGetMaxY(map.frame) + 16, Main_Screen_Width - 50, 1)];
+//    line.backgroundColor = RGB(245, 245, 245);
+//    [_myScrollView addSubview:line];
+//    
+//    //电话
+//    UILabel *phoneLabel = [[UILabel alloc] initWithFrame:CGRectMake(25, CGRectGetMaxY(line.frame) + 16, 0, 0)];
+//    phoneLabel.font = SYSTEMFONT(14);
+//    phoneLabel.textColor = RGB(51, 51, 51);
+//    phoneLabel.text = @"电话";
+//    [phoneLabel sizeToFit];
+//    [_myScrollView addSubview:phoneLabel];
+//    
+//    UILabel *phoneValueLabel = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(phoneLabel.frame) + 10, CGRectGetMinY(phoneLabel.frame), 0, 0)];
+//    phoneValueLabel.font = SYSTEMFONT(14);
+//    phoneValueLabel.textColor = RGB(135, 135, 135);
+//    phoneValueLabel.text = [[_poi objectForKey:@"address"] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+//    [phoneValueLabel sizeToFit];
+//    [_myScrollView addSubview:phoneValueLabel];
+//    
+//    line = [[UILabel alloc] initWithFrame:CGRectMake(25, CGRectGetMaxY(phoneLabel.frame) + 16, Main_Screen_Width - 50, 1)];
+//    line.backgroundColor = RGB(245, 245, 245);
+//    [_myScrollView addSubview:line];
+//    
+//    //门票价格
+//    UILabel *priceLabel = [[UILabel alloc] initWithFrame:CGRectMake(25, CGRectGetMaxY(line.frame) + 16, 0, 0)];
+//    priceLabel.font = SYSTEMFONT(14);
+//    priceLabel.textColor = RGB(51, 51, 51);
+//    priceLabel.text = @"门票价格";
+//    [priceLabel sizeToFit];
+//    [_myScrollView addSubview:priceLabel];
+//    
+//    UILabel *priceValueLabel = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(priceLabel.frame) + 10, CGRectGetMinY(priceLabel.frame), 0, 0)];
+//    priceValueLabel.font = SYSTEMFONT(14);
+//    priceValueLabel.textColor = RGB(135, 135, 135);
+//    priceValueLabel.text = [[_poi objectForKey:@"address"] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+//    [priceValueLabel sizeToFit];
+//    [_myScrollView addSubview:priceValueLabel];
+    
+    [_myScrollView setContentSize:CGSizeMake(Main_Screen_Width, CGRectGetMaxY(map.frame) + 30)];
+    
     //距离
     //    UILabel *distanceLabel = [[UILabel alloc] initWithFrame:CGRectMake(25, CGRectGetMaxY(addressValueLabel.frame) + 3, 0, 0)];
     //    distanceLabel.font = SYSTEMFONT(11);
@@ -173,10 +251,10 @@
     //    [distanceLabel sizeToFit];
     //    [_myScrollView addSubview:distanceLabel];
     //导航按钮
-    UIButton *daohangBtn = [[UIButton alloc] initWithFrame:CGRectMake(Main_Screen_Width - 25 - 38, CGRectGetMinY(addressValueLabel.frame), 38, 38)];
-    [daohangBtn setImage:[UIImage imageNamed:@"daohang"] forState:UIControlStateNormal];
-    [daohangBtn addTarget:self action:@selector(daohang) forControlEvents:UIControlEventTouchUpInside];
-    [_myScrollView addSubview:daohangBtn];
+//    UIButton *daohangBtn = [[UIButton alloc] initWithFrame:CGRectMake(Main_Screen_Width - 25 - 38, CGRectGetMinY(addressValueLabel.frame), 38, 38)];
+//    [daohangBtn setImage:[UIImage imageNamed:@"daohang"] forState:UIControlStateNormal];
+//    [daohangBtn addTarget:self action:@selector(daohang) forControlEvents:UIControlEventTouchUpInside];
+//    [_myScrollView addSubview:daohangBtn];
     
     //播放完成通知
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playVoiceEnd) name:@"playVoiceEnd" object:nil];
@@ -371,5 +449,38 @@
         vc.name = [_poi objectForKey:@"name"];
         [self.navigationController pushViewController:vc animated:YES];
     }
+}
+
+#pragma mark - BMKMapViewDelegate
+
+// Override
+- (BMKAnnotationView *)mapView:(BMKMapView *)mapView viewForAnnotation:(id <BMKAnnotation>)annotation
+{
+    
+    if ([annotation isKindOfClass:[MyPointAnnotation class]]) {
+        
+//        MyPointAnnotation *anno = (MyPointAnnotation *)annotation;
+//        NSDictionary *poi = anno.poi;
+        
+        BMKAnnotationView *view = [mapView dequeueReusableAnnotationViewWithIdentifier:@"annotation"];
+        if (view == nil) {
+            view = [[BMKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"annotation"];
+        }
+        view.image = [UIImage imageNamed:@"storeLocation"];
+        
+//        YWRectAnnotationView *view =(YWRectAnnotationView*)[mapView dequeueReusableAnnotationViewWithIdentifier:@"myAnnotation"];
+//        if (view==nil)
+//        {
+//            view=[[ YWRectAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"myAnnotation"];
+//        }
+//        UIImage *leftImage = [UIImage imageNamed:@"store4"];
+//        UIImage *leftHighligntImage = [UIImage imageNamed:@"store5"];
+//       
+//        view.leftHighlightImage = leftHighligntImage;
+//        [view setTitleText:[poi objectForKey:@"name"] leftImage:leftImage];
+        return view;
+    }
+    
+    return nil;
 }
 @end

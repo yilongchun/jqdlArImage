@@ -169,9 +169,9 @@ static CGFloat const TitleHeight = 30.0f;
     NSMutableArray *titleArray;//标题数组
     
     UIScrollView *imageSV;//滚动视图
-//    UIPageControl *pageControl;
-    UILabel *pageLabel;
-    NSInteger currentIndex;
+    UIPageControl *pageControl;
+//    UILabel *pageLabel;
+//    NSInteger currentIndex;
     BMBannerView *bannerView;
 }
 @end
@@ -205,7 +205,7 @@ static  int pageNumber;//页码
         [self addImages:imageArray titles:titleArray height:frame.size.height];
         
         [self addPageControl:imageURLs.count];
-        [self addPageLabel:frame];
+//        [self addPageLabel:frame];
         
         
       //设置NSTimer
@@ -280,50 +280,52 @@ static  int pageNumber;//页码
     [imageSV scrollRectToVisible:CGRectMake(kWIDTH,0,kWIDTH,self.frame.size.height) animated:NO]; // 默认从序号1位置放第1页 ，序号0位置位置放第4页
 
 }
-- (void)addPageControl:(NSInteger)count
-{
-//    CGRect rect =  CGRectMake(0, 180, 120, PAGE_HEIGHT);
-//    pageControl = [[UIPageControl alloc]initWithFrame:rect];
-//    
+- (void)addPageControl:(NSInteger)count{
+    pageControl = [[UIPageControl alloc] init];
+    CGSize size = [pageControl sizeForNumberOfPages:count];
+    
+    CGRect rect =  CGRectMake(Main_Screen_Width - size.width - 15, self.frame.size.height - size.height - 5, size.width, size.height);
+    [pageControl setFrame:rect];
+    
 //    if (_pageCenter.y == 0.0) {
 //        _pageCenter.y = self.frame.size.height - 15;
 //        _pageCenter.x = pageControl.center.x;
 //    }
 //    pageControl.center = _pageCenter;
-//    pageControl.numberOfPages = count;
-//    pageControl.pageIndicatorTintColor = [UIColor lightGrayColor];
-//    pageControl.currentPageIndicatorTintColor = [UIColor grayColor];
-//    [self addSubview:pageControl];
+    pageControl.numberOfPages = count;
+    pageControl.pageIndicatorTintColor = [UIColor lightGrayColor];
+    pageControl.currentPageIndicatorTintColor = [UIColor whiteColor];
+    [self addSubview:pageControl];
     
 }
 
 - (void)setPageCenter:(CGPoint)pageCenter
 {
-//    pageControl.center = pageCenter;
+    pageControl.center = pageCenter;
 }
 
--(void)addPageLabel:(CGRect)frame{
-    CGRect pageFrame = CGRectMake(frame.size.width - 40, frame.size.height - 40, 30, 30);
-    
-//    pageLabel.backgroundColor = [UIColor grayColor];
-    
-    
-    UIView *view = [[UIView alloc] initWithFrame:pageFrame];
-    UIImageView *imageview = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, view.frame.size.width, view.frame.size.height)];
-    imageview.backgroundColor = RGBA(200, 200, 200, 0.5);
-    [view addSubview:imageview];
-    pageLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, view.frame.size.width, view.frame.size.height)];
-    
-    pageLabel.textColor = [UIColor whiteColor];
-    pageLabel.textAlignment = NSTextAlignmentCenter;
-    pageLabel.font = [UIFont systemFontOfSize:13];
-    
-    pageLabel.text = [NSString stringWithFormat:@"%@/%@",[NSString stringWithFormat:@"%d",1],[NSString stringWithFormat:@"%ld",(long)imageArray.count]];
-    [view addSubview:pageLabel];
-    
-    ViewRadius(view, 15);
-    [self addSubview:view];
-}
+//-(void)addPageLabel:(CGRect)frame{
+//    CGRect pageFrame = CGRectMake(frame.size.width - 40, frame.size.height - 40, 30, 30);
+//    
+////    pageLabel.backgroundColor = [UIColor grayColor];
+//    
+//    
+//    UIView *view = [[UIView alloc] initWithFrame:pageFrame];
+//    UIImageView *imageview = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, view.frame.size.width, view.frame.size.height)];
+//    imageview.backgroundColor = RGBA(200, 200, 200, 0.5);
+//    [view addSubview:imageview];
+//    pageLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, view.frame.size.width, view.frame.size.height)];
+//    
+//    pageLabel.textColor = [UIColor whiteColor];
+//    pageLabel.textAlignment = NSTextAlignmentCenter;
+//    pageLabel.font = [UIFont systemFontOfSize:13];
+//    
+//    pageLabel.text = [NSString stringWithFormat:@"%@/%@",[NSString stringWithFormat:@"%d",1],[NSString stringWithFormat:@"%ld",(long)imageArray.count]];
+//    [view addSubview:pageLabel];
+//    
+//    ViewRadius(view, 15);
+//    [self addSubview:view];
+//}
 
 // scrollview 委托函数
 - (void)scrollViewDidScroll:(UIScrollView *)sender
@@ -331,13 +333,13 @@ static  int pageNumber;//页码
     CGFloat pagewidth = imageSV.frame.size.width;
     int page = floor((imageSV.contentOffset.x - pagewidth/([imageArray count]+2))/pagewidth)+1;
     page --;  // 默认从第二页开始
-//    pageControl.currentPage = page;
+    pageControl.currentPage = page;
     
-    NSInteger count = imageArray.count;
-    
-    if (page < count && page > -1) {
-        pageLabel.text = [NSString stringWithFormat:@"%@/%@",[NSString stringWithFormat:@"%d",page+1],[NSString stringWithFormat:@"%ld",(long)count]];
-    }
+//    NSInteger count = imageArray.count;
+//    
+//    if (page < count && page > -1) {
+//        pageLabel.text = [NSString stringWithFormat:@"%@/%@",[NSString stringWithFormat:@"%d",page+1],[NSString stringWithFormat:@"%ld",(long)count]];
+//    }
     
 //    DLog(@"%d",page);
 }
@@ -362,22 +364,22 @@ static  int pageNumber;//页码
 // pagecontrol 选择器的方法
 - (void)turnPage
 {
-//    NSInteger page = pageControl.currentPage; // 获取当前的page
-    NSInteger page = currentIndex;
+    NSInteger page = pageControl.currentPage; // 获取当前的page
+//    NSInteger page = currentIndex;
     [imageSV scrollRectToVisible:CGRectMake(kWIDTH*(page+1),0,kWIDTH,kHEIGHT) animated:YES]; // 触摸pagecontroller那个点点 往后翻一页 +1
 }
 
 // 定时器 绑定的方法
 - (void)runTimePage
 {
-//    NSInteger page = pageControl.currentPage; // 获取当前的page
-//    page++;
-//    page = page > imageArray.count-1 ? 0 : page ;
-//    pageControl.currentPage = page;
-    NSInteger page = currentIndex; // 获取当前的page
+    NSInteger page = pageControl.currentPage; // 获取当前的page
     page++;
     page = page > imageArray.count-1 ? 0 : page ;
-    currentIndex = page;
+    pageControl.currentPage = page;
+//    NSInteger page = currentIndex; // 获取当前的page
+//    page++;
+//    page = page > imageArray.count-1 ? 0 : page ;
+//    currentIndex = page;
     [self turnPage];
 }
 

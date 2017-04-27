@@ -38,7 +38,7 @@ typedef NS_ENUM(NSInteger, ResultCodeType){
 //测试服务器
 #define kHost @"https://api.qlxing.com"
 //正式服务器
-//#define kHost @"https://api.zlyun168.com/v2"
+//#define kHost @"https://api.zlyun168.com"
 
 #define kVERSION @"/v2"
 

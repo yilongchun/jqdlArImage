@@ -269,6 +269,8 @@
         
     }
     
+    
+    
     //添加底部景点卡片
     jdCardView = [[MyView alloc] initWithFrame:CGRectMake(0, Main_Screen_Height - 15 - 108, Main_Screen_Width, 108)];
     sv = [[UIScrollView alloc] initWithFrame:CGRectMake(10, 0, Main_Screen_Width - 30, 108)];
@@ -340,9 +342,10 @@
     
     //播放完成通知
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playVoiceEnd) name:@"playVoiceEnd" object:nil];
+    DLog(@"1 zoomLevel:%f",_mapView.zoomLevel);
     
-//    [_mapView showAnnotations:annotations animated:YES];
-    [self mapViewFit];
+    
+//    [self mapViewFit];
     
     //    //计算距离
     //    BMKMapPoint point1 = BMKMapPointForCoordinate(CLLocationCoordinate2DMake(39.915,116.404));
@@ -420,7 +423,7 @@
         
         //汉阳造
         if ([_storeId isEqualToString:@"0070c1938cc15df1d5b891b5adbb7d8b"]) {
-            CLLocationCoordinate2D coors = CLLocationCoordinate2DMake(30.563350, 114.273250);
+            CLLocationCoordinate2D coors = CLLocationCoordinate2DMake(30.563340, 114.273250);
             if (IS_IPHONE6P) {
                 coors = CLLocationCoordinate2DMake(30.563340, 114.273250);
             }else if (IS_IPHONE6){
@@ -429,12 +432,33 @@
             ground = [BMKGroundOverlay groundOverlayWithPosition:coors zoomLevel:20.9 anchor:CGPointMake(0.0f,0.0f)
                                                             icon:[UIImage imageNamed:@"hyz"]];
         }
+        
+        //仙桃沙湖公园
+        if ([_storeId isEqualToString:@"2ae8798b64a81d9956396dc3b1db8463"]) {
+            CLLocationCoordinate2D coors = CLLocationCoordinate2DMake(30.174395, 113.704554);
+            if (IS_IPHONE6P) {
+                coors = CLLocationCoordinate2DMake(30.174395,113.704554);
+            }else if (IS_IPHONE6){
+                coors = CLLocationCoordinate2DMake(30.178400,113.704300);
+            }
+            
+            ground = [BMKGroundOverlay groundOverlayWithPosition:coors
+                                                       zoomLevel:16 anchor:CGPointMake(0.0f,0.0f)
+                                                            icon:[UIImage imageNamed:@"shgy"]];
 //            ground.alpha = 0.5;
+        }
         if (ground) {
             [_mapView addOverlay:ground];
             showGroud = YES;
         }
     }
+    
+    DLog(@"2 zoomLevel:%f",_mapView.zoomLevel);
+    
+//    [_mapView showAnnotations:annotations animated:YES];
+    [self mapViewFit];
+    
+    DLog(@"3 zoomLevel:%f",_mapView.zoomLevel);
 }
 
 //转换为百度坐标
@@ -2987,6 +3011,7 @@
         if (view==nil)
         {
             view=[[ YWRectAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"myAnnotation"];
+            view.centerOffset = CGPointMake(20, 0);
         }
         
         
