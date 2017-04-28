@@ -636,7 +636,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
                 //f66c0fc1f74580c525365751a9ce21b6 三游洞
                 //0070c1938cc15df1d5b891b5adbb7d8b 汉阳造
                 //2ae8798b64a81d9956396dc3b1db8463 仙桃沙湖公园
-                if ([[storeDic objectForKey:@"id"] isEqualToString:@"2ae8798b64a81d9956396dc3b1db8463"]) {
+                if ([[storeDic objectForKey:@"id"] isEqualToString:@"f66c0fc1f74580c525365751a9ce21b6"]) {
                     locationCoordinate = CLLocationCoordinate2DMake(myLocation.coordinate.latitude + WT_RANDOM(-0.001, 0.001), myLocation.coordinate.longitude + WT_RANDOM(-0.01, 0.01));
                 }else{
                     locationCoordinate = CLLocationCoordinate2DMake(myLocation.coordinate.latitude + 0.3, myLocation.coordinate.longitude + 0.3);
@@ -2104,21 +2104,35 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
 //        [self.navigationController pushViewController:vc animated:YES];
         
         
+                
         UIBarButtonItem *backItem=[[UIBarButtonItem alloc] init];
-        UIImage *backImage = [UIImage imageNamed:@"navi_back"];
+        UIImage *backImage = [UIImage imageNamed:@"navi_back2"];
         [backItem setBackButtonBackgroundImage:[backImage resizableImageWithCapInsets:UIEdgeInsetsMake(0, backImage.size.width, 0, 0)] forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];//更改背景图片
         self.navigationItem.backBarButtonItem = backItem;
         
-        if([jingquType isEqualToString:@"2"]){
+        
+        NSDictionary *dic = [poi jsonRepresentation];
+        NSString *type = [dic objectForKey:@"type"];
+        if ([type isEqualToString:@"tourism_development"]) {//景区
             StoreViewController *vc = [[StoreViewController alloc] init];
-            vc.poi = [poi jsonRepresentation];
+            vc.poi = dic;
             [self.navigationController pushViewController:vc animated:YES];
-        }
-        if ([jingquType isEqualToString:@"1"]) {
+        }else{//景点
             DetailViewController *vc = [[DetailViewController alloc] init];
-            vc.poi = [poi jsonRepresentation];
+            vc.poi = dic;
             [self.navigationController pushViewController:vc animated:YES];
         }
+        
+//        if([jingquType isEqualToString:@"2"]){
+//            StoreViewController *vc = [[StoreViewController alloc] init];
+//            vc.poi = [poi jsonRepresentation];
+//            [self.navigationController pushViewController:vc animated:YES];
+//        }
+//        if ([jingquType isEqualToString:@"1"]) {
+//            DetailViewController *vc = [[DetailViewController alloc] init];
+//            vc.poi = [poi jsonRepresentation];
+//            [self.navigationController pushViewController:vc animated:YES];
+//        }
         
         
     }

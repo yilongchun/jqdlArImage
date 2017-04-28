@@ -211,7 +211,7 @@
 //    [typeBtn setBackgroundImage:[UIImage imageWithColor:[UIColor whiteColor] size:CGSizeMake(1, 1)] forState:UIControlStateNormal];
     [typeBtn setBackgroundImage:[UIImage imageNamed:@"btnBg"] forState:UIControlStateNormal];
 //    ViewBorderRadius(typeBtn, 4, 0, [UIColor whiteColor]);
-    [typeBtn addTarget:self action:@selector(showTypeView) forControlEvents:UIControlEventTouchUpInside];
+    [typeBtn addTarget:self action:@selector(setTypeView) forControlEvents:UIControlEventTouchUpInside];
     
     
 //    typeBtn.layer.cornerRadius = 4;
@@ -409,11 +409,11 @@
         
         //三游洞
         if ([_storeId isEqualToString:@"f66c0fc1f74580c525365751a9ce21b6"]) {
-            CLLocationCoordinate2D coors = CLLocationCoordinate2DMake(30.771626, 111.270551);
-            if (IS_IPHONE6P) {
-                coors = CLLocationCoordinate2DMake(30.771626, 111.270551);
-            }else if (IS_IPHONE6){
+            CLLocationCoordinate2D coors = CLLocationCoordinate2DMake(30.771366, 111.270581);
+            if (IS_IPHONE6){
                 coors = CLLocationCoordinate2DMake(30.771366, 111.270581);
+            }else if (IS_IPHONE6P) {
+                coors = CLLocationCoordinate2DMake(30.771626, 111.270551);
             }
             
             ground = [BMKGroundOverlay groundOverlayWithPosition:coors
@@ -423,11 +423,12 @@
         
         //汉阳造
         if ([_storeId isEqualToString:@"0070c1938cc15df1d5b891b5adbb7d8b"]) {
-            CLLocationCoordinate2D coors = CLLocationCoordinate2DMake(30.563340, 114.273250);
-            if (IS_IPHONE6P) {
-                coors = CLLocationCoordinate2DMake(30.563340, 114.273250);
-            }else if (IS_IPHONE6){
+            CLLocationCoordinate2D coors = CLLocationCoordinate2DMake(30.562980, 114.273280);
+            if (IS_IPHONE6){
                 coors = CLLocationCoordinate2DMake(30.562980, 114.273280);
+            }
+            else if (IS_IPHONE6P) {
+                coors = CLLocationCoordinate2DMake(30.563340, 114.273250);
             }
             ground = [BMKGroundOverlay groundOverlayWithPosition:coors zoomLevel:20.9 anchor:CGPointMake(0.0f,0.0f)
                                                             icon:[UIImage imageNamed:@"hyz"]];
@@ -436,10 +437,11 @@
         //仙桃沙湖公园
         if ([_storeId isEqualToString:@"2ae8798b64a81d9956396dc3b1db8463"]) {
             CLLocationCoordinate2D coors = CLLocationCoordinate2DMake(30.178400, 113.704300);
-            if (IS_IPHONE6P) {
-                coors = CLLocationCoordinate2DMake(30.189760,113.704270);
-            }else if (IS_IPHONE6){
+            if (IS_IPHONE6){
                 coors = CLLocationCoordinate2DMake(30.178400,113.704300);
+            }
+            else if (IS_IPHONE6P) {
+                coors = CLLocationCoordinate2DMake(30.189760,113.704270);
             }
             ground = [BMKGroundOverlay groundOverlayWithPosition:coors
                                                        zoomLevel:16 anchor:CGPointMake(0.0f,0.0f)
@@ -510,7 +512,7 @@
 }
 
 //显示分类按钮
--(void)showTypeView{
+-(void)setTypeView{
 //    CGRect frame1 = CGRectMake(CGRectGetMinX(typeBtn.frame), CGRectGetMinY(typeBtn.frame) - 10, CGRectGetWidth(typeBtn.frame), 0);
     CGRect frame2 = CGRectMake(CGRectGetMinX(typeBtn.frame), CGRectGetMinY(typeBtn.frame) - 260, CGRectGetWidth(typeBtn.frame), 250);
     if (typeView == nil) {
@@ -779,7 +781,7 @@
     }
     
     if (btn.tag != -1) {
-        [self showTypeView];
+        [self setTypeView];
     }
     
     
@@ -2839,34 +2841,41 @@
 
 - (void)mapView:(BMKMapView *)mapView onClickedMapBlank:(CLLocationCoordinate2D)coordinate{
     DLog(@"%f %f",coordinate.latitude,coordinate.longitude);
-    
+    DLog(@"onClickedMapBlank");
     showJd = NO;
     [self setJdScrollViewShowHidden];
     if (typeView) {
-        [self showTypeView];
+        [self setTypeView];
     }
     
-    NSArray* array = [NSArray arrayWithArray:_mapView.annotations];
-    //起点 终点 节点
-    [array enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if ([obj isKindOfClass:[RouteAnnotation class]]) {
-            [_mapView removeAnnotation:obj];
-        }
-    }];
     
-    //    [_mapView removeAnnotations:array];
-    array = [NSArray arrayWithArray:_mapView.overlays];
-    //线路
-    [array enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if ([obj isKindOfClass:[BMKPolyline class]]) {
-            [_mapView removeOverlay:obj];
-        }
-    }];
+    
+//    NSArray* array = [NSArray arrayWithArray:_mapView.annotations];
+//    //起点 终点 节点
+//    [array enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+//        if ([obj isKindOfClass:[RouteAnnotation class]]) {
+//            [_mapView removeAnnotation:obj];
+//        }
+//    }];
+//    
+//    //    [_mapView removeAnnotations:array];
+//    array = [NSArray arrayWithArray:_mapView.overlays];
+//    //线路
+//    [array enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+//        if ([obj isKindOfClass:[BMKPolyline class]]) {
+//            [_mapView removeOverlay:obj];
+//        }
+//    }];
 }
 
 -(void)mapView:(BMKMapView *)mapView didDeselectAnnotationView:(BMKAnnotationView *)view{
-    
+    DLog(@"didDeselectAnnotationView");
     selectedAnnotationView = nil;
+    showJd = NO;
+    [self setJdScrollViewShowHidden];
+    if (typeView) {
+        [self setTypeView];
+    }
 //    if (_calloutMapAnnotation&&![view isKindOfClass:[CallOutAnnotationView class]]) {
 //        if (_calloutMapAnnotation.coordinate.latitude == view.annotation.coordinate.latitude&& _calloutMapAnnotation.coordinate.longitude == view.annotation.coordinate.longitude) {
 //            [mapView removeAnnotation:_calloutMapAnnotation];
@@ -2889,10 +2898,7 @@
     if ([view.annotation isKindOfClass:[MyPointAnnotation class]]) {
         
         if ([view isKindOfClass:[YWRectAnnotationView class]]) {
-            
             selectedAnnotationView = (YWRectAnnotationView *)view;
-            
-            
         }
         
         
