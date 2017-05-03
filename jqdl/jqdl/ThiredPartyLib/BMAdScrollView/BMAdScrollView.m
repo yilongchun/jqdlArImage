@@ -286,7 +286,7 @@ static  int pageNumber;//页码
     
     CGRect rect =  CGRectMake(Main_Screen_Width - size.width - 15, self.frame.size.height - size.height - 5, size.width, size.height);
     [pageControl setFrame:rect];
-    
+    pageControl.transform=CGAffineTransformScale(CGAffineTransformIdentity, 0.8, 0.8);
 //    if (_pageCenter.y == 0.0) {
 //        _pageCenter.y = self.frame.size.height - 15;
 //        _pageCenter.x = pageControl.center.x;

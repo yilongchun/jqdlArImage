@@ -140,110 +140,63 @@
     player.delegate = self;
     
     
-    [self checkNetState];
-//    [self downloadFile];
+
     
     self.automaticallyAdjustsScrollViewInsets = NO;
-    
     self.view.backgroundColor = [UIColor whiteColor];
-    
-    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
-    titleLabel.font = BOLDSYSTEMFONT(17);
-    titleLabel.textColor = [UIColor blackColor];
-    titleLabel.textAlignment = NSTextAlignmentCenter;
-    titleLabel.text = _name;
-    self.navigationItem.titleView = titleLabel;
     
     self.jz_navigationBarBackgroundAlpha = 1.f;
     self.jz_wantsNavigationBarVisible = YES;
     
-    //添加地图
-    _mapView = [[BMKMapView alloc]initWithFrame:CGRectMake(0, 64, Main_Screen_Width, Main_Screen_Height - 64)];
-    [_mapView setZoomLevel:13];
-    _mapView.isSelectedAnnotationViewFront = YES;
-//    _mapView.showMapPoi = NO;
-    [self.view addSubview:_mapView];
-    
-    //列表
-    UIButton *listBtn = [[UIButton alloc] initWithFrame:CGRectMake(Main_Screen_Width - 12 - 30, 12 + 64, 30, 30)];
-    [listBtn setImage:[UIImage imageNamed:@"listIcon2"] forState:UIControlStateNormal];
-    [listBtn addTarget:self action:@selector(showFeatureListView) forControlEvents:UIControlEventTouchUpInside];
-    listBtn.layer.shadowColor = RGBA(0, 0, 0, 0.1).CGColor;
-    listBtn.layer.shadowOpacity = 1;
-    listBtn.layer.shadowOffset = CGSizeMake(0.0f, 0.0f);
-    
-    [self.view addSubview:listBtn];
-    
-    //手绘地图设置
-    UIButton *showShouhuiBtn = [[UIButton alloc] initWithFrame:CGRectMake(Main_Screen_Width - 12 - 30, CGRectGetMaxY(listBtn.frame) + 12, 30, 30)];
-    [showShouhuiBtn setImage:[UIImage imageNamed:@"showShouhui"] forState:UIControlStateNormal];
-    [showShouhuiBtn addTarget:self action:@selector(showDrawMapView) forControlEvents:UIControlEventTouchUpInside];
-    showShouhuiBtn.layer.shadowColor = RGBA(0, 0, 0, 0.1).CGColor;
-    showShouhuiBtn.layer.shadowOpacity = 1;
-    showShouhuiBtn.layer.shadowOffset = CGSizeMake(0.0f, 0.0f);
-    [self.view addSubview:showShouhuiBtn];
-    
-    
     //路线检索
     _routesearch = [[BMKRouteSearch alloc]init];
     _locService = [[BMKLocationService alloc]init];
-    
-    _mapView.delegate = self; // 此处记得不用的时候需要置nil，否则影响内存的释放
     _locService.delegate = self;
-    
     locationFlag = YES;
     [_locService startUserLocationService];
     
-    //定位按钮
-    locationBtn = [[UIButton alloc] initWithFrame:CGRectMake(14, _mapView.frame.size.height - 108 - 15 - 15 - 44, 44, 44)];
-    [locationBtn setImage:[UIImage imageNamed:@"location"] forState:UIControlStateNormal];
-    [locationBtn addTarget:self action:@selector(location) forControlEvents:UIControlEventTouchUpInside];
-    [_mapView addSubview:locationBtn];
+//    [self checkNetState];
+//    [self downloadFile];
     
-    //添加放大缩小按钮
+    [self setTitleLabel];
+    [self initUI];
     [self setZoomBtn];
+    
+    
 
-    [_mapView setZoomLevel:20.9];
-    
-    //添加筛选分类
-    typeBtn = [[UIButton alloc] initWithFrame:CGRectMake(Main_Screen_Width - 16 - 70, Main_Screen_Height - 15 - 108 - 15 - 5 - 30, 70, 30)];
-    [typeBtn setImage:[UIImage imageNamed:@"typeBtn0"] forState:UIControlStateNormal];
-//    [typeBtn setBackgroundImage:[UIImage imageWithColor:[UIColor whiteColor] size:CGSizeMake(1, 1)] forState:UIControlStateNormal];
-    [typeBtn setBackgroundImage:[UIImage imageNamed:@"btnBg"] forState:UIControlStateNormal];
-//    ViewBorderRadius(typeBtn, 4, 0, [UIColor whiteColor]);
-    [typeBtn addTarget:self action:@selector(setTypeView) forControlEvents:UIControlEventTouchUpInside];
+//    [_mapView setZoomLevel:20.9];
     
     
-//    typeBtn.layer.cornerRadius = 4;
-    typeBtn.layer.shadowColor = RGBA(0, 0, 0, 0.1).CGColor;
-    typeBtn.layer.shadowOpacity = 1;
-    typeBtn.layer.shadowOffset = CGSizeMake(0, 0);
-    [self.view addSubview:typeBtn];
     typeIndex = 0;
     
-    //添加景点标注
+    
     annotations = [NSMutableArray array];
     tuijianArray = [NSMutableArray array];
     otherArray = [NSMutableArray array];
     
     //初始化点聚合管理类
     _clusterManager = [[BMKClusterManager alloc] init];
+    
+    
+    jdCardView = [[MyView alloc] initWithFrame:CGRectMake(0, Main_Screen_Height - 15 - 108, Main_Screen_Width, 108)];
+    sv = [[UIScrollView alloc] initWithFrame:CGRectMake(10, 0, Main_Screen_Width - 30, 108)];
+    sv.tag = 1;
+    sv.delegate = self;
+    sv.clipsToBounds = NO;
+    sv.pagingEnabled = YES;
+    sv.showsHorizontalScrollIndicator = NO;
+    
+    CGFloat x = 10;
    
     for (int i = 0; i < _jingdianArray.count; i++) {
         NSDictionary *poi = [_jingdianArray objectAtIndex:i];
         
-        
-        
-        
         //添加PointAnnotation
         MyPointAnnotation* annotation = [[MyPointAnnotation alloc]init];
-        
 //        CLLocationCoordinate2D coor = CLLocationCoordinate2DMake(poi.location.coordinate.latitude + 0.00347516, poi.location.coordinate.longitude + 0.01223381);
         CLLocationCoordinate2D coo = CLLocationCoordinate2DMake([[poi objectForKey:@"latitude"] floatValue], [[poi objectForKey:@"longitude"] floatValue]);
-        
         NSDictionary* testdic = BMKConvertBaiduCoorFrom(coo,BMK_COORDTYPE_GPS);
         CLLocationCoordinate2D coor = BMKCoorDictionaryDecode(testdic);
-
         annotation.coordinate = coor;
         annotation.title = [poi objectForKey:@"name"];
         annotation.poi = poi;
@@ -259,7 +212,6 @@
             [otherArray addObject:annotation];
         }
         
-        
         //向点聚合管理类中添加标注
         BMKClusterItem *clusterItem = [[BMKClusterItem alloc] init];
         clusterItem.coor = coor;
@@ -267,25 +219,8 @@
         clusterItem.annotation = annotation;
         [_clusterManager addClusterItem:clusterItem];
         
-    }
-    
-    
-    
-    //添加底部景点卡片
-    jdCardView = [[MyView alloc] initWithFrame:CGRectMake(0, Main_Screen_Height - 15 - 108, Main_Screen_Width, 108)];
-    sv = [[UIScrollView alloc] initWithFrame:CGRectMake(10, 0, Main_Screen_Width - 30, 108)];
-    sv.tag = 1;
-    sv.delegate = self;
-    sv.clipsToBounds = NO;
-    sv.pagingEnabled = YES;
-    sv.showsHorizontalScrollIndicator = NO;
-    
-    CGFloat x = 10;
-    for (int i = 0; i < _jingdianArray.count; i++) {
-        NSDictionary *poi = [_jingdianArray objectAtIndex:i];
+        //添加底部景点卡片
         UIView *v = [[UIView alloc] initWithFrame:CGRectMake(x, 0, Main_Screen_Width - 40, 108)];
-        
-        
         v.backgroundColor = [UIColor whiteColor];
         ViewBorderRadius(v, 5, 1, RGBA(0, 0, 0, 0.15));
         //图片
@@ -327,6 +262,7 @@
         [sv addSubview:v];
         x += CGRectGetWidth(v.frame) + 10;
     }
+    
     x-=10;
     [sv setContentSize:CGSizeMake(x, 108)];
     [jdCardView addSubview:sv];
@@ -342,31 +278,11 @@
     
     //播放完成通知
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playVoiceEnd) name:@"playVoiceEnd" object:nil];
-    DLog(@"1 zoomLevel:%f",_mapView.zoomLevel);
-    
-    
-//    [self mapViewFit];
     
     //    //计算距离
     //    BMKMapPoint point1 = BMKMapPointForCoordinate(CLLocationCoordinate2DMake(39.915,116.404));
     //    BMKMapPoint point2 = BMKMapPointForCoordinate(CLLocationCoordinate2DMake(38.915,115.404));
     //    CLLocationDistance distance = BMKMetersBetweenMapPoints(point1,point2);
-    
-    
-    
-    
-    
-    
-    
-//    [self convertBaiduCoor:30.156462 lng:113.716483 des:@"大门口"];
-//    [self convertBaiduCoor:30.154898 lng:113.713231 des:@"科普宣教中心"];
-//    [self convertBaiduCoor:30.155467 lng:113.716117 des:@"公园主码头"];
-//    [self convertBaiduCoor:30.142199 lng:113.730229 des:@"公园小码头"];
-//    [self convertBaiduCoor:30.142930 lng:113.730162 des:@"关山监测站"];
-//    [self convertBaiduCoor:30.142983 lng:113.730231 des:@"观鸟台"];
-//    [self convertBaiduCoor:30.142602 lng:113.730151 des:@"步栈道"];
-//    [self convertBaiduCoor:30.155022 lng:113.713428 des:@"停车场"];
-//    [self convertBaiduCoor:30.155123 lng:113.713329 des:@"厕所"];
     
 //        //其他坐标系转为百度坐标系113.716483,30.156462
 //        CLLocationCoordinate2D coor = CLLocationCoordinate2DMake(30.156462, 113.716483);//原始坐标
@@ -400,8 +316,70 @@
     //    BOOL res = [_favManager deleteFavPoi:favId];
     
     
-//    [_mapView setCenterCoordinate:coors];
+    [self addOverlay];
+    [self mapViewFit];
+}
+
+//设置导航栏标题
+-(void)setTitleLabel{
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
+    titleLabel.font = BOLDSYSTEMFONT(17);
+    titleLabel.textColor = [UIColor blackColor];
+    titleLabel.textAlignment = NSTextAlignmentCenter;
+    titleLabel.text = _name;
+    self.navigationItem.titleView = titleLabel;
+}
+
+//初始化试图
+-(void)initUI{
+    //添加地图
+    _mapView = [[BMKMapView alloc]initWithFrame:CGRectMake(0, 64, Main_Screen_Width, Main_Screen_Height - 64)];
+    _mapView.delegate = self;
+    [_mapView setZoomLevel:13];
+    _mapView.isSelectedAnnotationViewFront = YES;
+    //    _mapView.showMapPoi = NO;
+    [self.view addSubview:_mapView];
     
+    //列表
+    UIButton *listBtn = [[UIButton alloc] initWithFrame:CGRectMake(Main_Screen_Width - 12 - 30, 12 + 64, 30, 30)];
+    [listBtn setImage:[UIImage imageNamed:@"listIcon2"] forState:UIControlStateNormal];
+    [listBtn addTarget:self action:@selector(showFeatureListView) forControlEvents:UIControlEventTouchUpInside];
+    listBtn.layer.shadowColor = RGBA(0, 0, 0, 0.1).CGColor;
+    listBtn.layer.shadowOpacity = 1;
+    listBtn.layer.shadowOffset = CGSizeMake(0.0f, 0.0f);
+    
+    [self.view addSubview:listBtn];
+    
+    //手绘地图设置
+    UIButton *showShouhuiBtn = [[UIButton alloc] initWithFrame:CGRectMake(Main_Screen_Width - 12 - 30, CGRectGetMaxY(listBtn.frame) + 12, 30, 30)];
+    [showShouhuiBtn setImage:[UIImage imageNamed:@"showShouhui"] forState:UIControlStateNormal];
+    [showShouhuiBtn addTarget:self action:@selector(showDrawMapView) forControlEvents:UIControlEventTouchUpInside];
+    showShouhuiBtn.layer.shadowColor = RGBA(0, 0, 0, 0.1).CGColor;
+    showShouhuiBtn.layer.shadowOpacity = 1;
+    showShouhuiBtn.layer.shadowOffset = CGSizeMake(0.0f, 0.0f);
+    [self.view addSubview:showShouhuiBtn];
+    
+    //定位按钮
+    locationBtn = [[UIButton alloc] initWithFrame:CGRectMake(14, _mapView.frame.size.height - 108 - 15 - 15 - 44, 44, 44)];
+    [locationBtn setImage:[UIImage imageNamed:@"location"] forState:UIControlStateNormal];
+    [locationBtn addTarget:self action:@selector(location) forControlEvents:UIControlEventTouchUpInside];
+    [_mapView addSubview:locationBtn];
+    
+    //添加筛选分类
+    typeBtn = [[UIButton alloc] initWithFrame:CGRectMake(Main_Screen_Width - 16 - 70, Main_Screen_Height - 15 - 108 - 15 - 5 - 30, 70, 30)];
+    [typeBtn setImage:[UIImage imageNamed:@"typeBtn0"] forState:UIControlStateNormal];
+    //    [typeBtn setBackgroundImage:[UIImage imageWithColor:[UIColor whiteColor] size:CGSizeMake(1, 1)] forState:UIControlStateNormal];
+    [typeBtn setBackgroundImage:[UIImage imageNamed:@"btnBg"] forState:UIControlStateNormal];
+    //    ViewBorderRadius(typeBtn, 4, 0, [UIColor whiteColor]);
+    [typeBtn addTarget:self action:@selector(setTypeView) forControlEvents:UIControlEventTouchUpInside];
+    //    typeBtn.layer.cornerRadius = 4;
+    typeBtn.layer.shadowColor = RGBA(0, 0, 0, 0.1).CGColor;
+    typeBtn.layer.shadowOpacity = 1;
+    typeBtn.layer.shadowOffset = CGSizeMake(0, 0);
+    [self.view addSubview:typeBtn];
+}
+
+-(void)addOverlay{
     //景区模式默认添加手绘地图
     if ([self.jingquType isEqualToString:@"1"]) {
         //小 - 下       小 - 左
@@ -446,20 +424,13 @@
             ground = [BMKGroundOverlay groundOverlayWithPosition:coors
                                                        zoomLevel:16 anchor:CGPointMake(0.0f,0.0f)
                                                             icon:[UIImage imageNamed:@"shgy"]];
-//            ground.alpha = 0.5;
+            //            ground.alpha = 0.5;
         }
         if (ground) {
             [_mapView addOverlay:ground];
             showGroud = YES;
         }
     }
-    
-    DLog(@"2 zoomLevel:%f",_mapView.zoomLevel);
-    
-//    [_mapView showAnnotations:annotations animated:YES];
-    [self mapViewFit];
-    
-    DLog(@"3 zoomLevel:%f",_mapView.zoomLevel);
 }
 
 //转换为百度坐标
@@ -1976,7 +1947,6 @@
         
             UITextField * searchField = [_searchBar valueForKey:@"_searchField"];
             [searchField setValue:[UIFont systemFontOfSize:14] forKeyPath:@"_placeholderLabel.font"];
-            
             _searchBar.delegate = self;
         }
         

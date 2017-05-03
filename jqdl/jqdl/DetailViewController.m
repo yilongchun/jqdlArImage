@@ -64,14 +64,27 @@
     //顶部广告
     NSMutableArray *arr = [NSMutableArray array];
     NSMutableArray *strArr = [NSMutableArray array];
-    NSString *imageStr = [_poi objectForKey:@"images"];
-    if (imageStr != nil) {
-        NSArray *images = [imageStr componentsSeparatedByString:@","];
+    
+    if ([[_poi objectForKey:@"images"] isKindOfClass:[NSArray class]]) {
+        NSArray *images = [_poi objectForKey:@"images"];
         for (int i = 0 ; i < images.count; i++) {
-            [arr addObject:[images objectAtIndex:i]];
+            [arr addObject:[[images objectAtIndex:i] objectForKey:@"url"]];
             [strArr addObject:@"1"];
         }
     }
+    else if ([[_poi objectForKey:@"images"] isKindOfClass:[NSString class]]){
+        NSString *imageStr = [_poi objectForKey:@"images"];
+        if (imageStr != nil) {
+            NSArray *images = [imageStr componentsSeparatedByString:@","];
+            for (int i = 0 ; i < images.count; i++) {
+                [arr addObject:[images objectAtIndex:i]];
+                [strArr addObject:@"1"];
+            }
+        }
+    }
+    
+    
+    
     
     BMAdScrollView *adView = [[BMAdScrollView alloc] initWithFrame:CGRectMake(0, 64, Main_Screen_Width, 250) images:arr titles:strArr];
     adView.delegate = self;

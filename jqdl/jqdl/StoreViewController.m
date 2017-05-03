@@ -20,6 +20,8 @@
 #import "MyPointAnnotation.h"
 #import <BaiduMapAPI_Utils/BMKUtilsComponent.h>
 #import "YWRectAnnotationView.h"
+#import "UIImageView+AFNetworking.h"
+#import "DetailViewController.h"
 
 @interface StoreViewController ()<LCActionSheetDelegate,FSPCMAudioStreamDelegate,ImageClickEventDelegate,BMKMapViewDelegate>{
     NSArray *maps;
@@ -32,6 +34,9 @@
     BOOL currentPlay;
     BOOL dragFlag;
     UInt64 end;
+    
+    NSMutableArray *jdArray;
+    UIScrollView *jdScrollView;
 }
 
 @end
@@ -58,6 +63,98 @@
     self.jz_navigationBarBackgroundAlpha = 1.f;
     
     [self setContent];
+    [self loadRmjd];
+}
+
+//进入详情
+-(void)toDetail:(UIGestureRecognizer *)recog{
+    UIBarButtonItem *backItem=[[UIBarButtonItem alloc] init];
+    UIImage *backImage = [UIImage imageNamed:@"navi_back2"];
+    [backItem setBackButtonBackgroundImage:[backImage resizableImageWithCapInsets:UIEdgeInsetsMake(0, backImage.size.width, 0, 0)] forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];//更改背景图片
+    self.navigationItem.backBarButtonItem = backItem;
+    
+    NSDictionary *dic = [jdArray objectAtIndex:recog.view.tag];
+    
+    DetailViewController *vc = [[DetailViewController alloc] init];
+    vc.poi = dic;
+    [self.navigationController pushViewController:vc animated:YES];
+    
+}
+
+//加载热门景点
+-(void)loadRmjd{
+    
+    NSString *storeId = [_poi objectForKey:@"id"];
+    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+    NSString *url = [NSString stringWithFormat:@"%@%@%@%@%@",kHost,kVERSION,@"/stores/",storeId,@"/spots"];
+    [manager GET:url parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
+        
+        NSDictionary *dic= [NSDictionary dictionaryWithDictionary:responseObject];
+        NSArray *data = [dic objectForKey:@"data"];
+        
+        if (jdArray == nil) {
+            jdArray = [NSMutableArray array];
+        }
+        
+        
+        CGFloat x = 18;
+        int seq = 0;
+        for (int i = 0 ; i < data.count; i++) {
+            NSMutableDictionary *spotDic = [[NSMutableDictionary alloc] initWithDictionary:data[i]];
+            
+            NSNumber *is_public = [spotDic objectForKey:@"is_public"];
+            if (![is_public boolValue]) {
+                continue;
+            }
+            NSArray *imagesArr = [spotDic objectForKey:@"images"];
+            NSDictionary *image;
+            if (imagesArr.count > 0) {
+                image = [imagesArr objectAtIndex:0];
+            }
+            NSString *name = [spotDic objectForKey:@"name"];
+            NSString *type = [spotDic objectForKey:@"type"];
+            if ([type isEqualToString:@"scenery_spot"]) {
+                [jdArray addObject:spotDic];
+                
+                UIView *jdView = [[UIView alloc] initWithFrame:CGRectMake(x, 0, 141, 120)];
+                jdView.tag = seq;
+                jdView.userInteractionEnabled = YES;
+                UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toDetail:)];
+                [jdView addGestureRecognizer:tap];
+                ViewBorderRadius(jdView, 0, 1, RGB(242, 242, 242));
+                
+                UIImageView *imageview = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 141, 90)];
+                [imageview setImageWithURL:[NSURL URLWithString:[image objectForKey:@"url"]]];
+                [jdView addSubview:imageview];
+                
+                UILabel *jdTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(6, 90, 100, 30)];
+                jdTitleLabel.font = SYSTEMFONT(11);
+                jdTitleLabel.textColor = RGB(51, 51, 51);
+                jdTitleLabel.text = name;
+                [jdView addSubview:jdTitleLabel];
+                
+                [jdScrollView addSubview:jdView];
+                x = CGRectGetMaxX(jdView.frame) + 18;
+                seq++;
+            }
+            
+            [jdScrollView setContentSize:CGSizeMake(x, 120)];
+            
+        }
+        
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+        NSData *data =[error.userInfo objectForKey:@"com.alamofire.serialization.response.error.data"];
+        if (data) {
+            NSString *result  =[[ NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            NSDictionary *dic= [NSJSONSerialization JSONObjectWithData:[result dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions error:nil];
+            NSString *message = [dic objectForKey:@"message"];
+            [self showHintInView:self.view hint:NSLocalizedString(message, nil)];
+            DLog(@"%@",result);
+        }else{
+            [self showHintInView:self.view hint:error.localizedDescription];
+        }
+    }];
+    
 }
 
 //设置内容
@@ -125,7 +222,7 @@
     
     
     //文本介绍
-    UILabel *contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(25, CGRectGetMaxY(playBtn.frame) + 20, Main_Screen_Width - 50, 10)];
+    UILabel *contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(18, CGRectGetMaxY(playBtn.frame) + 20, Main_Screen_Width - 36, 10)];
     contentLabel.numberOfLines = 0;
     contentLabel.font = [UIFont systemFontOfSize:14];
     contentLabel.textColor = RGB(135, 135, 135);
@@ -140,23 +237,23 @@
     [UILabel setLabelSpace:contentLabel withValue:contentLabel.text withFont:contentLabel.font];
     
     //景区等级
-    UILabel *ratingLabel = [[UILabel alloc] initWithFrame:CGRectMake(25, CGRectGetMaxY(contentLabel.frame) + 16, 0, 0)];
+    UILabel *ratingLabel = [[UILabel alloc] initWithFrame:CGRectMake(18, CGRectGetMaxY(contentLabel.frame) + 16, 0, 0)];
     ratingLabel.font = SYSTEMFONT(14);
     ratingLabel.textColor = RGB(51, 51, 51);
     ratingLabel.text = @"景区等级";
     [ratingLabel sizeToFit];
     [_myScrollView addSubview:ratingLabel];
     
-    UIImageView *ratingImageView = [[UIImageView alloc] initWithFrame:CGRectMake(25, CGRectGetMaxY(ratingLabel.frame) + 9, 54, 18)];
+    UIImageView *ratingImageView = [[UIImageView alloc] initWithFrame:CGRectMake(18, CGRectGetMaxY(ratingLabel.frame) + 9, 54, 18)];
     ratingImageView.image = [UIImage imageNamed:@"4a"];
     [_myScrollView addSubview:ratingImageView];
     
     //线
-    UILabel *line = [[UILabel alloc] initWithFrame:CGRectMake(25, CGRectGetMaxY(ratingImageView.frame) + 16, Main_Screen_Width - 50, 1)];
+    UILabel *line = [[UILabel alloc] initWithFrame:CGRectMake(18, CGRectGetMaxY(ratingImageView.frame) + 16, Main_Screen_Width - 36, 1)];
     line.backgroundColor = RGB(245, 245, 245);
     [_myScrollView addSubview:line];
     //地址标签
-    UILabel *addressLabel = [[UILabel alloc] initWithFrame:CGRectMake(25, CGRectGetMaxY(line.frame) + 16, 0, 0)];
+    UILabel *addressLabel = [[UILabel alloc] initWithFrame:CGRectMake(18, CGRectGetMaxY(line.frame) + 16, 0, 0)];
     addressLabel.font = SYSTEMFONT(14);
     addressLabel.textColor = RGB(51, 51, 51);
     addressLabel.text = @"地址";
@@ -173,7 +270,7 @@
     
     
     //地图
-    BMKMapView *map = [[BMKMapView alloc] initWithFrame:CGRectMake(25, CGRectGetMaxY(addressValueLabel.frame) + 16, Main_Screen_Width - 50, 130)];
+    BMKMapView *map = [[BMKMapView alloc] initWithFrame:CGRectMake(18, CGRectGetMaxY(addressValueLabel.frame) + 16, Main_Screen_Width - 36, 130)];
     map.delegate = self;
 //    map.gesturesEnabled = NO;
     [map setZoomLevel:15];
@@ -241,7 +338,58 @@
 //    [priceValueLabel sizeToFit];
 //    [_myScrollView addSubview:priceValueLabel];
     
-    [_myScrollView setContentSize:CGSizeMake(Main_Screen_Width, CGRectGetMaxY(map.frame) + 30)];
+    
+    //全景游览
+    line = [[UILabel alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(map.frame) + 20, Main_Screen_Width, 1)];
+    line.backgroundColor = RGB(240, 240, 240);
+    [_myScrollView addSubview:line];
+    
+    UIView *sepView = [[UIView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(line.frame), Main_Screen_Width, 10)];
+    sepView.backgroundColor = RGB(245, 245, 245);
+    [_myScrollView addSubview:sepView];
+    
+    line = [[UILabel alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(sepView.frame), Main_Screen_Width, 1)];
+    line.backgroundColor = RGB(240, 240, 240);
+    [_myScrollView addSubview:line];
+    
+    UILabel *qjylLabel = [[UILabel alloc] initWithFrame:CGRectMake(18, CGRectGetMaxY(line.frame) + 16, 0, 0)];
+    qjylLabel.font = BOLDSYSTEMFONT(14);
+    qjylLabel.textColor = RGB(51, 51, 51);
+    qjylLabel.text = @"全景导览";
+    [qjylLabel sizeToFit];
+    [_myScrollView addSubview:qjylLabel];
+    
+    UIView *vrView = [[UIView alloc] initWithFrame:CGRectMake(18, CGRectGetMaxY(qjylLabel.frame) + 16, Main_Screen_Width - 36, 140)];
+    vrView.backgroundColor = [UIColor grayColor];
+    [_myScrollView addSubview:vrView];
+    
+    //热门景点
+    line = [[UILabel alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(vrView.frame) + 20, Main_Screen_Width, 1)];
+    line.backgroundColor = RGB(240, 240, 240);
+    [_myScrollView addSubview:line];
+    
+    sepView = [[UIView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(line.frame), Main_Screen_Width, 10)];
+    sepView.backgroundColor = RGB(245, 245, 245);
+    [_myScrollView addSubview:sepView];
+    
+    line = [[UILabel alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(sepView.frame), Main_Screen_Width, 1)];
+    line.backgroundColor = RGB(240, 240, 240);
+    [_myScrollView addSubview:line];
+    
+    UILabel *rmjdLabel = [[UILabel alloc] initWithFrame:CGRectMake(18, CGRectGetMaxY(line.frame) + 16, 0, 0)];
+    rmjdLabel.font = BOLDSYSTEMFONT(14);
+    rmjdLabel.textColor = RGB(51, 51, 51);
+    rmjdLabel.text = @"热门景点";
+    [rmjdLabel sizeToFit];
+    [_myScrollView addSubview:rmjdLabel];
+    
+    jdScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(rmjdLabel.frame) + 16, Main_Screen_Width, 120)];
+    jdScrollView.showsHorizontalScrollIndicator = NO;
+    [_myScrollView addSubview:jdScrollView];
+    
+    
+    
+    [_myScrollView setContentSize:CGSizeMake(Main_Screen_Width, CGRectGetMaxY(jdScrollView.frame) + 30)];
     
     //距离
     //    UILabel *distanceLabel = [[UILabel alloc] initWithFrame:CGRectMake(25, CGRectGetMaxY(addressValueLabel.frame) + 3, 0, 0)];
