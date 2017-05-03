@@ -51,6 +51,9 @@
         self.extendedLayoutIncludesOpaqueBars = YES;
     }
     
+//    UIBarButtonItem *shareItem = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"share2"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] style:UIBarButtonItemStyleDone target:self action:@selector(share)];
+//    self.navigationItem.rightBarButtonItem = shareItem;
+    
     self.jz_navigationBarBackgroundHidden = NO;
     self.jz_navigationBarTintColor = [UIColor whiteColor];
     self.jz_navigationBarBackgroundAlpha = 1.f;
@@ -58,6 +61,17 @@
     [self setContent];
     
 }
+
+////分享
+//-(void)share{
+//    NSString *textToShare = @"请大家登录《iOS云端与网络通讯》服务网站。";
+//    UIImage *imageToShare = [UIImage imageNamed:@"share2"];
+//    NSURL *urlToShare = [NSURL URLWithString:@"http://www.iosbook3.com"];
+//    NSArray *activityItems = [NSArray arrayWithObjects:textToShare,imageToShare,urlToShare, nil];
+//    UIActivityViewController *activityVC = [[UIActivityViewController alloc]initWithActivityItems:activityItems
+//                                                                            applicationActivities:nil];
+//    [self presentViewController:activityVC animated:YES completion:nil];
+//}
 
 //设置内容
 -(void)setContent{
@@ -82,9 +96,6 @@
             }
         }
     }
-    
-    
-    
     
     BMAdScrollView *adView = [[BMAdScrollView alloc] initWithFrame:CGRectMake(0, 64, Main_Screen_Width, 250) images:arr titles:strArr];
     adView.delegate = self;
@@ -155,7 +166,7 @@
     [_myScrollView addSubview:sliderBackground];
     
     //文本介绍
-    UILabel *contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(25, CGRectGetMaxY(playBtn.frame) + 20, Main_Screen_Width - 50, 10)];
+    UILabel *contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(18, CGRectGetMaxY(playBtn.frame) + 20, Main_Screen_Width - 36, 10)];
     contentLabel.numberOfLines = 0;
     contentLabel.font = [UIFont systemFontOfSize:14];
     contentLabel.textColor = RGB(135, 135, 135);
@@ -169,18 +180,18 @@
     [contentLabel setFrame:labelFrame];
     [UILabel setLabelSpace:contentLabel withValue:contentLabel.text withFont:contentLabel.font];
     //线
-    UILabel *line = [[UILabel alloc] initWithFrame:CGRectMake(25, CGRectGetMaxY(contentLabel.frame) + 16, Main_Screen_Width - 50, 1)];
+    UILabel *line = [[UILabel alloc] initWithFrame:CGRectMake(18, CGRectGetMaxY(contentLabel.frame) + 16, Main_Screen_Width - 36, 1)];
     line.backgroundColor = RGB(245, 245, 245);
     [_myScrollView addSubview:line];
     //地址标签
-    UILabel *addressLabel = [[UILabel alloc] initWithFrame:CGRectMake(25, CGRectGetMaxY(line.frame) + 16, 0, 0)];
+    UILabel *addressLabel = [[UILabel alloc] initWithFrame:CGRectMake(18, CGRectGetMaxY(line.frame) + 16, 0, 0)];
     addressLabel.font = SYSTEMFONT(14);
     addressLabel.textColor = RGB(51, 51, 51);
     addressLabel.text = @"位置";
     [addressLabel sizeToFit];
     [_myScrollView addSubview:addressLabel];
     //地址内容
-    UILabel *addressValueLabel = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(addressLabel.frame) + 10, CGRectGetMinY(addressLabel.frame), Main_Screen_Width - CGRectGetMaxX(addressLabel.frame) - 10 - 25 - 38 - 10, 0)];
+    UILabel *addressValueLabel = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(addressLabel.frame) + 10, CGRectGetMinY(addressLabel.frame), Main_Screen_Width - CGRectGetMaxX(addressLabel.frame) - 10 - 18 - 38 - 10, 0)];
     addressValueLabel.font = SYSTEMFONT(14);
     addressValueLabel.numberOfLines = 0;
     addressValueLabel.textColor = RGB(135, 135, 135);
@@ -195,7 +206,7 @@
 //    [distanceLabel sizeToFit];
 //    [_myScrollView addSubview:distanceLabel];
     //导航按钮
-    UIButton *daohangBtn = [[UIButton alloc] initWithFrame:CGRectMake(Main_Screen_Width - 25 - 38, CGRectGetMinY(addressValueLabel.frame), 38, 38)];
+    UIButton *daohangBtn = [[UIButton alloc] initWithFrame:CGRectMake(Main_Screen_Width - 18 - 38, CGRectGetMinY(addressValueLabel.frame), 38, 38)];
     [daohangBtn setImage:[UIImage imageNamed:@"daohang"] forState:UIControlStateNormal];
     [daohangBtn addTarget:self action:@selector(daohang) forControlEvents:UIControlEventTouchUpInside];
     [_myScrollView addSubview:daohangBtn];
