@@ -180,8 +180,9 @@
     [addressLabel sizeToFit];
     [_myScrollView addSubview:addressLabel];
     //地址内容
-    UILabel *addressValueLabel = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(addressLabel.frame) + 10, CGRectGetMinY(addressLabel.frame), 0, 0)];
+    UILabel *addressValueLabel = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(addressLabel.frame) + 10, CGRectGetMinY(addressLabel.frame), Main_Screen_Width - CGRectGetMaxX(addressLabel.frame) - 10 - 25 - 38 - 10, 0)];
     addressValueLabel.font = SYSTEMFONT(14);
+    addressValueLabel.numberOfLines = 0;
     addressValueLabel.textColor = RGB(135, 135, 135);
     addressValueLabel.text = [[_poi objectForKey:@"address"] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     [addressValueLabel sizeToFit];
@@ -206,11 +207,9 @@
         NSString *playingUrlStr = [[player url] absoluteString];
         NSString *path = [NSString stringWithFormat:@"%@",[_poi objectForKey:@"voice"]];
         if ([playingUrlStr isEqualToString:path]) {//当前播放的就是该景点的语音 停止播放
-            DLog(@"播放的地址一致");
             currentPlay = YES;
             [playBtn setImage:[UIImage imageNamed:@"ztbf"] forState:UIControlStateNormal];
         }else{//不是该景点的 重新播放
-            DLog(@"播放的地址不一致");
             [playBtn setImage:[UIImage imageNamed:@"playStart"] forState:UIControlStateNormal];
         }
     }else if (player.audioState == kFsAudioStreamStopped){

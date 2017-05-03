@@ -296,11 +296,9 @@ static  int pageNumber;//页码
     pageControl.pageIndicatorTintColor = [UIColor lightGrayColor];
     pageControl.currentPageIndicatorTintColor = [UIColor whiteColor];
     [self addSubview:pageControl];
-    
 }
 
-- (void)setPageCenter:(CGPoint)pageCenter
-{
+- (void)setPageCenter:(CGPoint)pageCenter{
     pageControl.center = pageCenter;
 }
 
