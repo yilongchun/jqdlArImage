@@ -322,12 +322,14 @@
 
 //设置导航栏标题
 -(void)setTitleLabel{
-    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
-    titleLabel.font = BOLDSYSTEMFONT(17);
-    titleLabel.textColor = [UIColor blackColor];
-    titleLabel.textAlignment = NSTextAlignmentCenter;
-    titleLabel.text = _name;
-    self.navigationItem.titleView = titleLabel;
+//    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
+//    titleLabel.font = BOLDSYSTEMFONT(17);
+//    titleLabel.textColor = [UIColor blackColor];
+//    titleLabel.textAlignment = NSTextAlignmentCenter;
+//    titleLabel.text = _name;
+//    self.navigationItem.titleView = titleLabel;
+    
+    self.title = _name;
 }
 
 //初始化试图
@@ -1117,7 +1119,7 @@
 }
 
 -(void)viewDidAppear:(BOOL)animated{
-    
+    [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor blackColor]}];
     [super viewDidAppear:animated];
     if (player) {
         player.delegate = self;

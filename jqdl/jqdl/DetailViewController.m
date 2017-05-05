@@ -143,16 +143,15 @@
 //    //标题
     NSString *slogan = [_poi objectForKey:@"name"];
 
-    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
-    titleLabel.font = BOLDSYSTEMFONT(17);
-    titleLabel.textColor = [UIColor blackColor];
-    titleLabel.textAlignment = NSTextAlignmentCenter;
-    titleLabel.text = slogan;
-    [titleLabel sizeToFit];
-    self.navigationItem.titleView = titleLabel;
+//    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
+//    titleLabel.font = BOLDSYSTEMFONT(17);
+//    titleLabel.textColor = [UIColor blackColor];
+//    titleLabel.textAlignment = NSTextAlignmentCenter;
+//    titleLabel.text = slogan;
+//    [titleLabel sizeToFit];
+//    self.navigationItem.titleView = titleLabel;
     
-    
-    
+    self.title = slogan;
     
     UIImageView *jTypeImage = [[UIImageView alloc] initWithFrame:CGRectMake(20, 250 - 19 - 17 + 64, 52, 17)];
     jTypeImage.image = [UIImage imageNamed:@"jType1"];
@@ -388,6 +387,7 @@
 
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
+    [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor blackColor]}];
     player.delegate = self;
 }
 
@@ -439,15 +439,29 @@
         NSArray *coordinates = [_poi objectForKey:@"coordinates"];
         NSNumber *lat = coordinates[0];
         NSNumber *lng = coordinates[1];
-        CLLocationCoordinate2D coords = CLLocationCoordinate2DMake([lat doubleValue],[lng doubleValue]);//纬度，经度
+//        CLLocationCoordinate2D coords = CLLocationCoordinate2DMake([lat doubleValue],[lng doubleValue]);//纬度，经度
+        
+//        MKMapItem *currentLocation = [MKMapItem mapItemForCurrentLocation];
+        
+//        MKPlacemark *placemark = [[MKPlacemark alloc] initWithCoordinate:coords addressDictionary:nil];
+//        MKMapItem *toLocation = [[MKMapItem alloc] initWithPlacemark:placemark];
+//        toLocation.name = [[_poi objectForKey:@"name"] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+//        [MKMapItem openMapsWithItems:@[currentLocation, toLocation]
+//                       launchOptions:@{MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeDriving,MKLaunchOptionsShowsTrafficKey: [NSNumber numberWithBool:YES]}];
+        
+        CLLocationCoordinate2D endLocation = CLLocationCoordinate2DMake([lat doubleValue],[lng doubleValue]);
         
         MKMapItem *currentLocation = [MKMapItem mapItemForCurrentLocation];
-        
-        MKPlacemark *placemark = [[MKPlacemark alloc] initWithCoordinate:coords addressDictionary:nil];
-        MKMapItem *toLocation = [[MKMapItem alloc] initWithPlacemark:placemark];
-        toLocation.name = [[_poi objectForKey:@"name"] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        MKMapItem *toLocation = [[MKMapItem alloc] initWithPlacemark:[[MKPlacemark alloc] initWithCoordinate:endLocation addressDictionary:nil]];
+        toLocation.name = [_poi objectForKey:@"name"];
         [MKMapItem openMapsWithItems:@[currentLocation, toLocation]
-                       launchOptions:@{MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeDriving,MKLaunchOptionsShowsTrafficKey: [NSNumber numberWithBool:YES]}];
+                       launchOptions:@{MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeWalking,
+                                       MKLaunchOptionsShowsTrafficKey: [NSNumber numberWithBool:YES]}];
+        
+        
+        
+        
+        
     }else{
         NSDictionary *dic = maps[buttonIndex-2];
         NSString *urlString = dic[@"url"];

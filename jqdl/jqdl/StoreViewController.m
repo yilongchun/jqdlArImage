@@ -219,12 +219,14 @@
     //标题
     NSString *slogan = [_poi objectForKey:@"name"];
     
-    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
-    titleLabel.font = BOLDSYSTEMFONT(17);
-    titleLabel.textColor = [UIColor blackColor];
-    titleLabel.textAlignment = NSTextAlignmentCenter;
-    titleLabel.text = slogan;
-    self.navigationItem.titleView = titleLabel;
+//    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
+//    titleLabel.font = BOLDSYSTEMFONT(17);
+//    titleLabel.textColor = [UIColor blackColor];
+//    titleLabel.textAlignment = NSTextAlignmentCenter;
+//    titleLabel.text = slogan;
+//    self.navigationItem.titleView = titleLabel;
+    
+    self.title = slogan;
     
     NSDictionary *details = [_poi objectForKey:@"details"];
     NSString *rating = [details objectForKey:@"rating"];
@@ -607,6 +609,7 @@
 
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
+    [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor blackColor]}];
     player.delegate = self;
 }
 

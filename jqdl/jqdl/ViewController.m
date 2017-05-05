@@ -1833,6 +1833,9 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
 -(void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     DLog(@"viewDidAppear");
+    
+    [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]}];
+    
     if (bottomBtn == nil) {
 //        bottomBtn = [[UIButton alloc] init];
 //        [bottomBtn setFrame:CGRectMake((Main_Screen_Width - 70)/2, Main_Screen_Height - 38 - 70,70, 70)];
