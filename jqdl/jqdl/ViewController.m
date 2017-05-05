@@ -817,6 +817,9 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
 //                CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake([latitude doubleValue] - 0.00347516, [longitude doubleValue] - 0.01223381);
             
             
+            
+            
+            
             //GPS 后台数据
             CLLocationCoordinate2D locationCoordinate = CLLocationCoordinate2DMake([latitude doubleValue], [longitude doubleValue]);
             
@@ -2116,10 +2119,12 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
         if ([type isEqualToString:@"tourism_development"]) {//景区
             StoreViewController *vc = [[StoreViewController alloc] init];
             vc.poi = dic;
+            vc.storeId = poiIdentifier;
             [self.navigationController pushViewController:vc animated:YES];
         }else{//景点
             DetailViewController *vc = [[DetailViewController alloc] init];
             vc.poi = dic;
+            vc.spotId = poiIdentifier;
             [self.navigationController pushViewController:vc animated:YES];
         }
         

@@ -42,6 +42,7 @@
 @end
 
 @implementation StoreViewController
+@synthesize storeId;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -62,8 +63,9 @@
     self.jz_navigationBarTintColor = [UIColor whiteColor];
     self.jz_navigationBarBackgroundAlpha = 1.f;
     
-    [self setContent];
-    [self loadRmjd];
+    [self loadData];
+    
+    
 }
 
 //进入详情
@@ -77,14 +79,50 @@
     
     DetailViewController *vc = [[DetailViewController alloc] init];
     vc.poi = dic;
+    vc.spotId = [dic objectForKey:@"id"];
     [self.navigationController pushViewController:vc animated:YES];
+    
+}
+
+//加载景区详情
+-(void)loadData{
+    
+    [self showHudInView:self.view];
+    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+    NSString *url = [NSString stringWithFormat:@"%@%@%@%@",kHost,kVERSION,@"/stores/",storeId];
+    [manager GET:url parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
+        [self hideHud];
+        NSDictionary *dic= [NSDictionary dictionaryWithDictionary:responseObject];
+        DLog(@"%@",dic);
+        
+        NSNumber *code = [dic objectForKey:@"code"];
+        if ([code intValue] == 200) {
+            _poi = [dic objectForKey:@"data"];
+            [self setContent];
+            [self loadRmjd];
+        }else{
+            [self showHintInView:self.view hint:@"加载失败"];
+        }
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+        [self hideHud];
+        NSData *data =[error.userInfo objectForKey:@"com.alamofire.serialization.response.error.data"];
+        if (data) {
+            NSString *result  =[[ NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            NSDictionary *dic= [NSJSONSerialization JSONObjectWithData:[result dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions error:nil];
+            NSString *message = [dic objectForKey:@"message"];
+            [self showHintInView:self.view hint:NSLocalizedString(message, nil)];
+            DLog(@"%@",result);
+        }else{
+            [self showHintInView:self.view hint:error.localizedDescription];
+        }
+    }];
     
 }
 
 //加载热门景点
 -(void)loadRmjd{
     
-    NSString *storeId = [_poi objectForKey:@"id"];
+    
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     NSString *url = [NSString stringWithFormat:@"%@%@%@%@%@",kHost,kVERSION,@"/stores/",storeId,@"/spots"];
     [manager GET:url parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
@@ -162,17 +200,24 @@
     //顶部广告
     NSMutableArray *arr = [NSMutableArray array];
     NSMutableArray *strArr = [NSMutableArray array];
-    NSArray *images = [[_poi objectForKey:@"images"] componentsSeparatedByString:@","];
+//    NSArray *images = [[_poi objectForKey:@"images"] componentsSeparatedByString:@","];
+//    for (int i = 0 ; i < images.count; i++) {
+//        [arr addObject:[images objectAtIndex:i]];
+//        [strArr addObject:@"1"];
+//    }
+    
+    NSArray *images = [_poi objectForKey:@"images"];
     for (int i = 0 ; i < images.count; i++) {
-        [arr addObject:[images objectAtIndex:i]];
+        [arr addObject:[[images objectAtIndex:i] objectForKey:@"url"]];
         [strArr addObject:@"1"];
     }
+    
     
     BMAdScrollView *adView = [[BMAdScrollView alloc] initWithFrame:CGRectMake(0, 64, Main_Screen_Width, 250) images:arr titles:strArr];
     adView.delegate = self;
     [_myScrollView addSubview:adView];
     //标题
-    NSString *slogan = [[_poi objectForKey:@"name"] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSString *slogan = [_poi objectForKey:@"name"];
     
     UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
     titleLabel.font = BOLDSYSTEMFONT(17);
@@ -180,6 +225,27 @@
     titleLabel.textAlignment = NSTextAlignmentCenter;
     titleLabel.text = slogan;
     self.navigationItem.titleView = titleLabel;
+    
+    NSDictionary *details = [_poi objectForKey:@"details"];
+    NSString *rating = [details objectForKey:@"rating"];
+    
+    if ([rating isEqualToString:@"2A"]) {
+        UIImageView *jTypeImage = [[UIImageView alloc] initWithFrame:CGRectMake(20, 250 - 19 - 18 + 64, 54, 18)];
+        jTypeImage.image = [UIImage imageNamed:@"2a"];
+        [_myScrollView addSubview:jTypeImage];
+    }else if ([rating isEqualToString:@"3A"]){
+        UIImageView *jTypeImage = [[UIImageView alloc] initWithFrame:CGRectMake(20, 250 - 19 - 18 + 64, 54, 18)];
+        jTypeImage.image = [UIImage imageNamed:@"3a"];
+        [_myScrollView addSubview:jTypeImage];
+    }else if ([rating isEqualToString:@"4A"]){
+        UIImageView *jTypeImage = [[UIImageView alloc] initWithFrame:CGRectMake(20, 250 - 19 - 18 + 64, 54, 18)];
+        jTypeImage.image = [UIImage imageNamed:@"4a"];
+        [_myScrollView addSubview:jTypeImage];
+    }else if ([rating isEqualToString:@"5A"]){
+        UIImageView *jTypeImage = [[UIImageView alloc] initWithFrame:CGRectMake(20, 250 - 19 - 18 + 64, 54, 18)];
+        jTypeImage.image = [UIImage imageNamed:@"5a"];
+        [_myScrollView addSubview:jTypeImage];
+    }
     
     
     UILabel *playTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(18, CGRectGetMaxY(adView.frame) + 16, 0, 0)];
@@ -221,20 +287,21 @@
     [_myScrollView addSubview:sliderBackground];
     
     
+    NSString *description = [_poi objectForKey:@"description"];
     //文本介绍
     UILabel *contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(18, CGRectGetMaxY(playBtn.frame) + 20, Main_Screen_Width - 36, 10)];
     contentLabel.numberOfLines = 0;
     contentLabel.font = [UIFont systemFontOfSize:14];
     contentLabel.textColor = RGB(135, 135, 135);
-    contentLabel.text = [[_poi objectForKey:@"description"] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    contentLabel.text = description;
     [contentLabel sizeToFit];
     [_myScrollView addSubview:contentLabel];
     
-    CGFloat height = [UILabel getSpaceLabelHeight:contentLabel.text withFont:contentLabel.font withWidth:contentLabel.frame.size.width];
+    CGFloat height = [UILabel getSpaceLabelHeight:description withFont:contentLabel.font withWidth:contentLabel.frame.size.width];
     CGRect labelFrame = contentLabel.frame;
     labelFrame.size.height = height;
     [contentLabel setFrame:labelFrame];
-    [UILabel setLabelSpace:contentLabel withValue:contentLabel.text withFont:contentLabel.font];
+    [UILabel setLabelSpace:contentLabel withValue:description withFont:contentLabel.font];
     
     //景区等级
     UILabel *ratingLabel = [[UILabel alloc] initWithFrame:CGRectMake(18, CGRectGetMaxY(contentLabel.frame) + 16, 0, 0)];
@@ -263,7 +330,7 @@
     UILabel *addressValueLabel = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(addressLabel.frame) + 10, CGRectGetMinY(addressLabel.frame), 0, 0)];
     addressValueLabel.font = SYSTEMFONT(14);
     addressValueLabel.textColor = RGB(135, 135, 135);
-    addressValueLabel.text = [[_poi objectForKey:@"address"] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    addressValueLabel.text = [_poi objectForKey:@"address"];
     [addressValueLabel sizeToFit];
     [_myScrollView addSubview:addressValueLabel];
     
@@ -280,9 +347,11 @@
     MyPointAnnotation* annotation = [[MyPointAnnotation alloc]init];
     
     
-    
+    NSArray *coordinates = [_poi objectForKey:@"coordinates"];
+    NSNumber *lat = coordinates[0];
+    NSNumber *lng = coordinates[1];
 //    CLLocationCoordinate2D coo = CLLocationCoordinate2DMake(30.735277777777778,111.31583333333333);
-    CLLocationCoordinate2D coo = CLLocationCoordinate2DMake([[_poi objectForKey:@"latitude"] floatValue], [[_poi objectForKey:@"longitude"] floatValue]);
+    CLLocationCoordinate2D coo = CLLocationCoordinate2DMake([lat doubleValue], [lng doubleValue]);
     NSDictionary* testdic = BMKConvertBaiduCoorFrom(coo,BMK_COORDTYPE_GPS);
     CLLocationCoordinate2D coor = BMKCoorDictionaryDecode(testdic);
     
@@ -407,9 +476,13 @@
     //播放完成通知
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playVoiceEnd) name:@"playVoiceEnd" object:nil];
     
+    NSArray *audio_clips = [_poi objectForKey:@"audio_clips"];
+    NSString *path;
+    if (audio_clips.count > 0) {
+        path = [audio_clips[0] objectForKey:@"url"];
+    }
     if (player.audioState == kFsAudioStreamPlaying) {
-        NSString *playingUrlStr = [[player url] absoluteString];
-        NSString *path = [NSString stringWithFormat:@"%@",[_poi objectForKey:@"voice"]];
+        NSString *playingUrlStr = [[player url] absoluteString];        
         if ([playingUrlStr isEqualToString:path]) {//当前播放的就是该景点的语音 停止播放
             DLog(@"播放的地址一致");
             currentPlay = YES;
@@ -481,14 +554,20 @@
 
 //语音播放
 -(void)playVoice{
+    NSArray *audio_clips = [_poi objectForKey:@"audio_clips"];
+    NSString *path;
+    if (audio_clips.count > 0) {
+        path = [audio_clips[0] objectForKey:@"url"];
+    }
+    
     currentPlay = YES;
     if (player.audioState == kFsAudioStreamPlaying) {
         NSString *playingUrlStr = [[player url] absoluteString];
-        NSString *path = [NSString stringWithFormat:@"%@",[_poi objectForKey:@"voice"]];
+        
+        
         if (![playingUrlStr isEqualToString:path]) {
             [player stop];
             [playBtn setImage:[UIImage imageNamed:@"ztbf"] forState:UIControlStateNormal];
-            NSString *path = [NSString stringWithFormat:@"%@",[_poi objectForKey:@"voice"]];
             NSURL *url=[NSURL URLWithString:path];
             [player setUrl:url];
             [player play];
@@ -515,7 +594,6 @@
         }
     }else{
         [playBtn setImage:[UIImage imageNamed:@"ztbf"] forState:UIControlStateNormal];
-        NSString *path = [NSString stringWithFormat:@"%@",[_poi objectForKey:@"voice"]];
         NSURL *url=[NSURL URLWithString:path];
         [player setUrl:url];
         [player play];
@@ -573,7 +651,10 @@
 //    }
     else if (buttonIndex == 1){//苹果
         MKMapItem *currentLocation = [MKMapItem mapItemForCurrentLocation];
-        CLLocationCoordinate2D coords = CLLocationCoordinate2DMake([[_poi objectForKey:@"latitude"] floatValue],[[_poi objectForKey:@"longitude"] floatValue]);//纬度，经度
+        NSArray *coordinates = [_poi objectForKey:@"coordinates"];
+        NSNumber *lat = coordinates[0];
+        NSNumber *lng = coordinates[1];
+        CLLocationCoordinate2D coords = CLLocationCoordinate2DMake([lat doubleValue],[lng doubleValue]);//纬度，经度
         MKPlacemark *placemark = [[MKPlacemark alloc] initWithCoordinate:coords addressDictionary:nil];
         MKMapItem *toLocation = [[MKMapItem alloc] initWithPlacemark:placemark];
         toLocation.name = [[_poi objectForKey:@"name"] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
@@ -589,11 +670,18 @@
 #pragma mark - ImageClickEventDelegate
 
 -(void)imageClickAt:(NSInteger)vid{
-    NSString *imageStr = [_poi objectForKey:@"images"];
-    if (imageStr != nil) {
-        NSArray *images = [imageStr componentsSeparatedByString:@","];
+    
+    
+    NSMutableArray *arr = [NSMutableArray array];
+   
+    NSArray *images = [_poi objectForKey:@"images"];
+    for (int i = 0 ; i < images.count; i++) {
+        [arr addObject:[[images objectAtIndex:i] objectForKey:@"url"]];
+        
+    }
+    if (arr.count > 0) {
         PhotoViewController *vc = [[PhotoViewController alloc] init];
-        vc.images = images;
+        vc.images = arr;
         vc.name = [_poi objectForKey:@"name"];
         [self.navigationController pushViewController:vc animated:YES];
     }

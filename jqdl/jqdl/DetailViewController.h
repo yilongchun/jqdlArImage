@@ -13,6 +13,7 @@
 @interface DetailViewController : UIViewController
 
 @property (strong,nonatomic) NSDictionary *poi;
+@property (strong,nonatomic) NSString *spotId;
 @property (weak, nonatomic) IBOutlet UIScrollView *myScrollView;
 
 @end

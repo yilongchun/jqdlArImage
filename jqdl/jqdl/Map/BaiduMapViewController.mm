@@ -1044,14 +1044,14 @@
     if ([type isEqualToString:@"tourism_development"]) {//景区
         StoreViewController *vc = [[StoreViewController alloc] init];
         vc.poi = poi;
+        vc.storeId = [poi objectForKey:@"id"];
         [self.navigationController pushViewController:vc animated:YES];
     }else{//景点
         DetailViewController *vc = [[DetailViewController alloc] init];
         vc.poi = poi;
+        vc.spotId = [poi objectForKey:@"id"];
         [self.navigationController pushViewController:vc animated:YES];
     }
-    
-    
 }
               
 - (id) processDictionaryIsNSNull:(id)obj{
