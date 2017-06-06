@@ -4395,6 +4395,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/jqdl/ThiredPartyLib/BaiduMap/BaiduMapAPI_Base.framework",
+					"$(PROJECT_DIR)/jqdl/ThiredPartyLib/BaiduMap/thirdlibs",
 				);
 				OTHER_CFLAGS = "";
 				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
@@ -4433,6 +4434,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/jqdl/ThiredPartyLib/BaiduMap/BaiduMapAPI_Base.framework",
+					"$(PROJECT_DIR)/jqdl/ThiredPartyLib/BaiduMap/thirdlibs",
 				);
 				OTHER_CFLAGS = "";
 				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";

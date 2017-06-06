@@ -295,6 +295,27 @@
     }
 }
 
+////打开客户端AR步行导航
+//- (void)openMapARWalkNavi{
+//    //初始化调启导航时的参数管理类
+//    BMKNaviPara* para = [[BMKNaviPara alloc]init];
+//    //初始化终点节点
+//    BMKPlanNode* end = [[BMKPlanNode alloc]init];
+//    //指定终点经纬度
+//    end.pt = CLLocationCoordinate2DMake(39.90868, 116.3956);
+//    //指定终点名称
+//    end.name = @"天安门";
+//    //指定终点
+//    para.endPoint = end;
+//    
+//    //指定返回自定义scheme
+//    para.appScheme = @"baidumapsdk://mapsdk.baidu.com";
+//    
+//    //调启百度地图客户端
+//    BMKOpenErrorCode code = [BMKNavigation openBaiduMapwalkARNavigation:para];
+//    NSLog(@"调起步行导航：errorcode=%d", code);
+//}
+
 -(void)daohang{
     
     
@@ -374,6 +395,8 @@
     }else{
         [playBtn setImage:[UIImage imageNamed:@"ztbf"] forState:UIControlStateNormal];
         NSURL *url=[NSURL URLWithString:path];
+//        NSURL *url=[NSURL URLWithString:@"http://img.qlxing.com/9720b00b-091a-4575-bc52-0fff85338e12";
+//        NSURL *url=[NSURL URLWithString:@"http://139.170.150.181:8090/bxl/common/docInfo/downLoad.htm?fileId=297ebc2d5b65a9dd015b75193ce00030"];
         [player setUrl:url];
         [player play];
     }

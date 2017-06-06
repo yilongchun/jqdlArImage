@@ -44,6 +44,7 @@
 #import <CoreBluetooth/CoreBluetooth.h>
 #import "WebViewController.h"
 
+
 /* this is used to create random positions around you */
 #define WT_RANDOM(startValue, endValue) ((((float) (arc4random() % ((unsigned)RAND_MAX + 1)) / RAND_MAX) * (endValue - startValue)) + startValue)
 
@@ -1667,6 +1668,7 @@ static char *kWTAugmentedRealityViewController_AssociatedLocationManagerKey = "k
     vc.jingquType = jingquType;
     vc.storeId = currentStoreId;
     [self.navigationController pushViewController:vc animated:YES];
+    
 }
 
 -(void)openMoreFunctionView{

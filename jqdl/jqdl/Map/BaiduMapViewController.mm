@@ -155,16 +155,11 @@
     locationFlag = YES;
     [_locService startUserLocationService];
     
-//    [self checkNetState];
-//    [self downloadFile];
     
     [self setTitleLabel];
     [self initUI];
     [self setZoomBtn];
     
-    
-
-//    [_mapView setZoomLevel:20.9];
     
     
     typeIndex = 0;
@@ -193,7 +188,6 @@
         
         //添加PointAnnotation
         MyPointAnnotation* annotation = [[MyPointAnnotation alloc]init];
-//        CLLocationCoordinate2D coor = CLLocationCoordinate2DMake(poi.location.coordinate.latitude + 0.00347516, poi.location.coordinate.longitude + 0.01223381);
         CLLocationCoordinate2D coo = CLLocationCoordinate2DMake([[poi objectForKey:@"latitude"] floatValue], [[poi objectForKey:@"longitude"] floatValue]);
         NSDictionary* testdic = BMKConvertBaiduCoorFrom(coo,BMK_COORDTYPE_GPS);
         CLLocationCoordinate2D coor = BMKCoorDictionaryDecode(testdic);
@@ -318,6 +312,24 @@
     
     [self addOverlay];
     [self mapViewFit];
+    
+    
+//    [self convertBaiduCoor:30.896527777777777 lng:120.65403611111111 des:@"目澜洲"];
+//    [self convertBaiduCoor:30.911072222222224 lng:120.64880277777777 des:@"圆明园"];
+//    [self convertBaiduCoor:30.884475 lng:120.64034722222222 des:@"郎中荡生态园"];
+//    [self convertBaiduCoor:30.88499722222222 lng:120.62294166666666 des:@"旅游产品开发基地"];
+//    [self convertBaiduCoor:30.900694444444444 lng:120.64056944444444 des:@"东纺城"];
+//    [self convertBaiduCoor:30.907341666666667 lng:120.61653333333334 des:@"运河公园"];
+//    [self convertBaiduCoor:30.913275 lng:120.62766388888889 des:@"白龙桥"];
+//    [self convertBaiduCoor:30.91128888888889 lng:120.60563333333333 des:@"潜龙渠"];
+//    [self convertBaiduCoor:30.892605555555555 lng:120.60026111111111 des:@"丝博园"];
+//    [self convertBaiduCoor:30.89562777777778 lng:120.59779166666667 des:@"明庆寺莲云景区"];
+    
+    
+}
+
+-(void)loadData{
+    
 }
 
 //设置导航栏标题
